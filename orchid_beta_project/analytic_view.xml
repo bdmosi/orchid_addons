@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+       <record id="od_beta_project_account_analytic_account_tree_inherited" model="ir.ui.view">
+          <field name="name">account.analytic.account.beta.form</field>
+          <field name="model">account.analytic.account</field>
+          <field name="inherit_id" ref="account.view_account_analytic_account_tree"/>
+          <field name="arch" type="xml">
+            <field name="company_id" position="after">
+                <field name="partner_id" />
+                <field name="date_start" />
+                <field name="date" />
+                <field name="manager_id" />
+                <field name="od_owner_id" />
+                <field name="od_po_status" />
+                <field name="od_cost_sheet_id" />
+                <field name="od_type_of_project" />
+                <field name="recurring_invoices" />
+
+            </field>
+        </field>
+      </record>
+
+
+      <record id="od_beta_project_account_analytic_account_form_inherited" model="ir.ui.view">
+        <field name="name">account.analytic.account.beta.form</field>
+        <field name="model">account.analytic.account</field>
+
+        <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+        <field name="arch" type="xml">
+        <field name="type" position="after">
+            <field name="od_type_of_project" attrs="{'invisible':[('type','!=','contract')],'required':[('type','=','contract')]}"/>
+        </field>
+        <xpath expr="//div[@name=&quot;buttons&quot;]" position="inside">
+                  <button name="od_btn_open_invoice_lines" type="object" class="oe_stat_button"  icon="fa-pencil-square-o"  >
+                        <div><strong><field name="od_amnt_invoiced" /></strong><br/>Invoiced</div>
+            </button>
+             <button name="od_btn_open_purchase_lines" type="object" class="oe_stat_button"  icon="fa-list"  >
+                       <div><strong><field name="od_amnt_purchased" /></strong><br/>Supplier PO's</div>
+             </button>
+             <button name="od_btn_open_lots" type="object" class="oe_stat_button"  icon="fa-list"  >
+                       <div>Serial No's</div>
+             </button>
+              <button name="od_btn_open_delivery_orders" type="object" class="oe_stat_button"  icon="fa-list"  >
+                        <div>Delivery/GRN</div>
+              </button>
+              <button class="oe_inline oe_stat_button" type="object" context="{'partner_id': partner_id}" name="od_action_schedule_meeting" icon="fa-calendar">
+                    <field string="Meetings" name="od_meeting_count" widget="statinfo"/>
+            </button>
+            <button class="oe_inline oe_stat_button" name="od_open_timesheets" type="object"  icon="fa-calendar">
+                    <div><strong><field name="od_timesheet_amount" /></strong><br/>Timesheets</div>
+            </button>
+
+             <button class="oe_inline oe_stat_button" name="od_open_hr_expense_claim" type="object"  icon="fa-list">
+                     <div><strong><field name="od_hr_claim_amount" /></strong><br/>HR Expense</div>
+             </button>
+              <button class="oe_inline oe_stat_button" name="od_open_hr_expense_claim_draft" type="object"  icon="fa-list">
+                      <div style="color:#C7ABA5"><strong><field name="od_hr_claim_amount_draft" /></strong><br/>HR Expense</div>
+              </button>
+              <button  class="oe_inline oe_stat_button btn btn-danger" name="od_btn_open_account_move_lines" type="object"  icon="fa-list">
+                      <div><strong><field name="od_journal_amount" /></strong><br/>Journal Items</div>
+              </button>
+              <button  class="oe_inline oe_stat_button"  name="od_btn_open_account_move_lines_draft" type="object"  icon="fa-list">
+                      <div style="color:#C7ABA5"><strong><field name="od_journal_amount_draft" /></strong><br/>Journal Drafts</div>
+              </button>
+               <button name="od_btn_open_sales_orders" type="object" class="oe_stat_button"  icon="fa-list"  >
+                         <div><strong><field name="od_sale_count" /> </strong><br/>Sale Orders</div>
+               </button>
+    </xpath>
+
+     <xpath expr="//field[@name='manager_id']" position="after">
+         <field name="od_owner_id" />
+         <field name="od_po_status" />
+         <field name="od_timesheet_units" invisible="1"/>
+
+    </xpath>
+    <field name="date_start" position="attributes">
+        <attribute name="required">True</attribute>
+    </field>
+    <field name="date" position="attributes">
+        <attribute name="required">True</attribute>
+    </field>
+    <!-- <field name="date" position="after">
+        <div>
+            <label for="od_original_closing_date" />
+            <field name="od_original_closing_date" />
+            <field name="od_date_set" />
+            </div>
+
+    </field> -->
+        <page string="Contract Information" position="after">
+            <page string="KPI">
+                <separator string="Project KPI" />
+                <table style="width:100%" class="table table-striped">
+                   <thead>
+                       <th></th>
+                       <th>Sale</th>
+                       <th>Cost</th>
+                       <th>Profit</th>
+                       <th>Profit %</th>
+                    </thead>
+                    <tbody>
+                    <tr>
+                       <td>Original</td>
+                       <td><field name="od_original_sale_price"/></td>
+                       <td><field name="od_original_sale_cost"/></td>
+                       <td><field name="od_original_sale_profit"/></td>
+                       <td><field name="od_original_sale_profit_perc"/></td>
+                     </tr>
+                     <tr>
+                        <td>Amended</td>
+                        <td><field name="od_amended_sale_price"/></td>
+                        <td><field name="od_amended_sale_cost"/></td>
+                        <td><field name="od_amended_profit"/></td>
+                        <td><field name="od_amended_profit_perc"/></td>
+                      </tr>
+                       <tr>
+                          <td>Invoiced</td>
+                          <td><field name="od_amnt_invoiced2"/></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                           <td>Purchased</td>
+                           <td></td>
+                           <td><field name="od_amnt_purchased2"/></td>
+                           <td></td>
+                           <td></td>
+                         </tr>
+                         <tr>
+                            <td>Planned Timesheets</td>
+                            <td></td>
+                            <td><field name="od_planned_timesheet_cost"/></td>
+                            <td></td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                             <td>Actual Timesheets</td>
+                             <td></td>
+                             <td><field name="od_timesheet_amount2"/></td>
+                             <td></td>
+                             <td></td>
+                           </tr>
+                     </tbody>
+                     </table>
+                     <separator string="Project Manager" />
+                     <table style="width:100%" class="table table-striped">
+                        <thead>
+                            <th>Description</th>
+                            <th>Points</th>
+
+                         </thead>
+                         <tbody>
+                         <tr>
+                            <td>Cost Control</td>
+                            <td><field name="od_cost_control_kpi"/></td>
+                          </tr>
+                           <tr>
+                              <td>Scope Control</td>
+                              <td><field name="od_scope_control_kpi"/></td>
+                            </tr>
+
+                          </tbody>
+                          </table>
+                          <separator string="Technical Consultant" />
+                         <table style="width:100%" class="table table-striped">
+                            <thead>
+                                <th>Description</th>
+                                <th>Points</th>
+
+                             </thead>
+                             <tbody>
+                             <tr>
+                                <td>Manpower Cost Control</td>
+                                <td><field name="od_manpower_kpi"/></td>
+                              </tr>
+                              </tbody>
+                              </table>
+            </page>
+          
+        </page>
+
+    </field>
+</record>
+
+  </data>
+</openerp>

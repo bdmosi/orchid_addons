@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="orchid_asset.report_asset_statement">
+
+        <t t-foreach="docs" t-as="o">
+                        <div class="page">
+                            <div class="oe_structure"/>
+							<div><br/><br/></div>
+							<div><br/><br/></div>
+							<div class="row" style="background-color:#1E90FF">
+							
+							<font color="white"><h1> Asset Report </h1></font></div>
+						<div/><br/><div/>
+						<!--  --><div><h4>Date From:<span t-field="o.period_from" t-field-options="{&quot;format&quot;: &quot;dd/MMMM/ yyyy&quot;}"/>-- Date To:<span t-field="o.period_to" t-field-options="{&quot;format&quot;: &quot;MMMM/ yyyy&quot;}"/></h4></div>
+						<div>
+                             <t t-foreach="data['category_ids']" t-as="category_id">
+            <!-- <b>Asset Data By Category</b> -->
+			                             <!--  <t t-foreach="get_asset_by_category(category_id)" t-as="asset">
+                                                        <t t-esc="asset.category_id.name"/><br/> -->
+							
+             				<table class="table table-condensed" style="border: 1px solid black; width:100%">  
+							<thead style="background-color:#ECF2E9">
+								<tr>
+									<th class="text-center" style="border-left:1px solid black;width:2%">Asset Code</th>
+									<th class="text-center" style="border-left:1px solid black;width:8%">Reference Number</th>
+									<th class="text-center" style="border-left:1px solid black; width:4%"><center>Division</center></th>
+									<th class="text-center" style="border-left:1px solid black; width:25%">Asset</th>
+									<th class="text-center" style="border-left:1px solid black; width:9%"><center> D.O.P</center></th>
+										<th class="text-center" style="border-left:1px solid black; width:14%"><right>Cost</right></th>
+									
+									<th class="text-center" style="border-left:1px solid black; width:10%"><center>Acc Depr</center></th>
+									<th class="text-center" style="border-left:1px solid black; width:10%"><right>Depr</right></th>
+									<th class="text-center" style="border-left:1px solid black; width:14%"><right>Net Cost</right></th>
+								</tr>
+							</thead>							
+							 <tbody style="border-bottom: 1px solid black;">
+							 <t t-set="count" t-value="1"/>
+							 <t t-set="depre_sum" t-value="0"/>
+							
+                             <font color="#1E90FF"><h4><t t-esc="get_category_by_id(category_id)"/></h4></font><!-- <br/> -->
+							 <t t-foreach="get_asset_by_category(category_id)" t-as="asset">
+                                                        <!-- <t t-esc="asset.category_id.name"/><br/> -->
+							
+										<tr>
+											<td class="text-center" style="border-right:1px solid black;"><span t-esc="asset.code"/></td>
+											<td style="border-left:1px solid black;"><span t-field="asset.od_sequence"/></td>
+												<td style="border-left:1px solid black;"><span t-field="asset.od_cost_center_id"/></td>
+											<td style="border-left:1px solid black;"><span t-field="asset.name"/></td>
+											<td style="border-left:1px solid black;"><center><span t-field="asset.purchase_date"/></center></td>
+											<td class="text-right" style="border-left:1px solid black;"><right><t t-esc="asset.purchase_value"/></right></td>
+											<td class="text-right" style="border-left:1px solid black;"><right><t t-esc="get_acc_depreciation_amt(data,asset)+ asset.od_depreciation"/>
+
+											<t t-set="depre_sum" t-value="depre_sum + asset.od_depreciation + get_acc_depreciation_amt(data,asset)"/>
+
+</right></td>
+<!--											<t t-set="depr" t-value="asset.od_cost-asset.od_depreciation"/>-->
+<!--											<t t-set="dep1" t-value="depr-asset.purchase_value"/> -->
+                                            <td class="text-right" style="border-left:1px solid black;">
+                                                <right><span t-esc="get_depreciation_amt(data,asset) "/></right>
+                                            </td>	
+											<td class="text-right" style="border-left:1px solid black;"><right><t t-esc="asset.purchase_value-depre_sum-get_depreciation_amt(data,asset)"/></right></td>
+										</tr>
+							</t>
+							<tr>
+							<td><strong>TOTAL</strong></td>
+						<td/>
+						
+						<td/><td/>
+						
+						<td style="border-right:1px solid black;"/>
+						<td class="text-right" style="border-right:1px solid black;">
+							<strong><span t-esc="sum([oal.purchase_value for oal in get_asset_by_category(category_id)]  )"/></strong>
+						</td>
+					
+						<td class="text-right" style="border-right:1px solid black;">
+							<strong><span t-esc="depre_sum"/>
+
+</strong>
+						</td>
+						<td class="text-right" style="border-right:1px solid black;">
+							<strong><span t-esc="sum([get_depreciation_amt(data,oal) for oal in get_asset_by_category(category_id)])"/></strong>
+						</td>
+						<td class="text-right" style="border-right:1px solid black;">
+							<strong><span t-esc="sum([oal.purchase_value-depre_sum-get_depreciation_amt(data,oal) for oal in get_asset_by_category(category_id)])"/></strong>
+						</td> 
+						</tr>	</tbody>
+					</table>			
+                              </t>             
+<br/>
+<br/>
+            
+                             
+
+
+       <!--  All Assetsss
+                            <t t-foreach="get_asset(data)" t-as="asset">
+                                 Asset Data <t t-esc="asset.name"/> <br/>
+                            </t>
+ -->
+
+
+                       </div> 
+					   </div>
+            </t>
+
+
+
+        </template>
+    </data>
+</openerp>

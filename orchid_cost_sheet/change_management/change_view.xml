@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+     
+            
+            <record model="ir.ui.view" id="change_management_tree_view">
+                <field name="name">change.management.tree</field>
+                <field name="model">change.management</field>
+                <field name="type">tree</field>
+                <field name="arch" type="xml">
+			      <tree string="tree_string">
+						<field name="name" />
+						<field name="user_id" />
+						<field name="change_type_id" />
+						<field name="impact_sale_id" />
+						<field name="impact_cost_id" />
+						<field name="impact_profit_id" />
+						<field name="date" />
+						<field name="first_approval_by" />
+					<!-- 	<field name="second_approval_by" /> -->
+						<field name="third_approval_by" string="Final Approval"/>
+						<field name="third_approval_date" string="Final Approval Date"/>
+                    </tree>
+                </field>
+            </record>
+
+            <record model="ir.ui.view" id="change_management_form_view">
+                <field name="name">change.management.form</field>
+                <field name="model">change.management</field>
+                <field name="type">form</field>
+                <field name="arch" type="xml">
+                    <form string="form_string">
+                        <header>
+                        <button string="Import" name="import_sale" type="object" class="oe_highlight"
+                            states="draft" />
+                        
+                        <button string="Submit" name="button_submit" type="object" class="oe_highlight"
+                            states="imported" />
+                        
+                        <button string="Direct Manager" name="button_first_approval" type="object" class="oe_highlight"
+                            states="submit" />
+                        <!-- <button string="Second Approval" name="button_second_approval" type="object" class="oe_highlight"
+                            states="first_approval" /> -->
+                         <button string="GM Approval" name="button_third_approval" type="object" class="oe_highlight"
+                            states="first_approval" /> 
+                         
+                          <button string="Cancel" name="button_cancel" type="object" class="oe_highlight"
+                             />
+                          <button string="Reject" name="button_reject" type="object" class="oe_highlight"
+                             />  
+                         
+                      
+                        <field name="state" widget="statusbar" />
+                    </header>
+                    <sheet>
+                        <h1>
+                            <field name="name" />
+                            
+                        
+
+                        </h1>
+                        <group>
+                            <group>
+                                 <field name="so_id"/>
+                                 <field name="cost_sheet_id"/>
+                            </group>
+                            <group>
+                                 <field name="project_id"/>
+                                 <field name="change_type_id"/>
+                                 <field name="change_method"/>
+                            </group>
+                            <group>
+                                <field name="user_id"/>
+                              <!--   <field name="manager_id" /> -->
+                              <field name="first_approval_manager_id" required="1"/>
+                               <field name="branch_id" required="1"/>
+                                <field name="date"/>
+                                 <field name="closing_date"/>
+                            </group>
+                            <group>
+                                <field name="impact_sale_id"/>
+                                <field name="impact_cost_id"/>
+                                 <field name="impact_profit_id"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Details">
+                               <field name="change_line">
+                                    <tree editable="bottom" delete="false" colors="gray:remove_item == True;">
+                                        <field name="state" invisible="1" />
+                                         <field name="remove_item" />
+                                        <field name="od_manufacture_id" />
+                                        <field name="product_id" />
+                                        <field name="name" />
+                                        <field name="product_uom_qty" readonly="1" sum="total"/>
+                                        <field name="price_unit" readonly="1"/>
+                                        <field name="total_price" string="Total Price" sum="total"/>
+                                        <field name="purchase_price" readonly="1"/>
+                                        <field name="od_amended_line_cost" string="Total Cost" sum="total"/>
+                                        <field name="change_qty" sum="total" />
+                                        <field name="change_price" />
+                                        <field name="new_total_price" sum="total" />
+                                        <field name="change_cost" />
+                                        <field name="new_total_cost" sum="total"/>
+                                    
+                                    </tree>
+                               </field>
+                            </page>
+                            
+                             <page string="Change Summary">
+		                        <table style="width:100%" class="table table-striped">
+		                            <thead>
+		                                    <th> </th>
+		                                    <th>Total Price</th>
+		                                    <th>Total Cost</th>
+		                                    <th>Profit</th>
+		                                    <th>Profit Percent</th>
+		                            </thead>
+		                             <tbody>
+		                                    <tr>
+		                                        <td>Current</td>
+		                                        <td><field name="total_price" /></td>
+		                                        <td><field name="total_cost" /></td>
+		                                        <td><field name="profit" /></td>
+		                                        <td><field name="profit_percent" /></td>
+		                                   </tr>
+		                                   <tr>
+		                                       <td>New</td>
+		                                       <td><field name="new_total_price" /></td>
+		                                       <td><field name="new_total_cost" /></td>
+		                                       <td><field name="new_profit" /></td>
+		                                       <td><field name="new_profit_percent" /></td>
+		                                  </tr>
+		                                </tbody>
+		                            </table>
+                                </page>
+                                <page string="Notes">
+                                	<field name="notes" />
+                                </page>
+                           
+                        </notebook>
+                        </sheet>
+                    </form>
+                </field>
+            </record>
+            
+
+            <record model="ir.actions.act_window" id="action_change_management_tree_view">
+                <field name="name">Change Management</field>
+                <field name="type">ir.actions.act_window</field>
+                <field name="res_model">change.management</field>
+		   <!-- <field name="domain">[('field_name','condition',criteria)]</field>-->
+                <field name="view_type">form</field>
+                <field name="view_mode">tree,form</field>
+                <field name="view_id" ref="change_management_tree_view"/>
+            </record>
+
+			<menuitem id="change_management_menu"  parent="menu_cost_sheet_parent" action="action_change_management_tree_view"/>
+
+    
+    </data>
+</openerp>

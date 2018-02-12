@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="layout" inherit_id="web.layout">
+           <xpath expr="." positon="inside">
+               <link rel="stylesheet" href='/orchid_cost_sheet/static/src/css/remove_sheet.css'/>
+           </xpath>
+  </template>
+
+
+</data>
+</openerp>

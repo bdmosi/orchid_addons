@@ -1,0 +1,2778 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+
+
+		<record model="ir.ui.view" id="od_cost_sheet_tree_view">
+			<field name="name">od.cost.sheet</field>
+			<field name="model">od.cost.sheet</field>
+			<field name="arch" type="xml">
+				<tree string="Cost Sheet">
+					<field name="op_expected_booking"/>
+					<field name="name"/>
+					<field name="od_customer_id"/>
+					<field name="sum_total_sale" string="Total Sale Value" sum="total"/>
+					<!-- <field name="special_discount" string="Discount or Addition" sum="total"/> -->
+					<!-- <field name="sum_tot_cost" string="Total Cost Value" sum="total"/> -->
+					<field name="sum_profit" string="Profit without MP" sum="total"/>
+					<!-- <field name="sum_profit_per"/> -->
+					<!-- <field name="a_tot_cost" string="Beta MP" sum="total"/> -->
+					<field name="a_bim_cost" string="IMP MP" sum="total"/>
+					<field name="a_bmn_cost" string="AMC MP" sum="total"/>
+					<!-- <field name="a_om_cost" string="R.E. MP" sum="total"/> -->
+					<!-- <field name="lead_id"/> -->
+					<field name="number"/>
+					<!-- <field name="date"/>
+					<field name="prepared_by"/>
+					<field name="reviewed_id"/>
+					<field name="sales_acc_manager"/>
+					<field name="business_development"/>
+					<field name="pre_sales_engineer"/> -->
+					<field name="status"/>
+					<field name="state"/>
+
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="od_cost_sheet_search_view">
+			<field name="name">od.cost.sheet.search</field>
+			<field name="model">od.cost.sheet</field>
+			<field name="arch" type="xml">
+				<search>
+				   		    <field name="op_expected_booking"/>
+					<field name="name"/>
+					<field name="od_customer_id"/>
+					<field name="lead_id"/>
+					<field name="number"/>
+					<field name="date"/>
+					<field name="sum_tot_sale" string="Total Sale Value"/>
+					<field name="sum_tot_cost" string="Total Cost Value"/>
+					<field name="sum_profit_per"/>
+					<field name="prepared_by"/>
+					<field name="reviewed_id"/>
+					<field name="sales_acc_manager"/>
+					<field name="business_development"/>
+					<field name="pre_sales_engineer"/>
+					<field name="status"/>
+					<field name="state"/>
+					<filter name="handover" string="Handover" domain="[('state','=','handover')]"/>
+					<filter name="processed" string="Processed" domain="[('state','=','processed')]"/> <!-- #FA -->
+                                        <filter name="Waiting PO" string="Waiting PO" domain="[('state','=','waiting_po')]"/>
+					<filter name="Approved" string="Approved" domain="[('state','=','done')]"/>
+					<filter name="handover" string="Returned by PMO" domain="[('state','=','returned_by_pmo')]"/>
+					<filter name="handover" string="Returned by Finance" domain="[('state','=','returned_by_fin')]"/>
+					<filter name="Change" string="Change" domain="[('state','=','change')]"/>
+					<filter name="Modify" string="Modify" domain="[('state','=','modify')]"/>
+					<filter name="Redistribute" string="Redistribute" domain="[('state','=','analytic_change')]"/>
+					<filter name="Cancel" string="Cancel" domain="[('state','=','cancel')]"/>
+                                        <filter string="Approved This Year" name="thisyear" domain="['|', ('create_date', '=', False), '&amp;',('create_date','&lt;=', time.strftime('%Y-12-31')),('create_date','&gt;=',time.strftime('%Y-01-01'))]" help="Creation Date in Current Year"/>
+                                        <filter string="Expected This Year" name="thisyear" domain="['|', ('op_expected_booking', '=', False), '&amp;',('op_expected_booking','&lt;=', time.strftime('%Y-12-31')),('op_expected_booking','&gt;=',time.strftime('%Y-01-01'))]" help="Expected Booking Date in Current Year"/>
+                                        <filter string="Approved This Year" name="thisyear" domain="['|', ('approved_date', '=', False), '&amp;',('approved_date','&lt;=', time.strftime('%Y-12-31')),('approved_date','&gt;=',time.strftime('%Y-01-01'))]" help="Approved Date in Current Year"/>
+                    <group expand="0" string="Group By" colspan="16">
+                        <filter string="Branch" context="{'group_by':'od_branch_id'}"/>
+                        <filter string="Technology Unit" context="{'group_by':'od_division_id'}"/>
+                         <filter string="State" context="{'group_by':'state'}"/>
+                         <filter string="Advance Payment" context="{'group_by':'adv_payment_status'}"/>
+                        <filter string="Approved Month" context="{'group_by':'approved_date:month'}"/>
+                        <filter string="Approved Quarter" context="{'group_by':'approved_date:quarter'}"/>
+                        <filter string="Approved Year" context="{'group_by':'approved_date:year'}"/>
+                        <filter string="SAM" context="{'group_by':'sales_acc_manager'}"/>
+                        <filter string="BDM" context="{'group_by':'business_development'}"/>
+                        <filter string="Pre-Sales" context="{'group_by':'od_responsible_id'}"/>
+                        <filter string="Pre-Sales" context="{'group_by':'pre_sales_engineer'}"/>
+                        <filter string="Owner" context="{'group_by':'reviewed_id'}"/>
+                        <filter string="Company" context="{'group_by':'company_id'}"/>
+                        <filter string="Channel" domain="[]" context="{'group_by':'medium_id'}"/>
+                        <filter string="Source" domain="[]" context="{'group_by':'source_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Creation Month" context="{'group_by':'create_date:month'}" name="Month"/>
+                        <filter string="Creation Quarter" context="{'group_by':'create_date:quarter'}" name="Quarter"/>
+                        <filter string="Creation Year" context="{'group_by':'create_date:year'}" name="Year"/>
+                        <filter string="Expected Month" context="{'group_by':'op_expected_booking:month'}"/>
+                        <filter string="Expected Quarter" context="{'group_by':'op_expected_booking:quarter'}"/>
+                        <filter string="Expected Year" context="{'group_by':'op_expected_booking:year'}"/>
+                     <!--   <filter string="Expected Closing" context="{'group_by':'date_deadline'}"/>  -->
+                    </group>
+				</search>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="od_cost_sheet_graph_view">
+			<field name="name">od.cost.sheet.graph</field>
+			<field name="model">od.cost.sheet</field>
+			<field name="arch" type="xml">
+				<graph string="Costing Sheet" type="pivot">
+					<field name="name" />
+					<field name="sum_tot_sale" string="Total Sale Value" type="measure" />
+					<field name="sum_tot_cost" string="Total Cost Value" type="measure" />
+				</graph>
+			</field>
+		</record>
+
+
+
+
+		<record model="ir.ui.view" id="od_cost_sheet_form_view">
+			<field name="name">od.cost.sheet</field>
+			<field name="model">od.cost.sheet</field>
+			<field name="arch" type="xml">
+				<form>
+					<header>
+							<!-- <button name="cron_od_cost_sheet" string="send email" type='object' 
+							class='oe_highlight' /> -->
+						<button name="update_cost_sheet" string="Update" context="{'update_btn':1}" type="object" class="oe_highlight" attrs="{'invisible':[('state','in',('done','waiting_po'))]}" />
+						<button name="print_cost_sheet" string="Print" type="object" class="oe_highlight"/>
+
+
+						<!-- <button name="btn_freeze" string="Freeze" type='object' class='oe_highlight' 
+							attrs="{'invisible':[('freeze','=',True)]}" /> <button name="btn_unfreeze" 
+							string="Un-Freeze" type='object' class='oe_highlight' attrs="{'invisible':[('freeze','!=',True)]}" 
+							/> -->
+						
+						<button name="update_vat" string="Link VAT" type="object" class="oe_highlight" states="draft,submitted,returned_by_pmo" />
+						<button name="btn_price_fix" string="Fix/Reset Selling" type="object" class="oe_highlight" states="draft,submitted,returned_by_pmo" />
+						
+						<button name="btn_submit" string="Submit" type="object" class="oe_highlight" states="draft" groups="orchid_beta.group_beta_presales_engineer,orchid_beta.group_beta_presales_manager,orchid_beta.group_executive_management_beta_1"/>
+					
+						<button name="btn_handover" string="Handover" type="object" class="oe_highlight" states="submitted,returned_by_pmo" groups="orchid_beta.group_beta_sale_account_mananger,orchid_beta.group_beta_sale_coordinator_1,orchid_beta.group_executive_management_beta_1"/>
+						<button name="btn_reset_draft" string="Reset to Draft" type="object" class="oe_highlight" states="submitted,returned_by_pmo" groups="orchid_beta.group_beta_presales_engineer,orchid_beta.group_beta_presales_manager,orchid_beta.group_executive_management_beta_1"/>
+
+						<button name="btn_waiting_po" string="Waiting PO" type="object" class="oe_highlight" attrs="{'invisible':['|',('po_status','!=','waiting_po'),('state','!=','handover')]}" groups="orchid_beta.group_od_project_manager,orchid_beta.group_od_project_user,orchid_beta.group_executive_management_beta_1"/>
+						<button name="btn_waiting_to_handover" string="Reset To Sales" type="object" class="oe_highlight" states="waiting_po" groups="orchid_beta.group_od_project_manager,orchid_beta.group_od_project_user,orchid_beta.group_executive_management_beta_1"/>
+						<button name="btn_process" string="Process" type="object" class="oe_highlight" attrs="{'invisible':['|',('po_status','=','waiting_po'),('state','not in',('handover','returned_by_fin','waiting_po','change','analytic_change'))]}" groups="orchid_beta.group_od_project_manager,orchid_beta.group_od_project_user,orchid_beta.group_executive_management_beta_1"/>
+
+						<!-- <button name="btn_reset_submit" string="Return" type='object' 
+							class='oe_highlight' states="handover" groups="orchid_beta.group_od_project_manager,orchid_beta.group_od_project_user"/> -->
+						<button name="1224" context="{'action':'btn_reset_submit'}" string="Return" type="action" class="oe_highlight" states="handover,returned_by_fin" groups="orchid_beta.group_od_project_manager,orchid_beta.group_od_project_user,orchid_beta.group_executive_management_beta_1"/>
+						
+						<button name="btn_approved" string="Approve" type="object" class="oe_highlight" states="processed,modify" groups="orchid_beta.group_beta_finance_manger_acc,account.group_account_user,account.group_account_manager,orchid_beta.group_executive_management_beta_1"/>
+						<button name="btn_allow_change" string="Allow Change" type="object" class="oe_highlight" states="done" invisible="1" groups="orchid_beta.group_beta_finance_manger_acc,account.group_account_user,account.group_account_manager,orchid_beta.group_executive_management_beta_1"/>
+						<button name="btn_redistribute_analytic" string="Redistribute Analytic" type="object" class="oe_highlight" states="done" invisible="1" groups="orchid_beta.group_beta_finance_manger_acc,account.group_account_user,account.group_account_manager,orchid_beta.group_executive_management_beta_1"/>
+						<button name="btn_modify" string="Modify" type="object" class="oe_highlight" states="done" groups="orchid_beta.group_beta_finance_manger_acc,account.group_account_user,account.group_account_manager,orchid_beta.group_executive_management_beta_1"/>
+						<!-- <button name="btn_reset_handover" string="Return" type='object' 
+							class='oe_highlight' states="processed" groups="orchid_beta.group_beta_finance_manger_acc,account.group_account_user,account.group_account_manager"/> -->
+						<button name="1224" context="{'action':'btn_reset_handover'}" string="Return" type="action" class="oe_highlight" states="processed" groups="orchid_beta.group_beta_finance_manger_acc,account.group_account_user,account.group_account_manager,orchid_beta.group_executive_management_beta_1"/>
+						<!-- <button name="generate_sale_order" string="Generate Sale Order" 
+							type='object' class='oe_highlight' states='approved' groups="orchid_beta.group_beta_finance_manger_acc,account.group_account_user,account.group_account_manager"/> 
+							<button name="btn_reset_process" string="Reset To Process" type='object' 
+							class='oe_highlight' states='approved' groups="orchid_beta.group_beta_finance_manger_acc,account.group_account_user,account.group_account_manager"/> -->
+						
+						<button name="button_cancel" string="Cancel" type="object" class="oe_highlight" attrs="{'invisible':[('state','in',('done','cancel'))]}" 
+ groups="orchid_beta.group_beta_presales_engineer,orchid_beta.group_beta_presales_manager,orchid_beta.group_executive_management_beta_1"/>
+						
+						<field name="state" widget="statusbar" readonly="1" statusbar_visible="draft,submitted,handover,processed,done"/>
+					</header>
+					<div class="oe_right oe_button_box">
+						<button class="oe_inline oe_stat_button" name="od_open_attachement" type="object" icon="fa-book">
+							<field name="od_attachement_count" widget="statinfo" string="Documents"/>
+						</button>
+						<button class="oe_inline oe_stat_button" name="od_open_hr_expense_claim" type="object" icon="fa-list">
+							<div>
+								<strong>
+									<field name="od_hr_claim_amount"/>
+								</strong>
+								<br/>
+								HR Expense
+							</div>
+						</button>
+						<button class="oe_inline oe_stat_button" name="od_btn_open_account_move_lines" type="object" icon="fa-list">
+							<div>
+								<strong>
+									<field name="od_journal_amount"/>
+								</strong>
+								<br/>
+								Journal Items
+							</div>
+						</button>
+						<button class="oe_inline oe_stat_button" name="od_btn_open_timsheet_for_opp" type="object" icon="fa-list">
+							<div>
+								<strong>
+									<field name="od_timesheet_amount"/>
+								</strong>
+								<br/>
+								Timesheets
+							</div>
+						</button>
+					</div>
+					<!-- <sheet> -->
+					<group col="6" colspan="2">
+						<field name="name" attrs="{'readonly':[('state','not in',('draft','submitted'))]}"/>
+						<field name="number"/>
+						<field name="od_customer_id"/>
+
+					</group>
+					<group>
+						<field name="price_fixed" readonly="1" />
+					</group>
+
+
+
+					<field name="id" invisible="1"/>
+					
+
+					<notebook>
+						<page string="Info">
+							<group>
+								<group>
+									<field name="date" attrs="{'readonly':[('state','not in',('draft','submitted'))]}"/>
+									<field name="status" attrs="{'readonly':[('state','not in',('draft','submitted','cancel'))]}"/>
+									<field name="lead_id"/>
+								</group>
+								<group>
+									<field name="company_id" readonly="1"/>
+									<field name="prepared_by"/>
+
+								</group>
+								<group>
+									<field name="od_order_type_id" domain="[('company_id','=',company_id)]" attrs="{'invisible':[('state','in',('draft','submitted','handover','waiting_po'))],'readonly':[('state','in',('approved','done'))]}"/>
+									<field name="od_version"/>
+								</group>
+								<group>
+									<button name="1158" string="Assign Owner" attrs="{'invisible':[('state','in',('draft','submitted'))]}" type="action" class="oe_link" groups="orchid_beta.group_od_project_manager,orchid_beta.group_od_sd_mananger,orchid_beta.group_executive_management_beta_1"/>
+									<field name="reviewed_id" nolabel="1" class="oe_inline" attrs="{'invisible':[('state','in',('draft','submitted'))]}"/>
+								</group>
+							</group>
+							<separator string="Log Date History"/>
+
+							<table style="width:100%" class="table table-striped">
+								<thead>
+									<th>
+									</th>
+									<th>Dates</th>
+									<th/>
+									<th>KPI</th>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Financial Proposal Required On</td>
+										<td>
+											<field name="financial_proposal_date"/>
+										</td>
+										<td/>
+										<td/>
+									</tr>
+									<tr>
+										<td>Submitted Date</td>
+										<td>
+											<field name="submitted_date"/>
+										</td>
+										<td>Pre-Sales KPI (Proposal Finished On Time)</td>
+										<td>
+											<div style="color:green" t-if="record.presale_kpi.value =='ok'">
+												<field name="presale_kpi"/>
+											</div>
+										</td>
+
+
+
+									</tr>
+									<tr>
+										<td>Hand-Over Date</td>
+										<td>
+											<field name="handover_date"/>
+										</td>
+										<td/>
+										<td/>
+									</tr>
+									<tr>
+										<td>PO Date</td>
+										<td>
+											<field name="po_date_kpi"/>
+										</td>
+										<td>Sales KPI (3-Day Rule)</td>
+										<td>
+											<div style="color:green" t-if="record.sales_kpi.value =='ok'">
+												<field name="sales_kpi"/>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td>Processed Date</td>
+										<td>
+											<field name="processed_date"/>
+										</td>
+										<td>Owner KPI (5-Day Rule)</td>
+										<td>
+											<div style="color:green" t-if="record.owner_kpi.value =='ok'">
+												<field name="owner_kpi"/>
+											</div>
+										</td>
+									</tr>
+
+									<tr>
+										<td>Approved Date</td>
+										<td>
+											<field name="approved_date" attrs="{'required':[('state','in',('processed','modify','approved','done'))]}"/>
+										</td>
+										<td>Finance KPI (2-Day Rule)</td>
+										<td>
+											<div style="color:green" t-if="record.finance_kpi.value =='ok'">
+												<field name="finance_kpi"/>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td>Latest Change Date</td>
+										<td>
+											<field name="change_date"/>
+										</td>
+										<td/>
+										<td/>
+									</tr>
+								</tbody>
+							</table>
+							<field name="date_log_history_line">
+								<tree>
+									<field name="name"/>
+									<field name="date"/>
+								</tree>
+							</field>
+						</page>
+
+
+						<page string="Summary" help="Cost Summary">
+
+
+							<separator string="Financial Summary الموجز المالي"/>
+
+							<div>
+
+								<!-- <button name="summarize" class="oe_highlight" type="object" 
+									string="Calculate" /> -->
+								<table style="width:100%" class="table table-striped">
+									<thead>
+										<tr>
+											<td>Financial Summary الموجز المالي</td>
+											<td>Total Sales سعر البيع</td>
+										    <td>VAT</td>
+											<td>Total Cost التكلفة</td>
+											<td>Profit الربح</td>
+											<td>Profit % نسبة الربح</td>
+											<td>Weight % الوزن</td>
+										</tr>
+										<tbody>
+											<tr>
+												<td>
+													<label string="Material المواد"/>
+												</td>
+												<td>
+													<field name="mat_tot_sale"/>
+												</td>
+												<td>
+													<field name="mat_vat"/>
+												</td>
+												<td>
+													<field name="mat_tot_cost"/>
+												</td>
+												<td>
+													<field name="mat_profit"/>
+												</td>
+												<td>
+													<field name="mat_profit_percentage"/>
+												</td>
+												<td>
+													<field name="mat_weight"/>
+												</td>
+											</tr>
+
+											<tr>
+												<td>
+													<label string="Training التدريب"/>
+												</td>
+												<td>
+													<field name="trn_tot_sale"/>
+												</td>
+												<td>
+													<field name="trn_vat"/>
+												</td>
+												<td>
+													<field name="trn_tot_cost"/>
+												</td>
+												<td>
+													<field name="trn_profit"/>
+												</td>
+												<td>
+													<field name="trn_profit_percentage"/>
+												</td>
+												<td>
+													<field name="trn_weight"/>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<label string="Beta IT Manpower and Extra Expenses التركيب مع المصاريف الإضافية"/>
+												</td>
+												<td>
+													<field name="bim_tot_sale"/>
+												</td>
+												<td>
+													<field name="bim_vat"/>
+												</td>
+												<td>
+													<field name="bim_tot_cost"/>
+												</td>
+												<td>
+													<field name="bim_profit"/>
+												</td>
+												<td>
+													<field name="bim_profit_percentage"/>
+												</td>
+												<td>
+													<field name="bim_weight"/>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<label string="Outsourced Implementation Service خدمة التركيب - مقاولات الباطن"/>
+												</td>
+												<td>
+													<field name="oim_tot_sale"/>
+												</td>
+												<td>
+													<field name="oim_vat"/>
+												</td>
+												
+												<td>
+													<field name="oim_tot_cost"/>
+												</td>
+												<td>
+													<field name="oim_profit"/>
+												</td>
+												<td>
+													<field name="oim_profit_percentage"/>
+												</td>
+												<td>
+													<field name="oim_weight"/>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<label string="Beta IT Maintenance Service and Extra Expenses الصيانة مع المصاريف الإضافية"/>
+												</td>
+												<td>
+													<field name="bmn_tot_sale"/>
+												</td>
+												<td>
+													<field name="bmn_vat"/>
+												</td>
+												<td>
+													<field name="bmn_tot_cost"/>
+												</td>
+												<td>
+													<field name="bmn_profit"/>
+												</td>
+												<td>
+													<field name="bmn_profit_percentage"/>
+												</td>
+												<td>
+													<field name="bmn_weight"/>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<label string="Outsourced Maintenance Services الصيانة - مقاولات الباطن"/>
+												</td>
+												<td>
+													<field name="omn_tot_sale"/>
+												</td>
+												<td>
+													<field name="omn_vat"/>
+												</td>
+												<td>
+													<field name="omn_tot_cost"/>
+												</td>
+												<td>
+													<field name="omn_profit"/>
+												</td>
+												<td>
+													<field name="omn_profit_percentage"/>
+												</td>
+												<td>
+													<field name="omn_weight"/>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<label string="Operation And Maintenance Services and Extra Expenses التشغيل مع المصاريف الإضافية"/>
+												</td>
+												<td>
+													<field name="o_m_tot_sale"/>
+												</td>
+												<td>
+													<field name="o_m_vat"/>
+												</td>
+												<td>
+													<field name="o_m_tot_cost"/>
+												</td>
+												<td>
+													<field name="o_m_profit"/>
+												</td>
+												<td>
+													<field name="o_m_profit_percentage"/>
+												</td>
+												<td>
+													<field name="o_m_weight"/>
+												</td>
+											</tr>
+											<tr/>
+											<tr/>
+											<tr>
+												<td>
+													<label string="Sum Before Discount المجموع قبل الخصم"/>
+												</td>
+												<td>
+													<field name="sum_tot_sale"/>
+												</td>
+
+
+											</tr>
+											<tr>
+												<td>
+													<label string="Special Discount خصم - نسبة الخصم"/>
+												</td>
+												<td>
+													<field name="special_discount" attrs="{'readonly':[('state','=','done')]}"/>
+												</td>
+												<td>
+													<field name="sp_disc_percentage"/>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<label string="Total After Discount المجموع الكلي بعد الخصم"/>
+												</td>
+												<td>
+													<field name="sum_total_sale"/>
+												</td>
+												<td></td>
+												<td>
+													<field name="sum_tot_cost"/>
+												</td>
+												<td>
+													<field name="sum_profit"/>
+												</td>
+												<td>
+													<field name="sum_profit_per"/>
+												</td>
+												<td>
+													<field name="sum_total_weight"/>
+												</td>
+											</tr>
+											
+											<tr>
+												<td>
+													<label string="VAT"/>
+												</td>
+																									
+												<td></td>
+												<td>
+													<field name="sum_vat"/>
+												</td>
+												
+											</tr>
+											
+											<tr>
+												<td>
+													<label string="Total With VAT"/>
+												</td>
+																									
+												
+												<td>
+													<field name="sum_total_with_vat"/>
+												</td>
+												
+											</tr>
+											
+											
+										</tbody>
+									</thead>
+								</table>
+							</div>
+							<group>
+								<field name="summary_tot_cost" invisible="1"/>
+							</group>
+							<separator string="Material Optional Summary موجز المواد الاختيارية"/>
+							<table style="width:100%" class="table table-striped">
+								<thead>
+									<tr>
+										<td>Summary</td>
+										<td>Total Sales سعر البيع</td>
+										<td>VAT</td>
+										<td>Total Cost التكلفة</td>
+										<td>Profit الربح</td>
+										<td>Profit % نسبة الربح</td>
+
+									</tr>
+									<tbody>
+										<tr>
+											<td>
+												<label string="Material Optional"/>
+											</td>
+											<td>
+												<field name="mat_tot_sale_opt"/>
+											</td>
+											<td>
+												<field name="mat_vat_opt"/>
+											</td>
+											<td>
+												<field name="mat_tot_cost_opt"/>
+											</td>
+											<td>
+												<field name="mat_profit_opt"/>
+											</td>
+											<td>
+												<field name="mat_profit_percentage_opt"/>
+											</td>
+
+										</tr>
+									</tbody>
+								</thead>
+							</table>
+							
+							
+							<separator string="Beta IT Manpower Analysis خدمات بيتا بدون المصاريف الإضافية"/>
+							<table style="width:100%" class="table table-striped">
+								<thead>
+									<tr>
+										<td>Name</td>
+										<td>Sales Value البيع</td>
+										<td>VAT</td>
+										<td>Cost Value التكلفة</td>
+										<td>Profit الربح</td>
+										<td>Profit % نسبة الربح</td>
+
+									</tr>
+									<tbody>
+										<tr>
+											<td>
+												<label string="IMP التركيب"/>
+											</td>
+											<td>
+												<field name="a_bim_sale"/>
+											</td>
+											<td>
+												<field name="a_bim_vat"/>
+											</td>
+											<td>
+												<field name="a_bim_cost"/>
+											</td>
+											<td>
+												<field name="a_bim_profit"/>											</td>
+											<td>
+												<field name="a_bim_profit_percentage"/>	
+											</td>
+
+										</tr>
+										
+										<tr>
+											<td>
+												<label string="AMC الصيانة"/>
+											</td>
+											<td>
+												<field name="a_bmn_sale"/>
+											</td>
+											<td>
+												<field name="a_bmn_vat"/>
+											</td>
+											<td>
+												<field name="a_bmn_cost"/>
+											</td>
+											<td>
+												<field name="a_bmn_profit"/>											</td>
+											<td>
+												<field name="a_bmn_profit_percentage"/>	
+											</td>
+
+										</tr>
+										
+										
+										<tr style="color:blue;font-weight:bold;">
+											<td>
+												<label string="Total Manpower"/>
+											</td>
+											<td>
+												<field name="a_total_manpower_sale"/>
+											</td>
+											<td>
+												<field name="a_total_manpower_vat"/>
+											</td>
+											<td>
+												<field name="a_total_manpower_cost"/>
+											</td>
+											<td>
+												<field name="a_total_manpower_profit"/>											</td>
+											<td>
+												<field name="a_total_manpower_profit_percentage"/>	
+											</td>
+
+										</tr>
+										
+										
+										<tr>
+											<td>
+												<label string="O&amp;M التشغيل"/>
+											</td>
+											<td>
+												<field name="a_om_sale"/>
+											</td>
+											<td>
+												<field name="a_om_vat"/>
+											</td>
+											<td>
+												<field name="a_om_cost"/>
+											</td>
+											<td>
+												<field name="a_om_profit"/>											</td>
+											<td>
+												<field name="a_om_profit_percentage"/>	
+											</td>
+
+										</tr>
+										
+										<tr>
+											<td>
+												<label string="Total"/>
+											</td>
+											<td>
+												<field name="a_tot_sale"/>
+											</td>
+											<td>
+												<field name="a_tot_vat"/>
+											</td>
+											<td>
+												<field name="a_tot_cost"/>
+											</td>
+											<td>
+												<field name="a_tot_profit"/>											</td>
+											<td>
+												<field name="a_tot_profit_percentage"/>	
+											</td>
+
+										</tr>
+										
+										
+										
+									</tbody>
+								</thead>
+							</table>
+							
+							
+							
+							
+
+							<group col="4" colspan="2">
+								<label string="Notes" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
+								<field name="show_proposal_validity"/>
+							</group>
+							<field name="ignore_vat" />
+							<field name="proposal_validity_duration"/>
+							<separator string="Material Summary"/>
+							<field name="material_summary"/>
+							<separator string="Implementation Summary"/>
+							<field name="implementation_summary"/>
+							<separator string="Maintance Summary"/>
+							<field name="amc_summary"/>
+							<separator string="Operation Summary"/>
+							<field name="operation_summary"/>
+						</page>
+
+						<page string="Terms" help="Terms">
+
+							<group col="4" colspan="2">
+								<label string="Payment Terms" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
+								<field name="show_to_customer_payment"/>
+							</group>
+
+							<field name="payment_terms_line">
+								<tree editable="bottom">
+									<field name="number" invisible="1"/>
+									<field name="item_int" string="Order"/>
+									<field name="payment_name"/>
+									<field name="payment_percentage"/>
+								</tree>
+							</field>
+
+							<separator/>
+							<group col="4" colspan="2">
+								<label string="Credit Terms" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
+								<field name="show_to_customer_credit"/>
+							</group>
+							<field name="credit_terms_line">
+								<tree editable="bottom">
+									<field name="number" invisible="1"/>
+									<field name="credit_period"/>
+									<field name="max_credit_amount"/>
+									<field name="minimum_credit_amount"/>
+								</tree>
+							</field>
+							<field name="remarks1" placeholder="Put notes here"/>
+							<field name="remarks2" placeholder="Put notes here"/>
+
+						</page>
+
+						<page string="MAT" help="Material Information">
+
+							<table style="width:100%" class="table table-striped">
+								<thead>
+									<th> Included</th>
+									<th>Total Sales</th>
+									<th>Total VAT</th>
+									<th>Total Cost</th>
+									<th>Profit</th>
+									<th>Profit %</th>
+									<!-- <th>Order Type</th> -->
+									<!-- <th>Project</th> <th>Quotation</th> -->
+								</thead>
+								<tbody>
+									<tr>
+										<td>
+											<field name="included_in_quotation" attrs="{'readonly':[('state','=','done')]}"/>
+										</td>
+										<td>
+											<field name="mat_tot_sale1"/>
+										</td>
+										<td>
+											<field name="mat_vat1"/>
+										</td>
+										<td>
+											<field name="mat_tot_cost1"/>
+										</td>
+										<td>
+											<field name="mat_profit1"/>
+										</td>
+										<td>
+											<field name="mat_profit_percentage1"/>
+										</td>
+										<!-- <td><field name="type_mat" /></td> -->
+										<!-- <td><field name="project_mat" attrs="{'readonly':[('state','=','done')]}" 
+											/></td> <td> <field name="od_mat_sale_id" /></td> -->
+									</tr>
+								</tbody>
+							</table>
+							<group col="8" colspan="2">
+								<field name="project_mat" attrs="{'readonly':[('state','in',('done','change'))],'invisible':[('state','in',('draft','submitted','handover','waiting_po'))]}"/>
+								
+								<field name="project_mat_state" string="Analytic State" attrs="{'readonly':[('state','in',('done','change'))],'invisible':[('state','in',('draft','submitted','handover','waiting_po'))]}"/>
+ 								<button name="quick_create_analytic" type="object" class="oe_link" string="New" attrs="{'invisible':[('state','in',('draft','submitted','handover','waiting_po'))]}"/>
+								<field name="od_mat_sale_id" attrs="{'invisible':[('state','in',('draft','submitted','handover','waiting_po'))]}"/>
+							</group>
+							<group col="4" colspan="2">
+								<label string="Main Proposal - Bill of Material" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
+								<field name="show_to_customer_main_proposal"/>
+								<!-- <button name="mat_order" type="object" string="Sort" /> -->
+							</group>
+							<group col="4" colspan="2">
+								<field name="mat_copy_cost_sheet_id" attrs="{'invisible':[('state','in',('submitted','handover','waiting_po','processed','approved','done','cancel'))]}"/>
+								<button name="copy_from_mat" string="Copy MAT from Other C.S." type="object" class="oe_link" states="draft"/>
+							</group>
+							<group col="4" colspan="2">
+								<field name="mat_select_all"/>
+								<button name="delete_mat_line" string="Delete" type="object"/>
+							</group>
+
+							<field name="mat_main_pro_line">
+								<tree editable="bottom">
+									<field name="item_int"/>
+									<field name="check"/>
+									<field name="item" invisible="0"/>
+									<field name="manufacture_id"/>
+									<!-- <field name="supplier_id"/> -->
+									<field name="part_no" string="Product Part Number" domain="[('od_pdt_brand_id','=', manufacture_id)]"/>
+									<field name="name"/>
+									<field name="types"/>
+									<field name="cost_sheet_id" invisible="1"/>
+									<field name="uom_id"/>
+									<field name="qty"/>
+									<field name="sales_currency_id"/>
+									<field name="fixed" invisible="1"/>
+									<field name="unit_price" attrs="{'invisible':[('fixed','=',True)]}"/>
+									<field name="new_unit_price" attrs="{'invisible':[('fixed','=',False)]}"/>
+									<!-- <field name="temp_unit_price" /> -->
+									<field name="line_price" sum="Total"/>
+									<field name="tax_id"/>
+									<field name="vat"/>
+									<field name="vat_value" sum="Total"/>
+									<field name="group" domain="[('cost_sheet_id','=',parent.id)]" options="{'no_create': True}"/>
+									<field name="supplier_currency_id"/>
+									<field name="unit_cost_supplier_currency" attrs="{'readonly': [('supplier_currency_id','=',False)]}"/>
+									<!-- <field name="show_main_pro_line"/> -->
+									<field name="ren"/>
+									<field name="unit_cost_local"/>
+									<field name="line_cost_local_currency" sum="Total"/>
+									<field name="section_id" domain="[('cost_sheet_id','=',parent.id)]"/>
+									<field name="min_order"/>
+									<field name="profit" sum="Total"/>
+									<field name="profit_percentage" sum="Total"/>
+									<field name="supplier_discount"/>
+									<field name="discounted_unit_supplier_currency"/>
+									<field name="discounted_total_supplier_currency" sum="Total"/>
+								</tree>
+							</field>
+							<group col="4" colspan="2">
+								<label string="Optional Items - Bill of Material" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
+								<field name="show_to_opt"/>
+							</group>
+							<group col="4" colspan="2">
+								<field name="opt_copy_cost_sheet_id"/>
+								<button name="copy_from_opt" string="Import" type="object" class="oe_link" states="draft"/>
+							</group>
+							<group col="4" colspan="2">
+								<field name="mat_opt_select_all"/>
+								<button name="btn_del_mat_opt_line" string="Delete" type="object"/>
+							</group>
+
+							<field name="mat_optional_item_line">
+								<tree editable="bottom">
+									<field name="item_int"/>
+									<field name="check"/>
+									<field name="item" invisible="0"/>
+									<field name="manufacture_id"/>
+									<!-- <field name="supplier_id"/> -->
+									<field name="part_no" string="Product Part Number" domain="[('od_pdt_brand_id','=', manufacture_id)]"/>
+									<field name="name"/>
+									<field name="types"/>
+									<field name="cost_sheet_id" invisible="1"/>
+									<field name="uom_id"/>
+									<field name="qty"/>
+									<field name="sales_currency_id"/>
+									<field name="unit_price"/>
+
+									<field name="line_price" sum="Total"/>
+									<field name="tax_id"/>
+									<field name="vat"/>
+									<field name="vat_value" sum="Total"/>
+
+									<field name="group_id" domain="[('cost_sheet_id','=',parent.id)]" options="{'no_create':True}"/>
+
+									<field name="supplier_currency_id"/>
+									<field name="unit_cost_supplier_currency" attrs="{'readonly': [('supplier_currency_id','=',False)]}"/>
+									<!-- <field name="show_main_pro_line"/> -->
+									<field name="ren"/>
+
+									<field name="unit_cost_local"/>
+									<field name="line_cost_local_currency" sum="Total"/>
+
+									<field name="opt_section_id" domain="[('cost_sheet_id','=',parent.id)]"/>
+									<field name="min_order"/>
+
+									<field name="profit" sum="Total"/>
+									<field name="profit_percentage" sum="Total"/>
+
+									<!-- <field name='pricelist_id' invisible="1"/> -->
+
+
+									<field name="supplier_discount"/>
+									<field name="discounted_unit_supplier_currency"/>
+									<field name="discounted_total_supplier_currency" sum="Total"/>
+
+
+
+
+								</tree>
+							</field>
+
+							<group col="4" colspan="2">
+								<label string="Material Extra Expense" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
+								<field name="show_mat_ext_exp"/>
+							</group>
+
+							<!-- <group col="4" colspan="2"> <field name="mat_ext_sel`" /> <button 
+								name="btn_del_mat_ext_line" string="Delete" type="object" /> </group> -->
+							<group col="4" colspan="2">
+								<field name="mat_ext_sel"/>
+								<button name="btn_del_mat_ext_line" string="Delete" type="object"/>
+							</group>
+
+							<field name="mat_extra_expense_line">
+								<tree editable="bottom">
+									<field name="item_int"/>
+									<field name="check"/>
+									<field name="item" invisible="0"/>
+									<!-- <field name="od_product_id" /> -->
+									<field name="name"/>
+									<field name="qty" sum="qty"/>
+									<field name="unit_price2" attrs="{'invisible':[('fixed','=',True)]}"/>
+									<field name="new_unit_price" attrs="{'invisible':[('fixed','=',False)]}"/>
+									<field name="fixed" invisible="1"/>
+									<field name="line_price2" sum="line_price2"/>
+									<field name="tax_id"/>
+									<field name="vat"/>
+									<field name="vat_value2" string="VAT Value" sum="Total"/>
+									<field name="list_price" sum="list_price"/>
+									<field name="unit_cost_local" />
+									<field name="line_cost_local" sum="line_cost_local"/>
+
+
+									<field name="group2" domain="[('cost_sheet_id','=',parent.id)]" options="{'no_create': True}"/>
+									<!-- <field name="show_to_customer"/> -->
+
+								</tree>
+							</field>
+							<separator string="Brand Weight"/>
+							<button string="Check" type="object" class="oe_link" name="generate_brand_weight"/>
+							<field name="mat_brand_weight_line">
+								<tree>
+									<field name="manufacture_id"/>
+									<field name="total_sale"/>
+									<field name="total_cost"/>
+									<field name="profit"/>
+									<field name="profit_percent"/>
+									<field name="weight"/>
+								</tree>
+							</field>
+
+
+							<group col="4" colspan="2">
+								<h3>
+									<label string="Material Terms &amp; Conditions"/>
+								</h3>
+								<field name="show_to_customer_mat_delivery"/>
+							</group>
+
+							<field name="material_delivery_terms"/>
+
+							<!-- <group col="4" colspan="2"> <h3><label string="Material Notes" 
+								/></h3> <field name="show_to_customer_material_notes"/> </group> <field name="material_notes" 
+								/> -->
+
+
+
+						</page>
+
+						<page string="REN" help="Renewals">
+
+							<!-- <table style="width:100%" class="table table-striped"> <thead> 
+								<th> Included</th> <th>Project</th> <th>Quotation</th> </thead> <tbody> <tr> 
+								<td></td> <td> <field name="project_ren" attrs="{'readonly':[('state','=','done')]}"/> 
+								</td> <td> <field name="od_ren_sale_id"/> </td> </tr> </tbody> </table> -->
+							<group>
+								<field name="included_in_quotation_ren" attrs="{'readonly':[('state','=','done')]}"/>
+							</group>
+
+							<group col="6" colspan="2">
+
+								<label string="Main Proposal - Renewals Serial Numbers / Licenses" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
+								<field name="show_to_customer_ren_main"/>
+								<button type="action" name="1100" string="Fill" class="oe_highlight"/>
+								<!-- <button type="object" name="reorder_seq" string="Sort" class="oe_highligt" 
+									/> -->
+							</group>
+
+							<group col="4" colspan="2">
+								<field name="ren_main_select"/>
+								<button name="btn_del_ren_main_line" string="Delete" type="object"/>
+							</group>
+
+
+
+							<field name="ren_main_pro_line">
+								<tree editable="bottom">
+									<field name="item_int"/>
+									<field name="check"/>
+									<field name="item" invisible="0"/>
+									<field name="manufacture_id"/>
+									<field name="renewal_package_no" domain="[('od_pdt_brand_id','=', manufacture_id)]"/>
+									<field name="product_p_n" domain="[('od_pdt_brand_id','=', manufacture_id)]"/>
+									<field name="serial_no"/>
+									<field name="city_id"/>
+									<field name="location"/>
+									<field name="start_date"/>
+									<field name="expiry_date"/>
+									<field name="notes"/>
+									<!-- <field name="show_main_line"/> -->
+								</tree>
+							</field>
+							<group>
+								<group>
+
+								</group>
+
+
+							</group>
+
+							<group col="8" colspan="2">
+								<label string="Optional Items - Renewals Serial Numbers / Licenses" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
+								<field name="show_to_customer_ren_optional"/>
+								<button type="action" name="1100" string="Fill" context="{'optional':True}" class="oe_highlight"/>
+								<button type="object" name="reorder_seq" string="Sort" context="{'optional':True}" class="oe_highligt"/>
+							</group>
+
+							<group col="4" colspan="2">
+								<field name="ren_opt_select"/>
+								<button name="btn_del_ren_opt_line" string="Delete" type="object"/>
+							</group>
+
+							<field name="ren_optional_item_line">
+								<tree editable="bottom">
+									<field name="item_int"/>
+									<field name="check"/>
+									<field name="item"/>
+									<field name="manufacture_id"/>
+									<field name="renewal_package_no" domain="[('od_pdt_brand_id','=', manufacture_id)]"/>
+									<field name="product_p_n" domain="[('od_pdt_brand_id','=', manufacture_id)]"/>
+									<field name="serial_no"/>
+									<field name="city_id"/>
+									<field name="location"/>
+									<field name="start_date"/>
+									<field name="expiry_date"/>
+									<field name="notes"/>
+									<!-- <field name="show_optional_line"/> -->
+
+								</tree>
+							</field>
+
+							<group col="4" colspan="2">
+								<h3>
+									<label string="Renewal Notes"/>
+								</h3>
+								<field name="show_to_customer_ren_notes"/>
+							</group>
+
+							<field name="renewal_quotes"/>
+
+
+						</page>
+
+						<page string="TRN" help="Training Details">
+							<table style="width:100%" class="table table-striped">
+								<thead>
+									<th> Included</th>
+									<th>Total Sales</th>
+									<th>Total VAT</th>
+									<th>Total Cost</th>
+									<th>Profit</th>
+									<th>Profit %</th>
+									<!-- <th>Order Type</th> -->
+									<!-- <th>Project</th> <th>Quotation</th> -->
+								</thead>
+								<tbody>
+									<tr>
+										<td>
+											<field name="included_trn_in_quotation" attrs="{'readonly':[('state','=','done')]}"/>
+										</td>
+										<td>
+											<field name="trn_tot_sale1"/>
+										</td>
+										<td>
+											<field name="trn_vat1"/>
+										</td>
+										<td>
+											<field name="trn_tot_cost1"/>
+										</td>
+										<td>
+											<field name="trn_profit1"/>
+										</td>
+										<td>
+											<field name="trn_profit_percentage1"/>
+										</td>
+										<!-- <td> <field name="type_trn" /></td> -->
+										<!-- <td> <field name="project_trn" attrs="{'readonly':[('state','=','done')]}"/></td> 
+											<td><field name="od_trn_sale_id" /></td> -->
+									</tr>
+								</tbody>
+							</table>
+
+							<group col="8" colspan="2">
+
+								<field name="project_trn" attrs="{'readonly':[('state','in',('done','change'))],'invisible':[('state','in',('draft','submitted','handover','waiting_po'))]}"/>
+								
+								<field name="project_trn_state" string="Analytic State" attrs="{'readonly':[('state','in',('done','change'))],'invisible':[('state','in',('draft','submitted','handover','waiting_po'))]}"/>
+								<button name="quick_create_analytic" type="object" class="oe_link" string="New" attrs="{'invisible':[('state','in',('draft','submitted','handover','waiting_po'))]}"/>
+								<field name="od_trn_sale_id" attrs="{'invisible':[('state','in',('draft','submitted','handover','waiting_po'))]}"/>
+							</group>
+							<group col="6" colspan="2">
+								<label string="Customer Training Details" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
+								<field name="show_customer_trn_training_details"/>
+								<!-- <button name="trn_order" type="object" string="Sort"/> -->
+							</group>
+							<group col="4" colspan="2">
+								<field name="trn_copy_cost_sheet_id" attrs="{'invisible':[('state','in',('submitted','handover','waiting_po','processed','approved','done','cancel'))]}"/>
+								<button name="copy_from_trn" string="Copy TRN from Other C.S." type="object" class="oe_link" states="draft"/>
+							</group>
+							<group col="4" colspan="2">
+								<field name="trn_sel"/>
+								<button name="btn_del_trn_line" string="Delete" type="object"/>
+							</group>
+
+							<field name="trn_customer_training_line">
+								<tree editable="bottom">
+									<field name="item_int"/>
+									<field name="check"/>
+									<field name="item" invisible="0"/>
+									<field name="manufacture_id" string="Training Center"/>
+									<!-- <field name="supplier_id"/> -->
+									<field name="part_no" string="Training Number" domain="[('od_pdt_brand_id','=', manufacture_id)]"/>
+									<field name="name"/>
+									<field name="types"/>
+									<field name="cost_sheet_id" invisible="1"/>
+									<field name="uom_id"/>
+									<field name="qty"/>
+									<field name="sales_currency_id"/>
+									<field name="unit_price"/>
+									<field name="line_price" sum="Total"/>
+									<field name="tax_id"/>
+									<field name="vat"/>
+									<field name="vat_value" sum="Total"/>
+									<field name="group" domain="[('cost_sheet_id','=',parent.id)]" options="{'no_create':True}"/>
+
+									<field name="supplier_currency_id"/>
+									<field name="unit_cost_supplier_currency" attrs="{'readonly': [('supplier_currency_id','=',False)]}"/>
+									<!-- <field name="show_main_pro_line"/> -->
+
+									<field name="unit_cost_local"/>
+									<field name="line_cost_local_currency" sum="Total"/>
+
+									<field name="trn_section_id" domain="[('cost_sheet_id','=',parent.id)]"/>
+									<field name="min_order"/>
+									<field name="profit" sum="Total"/>
+									<field name="profit_percentage" sum="Total"/>
+									<field name="supplier_discount"/>
+									<field name="discounted_unit_supplier_currency"/>
+									<field name="discounted_total_supplier_currency" sum="Total"/>
+
+								</tree>
+							</field>
+							<group>
+								<!-- <group> <field name="show_to_customer_optional_proposal"/> </group> -->
+								<group>
+								</group>
+							</group>
+							<!-- <separator string="Optional" /> <field name="trn_customer_training_optional_line" 
+								context="{'default_sheet_id':active_id}"> <tree editable="bottom"> <field 
+								name="item" invisible="1"/> <field name="manufacture_id"/> <field name="supplier_id" 
+								/> <field name="part_no" string="Product Part Number" domain="[('od_pdt_brand_id','=', 
+								manufacture_id)]"/> <field name="name"/> <field name="types"/> <field name="uom_id"/> 
+								<field name="qty"/> <field name="unit_price" /> <field name="line_price" 
+								sum="Total"/> <field name="sheet_id" invisible="1"/> <field name="group" 
+								domain="[('cost_sheet_id','=',sheet_id)]" /> <field name="section_id" domain="[('cost_sheet_id','=',sheet_id)]"/> 
+								<field name="sales_currency_id"/> <field name="unit_cost_local"/> <field 
+								name="line_cost_local_currency" sum="Total"/> <field name="profit" sum="Total"/> 
+								<field name="profit_percentage" sum="Total"/> <field name='pricelist_id' 
+								invisible="1"/> <field name="supplier_currency_id"/> <field name="min_order"/> 
+								<field name="unit_cost_supplier_currency"/> <field name="supplier_discount"/> 
+								<field name="discounted_unit_supplier_currency"/> <field name="discounted_total_supplier_currency" 
+								sum="Total"/> <field name="show_main_pro_line"/> </tree> </field> -->
+
+
+
+
+							<group col="4" colspan="2">
+								<label string="Training Extra Expenses" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
+								<field name="show_trn_training_extra_expenses"/>
+							</group>
+
+							<group col="4" colspan="2">
+								<field name="trn_ext_sel"/>
+								<button name="btn_del_trn_ext_line" string="Delete" type="object"/>
+							</group>
+
+							<field name="trn_customer_training_extra_expense_line">
+								<tree editable="bottom">
+
+									<field name="item_int"/>
+									<field name="check"/>
+									<field name="item" invisible="0"/>
+									<!-- <field name="od_product_id" /> -->
+									<field name="name"/>
+									<field name="qty" sum="qty"/>
+									<field name="unit_price2" />
+									<field name="line_price2" sum="line_price2"/>
+									<field name="tax_id"/>
+									<field name="vat"/>
+									<field name="vat_value2" string="VAT Value" sum="Total"/>
+									<field name="list_price" sum="list_price"/>
+									<field name="unit_cost_local" sum="unit_cost_local"/>
+									<field name="line_cost_local" sum="line_cost_local"/>
+
+									<field name="group2" sum="line_cost" domain="[('cost_sheet_id','=',parent.id)]" options="{'no_create': True}"/>
+								</tree>
+							</field>
+							<group col="4" colspan="2">
+								<h3>
+									<label string="Training Terms &amp; Conditions"/>
+								</h3>
+								<field name="show_customer_trn_terms_condition"/>
+							</group>
+
+							<field name="trn_terms_condition" placeholder="Terms And Condition"/>
+						</page>
+						<page string="IMP" help="Beta IT Implimentation">
+							<!-- <table style="width:100%" class="table table-striped"> <thead> 
+								<th> Included</th> <th>Project</th> <th>Quotation</th> </thead> <tbody> <tr> 
+								<td> <field name="included_bim_in_quotation" attrs="{'readonly':[('state','=','done')]}"/></td> 
+								<td><field name="project_bim" attrs="{'readonly':[('state','=','done')],'invisible':[('state','in',('draft','submitted','handover','waiting_po'))]}"/> 
+								</td> <td><field name="od_bim_sale_id" attrs="{'invisible':[('state','in',('draft','submitted','handover','waiting_po'))]}" 
+								/></td> </tr> </tbody> </table> -->
+
+							<table style="width:100%" class="table table-striped">
+								<thead>
+									<th>
+										<field name="included_bim_in_quotation" attrs="{'readonly':[('state','=','done')]}"/>
+									</th>
+									<th>Total Sales</th>
+									<th>Total VAT</th>
+									<th>Total Cost</th>
+									<th>Profit</th>
+									<th>Profit %</th>
+
+								</thead>
+								<tbody>
+									<tr>
+										<td>BIM</td>
+										<td>
+											<field name="bim_tot_sale1"/>
+										</td>
+										<td>
+											<field name="bim_vat1"/>
+										</td>
+										<td>
+											<field name="bim_tot_cost1"/>
+										</td>
+										<td>
+											<field name="bim_profit1"/>
+										</td>
+										<td>
+											<field name="bim_profit_percentage1"/>
+										</td>
+									</tr>
+									<tr>
+										<td>OIM</td>
+										<td>
+											<field name="oim_tot_sale1"/>
+										</td>
+										<td>
+											<field name="oim_vat1"/>
+										</td>
+										
+										<td>
+											<field name="oim_tot_cost1"/>
+										</td>
+										<td>
+											<field name="oim_profit1"/>
+										</td>
+										<td>
+											<field name="oim_profit_percentage1"/>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<!-- <table style="width:100%" class="table table-striped"> <thead> 
+								<th></th> <th>Total Sales</th> <th>Total Cost</th> <th>Profit</th> <th>Profit 
+								%</th> </thead> <tbody> <tr> <td>OIM</td> <td><field name="oim_tot_sale1" 
+								/></td> <td><field name="oim_tot_cost1" /></td> <td><field name="oim_profit1" 
+								/></td> <td><field name="oim_profit_percentage1" /></td> </tr> </tbody> </table> -->
+
+							<group col="6" colspan="2">
+								<field name="project_bim" attrs="{'readonly':[('state','in',('done','change'))],'invisible':[('state','in',('draft','submitted','handover','waiting_po'))]}"/>
+								<field name="project_bim_state" string="Analytic State" attrs="{'readonly':[('state','in',('done','change'))],'invisible':[('state','in',('draft','submitted','handover','waiting_po'))]}"/>
+								<button name="quick_create_analytic" type="object" class="oe_link" string="New" attrs="{'invisible':[('state','in',('draft','submitted','handover','waiting_po'))]}"/>
+								<field name="od_bim_sale_id" attrs="{'invisible':[('state','in',('draft','submitted','handover','waiting_po'))]}"/>
+							</group>
+							<group col="4" colspan="2">
+								<h3>
+									<label string="Exclusions from Scope of Work"/>
+								</h3>
+								<field name="show_customer_bim_exclusion"/>
+							</group>
+							<field name="bim_exclusion_note"/>
+							<group col="4" colspan="2">
+								<h3>
+									<label string="Inclusions of Scope of Work"/>
+								</h3>
+								<field name="show_customer_bim_inclusion"/>
+							</group>
+							<field name="bim_inclusion_note"/>
+
+							<group>
+								<label string="Beta IT Manpower - Engineers &amp; Technicians" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
+							</group>
+							<group col="6" colspan="2">
+								<field name="bim_log_select"/>
+								<field name="bim_full_outsource"/>
+								<field name="show_bim_log_eqn"/>
+							</group>
+							<table style="width:100%" class="table table-striped">
+								<thead>
+									<th>Description</th>
+									<th>Price</th>
+									<th>Tax</th>
+									<th>VAT %</th>
+									<th>VAT Value</th>
+									<th>Cost</th>
+									<th>Cost Group</th>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Beta IT Implementation Cost</td>
+										<td>
+											<field name="bim_log_price"/>
+										</td>
+										<td>
+											<field name="bim_tax_id"/>
+										</td>
+										<td>
+											<field name="bim_log_vat"/>
+										</td>
+										<td>
+											<field name="bim_log_vat_value"/>
+										</td>
+										<td>
+											<field name="bim_log_cost"/>
+										</td>
+										<td>
+											<field name="bim_log_group" domain="[('cost_sheet_id','=',id)]"/>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+
+
+							<group col="4" colspan="2">
+								<label string="Beta IT Implementation Extra Expenses" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
+								<field name="show_bim_extra_exp"/>
+							</group>
+							<field name="implimentation_extra_expense_line">
+								<tree editable="bottom" context="{'sheet_id':active_id}">
+									<field name="item_int"/>
+									<field name="item" invisible="0"/>
+									<field name="name"/>
+									<field name="qty" sum="qty"/>
+									<field name="unit_price" />
+									<field name="line_price" sum="line_price"/>
+									<field name="tax_id"/>
+									<field name="vat"/>
+									<field name="vat_value" sum="Total"/>
+									<field name="group" domain="[('cost_sheet_id','=',parent.id)]" options="{'no_create': True}"/>
+									<field name="unit_cost" sum="unit_cost"/>
+									<field name="line_cost" sum="line_cost"/>
+								</tree>
+							</field>
+							<group col="4" colspan="2">
+								<label string="Beta IT Manpower - Other Services" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
+								<field name="show_customer_bim_manpower_calc"/>
+							</group>
+							<field name="manpower_manual_line">
+								<tree editable="bottom">
+									<field name="item_int"/>
+									<field name="item"/>
+									<field name="name"/>
+									<field name="qty" sum="qty"/>
+									<field name="unit_price" />
+									<field name="line_price" sum="line_price"/>
+									<field name="tax_id"/>
+									<field name="vat"/>
+									<field name="vat_value"/>
+									<field name="unit_cost" sum="unit_cost"/>
+									<field name="line_cost" sum="line_cost"/>
+									<field name="cost_group_id" domain="[('cost_sheet_id','=',parent.id)]" options="{'no_create': True}"/>
+								</tree>
+							</field>
+
+							<group>
+								<label string="Beta IT Manpower - Engineers &amp; Technicians" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
+							</group>
+							<group col="4" colspan="2">
+								<field name="bim_imp_select"/>
+								<field name="show_imp_code"/>
+							</group>
+							<field name="bim_implementation_code_line">
+								<tree editable="bottom">
+									<field name="item_int"/>
+									<field name="item"/>
+									<field name="imp_code" options="{'no_create':True}"/>
+									<field name="qty"/>
+									<field name="unit_price"/>
+									<field name="line_price" sum="line_price"/>
+									<field name="unit_cost"/>
+									<field name="line_cost" sum="line_cost"/>
+									<field name="tax_id"/>
+									<field name="vat"/>
+									<field name="vat_value" sum="Total"/>
+									<field name="group" domain="[('cost_sheet_id','=',parent.id)]" options="{'no_create':True}"/>
+									<field name="code_hours" widget="float_time"/>
+									<field name="total_hours" widget="float_time"/>
+									<field name="cost_hour"/>
+								</tree>
+							</field>
+							<group col="4" colspan="2">
+								<label string="Outsourced Implementation Price Calculation" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
+								<field name="show_oim_outsourced_price"/>
+							</group>
+							<field name="oim_implimentation_price_line">
+								<tree editable="bottom">
+									<field name="item_int"/>
+									<field name="item" invisible="0"/>
+									<field name="partner_id" invisible="0"/>
+									<field name="name"/>
+									<field name="qty" sum="qty"/>
+									<field name="unit_price" />
+									<field name="line_price" sum="line_price"/>
+								    <field name="tax_id"/>
+								    <field name="vat"/>
+									<field name="vat_value" sum="Total"/>
+									<field name="unit_cost" sum="unit_cost"/>
+									<field name="line_cost" sum="line_cost"/>
+									<field name="group" domain="[('cost_sheet_id','=',parent.id)]" options="{'no_create':True}"/>
+								</tree>
+							</field>
+
+							<group col="4" colspan="2">
+								<label string="Outsourced Implementation Extra Expenses" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
+								<field name="show_oim_extra_exp"/>
+							</group>
+
+							<field name="oim_extra_expenses_line">
+								<tree editable="bottom">
+									<field name="item_int"/>
+									<field name="item"/>
+									<field name="name"/>
+									<field name="qty" sum="qty"/>
+									<field name="unit_price" />
+									<field name="line_price" sum="line_price"/>
+									<field name="tax_id"/>
+									<field name="vat"/>
+									<field name="vat_value" sum="Total"/>
+									<field name="unit_cost" sum="unit_cost"/>
+									<field name="line_cost" sum="line_cost"/>
+									<field name="group" domain="[('cost_sheet_id','=',parent.id)]" options="{'no_create': True}"/>
+								</tree>
+							</field>
+						</page>
+
+						<!-- <page string="OIM" help="Outsourced Implimentation" > <table style="width:100%" 
+							class="table table-striped"> <thead> <th> Included</th> <th>Total Sales</th> 
+							<th>Total Cost</th> <th>Profit</th> <th>Profit %</th> <th>Project</th> <th>Quotation</th> 
+							</thead> <tbody> <tr> <td> <field name="included_oim_in_quotation" attrs="{'readonly':[('state','=','done')]}"/> 
+							</td> <td><field name="oim_tot_sale1" /></td> <td><field name="oim_tot_cost1" 
+							/></td> <td><field name="oim_profit1" /></td> <td><field name="oim_profit_percentage1" 
+							/></td> <td><field name="project_oim" attrs="{'readonly':[('state','=','done')]}" 
+							/></td> <td><field name="od_oim_sale_id" /></td> </tr> </tbody> </table> 
+							<group> <group> </group> <group> </group> </group> <group col="4" colspan="2"> 
+							<h3><label string="Exclusions from Outsourced Scope of Work" /></h3> <field 
+							name="show_oim_ex_outsourced_scope"/> </group> <field name="oim_ex_outsourced_scope"/> 
+							<group col="4" colspan="2"> <h3><label string="Inclusions of Outsourced Scope 
+							of Work" /></h3> <field name="show_oim_in_outsourced_scope"/> </group> <field 
+							name="oim_in_outsourced_scope"/> <group col="4" colspan="2"> <label string="Outsourced 
+							Implementation Price Calculation" style="font-weight: bold;font-size: 20px;color: 
+							#7C7BAD;"/> <field name="show_oim_outsourced_price"/> </group> <field name="oim_implimentation_price_line" 
+							> <tree editable="bottom"> <field name="item" invisible="0"/> <field name="partner_id" 
+							invisible="0"/> <field name="name"/> <field name="qty" sum="qty"/> <field 
+							name="unit_price" sum="unit_price"/> <field name="line_price" sum="line_price"/> 
+							<field name="unit_cost" sum="unit_cost"/> <field name="line_cost" sum="line_cost"/> 
+							<field name="group" domain="[('cost_sheet_id','=',parent.id)]" options="{'no_create':True}"/> 
+							</tree> </field> <separator string="Outsourced Implementation Extra Expenses" 
+							/> <field name="oim_extra_expenses_line" > <tree editable="bottom"> <field 
+							name="item"/> <field name="name"/> <field name="qty" sum="qty"/> <field name="unit_price" 
+							sum="unit_price" /> <field name="line_price" sum="line_price"/> <field name="unit_cost" 
+							sum="unit_cost"/> <field name="line_cost" sum="line_cost"/> <field name="group" 
+							domain="[('cost_sheet_id','=',parent.id)]" options="{'no_create': True}"/> 
+							</tree> </field> </page> -->
+
+						<page string="AMC" help="Beta IT Maintenance">
+							<!-- <table style="width:100%" class="table table-striped"> <thead> 
+								<th> Included</th> <th>Project</th> <th>Quotation</th> </thead> <tbody> <tr> 
+								<td> <field name="included_bmn_in_quotation" attrs="{'readonly':[('state','=','done')]}"/> 
+								</td> <td><field name="project_bmn" attrs="{'readonly':[('state','=','done')]}" 
+								/></td> <td><field name="od_bmn_sale_id" /></td> </tr> </tbody> </table> -->
+							<table style="width:100%" class="table table-striped">
+								<thead>
+									<th>
+										<field name="included_bmn_in_quotation" attrs="{'readonly':[('state','=','done')]}"/>
+									</th>
+									<th>Total Sales</th>
+									<th>Total VAT</th>
+									<th>Total Cost</th>
+									<th>Profit</th>
+									<th>Profit %</th>
+								</thead>
+								<tbody>
+									<tr>
+										<td>BMN</td>
+										<td>
+											<field name="bmn_tot_sale1"/>
+										</td>
+										<td>
+											<field name="bmn_vat1"/>
+										</td>
+										<td>
+											<field name="bmn_tot_cost1"/>
+										</td>
+										<td>
+											<field name="bmn_profit1"/>
+										</td>
+										<td>
+											<field name="bmn_profit_percentage1"/>
+										</td>
+									</tr>
+									<tr>
+										<td>OMN</td>
+										<td>
+											<field name="omn_tot_sale1"/>
+										</td>
+										<td>
+											<field name="omn_vat1"/>
+										</td>
+										<td>
+											<field name="omn_tot_cost1"/>
+										</td>
+										<td>
+											<field name="omn_profit1"/>
+										</td>
+										<td>
+											<field name="omn_profit_percentage1"/>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<group col="6" colspan="2">
+								<field name="project_bmn" attrs="{'readonly':[('state','in',('done','change'))],'invisible':[('state','in',('draft','submitted','handover','waiting_po'))]}"/>
+								<field name="project_bmn_state" string="Analytic State" attrs="{'readonly':[('state','in',('done','change'))],'invisible':[('state','in',('draft','submitted','handover','waiting_po'))]}"/>
+								<button name="quick_create_analytic" type="object" class="oe_link" string="New" attrs="{'invisible':[('state','in',('draft','submitted','handover','waiting_po'))]}"/>
+								<field name="od_bmn_sale_id" attrs="{'invisible':[('state','in',('draft','submitted','handover','waiting_po'))]}"/>
+							</group>
+							<table style="width:100%" class="table table-bordered">
+								<thead>
+									<th>Week/Month/Year</th> <!-- #FA -->
+									<th>Number</th>
+									<th>Level</th>
+									<th>Public Holidays</th>
+									<th>Start Date</th>
+									<th>End Date</th>
+									<th>___________Comments___________</th>
+
+								</thead>
+								<tbody>
+									<tr>
+										<td>
+											<field name="bmn_year_month"/>
+										</td>
+										<td>
+											<field name="bmn_number"/>
+										</td>
+										<td>
+											<field name="bmn_level"/>
+										</td>
+										<td>
+											<field name="bmn_public_holiday"/>
+										</td>
+										<td>
+											<field name="bmn_start_date"/>
+										</td>
+										<td>
+											<field name="bmn_end_date"/>
+										</td>
+										<td>
+											<field name="bmn_comment"/>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<group col="4" colspan="2">
+								<h3>
+									<label string="Scope of Maintenance"/>
+								</h3>
+								<field name="show_bmn_scope_maintanance"/>
+							</group>
+							<field name="bmn_beta_it_maintanance"/>
+
+
+							<group col="4" colspan="2">
+								<label string="Beta IT Preventive Maintenance" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
+								<field name="show_bmn_it_preventive_line"/>
+							</group>
+							<field name="bmn_it_preventive_line">
+								<tree editable="bottom">
+									<field name="item_int"/>
+									<field name="item" invisible="0"/>
+									<field name="description"/>
+									<field name="qty" sum="qty"/>
+									<field name="unit_price" />
+									<field name="line_price" sum="line_price"/>
+									<field name="tax_id"/>
+									<field name="vat"/>
+									<field name="vat_value" sum="Total"/>
+									<field name="unit_cost" />
+									<field name="line_cost" sum="line_price"/>
+									<field name="group" domain="[('cost_sheet_id','=',parent.id)]" options="{'no_create':True}"/>
+								</tree>
+							</field>
+							<group col="4" colspan="2">
+								<label string="Beta IT Remedial Maintenance" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
+								<field name="show_bmn_it_remedial_line"/>
+							</group>
+							<field name="bmn_it_remedial_line">
+								<tree editable="bottom">
+									<field name="item_int"/>
+									<field name="item"/>
+									<field name="name"/>
+									<field name="qty" sum="qty"/>
+									<field name="unit_price" />
+									<field name="line_price" sum="line_price"/>
+									<field name="tax_id"/>
+									<field name="vat"/>
+									<field name="vat_value" sum="Total"/>
+									<field name="unit_cost" />
+									<field name="line_cost" sum="line_cost"/>
+									<field name="group" domain="[('cost_sheet_id','=',parent.id)]" options="{'no_create':True}"/>
+								</tree>
+							</field>
+
+							<group col="4" colspan="2">
+								<label string="Spare Parts for Beta IT Maintenance" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
+								<field name="show_to_cust_bmn_beta_spareparts"/>
+							</group>
+							<group col="4" colspan="2">
+								<field name="bmn_copy_spareparts_cs_id"/>
+								<button name="copy_from_bmn_spare_parts" string="Import" type="object" class="oe_link" states="draft"/>
+							</group>
+							<field name="bmn_spareparts_beta_it_maintenance_line">
+								<tree editable="bottom">
+									<field name="item_int"/>
+									<field name="item" invisible="0"/>
+									<field name="manufacture_id"/>
+									<field name="part_no" string="Product Part Number" domain="[('od_pdt_brand_id','=', manufacture_id)]"/>
+									<field name="name"/>
+									<field name="types"/>
+									<field name="cost_sheet_id" invisible="1"/>
+									<field name="uom_id"/>
+									<field name="qty"/>
+									<field name="sales_currency_id"/>
+									<field name="unit_price"/>
+									<field name="line_price" sum="Total"/>
+									<field name="tax_id"/>
+									<field name="vat"/>
+									<field name="vat_value" sum="Total"/>
+									<field name="group" domain="[('cost_sheet_id','=',parent.id)]" options="{'no_create':True}"/>
+									<field name="supplier_currency_id"/>
+									<field name="unit_cost_supplier_currency" attrs="{'readonly': [('supplier_currency_id','=',False)]}"/>
+									<field name="unit_cost_local"/>
+									<field name="line_cost_local_currency" sum="Total"/>
+									<field name="section_id" domain="[('cost_sheet_id','=',parent.id)]"/>
+									<field name="min_order"/>
+									<field name="profit" sum="Total"/>
+									<field name="profit_percentage" sum="Total"/>
+									<field name="supplier_discount"/>
+									<field name="discounted_unit_supplier_currency"/>
+									<field name="discounted_total_supplier_currency" sum="Total"/>
+								</tree>
+							</field>
+
+							<group col="4" colspan="2">
+								<label string="Beta IT Maintenance Extra Expenses" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
+								<field name="show_to_cust_bmn_maintanance"/>
+							</group>
+
+							<field name="bmn_beta_it_maintenance_extra_expense_line">
+								<tree editable="bottom">
+									<field name="item_int"/>
+									<field name="item"/>
+									<field name="name"/>
+									<field name="qty"/>
+									<field name="unit_price" />
+									<field name="line_price" sum="line_price"/>
+									<field name="tax_id"/>
+									<field name="vat"/>
+									<field name="vat_value" sum="Total"/>
+									<field name="group" domain="[('cost_sheet_id','=',parent.id)]" options="{'no_create': True}"/>
+									<field name="unit_cost"/>
+									<field name="line_cost"/>
+								</tree>
+							</field>
+							<group col="4" colspan="2">
+								<label string="Equipment Covered by Beta IT Maintenance" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
+								<field name="show_to_customer_bmn_eqp"/>
+							</group>
+							<group col="4" colspan="2">
+								<field name="bmn_copy_eqpcoverd_cs_id"/>
+								<button name="copy_from_bmn_eqpcoverd" string="Import" type="object" class="oe_link" states="draft"/>
+							</group>
+							<field name="bmn_eqp_cov_line">
+								<tree editable="bottom">
+									<field name="item_int"/>
+									<field name="item"/>
+									<field name="manufacture_id"/>
+									<field name="product_p_n" domain="[('od_pdt_brand_id','=', manufacture_id)]" string="Part Number"/>
+									<field name="serial_no"/>
+									<field name="city_id"/>
+									<field name="location"/>
+									<field name="notes"/>
+								</tree>
+							</field>
+
+							<group col="4" colspan="2">
+								<label string="Outsourced Preventive Maintenance" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
+								<field name="show_to_cust_omn_maintance_price"/>
+							</group>
+							<field name="omn_out_preventive_maintenance_line">
+								<tree editable="bottom">
+									<field name="item_int"/>
+									<field name="item" invisible="0"/>
+									<field name="name"/>
+									<field name="qty" sum="qty"/>
+									<field name="unit_price" />
+									<field name="line_price" sum="line_price"/>
+								    <field name="tax_id"/>
+								    <field name="vat"/>
+									<field name="vat_value"/>
+									<field name="unit_cost" />
+									<field name="line_cost" sum="line_cost"/>
+									<field name="group" domain="[('cost_sheet_id','=',parent.id)]" options="{'no_create':True}"/>
+								</tree>
+							</field>
+							<group>
+								<group>
+								</group>
+								<group>
+								</group>
+							</group>
+							<group col="4" colspan="2">
+								<label string="Outsourced Remedial Maintenance" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
+								<field name="show_to_cust_omn_remedial_maintenance"/>
+							</group>
+							<field name="omn_out_remedial_maintenance_line">
+								<tree editable="bottom">
+									<field name="item_int"/>
+									<field name="item"/>
+									<field name="name"/>
+									<field name="qty"/>
+									<field name="unit_price"/>
+									<field name="line_price" sum="Total"/>
+									<field name="tax_id"/>
+									<field name="vat"/>
+									<field name="vat_value" sum="Total"/>
+									<field name="unit_cost"/>
+									<field name="line_cost" sum="Total"/>
+									<field name="group" domain="[('cost_sheet_id','=',parent.id)]" options="{'no_create':True}"/>
+								</tree>
+							</field>
+							<!-- <group col="4" colspan="2"> <h3><label string="Scope of Outsourced 
+								Maintenance" /></h3> <field name="show_to_cust_remarks"/> </group> <field 
+								name="omn_remarks"/> -->
+							<group col="4" colspan="2">
+								<label string="Spare Parts for Outsourced Maintenance" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
+								<field name="show_to_cust_spare_parts"/>
+							</group>
+							<group col="4" colspan="2">
+								<field name="omn_copy_spareparts_cs_id"/>
+								<button name="copy_from_omn_spare_parts" string="Import" type="object" class="oe_link" states="draft"/>
+							</group>
+
+							<field name="omn_spare_parts_line">
+								<tree editable="bottom">
+									<field name="item_int"/>
+									<field name="item" invisible="0"/>
+									<field name="manufacture_id"/>
+									<field name="part_no" string="Product Part Number" domain="[('od_pdt_brand_id','=', manufacture_id)]"/>
+									<field name="name"/>
+									<field name="types"/>
+									<field name="cost_sheet_id" invisible="1"/>
+									<field name="uom_id"/>
+									<field name="qty"/>
+									<field name="sales_currency_id"/>
+									<field name="unit_price"/>
+									<field name="line_price" sum="Total"/>
+									<field name="tax_id"/>
+									<field name="vat"/>
+									<field name="vat_value" sum="Total"/>
+									<field name="group" domain="[('cost_sheet_id','=',parent.id)]" options="{'no_create':True}"/>
+									<field name="supplier_currency_id"/>
+									<field name="unit_cost_supplier_currency" attrs="{'readonly': [('supplier_currency_id','=',False)]}"/>
+									<field name="unit_cost_local"/>
+									<field name="line_cost_local_currency" sum="Total"/>
+									<field name="section_id" domain="[('cost_sheet_id','=',parent.id)]"/>
+									<field name="min_order"/>
+									<field name="profit" sum="Total"/>
+									<field name="profit_percentage" sum="Total"/>
+									<field name="supplier_discount"/>
+									<field name="discounted_unit_supplier_currency"/>
+									<field name="discounted_total_supplier_currency" sum="Total"/>
+								</tree>
+							</field>
+							<group col="4" colspan="2">
+								<label string="Outsourced Maintenance Extra Expenses" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
+								<field name="show_to_cust_omn_maintanance"/>
+							</group>
+
+							<field name="omn_maintenance_extra_expense_line">
+								<tree editable="bottom">
+									<field name="item_int"/>
+									<field name="item"/>
+									<field name="name"/>
+									<field name="qty"/>
+									<field name="unit_price" />
+									<field name="line_price" sum="line_price"/>
+									<field name="tax_id"/>
+									<field name="vat"/>
+									<field name="vat_value" sum="Total"/>
+									<field name="group" domain="[('cost_sheet_id','=',parent.id)]" options="{'no_create': True}"/>
+									<field name="unit_cost"/>
+									<field name="line_cost" sum="Total"/>
+								</tree>
+							</field>
+							<group col="4" colspan="2">
+								<label string="Equipment Covered by Outsourced Maintenance" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
+								<field name="show_to_customer_omn_eqp"/>
+							</group>
+							<group col="4" colspan="2">
+								<field name="omn_copy_eqpcoverd_cs_id"/>
+								<button name="copy_from_omn_eqpcoverd" string="Import" type="object" class="oe_link" states="draft"/>
+							</group>
+							<field name="omn_eqp_cov_line">
+								<tree editable="bottom">
+									<field name="item_int"/>
+									<field name="item"/>
+									<field name="manufacture_id"/>
+									<field name="product_p_n" domain="[('od_pdt_brand_id','=', manufacture_id)]" string="Part Number"/>
+									<field name="serial_no"/>
+									<field name="city_id"/>
+									<field name="location"/>
+									<field name="notes"/>
+								</tree>
+							</field>
+
+						</page>
+
+						<!-- <page string="OMN" help="Outsourced Maintenance" > <table style="width:100%" 
+							class="table table-striped"> <thead> <th>Included</th> <th>Total Sales</th> 
+							<th>Total Cost</th> <th>Profit</th> <th>Profit %</th> <th>Project</th> <th>Quotation</th> 
+							</thead> <tbody> <tr> <td> <field name="included_omn_in_quotation" attrs="{'readonly':[('state','=','done')]}"/></td> 
+							<td><field name="omn_tot_sale1" /></td> <td><field name="omn_tot_cost1" /></td> 
+							<td><field name="omn_profit1" /></td> <td><field name="omn_profit_percentage1" 
+							/></td> <td><field name="project_omn" attrs="{'readonly':[('state','=','done')]}"/></td> 
+							<td><field name="od_omn_sale_id" /></td> </tr> </tbody> </table> <table style="width:100%" 
+							class="table table-bordered"> <thead> <th>Month or Year</th> <th>Number</th> 
+							<th>Level</th> <th>Public Holidays</th> <th>Start Date</th> <th>End Date</th> 
+							<th>___________Comments___________</th> </thead> <tbody> <tr> <td> <field 
+							name="omn_year_month" /></td> <td> <field name="omn_number" /></td> <td> 
+							<field name="omn_level"/></td> <td> <field name="omn_public_holiday" /></td> 
+							<td><field name="omn_start_date" /></td> <td><field name="omn_end_date" /></td> 
+							<td><field name="omn_comment" /></td> </tr> </tbody> </table> <group> <group> 
+							</group> <group> </group> </group> <group col="4" colspan="2"> <label string="Outsourced 
+							Preventive Maintenance Price" style="font-weight: bold;font-size: 20px;color: 
+							#7C7BAD;"/> <field name="show_to_cust_omn_maintance_price"/> </group> <field 
+							name="omn_out_preventive_maintenance_line" > <tree editable="bottom"> <field 
+							name="item" invisible="0"/> <field name="name"/> <field name="qty" sum="qty"/> 
+							<field name="unit_price" sum="unit_price"/> <field name="line_price" sum="line_price"/> 
+							<field name="unit_cost" sum="unit_cost"/> <field name="line_cost" sum="line_cost"/> 
+							<field name="group" domain="[('cost_sheet_id','=',parent.id)]" options="{'no_create':True}"/> 
+							</tree> </field> <group> <group> </group> <group> </group> </group> <group 
+							col="4" colspan="2"> <label string="Outsourced Remedial Maintenance Price" 
+							style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/> <field name="show_to_cust_omn_remedial_maintenance" 
+							/> </group> <field name="omn_out_remedial_maintenance_line" > <tree editable="bottom"> 
+							<field name="item"/> <field name="name"/> <field name="qty"/> <field name="unit_price"/> 
+							<field name="line_price"/> <field name="unit_cost"/> <field name="line_cost"/> 
+							<field name="group" domain="[('cost_sheet_id','=',parent.id)]" options="{'no_create':True}"/> 
+							</tree> </field> <group col="4" colspan="2"> <h3><label string="Scope of 
+							Outsourced Maintenance" /></h3> <field name="show_to_cust_remarks"/> </group> 
+							<field name="omn_remarks"/> <group col="4" colspan="2"> <label string="Spare 
+							Parts for Outsourced Maintenance" style="font-weight: bold;font-size: 20px;color: 
+							#7C7BAD;" /> <field name="show_to_cust_spare_parts"/> </group> <field name="omn_spare_parts_line" 
+							> <tree editable="bottom"> <field name="item" invisible="0"/> <field name="manufacture_id"/> 
+							<field name="part_no" string="Product Part Number" domain="[('od_pdt_brand_id','=', 
+							manufacture_id)]"/> <field name="name"/> <field name="types"/> <field name="cost_sheet_id" 
+							invisible="1" /> <field name="uom_id"/> <field name="qty"/> <field name="sales_currency_id"/> 
+							<field name="unit_price" /> <field name="line_price" sum="Total"/> <field 
+							name="group" domain="[('cost_sheet_id','=',parent.id)]" options="{'no_create':True}"/> 
+							<field name="supplier_currency_id"/> <field name="unit_cost_supplier_currency" 
+							attrs="{'readonly': [('supplier_currency_id','=',False)]}"/> <field name="unit_cost_local"/> 
+							<field name="line_cost_local_currency" sum="Total"/> <field name="section_id" 
+							domain="[('cost_sheet_id','=',parent.id)]"/> <field name="min_order"/> <field 
+							name="profit" sum="Total"/> <field name="profit_percentage" sum="Total"/> 
+							<field name="supplier_discount"/> <field name="discounted_unit_supplier_currency"/> 
+							<field name="discounted_total_supplier_currency" sum="Total"/> </tree> </field> 
+							<group col="4" colspan="2"> <label string="Outsourced Maintenance Extra Expenses" 
+							style="font-weight: bold;font-size: 20px;color: #7C7BAD;" /> <field name="show_to_cust_omn_maintanance"/> 
+							</group> <field name="omn_maintenance_extra_expense_line" > <tree editable="bottom"> 
+							<field name="item"/> <field name="name"/> <field name="qty"/> <field name="unit_price" 
+							sum="unit_price" /> <field name="line_price" sum="line_price"/> <field name="group" 
+							domain="[('cost_sheet_id','=',parent.id)]" options="{'no_create': True}"/> 
+							<field name="unit_cost"/> <field name="line_cost"/> </tree> </field> <group 
+							col="4" colspan="2"> <label string="Equipment Covered by The Scope of Service" 
+							style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/> <field name="show_to_customer_omn_eqp"/> 
+							</group> <field name="omn_eqp_cov_line"> <tree editable="bottom"> <field 
+							name="item" /> <field name="manufacture_id"/> <field name="product_p_n" domain="[('od_pdt_brand_id','=', 
+							manufacture_id)]" string="Part Number"/> <field name="serial_no" /> <field 
+							name="city_id" /> <field name="location" /> <field name="notes" /> </tree> 
+							</field> </page> -->
+
+						<page string="O&amp;M" help="Operation And Maintenance">
+							<table style="width:100%" class="table table-striped">
+								<thead>
+									<th> Included</th>
+									<th>Total Sales</th>
+									<th>Total VAT</th>
+									<th>Total Cost</th>
+									<th>Profit</th>
+									<th>Profit %</th>
+									<!-- <th>Order Type</th> -->
+									<!-- <th>Project</th> <th>Quotation</th> -->
+								</thead>
+								<tbody>
+									<tr>
+										<td>
+											<field name="included_om_in_quotation" attrs="{'readonly':[('state','=','done')]}"/>
+										</td>
+										<td>
+											<field name="o_m_tot_sale1"/>
+										</td>
+										<td>
+											<field name="o_m_vat1"/>
+										</td>
+										<td>
+											<field name="o_m_tot_cost1"/>
+										</td>
+										<td>
+											<field name="o_m_profit1"/>
+										</td>
+										<td>
+											<field name="o_m_profit_percentage1"/>
+										</td>
+										<!-- <td> <field name="type_o_m" /></td> -->
+										<!-- <td> <field name="project_o_m" attrs="{'readonly':[('state','=','done')]}"/></td> 
+											<td><field name="od_om_res_sale_id" /></td> -->
+									</tr>
+								</tbody>
+							</table>
+
+							<table style="width:100%" class="table table-bordered">
+								<thead>
+									<th>Week/Month/Year</th> <!-- #FA -->
+									<th>Number</th>
+									<th>Level</th>
+									<th>Public Holidays</th>
+									<th>Start Date</th>
+									<th>End Date</th>
+									<th>___________Comments___________</th>
+
+								</thead>
+								<tbody>
+									<tr>
+										<td>
+											<field name="o_m_year_month"/>
+										</td>
+										<td>
+											<field name="o_m_number"/>
+										</td>
+										<td>
+											<field name="o_m_level"/>
+										</td>
+										<td>
+											<field name="o_m_public_holiday"/>
+										</td>
+										<td>
+											<field name="o_m_start_date"/>
+										</td>
+										<td>
+											<field name="o_m_end_date"/>
+										</td>
+										<td>
+											<field name="o_m_comment"/>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<group col="6" colspan="2">
+								<field name="project_o_m" attrs="{'readonly':[('state','in',('done','change'))],'invisible':[('state','in',('draft','submitted','handover','waiting_po'))]}"/>
+								<field name="project_o_m_state" string="Analytic State" attrs="{'readonly':[('state','in',('done','change'))],'invisible':[('state','in',('draft','submitted','handover','waiting_po'))]}"/>
+								<button name="quick_create_analytic" type="object" class="oe_link" string="New" attrs="{'invisible':[('state','in',('draft','submitted','handover','waiting_po'))]}"/>
+								<field name="od_om_res_sale_id" attrs="{'invisible':[('state','in',('draft','submitted','handover','waiting_po'))]}"/>
+							</group>
+							<group col="4" colspan="2">
+								<label string="Resident Engineers" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
+								<field name="show_om_residenteng_cust"/>
+							</group>
+							<field name="om_residenteng_line">
+								<tree editable="bottom">
+
+									<field name="item" invisible="0"/>
+									<!-- <field name="od_product_id" /> -->
+									<field name="name"/>
+									<field name="qty"/>
+
+									<field name="unit_price"/>
+									<field name="line_price" sum="Total"/>
+									<field name="tax_id"/>
+									<field name="vat"/>
+									<field name="vat_value" sum="Total"/>
+
+									<field name="unit_cost"/>
+									<field name="line_cost"/>
+
+									<!-- <field name="profit"/> <field name="profit_percentage"/> -->
+									<field name="group" domain="[('cost_sheet_id','=',parent.id)]" options="{'no_create':True}"/>
+
+									<!-- <field name="show_to_customer"/> -->
+
+
+								</tree>
+							</field>
+
+							<group col="4" colspan="2">
+								<label string="Material / Tools / Equipment Required for O&amp;M" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
+								<field name="show_om_eqpmntreqst_cust"/>
+							</group>
+							<group col="4" colspan="2">
+								<field name="om_copy_eqp_required_cs_id"/>
+								<button name="copy_from_om_required_parts" string="Import" type="object" class="oe_link" states="draft"/>
+							</group>
+
+							<field name="om_eqpmentreq_line">
+								<tree editable="bottom">
+									<field name="item_int"/>
+									<field name="item" invisible="0"/>
+									<field name="manufacture_id"/>
+									<!-- <field name="supplier_id"/> -->
+									<field name="part_no" string="Product Part Number" domain="[('od_pdt_brand_id','=', manufacture_id)]"/>
+									<field name="name"/>
+									<field name="types"/>
+									<field name="cost_sheet_id" invisible="1"/>
+									<field name="uom_id"/>
+									<field name="qty"/>
+									<field name="sales_currency_id"/>
+									<field name="unit_price"/>
+
+									<field name="line_price" sum="Total"/>
+									<field name="tax_id"/>
+									<field name="vat"/>
+									<field name="vat_value" sum="Total"/>
+
+									<field name="group" domain="[('cost_sheet_id','=',parent.id)]" options="{'no_create':True}"/>
+
+									<field name="supplier_currency_id"/>
+									<field name="unit_cost_supplier_currency" attrs="{'readonly': [('supplier_currency_id','=',False)]}"/>
+									<!-- <field name="show_main_pro_line"/> -->
+
+									<field name="unit_cost_local"/>
+									<field name="line_cost_local_currency" sum="Total"/>
+									<field name="section_id" domain="[('cost_sheet_id','=',parent.id)]"/>
+									<field name="min_order"/>
+
+									<field name="profit" sum="Total"/>
+									<field name="profit_percentage" sum="Total"/>
+
+									<!-- <field name='pricelist_id' invisible="1"/> -->
+
+
+									<field name="supplier_discount"/>
+									<field name="discounted_unit_supplier_currency"/>
+									<field name="discounted_total_supplier_currency" sum="Total"/>
+
+								</tree>
+							</field>
+
+							<group col="4" colspan="2">
+								<h3>
+									<label string="Exclusions from O&amp;M Works"/>
+								</h3>
+								<field name="show_om_exclusion_cust"/>
+							</group>
+							<field name="om_ex_works_note"/>
+
+							<group col="4" colspan="2">
+								<h3>
+									<label string="Inclusions of O&amp;M Works"/>
+								</h3>
+								<field name="show_om_inclusion_cust"/>
+							</group>
+							<field name="om_in_works_note"/>
+
+							<group col="4" colspan="2">
+								<h3>
+									<label string="O&amp;M Extra Expenses"/>
+								</h3>
+								<field name="show_om_extra_exp"/>
+							</group>
+							<field name="om_extra_line">
+								<tree editable="bottom">
+									<field name="item_int"/>
+									<field name="item"/>
+									<!-- <field name="od_product_id" /> -->
+									<field name="name"/>
+									<field name="qty"/>
+									<field name="unit_price" />
+									<field name="line_price" sum="line_price"/>
+									<field name="tax_id"/>
+									<field name="vat"/>
+									<field name="vat_value" sum="Total"/>
+
+									<field name="group" domain="[('cost_sheet_id','=',parent.id)]" options="{'no_create': True}"/>
+
+									<field name="unit_cost"/>
+									<field name="line_cost" sum="Total"/>
+
+									<!-- <field name="show_to_customer"/> -->
+
+
+								</tree>
+							</field>
+							<group col="4" colspan="2">
+								<label string="Equipment Covered by O&amp;M" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
+								<field name="show_to_customer_o_m_eqp"/>
+							</group>
+
+							<group col="4" colspan="2">
+								<field name="om_copy_eqpcoverd_cs_id"/>
+								<button name="copy_from_om_eqpcoverd" string="Import" type="object" class="oe_link" states="draft"/>
+							</group>
+
+							<field name="o_m_eqp_cov_line">
+								<tree editable="bottom">
+									<field name="item"/>
+									<field name="manufacture_id"/>
+									<field name="product_p_n" domain="[('od_pdt_brand_id','=', manufacture_id)]" string="Part Number"/>
+									<field name="serial_no"/>
+									<field name="city_id"/>
+									<field name="location"/>
+									<field name="notes"/>
+								</tree>
+							</field>
+						</page>
+
+
+
+
+						<page string="Cost Groups" help="Cost Groups">
+							<!-- <button name='compute_value' type='object' class='oe_highlight' 
+								string='Compute' /> -->
+							<separator string="Material and Training المواد والتدريب"/>
+							<field name="costgroup_material_line">
+								<tree editable="bottom">
+									<field name="item_int" string="Seq تسلسل"/>
+									<field name="cost_group_number" invisible="1"/>
+									<button name="link_costgroup" string="Link" icon="STOCK_ADD" type="object"/>
+									<button name="unlink_costgroup" string="Clear Costgroup" icon="STOCK_REMOVE" type="object"/>
+									<field name="proof_of_cost"/>
+									<field name="name"/>
+									<field name="sales_currency_id"/>
+									<field name="round_up"/>
+									<field name="customer_discount" string="Customer Discount خصم للعميل"/>
+									<field name="tax_id" />
+									<field name="vat" />
+									<field name="profit" string="Profit % الربح"/>
+									<field name="supplier_id" invisible="1"/>
+									<field name="supplier_discount" string="Supplier Discount خصم من المورد"/>
+									<field name="supplier_currency_id" string="Supplier Currency عملة المورد"/>
+									<field name="currency_exchange_factor"/>
+									<field name="shipping" string="Shipping % الشحن"/>
+									<field name="shipping_value" sum="shipping_value"/>
+									<field name="customs" string="Customs % الجمارك"/>
+									<field name="customs_value" sum="customs_value"/>
+									<field name="stock_provision"/>
+									<field name="stock_provision_value" sum="stock_provision_value"/>
+									<field name="conting_provision"/>
+									<field name="conting_provision_value" sum="conting_provision_value"/>
+									<field name="currency_fluctation_provision"/>
+									<field name="currency_fluct_value" sum="currency_fluct_value"/>
+								</tree>
+							</field>
+
+							<separator string="Optional المواد الاختيارية"/>
+							<field name="costgroup_optional_line">
+								<tree editable="bottom">
+									<field name="item_int" string="Seq تسلسل"/>
+									<field name="cost_group_number" invisible="1"/>
+									<button name="link_costgroup" string="Link" icon="STOCK_ADD" type="object"/>
+									<button name="unlink_costgroup" string="Clear Costgroup" icon="STOCK_REMOVE" type="object"/>
+									<field name="proof_of_cost"/>
+									<field name="name"/>
+									<field name="sales_currency_id"/>
+									<field name="round_up"/>
+									<field name="customer_discount" string="Customer Discount خصم للعميل"/>
+									<field name="tax_id" />
+									<field name="vat" />
+									<field name="profit" string="Profit % الربح"/>
+									<field name="supplier_id" invisible="1"/>
+									<field name="supplier_discount" string="Supplier Discount خصم من المورد"/>
+									<field name="supplier_currency_id" string="Supplier Currency عملة المورد"/>
+									<field name="currency_exchange_factor"/>
+									<field name="shipping" string="Shipping % الشحن"/>
+									<field name="shipping_value" sum="shipping_value"/>
+									<field name="customs" string="Customs % الجمارك"/>
+									<field name="customs_value" sum="customs_value"/>
+									<field name="stock_provision"/>
+									<field name="stock_provision_value" sum="stock_provision_value"/>
+									<field name="conting_provision"/>
+									<field name="conting_provision_value" sum="conting_provision_value"/>
+									<field name="currency_fluctation_provision"/>
+									<field name="currency_fluct_value" sum="currency_fluct_value"/>
+								</tree>
+							</field>
+
+							<separator string="Extra Expenses المصاريف الإضافية"/>
+							<field name="costgroup_extra_expense_line">
+								<tree editable="bottom">
+									<field name="item_int" string="Seq تسلسل"/>
+									<field name="cost_group_number" invisible="1"/>
+									<button name="link_costgroup" string="Link" icon="STOCK_ADD" type="object"/>
+									<button name="unlink_costgroup" string="Clear Costgroup" icon="STOCK_REMOVE" type="object"/>
+									<field name="proof_of_cost"/>
+									<field name="name"/>
+									<field name="sales_currency_id"/>
+									<field name="round_up"/>
+									<field name="customer_discount" string="Customer Discount خصم للعميل"/>
+									<field name="tax_id" />
+									<field name="vat" />
+									<field name="profit" string="Profit % الربح"/>
+									<field name="supplier_id" invisible="1"/>
+									<field name="supplier_discount" string="Supplier Discount خصم من المورد"/>
+									<field name="supplier_currency_id" string="Supplier Currency عملة المورد"/>
+									<field name="currency_exchange_factor"/>
+									<field name="shipping" string="Shipping % الشحن"/>
+									<field name="shipping_value" sum="shipping_value"/>
+									<field name="customs" string="Customs % الجمارك"/>
+									<field name="customs_value" sum="customs_value"/>
+									<field name="stock_provision"/>
+									<field name="stock_provision_value" sum="stock_provision_value"/>
+									<field name="conting_provision"/>
+									<field name="conting_provision_value" sum="conting_provision_value"/>
+									<field name="currency_fluctation_provision"/>
+									<field name="currency_fluct_value" sum="currency_fluct_value"/>
+								</tree>
+							</field>
+
+							<separator string="Beta Services الخدمات"/>
+							<field name="costgroup_it_service_line">
+								<tree editable="bottom">
+									<field name="item_int" string="Seq تسلسل"/>
+									<field name="cost_group_number" invisible="1"/>
+									<field name="proof_of_cost"/>
+									<field name="name"/>
+									<field name="tax_id" />
+									<field name="vat" />
+									<field name="sales_currency_id"/>
+									<field name="customer_discount" string="Customer Discount خصم للعميل"/>
+									<field name="profit" string="Profit % الربح"/>
+
+								</tree>
+							</field>
+
+
+						</page>
+
+						<page string="Sections" help="Sections">
+							<separator string="Material"/>
+							<field name="cost_section_line">
+								<tree editable="bottom">
+									<field name="item_int"/>
+									<button name="link_section" string="Link" icon="STOCK_ADD" type="object"/>
+									<button name="unlink_section" string="Clear Section" icon="STOCK_REMOVE" type="object"/>
+									<field name="section"/>
+									<field name="name"/>
+								</tree>
+							</field>
+
+							<separator string="Optional"/>
+							<field name="cost_section_option_line">
+								<tree editable="bottom">
+									<field name="item_int"/>
+									<button name="link_section" string="Link" icon="STOCK_ADD" type="object"/>
+									<button name="unlink_section" string="Clear Section" icon="STOCK_REMOVE" type="object"/>
+									<field name="section"/>
+									<field name="name"/>
+								</tree>
+							</field>
+							<separator string="Training"/>
+							<field name="cost_section_trn_line">
+								<tree editable="bottom">
+									<field name="item_int"/>
+									<button name="link_section" string="Link" icon="STOCK_ADD" type="object"/>
+									<button name="unlink_section" string="Clear Section" icon="STOCK_REMOVE" type="object"/>
+									<field name="section"/>
+									<field name="name"/>
+								</tree>
+							</field>
+
+						</page>
+						<page string="Hand Over">
+							<group col="6" colspan="2">
+								<field name="sales_acc_manager"/>
+								<field name="business_development"/>
+								<field name="pre_sales_engineer"/>
+
+							</group>
+							<group col="4" colspan="2">
+								<field name="technical_consultant1" string="Technology Consultant"/>
+								<!-- <field name="technical_consultant2"/> -->
+								<field name="accountant"/>
+							</group>
+							
+							<group col="6" colspan="2">
+                                <field name="od_cost_centre_id" attrs="{'required':[('state','in',('processed','done'))]}"/>
+                                <field name="od_branch_id" attrs="{'required':[('state','in',('processed','done'))]}"/>
+                                <field name="od_division_id" attrs="{'required':[('state','in',('processed','done'))]}" string="Technology Unit"/>
+                            </group>
+
+                             <group col="6" colspan="2">
+                                <field name="sale_team_id"/>
+                                <field name="op_stage_id"/>
+                                <field name="op_expected_booking"/>
+                                 
+                            </group>
+                             
+							<button string="Assign Accountant" name="1159" type="action" states="processed,approved" class="oe_link oe_right"/>
+
+							<!-- <separator string="Supporting Documents" /> <field name="support_doc_line"> 
+								<tree editable="bottom"> <field name="doc_type_id" /> <field name="date" 
+								/> <field name="ref" /> <field name="rev_comment_id" /> <field name="fin_comment_id" 
+								/> </tree> </field> -->
+							<separator string="Deadlines المواعيد النهائية"/>
+							<field name="deadlines">
+								<tree editable="bottom">
+
+									<field name="deadline_type"/>
+									<field name="date"/>
+									<field name="ref" string="Comment"/>
+									<field name="rev_comment_id"/>
+									<field name="fin_comment_id"/>
+								</tree>
+							</field>
+							<separator string="Payment Schedule شروط الدفع النهائية"/>
+
+							<field name="payment_schedule_line">
+								<tree editable="bottom">
+
+									<field name="payment_type_id"/>
+									<field name="value"/>
+									<field name="milestone"/>
+									<field name="fin_comment_id"/>
+								</tree>
+							</field>
+							<separator string="General Questionnaire معلومات عامة"/>
+							<table style="width:100%" class="table table-striped">
+								<thead>
+									<th> General Questionnaire </th>
+									<th>Comments</th>
+									<th>Reviewer Comments</th>
+									<th>Finance Comments</th>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Did you submit a Bid Bond? هل سلمت ضمان بنكي للعطاء </td>
+										<td>
+											<field name="bid_bond_submit"/>
+										</td>
+										<td>
+											<field name="bid_bond_rev_comment_id"/>
+										</td>
+										<td>
+											<field name="bid_bond_fin_comment_id"/>
+										</td>
+									</tr>
+
+									<tr>
+										<td>Is a Performance Bond Required? هل الضمان النهائي مطلوب لحسن التنفيذ</td>
+										<td>
+											<field name="peromance_bond"/>
+										</td>
+										<td>
+											<field name="perfomance_rev_comment_id"/>
+										</td>
+										<td>
+											<field name="perfomance_fin_comment_id"/>
+										</td>
+									</tr>
+
+									<tr>
+										<td>Is Insurance Required? هل التأمين مطلوب</td>
+										<td>
+											<field name="insurance_req"/>
+										</td>
+										<td>
+											<field name="insurance_rev_comment_id"/>
+										</td>
+										<td>
+											<field name="insurance_fin_comment_id"/>
+										</td>
+									</tr>
+
+									<tr>
+										<td>Is there a Penalty Clause? هل هناك شرط لغرامات</td>
+										<td>
+											<field name="penalty_clause"/>
+										</td>
+										<td>
+											<field name="penalty_rev_comment_id"/>
+										</td>
+										<td>
+											<field name="penalty_fin_comment_id"/>
+										</td>
+									</tr>
+
+									<tr>
+										<td>Advance Payment Status حالة الدفعة المقدمة</td>
+										<td>
+											<field name="adv_payment_status"/>
+										</td>
+										<td>
+											<field name="adv_payment_rev_comment_id"/>
+										</td>
+										<td>
+											<field name="adv_payment_fin_comment_id"/>
+										</td>
+									</tr>
+									
+									<tr>
+										<td>Customer P.O. Status? حالة أمر الشراء من العميل</td>
+										<td>
+											<field name="po_status"/>
+										</td>
+										<td>
+											<field name="po_status_rev_comment_id"/>
+										</td>
+										<td>
+											<field name="po_status_fin_comment_id"/>
+										</td>
+									</tr>
+									<tr>
+										<td>Customer P.O. Date تاريخ أمر الشراء</td>
+										<td>
+											<field name="po_date" attrs="{'required':[('po_status','=','available')]}"/>
+										</td>
+										<td>
+											<field name="po_date_rev_comment_id"/>
+										</td>
+										<td>
+											<field name="po_date_fin_comment_id"/>
+										</td>
+									</tr>
+
+									<tr>
+										<td>Customer Registration هل هناك حاجة لتسجيل العميل لدينا</td>
+										<td>
+											<field name="customer_reg_id"/>
+										</td>
+										<td/>
+									</tr>
+
+									<tr>
+										<td>Closing Date As Per Owner / PMO Feedback تاريخ إغلاق المشروع المتوقع حسب قسم المشاريع</td>
+										<td/>
+										<td>
+											<field name="project_closing_date"/>
+										</td>
+										<td>
+											<field name="project_closing_fin_comment_id"/>
+										</td>
+									</tr>
+
+
+
+								</tbody>
+							</table>
+
+							<separator string="Communication Matrix معلومات الاتصال"/>
+							<field name="comm_matrix_line">
+								<tree editable="bottom">
+
+									<field name="partner_id" domain="[('parent_id','=',parent.od_customer_id)]"/>
+									<field name="customer_role_id"/>
+									<field name="rev_comment_id"/>
+									<field name="fin_comment_id"/>
+								</tree>
+							</field>
+							<separator string="Commitments I Made or Made to Me الوعود"/>
+							<field name="comm_made_to_customer"/>
+
+							<!-- <separator string="Commitments Made to Me by Customer or Suppliers" 
+								/> <field name="comm_made_to_me" /> -->
+							<separator string="Closing Conditions (Entered By Owner - PMO) شروط إغلاق المشروع حسب قسم المشاريع"/>
+							<table style="width:100%" class="table table-striped">
+								<thead>
+									<th class="col-md-8">Conditions</th>
+									<th class="col-md-4">Finance Comments</th>
+								</thead>
+								<tbody>
+									<tr>
+										<td class="col-md-8">
+											<field name="closing_condition_ids" widget="many2many_tags"/>
+										</td>
+										<td class="col-md-4">
+											<field name="closing_fin_comment_id"/>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+					</page>
+					
+					<page string="Revenue">
+						<!-- 	<table style="width:100%" class="table table-striped">
+								<thead>
+									
+									<th>Total Sales</th>
+									<th>Total Cost</th>
+									<th>Profit</th>
+									<th>Profit %</th>
+								</thead>
+								<tbody>
+									<tr>
+										
+										<td>
+											<field name="rev_tot_sale1"/>
+										</td>
+										<td>
+											<field name="rev_tot_cost1"/>
+										</td>
+										<td>
+											<field name="rev_profit1"/>
+										</td>
+										<td>
+											<field name="rev_profit_percentage1"/>
+										</td>
+										
+									</tr>
+								</tbody>
+							</table>
+					 -->
+				<separator string="Summary"/>
+					<field name="summary_weight_line">
+								<tree>
+									<field name="pdt_grp_id"/>
+									<field name="total_sale" sum="Total"/>
+									<field name="sale_aftr_disc" sum="Total"/>
+									<field name="total_cost" sum="Total"/>
+									<field name="profit" sum="Total"/>
+									<field name="profit_percent"/>
+								
+									
+								</tree>
+							</field>
+					
+					
+					<separator string="MAT &amp; TRN"/>
+							<field name="mat_group_weight_line">
+								<tree>
+									<field name="pdt_grp_id"/>
+									<field name="total_sale" sum="Total"/>
+									<field name="disc" />
+									<field name="sale_aftr_disc" sum="Total"/>
+									<field name="total_cost" sum="Total"/>
+									<field name="profit" sum="Total"/>
+									<field name="profit_percent"/>
+									<field name="weight"/>
+								</tree>
+							</field>
+							
+							<separator string="Extra Expense"/>
+							<field name="extra_weight_line">
+								<tree>
+								    <field name="tab"/>
+									<field name="pdt_grp_id"/>
+									<field name="total_sale" sum="Total"/>
+									<field name="disc" />
+									<field name="sale_aftr_disc" sum="Total"/>
+									<field name="total_cost" sum="Total"/>
+									<field name="profit" sum="Total"/>
+								</tree>
+							</field>
+							
+							<separator string="IMP"/>
+							<field name="imp_weight_line">
+								<tree>
+								<field name="tab"/>
+									<field name="pdt_grp_id"/>
+									<field name="total_sale" sum="Total"/>
+									<field name="disc" />
+									<field name="sale_aftr_disc" sum="Total"/>
+									<field name="total_cost" sum="Total"/>
+									<field name="profit" sum="Total"/>
+								</tree>
+							</field>
+							
+							<separator string="AMC"/>
+							<field name="amc_weight_line">
+								<tree>
+								<field name="tab"/>
+									<field name="pdt_grp_id"/>
+									<field name="total_sale" sum="Total"/>
+									<field name="disc" />
+									<field name="sale_aftr_disc" sum="Total"/>
+									<field name="total_cost" sum="Total"/>
+									<field name="profit" sum="Total"/>
+								</tree>
+							</field>
+						<separator string="O&amp;M"/>
+							<field name="om_weight_line">
+								<tree>
+								<field name="tab"/>
+									<field name="pdt_grp_id"/>
+									<field name="total_sale" sum="Total"/>
+									<field name="disc" />
+									<field name="sale_aftr_disc" sum="Total"/>
+									<field name="total_cost" sum="Total"/>
+									<field name="profit" sum="Total"/>
+								</tree>
+							</field>
+							
+							
+					</page>
+					<page string="CR#"          
+            attrs="{'invisible':[('state','not in',('modify','approved','done','cancel'))]}">
+						<separator string="Change Request"/>
+						<field name="change_management_line">
+							<tree>
+								<field name="name" />
+								<field name="total_price" />
+								<field name="total_cost" />
+								<field name="profit" />
+								<field name="profit_percent" />
+								<field name="new_total_price" />
+								<field name="new_total_cost" />
+								<field name="new_profit" />
+								<field name="new_profit_percent" />
+								
+								
+							</tree>
+						</field>
+					
+					</page>
+					
+					<page string="Original"          
+            attrs="{'invisible':[('state','not in',('modify','approved','done','cancel'))]}">
+						<separator string="Sales Orders"/>
+						<field name="sale_order_original_line">
+							<tree>
+								<field name="state" invisible="1"/>
+								<field name="name" />
+								<field name="od_original_total_price" />
+								<field name="od_original_total_cost" />
+								<field name="od_original_profit" />
+								<field name="od_original_profit_percent" />
+							</tree>
+						</field>
+					
+					</page>
+					
+					</notebook>
+					<div class="oe_chatter">
+						<field name="message_follower_ids" widget="mail_followers" />
+						<field name="message_ids" widget="mail_thread" />
+					</div>
+					<!-- </sheet> -->
+				</form>
+			</field>
+		</record>
+
+
+		<record model="ir.actions.act_window" id="action_od_cost_sheet">
+			<field name="name">Cost Sheet</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">od.cost.sheet</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form,graph</field>
+			<field name="search_view_id" ref="od_cost_sheet_search_view" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to add new Cost Sheet.
+				</p>
+			</field>
+		</record>
+		<menuitem id="menu_cost_sheet_parent" name="Costing Sheet"
+			parent="base.menu_base_partner" sequence="1" />
+		<menuitem id="menu_od_cost_sheet_1" name="Cost Sheet"
+			action="action_od_cost_sheet" parent="menu_cost_sheet_parent" />
+		<menuitem id="menu_od_cost_sheet_import_export" name="Import/Export"
+			parent="menu_cost_sheet_parent" />
+	</data>
+</openerp>

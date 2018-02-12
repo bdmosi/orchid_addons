@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_expenses_tree_inheritted_beta" model="ir.ui.view">
+            <field name="name">hr.expense.treee.beta</field>
+            <field name="model">hr.expense.expense</field>
+            <field name="inherit_id" ref="hr_expense.view_expenses_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="od_payment_status" />
+                    <field name="od_payment_datetime" />
+                    <field name="od_paid_amount" />
+                </field>
+            </field>
+        </record>
+
+        <record id="view_expenses_form_inheritted_beta" model="ir.ui.view">
+            <field name="name">hr.expense.form.beta</field>
+            <field name="model">hr.expense.expense</field>
+            <field name="inherit_id" ref="hr_expense.view_expenses_form"/>
+            <field name="arch" type="xml">
+                 <field name="currency_id" position="after">
+                     <field name="od_payment_status" />
+                     <field name="od_payment_datetime" />
+                     <field name="od_paid_amount" />
+                 </field>
+
+                 <xpath expr="/form/sheet/notebook/page/field[@name='line_ids']/tree/field[@name='analytic_account']" position="attributes">
+                     <attribute name="required">True</attribute>
+                </xpath>
+                 <xpath expr="/form/sheet/notebook/page/field[@name='line_ids']/tree/field[@name='analytic_account']" position="after">
+                     <field name="od_opp_id" domain="[('stage_id','not in',(6,7,8,2))]"/>
+                     <field name="od_brand_id" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="crm_help_desk_form_view_beta_project">
+            <field name="name">Beta help Desk Form View</field>
+            <field name="model">crm.helpdesk</field>
+            <field name="inherit_id" ref="crm_helpdesk.crm_case_form_view_helpdesk"/>
+            <field name="arch" type="xml">
+                <xpath expr='//form/sheet/group' position='before'>
+                    <div class="oe_right oe_button_box">
+                        <button name="od_btn_open_tasks" type="object" class="oe_stat_button"  icon="fa-pencil-square-o" >
+                         <field string="Tasks" name="od_task_count" widget="statinfo"/>
+                        </button>
+                        <button name="od_btn_open_timsheet_for_helpdesk" type="object" class="oe_stat_button"  icon="fa-pencil-square-o" >
+                         <field string="Timesheets" name="od_timesheet_amount" widget="statinfo"/>
+                        </button>
+                    </div>
+                 </xpath>
+
+                <field name="date_deadline" position="after">
+                    <field name="od_number" readonly="1"/>
+                </field>
+                <field name="date_deadline" position="attributes">
+                    <attribute name="required">True</attribute>
+                </field>
+                <field name="date" position="attributes">
+                    <attribute name="readonly">True</attribute>
+                </field>
+                <field name="partner_id" position="before">
+                    <field name="od_organization_id" domain="[('is_company','=',True)]" />
+                </field>
+                <field name="partner_id" position="attributes">
+                    <attribute name="string">Contact Person</attribute>
+                    <attribute name="domain">[('parent_id','=',od_organization_id)]</attribute>
+                </field>
+                <field name="partner_id" position="after">
+                    <field name="od_mobile_number" />
+                    <field name="od_landline" />
+                </field>
+                <field name="priority" position="after">
+                    <field name="od_brand_ids" widget="many2many_tags" />
+                    <field name="od_subgroup_id" />
+                </field>
+                <field name="ref2" position="after">
+                    <field name="od_ref3" />
+                    <field name="od_ref4" />
+                </field>
+                <!-- <field name="section_id" position="after">
+                 <field name="company_id" />
+                </field> -->
+                <page string="Extra Info" position="after">
+                    <page string="Work Log">
+                        <field name="od_activity_lines">
+                            <tree editable="bottom">
+                                <field name="date" />
+                                <field name="name" />
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Equipment Log">
+                        <field name="od_eqp_lines">
+                            <tree editable="bottom">
+                                <field name="date" />
+                                <field name="product_id" />
+                                <field name="name" />
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Summary">
+                        <field name="od_summary_lines">
+                            <tree editable="bottom">
+                                <field name="date" />
+                                <field name="name" />
+                            </tree>
+                        </field>
+                    </page>
+
+                </page>
+
+
+            </field>
+        </record>
+        <record model="ir.ui.view" id="crm_help_desk_search_view_beta_project">
+            <field name="name">Beta help Desk Search View</field>
+            <field name="model">crm.helpdesk</field>
+            <field name="inherit_id" ref="crm_helpdesk.view_crm_case_helpdesk_filter"/>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="od_number" />
+                     <filter string="Organization" icon="terp-partner" domain="[]" help="Partner" context="{'group_by':'od_organization_id'}"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="crm_help_desk_tree_view_beta_project">
+            <field name="name">Beta help Desk Tree View</field>
+            <field name="model">crm.helpdesk</field>
+            <field name="inherit_id" ref="crm_helpdesk.crm_case_tree_view_helpdesk"/>
+            <field name="arch" type="xml">
+
+                <field name="name" position="before">
+                    <field name="od_organization_id" />
+                </field>
+
+                <field name="name" position="after">
+                    <field name="od_brand_ids" widget="many2many_tags" />
+                    <field name="categ_id" />
+                    <field name="od_number" />
+
+                </field>
+                <field name="state" position="after">
+                    <field name="channel_id" />
+                    <field name="od_subgroup_id" />
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="crm_help_desk_graph_view_beta_project">
+            <field name="name">Beta help Desk Search View</field>
+            <field name="model">crm.helpdesk</field>
+            <field name="arch" type="xml">
+                <graph string="Help Desk" type="pivot">
+                    <field name="name" type="row"/>
+                    <field name="od_number" type="row"/>
+
+                </graph>
+            </field>
+        </record>
+
+    </data>
+</openerp>

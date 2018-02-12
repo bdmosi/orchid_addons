@@ -1,0 +1,21 @@
+BZR merge-modified list format 1
+file_id: __init__.py-20141125102633-xwsqjxeimgo9qkpd-1
+hash: 8c2b54a68d7d73a0603daba8e2bcdca86c4426db
+
+file_id: stock_landed_costs_v-20141125102633-xwsqjxeimgo9qkpd-5
+hash: e2c86e357864fb99b3c1c06062f424e0381c6188
+
+file_id: __openerp__.py-20141125102633-xwsqjxeimgo9qkpd-2
+hash: 9fda210f274a04a9bf36f17de9a8000ebcf44d8f
+
+file_id: cost_wiz.py-20160328090402-l9rrlhumy0485fwr-3
+hash: 2688e9fc28cf9cbf3c68d8cae328407254696c48
+
+file_id: cost_wiz_view.xml-20160328090402-l9rrlhumy0485fwr-4
+hash: 67213eec3360c16265190cdc024d33fd0033c068
+
+file_id: stock_landed_costs.p-20141125102633-xwsqjxeimgo9qkpd-4
+hash: 7b213225a5c85037ec8cd9856a85c90148bbd15e
+
+file_id: __init__.py-20160328090402-l9rrlhumy0485fwr-2
+hash: 5db1da3ab28ca07fca1dabd3a43c4d648386876d
