@@ -8,6 +8,7 @@ from openerp.exceptions import Warning
 from pprint import pprint
 from openerp import tools
 from openerp.osv import fields as field2
+from openerp import SUPERUSER_ID
 class project_work(models.Model):
     _inherit = 'project.task.work'
 
@@ -24,7 +25,7 @@ class project_work(models.Model):
         acc_id = False
 
         task_obj = task_obj.browse(cr, uid, vals['task_id'], context=context)
-        result = self.get_user_related_details(cr, uid, vals.get('user_id', uid))
+        result = self.get_user_related_details(cr, SUPERUSER_ID, vals.get('user_id', uid))
         vals_line['name'] = '%s: %s' % (tools.ustr(task_obj.name), tools.ustr(vals['name'] or '/'))
         vals_line['user_id'] = vals['user_id']
         vals_line['product_id'] = result['product_id']

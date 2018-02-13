@@ -5,14 +5,17 @@ from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp.exceptions import Warning
 from pprint import pprint
+from openerp import SUPERUSER_ID
+
 class hr_analytic_timesheet(osv.osv):
     _inherit = "hr.analytic.timesheet"
     
     def od_get_hourly_rate(self,cr,uid,user_id,context=None):
+        uid = SUPERUSER_ID
         employee_pool = self.pool['hr.employee']
         contract_pool = self.pool['hr.contract']
      
-        employee_id = employee_pool.search(cr,uid,[('user_id','=',user_id)],limit=1)
+        employee_id = employee_pool.search(cr,SUPERUSER_ID,[('user_id','=',user_id)],limit=1)
         if not employee_id:
             raise Warning(" This User with User ID %s not Related to Any Employee ,Please Configure First"%user_id)
         contract_id = contract_pool.search(cr,uid,[('employee_id','=',employee_id),('od_active','=',True)],limit=1)

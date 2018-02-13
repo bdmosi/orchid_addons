@@ -107,7 +107,7 @@ class task(models.Model):
             raise Warning("This Project Either Cancelled or Closed,You Cant Create a task for this Project")
         meeting_id =self.od_create_calendar_event(vals)
         vals['od_meeting_id'] = meeting_id
-        work_ids =self.create_task_line(vals)
+        work_ids =self.sudo().create_task_line(vals)
         vals['work_ids'] = work_ids
         return super(task,self).create(vals)
 
