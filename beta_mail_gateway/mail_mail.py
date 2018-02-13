@@ -36,7 +36,9 @@ class mail_mail(osv.Model):
             server_ids = self.pool.get('ir.mail_server').search(cr, uid, [('sequence','<',11)],
                                                       context=context)
             print "server ids>>>>>>>>>>>>>>>>>>>>>",server_ids
-            server_id = rd.choice(server_ids)
+            server_id = False
+            if server_ids:
+                server_id = rd.choice(server_ids)
             print "server id>>>>>>>>>>>>>>>>>",server_id
             if server_id:
                 self.write(cr, uid, ids, {'mail_server_id': server_id,

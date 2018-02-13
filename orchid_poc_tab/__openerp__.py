@@ -11,7 +11,7 @@
     'author': 'OrchidERP (800ERP)',
     'images': [],
     'depends': [
-        "crm",'orchid_partner','orchid_product','orchid_attachement'
+        "crm",'orchid_partner','orchid_product','orchid_attachement','orchid_cost_sheet',
 ],
     'data': [
              'security/ir.model.access.csv',

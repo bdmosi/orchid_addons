@@ -32,12 +32,13 @@ class od_cost_sheet(models.Model):
             base_domain.extend(domain)
             cost_sheet_ids = self.search(cr, uid, base_domain, context=context)
             for costsheet in self.browse(cr,uid,cost_sheet_ids,context=context):
-                val = {'name':costsheet.name,'number':costsheet.number,
-                    'customer':costsheet.od_customer_id and costsheet.od_customer_id.name or '',
-                    'po_status':costsheet.po_status,'sale_person':costsheet.sales_acc_manager and costsheet.sales_acc_manager.name or '',
-                    'owner':costsheet.reviewed_id and costsheet.reviewed_id.name or ''
-                    }
-                remind.append(val)
+                if costsheet.state not in ('cancel','draft','submitted'):
+                    val = {'name':costsheet.name,'number':costsheet.number,
+                        'customer':costsheet.od_customer_id and costsheet.od_customer_id.name or '',
+                        'po_status':costsheet.po_status,'sale_person':costsheet.sales_acc_manager and costsheet.sales_acc_manager.name or '',
+                        'owner':costsheet.reviewed_id and costsheet.reviewed_id.name or ''
+                        }
+                    remind.append(val)
 
         for company_id in [1,6]:
             remind = []
@@ -2491,10 +2492,19 @@ class od_cost_sheet(models.Model):
                   'tax_id':tax_id
                  }]
         return line
+    
+    
+    
+    @api.one 
+    @api.depends('sum_profit','a_bim_cost','a_bmn_cost')
+    def _get_total_gp(self):
+        self.total_gp = self.sum_profit + self.a_bim_cost + self.a_bmn_cost
+    
     summary_tot_cost = fields.Float(string='Total Cost',compute='_get_sum_total_cost',store=True)
     sum_tot_sale = fields.Float(string="Total Sale",compute="_get_total_summary",store=True)
     sum_tot_cost = fields.Float(string='Total Cost',compute="_get_total_summary",store=True)
     sum_profit = fields.Float(string="Total Profit",compute="_get_total_summary",store=True)
+    total_gp = fields.Float(string="Total GP",compute="_get_total_gp")
 #     sum_od_new_profit = fields.Float(string="New Profit",compute="_get_total_summary",store=True)
     sum_profit_per = fields.Float(string="Total Profit Percentage",compute="_get_total_summary",store=True)
     sum_total_weight = fields.Float(string="Total Weight",compute="_get_total_summary",store=True)

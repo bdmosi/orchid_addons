@@ -28,7 +28,7 @@
                </xpath>
                 
                <xpath expr="//field[@name='partner_id']" position="after">
-               	<field name="od_contact_person" domain="[('parent_id','=',partner_id)]" />
+               	<field name="od_contact_person" domain="[('parent_id','=',partner_id)]" required="1" />
                </xpath>
                
                <xpath expr="//field[@name='email_from']" position="attributes">
@@ -100,7 +100,7 @@
              <tbody>
              <tr>
              <td><field name="financial_proposal" /><label string="Financial Proposal" /></td>
-             <td> <field name="od_req_on_7" nolabel="1" /></td>
+             <td> <field name="od_req_on_7" nolabel="1" groups="orchid_beta.group_beta_presales_engineer,orchid_beta.group_beta_presales_manager"/></td>
              <td><field name="od_status_id_7" nolabel="1"/></td>
              <td><field name="finished_on_7" nolabel="1" readonly="1" /></td>
              </tr>

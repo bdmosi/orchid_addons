@@ -223,6 +223,7 @@ class crm_lead(osv.osv):
                'od_creator':fields.many2one('res.users','Creator',readonly=True),
           }
     _defaults = {
+        'financial_proposal':True,
 #                   'man_pre_date': fields.date.context_today,
 #                   'tech_pre_date': fields.date.context_today,
 #                   'proof_date': fields.date.context_today,

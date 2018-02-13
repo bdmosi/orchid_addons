@@ -15,6 +15,7 @@
 					<field name="sum_total_sale" string="Total Sale Value" sum="total"/>
 					<!-- <field name="special_discount" string="Discount or Addition" sum="total"/> -->
 					<!-- <field name="sum_tot_cost" string="Total Cost Value" sum="total"/> -->
+					<field name="total_gp" sum="Total" />
 					<field name="sum_profit" string="Profit without MP" sum="total"/>
 					<!-- <field name="sum_profit_per"/> -->
 					<!-- <field name="a_tot_cost" string="Beta MP" sum="total"/> -->
@@ -2259,7 +2260,7 @@
 									<field name="shipping_value" sum="shipping_value"/>
 									<field name="customs" string="Customs % الجمارك"/>
 									<field name="customs_value" sum="customs_value"/>
-									<field name="stock_provision"/>
+									<field name="stock_provision" readonly="1"/>
 									<field name="stock_provision_value" sum="stock_provision_value"/>
 									<field name="conting_provision"/>
 									<field name="conting_provision_value" sum="conting_provision_value"/>
@@ -2291,7 +2292,7 @@
 									<field name="shipping_value" sum="shipping_value"/>
 									<field name="customs" string="Customs % الجمارك"/>
 									<field name="customs_value" sum="customs_value"/>
-									<field name="stock_provision"/>
+									<field name="stock_provision" readonly="1"/>
 									<field name="stock_provision_value" sum="stock_provision_value"/>
 									<field name="conting_provision"/>
 									<field name="conting_provision_value" sum="conting_provision_value"/>
@@ -2323,7 +2324,7 @@
 									<field name="shipping_value" sum="shipping_value"/>
 									<field name="customs" string="Customs % الجمارك"/>
 									<field name="customs_value" sum="customs_value"/>
-									<field name="stock_provision"/>
+									<field name="stock_provision" readonly="1"/>
 									<field name="stock_provision_value" sum="stock_provision_value"/>
 									<field name="conting_provision"/>
 									<field name="conting_provision_value" sum="conting_provision_value"/>
