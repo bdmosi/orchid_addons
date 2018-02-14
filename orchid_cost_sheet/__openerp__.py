@@ -12,6 +12,7 @@
                
                 'orchid_so2po',
                 
+                
               
                 ],
     "data" : [  'security/ir.model.access.csv',
@@ -46,6 +47,9 @@
                  'change_management/email_template.xml',
                  'change_management/cm_seq.xml',
                  'change_management/change_view.xml',
+                'crm/crm_view.xml',
+                'crm/inquiry_type.xml',
+        
             ],
     'css': [],
 }

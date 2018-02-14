@@ -16,4 +16,5 @@ import sale_order_line_old
 import sale_advance
 import sale
 import change_management
+import crm
 import report

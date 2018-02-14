@@ -11,12 +11,12 @@
     'author': 'OrchidERP (800ERP)',
     'images': [],
     'depends': [
-        "crm",'orchid_partner','orchid_product','orchid_attachement','orchid_cost_sheet',
+         "crm",'orchid_partner','orchid_product','orchid_attachement',
 ],
     'data': [
              'security/ir.model.access.csv',
-             'crm/crm_view.xml',
-             'crm/inquiry_type.xml',
+#              'crm/crm_view.xml',
+#              'crm/inquiry_type.xml',
         
     ],
     'demo': [],
