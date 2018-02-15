@@ -662,7 +662,7 @@ class task(models.Model):
                 if day_diff > 1:
                     self.od_end_kpi = 0
                 else:
-                    self.od_end_kpi = 100
+                    self.od_end_kpi = 60
 
 
     @api.one
@@ -671,11 +671,11 @@ class task(models.Model):
         if self.od_type == 'activities':
             quality = self.od_quality_of_implementation
             if quality == 'good':
-                self.od_qualiy_kpi = 5
+                self.od_qualiy_kpi = 20
             elif quality == 'average':
-                self.od_qualiy_kpi = 3
+                self.od_qualiy_kpi = 12
             else:
-                self.od_qualiy_kpi = 0
+                self.c = 0
 
     @api.one
     @api.depends('od_type','od_quality_of_documentation')
@@ -683,9 +683,9 @@ class task(models.Model):
         if self.od_type == 'activities':
             doc = self.od_quality_of_documentation
             if doc == 'good':
-                self.od_doc_kpi = 5
+                self.od_doc_kpi = 20
             elif doc == 'average':
-                self.od_doc_kpi = 3
+                self.od_doc_kpi = 12
             else:
                 self.od_doc_kpi = 0
 
@@ -710,7 +710,7 @@ class task(models.Model):
     def _get_overnight_kpi(self):
 
         if self.od_type == "activities" and self.od_overnight:
-            self.od_overnight_kpi = 1
+            self.od_overnight_kpi = 15
         else:
             self.od_overnight_kpi = 0
 
@@ -718,10 +718,15 @@ class task(models.Model):
     @api.depends('od_type','od_outstation')
     def _get_outstation_kpi(self):
         if self.od_type == "activities" and self.od_outstation:
-            self.od_outstation_kpi = 1
+            self.od_outstation_kpi = 15
         else:
             self.od_outstation_kpi = 0
-
+    
+    @api.one 
+    def _get_kpi_total(self):
+        self.od_total_kpi = self.od_end_kpi +self.od_qualiy_kpi + self.od_doc_kpi +self.od_overnight_kpi + self.od_outstation_kpi 
+        
+    od_total_kpi = fields.Float(string="Total Scores",compute="_get_kpi_total")
     od_time_kpi = fields.Float(string="Time KPI",compute="_get_time_kpi")
     od_end_kpi = fields.Float(string="Planned Done KPI",compute="_get_end_kpi")
     od_qualiy_kpi = fields.Float(string="Quality Points",compute="_get_quality_kpi")

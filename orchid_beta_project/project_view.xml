@@ -290,33 +290,37 @@
                   	 	<th>Points</th>
                   	 </thead>
                   	 <tbody>
-                  	 <tr>
+                  	<!--  <tr>
                        <td>Planned Hours - Actual Hours</td>
                        <td><field name="od_time_kpi" /></td>
-                     </tr>
+                     </tr> -->
                      <tr>
-                       <td>Done Date - Planned Date</td>
+                       <td>Finished On Time</td>
                        <td><field name="od_end_kpi" /></td>
                      </tr>
                      <tr>
-                       <td>Quality Points</td>
+                       <td>Quality of Activity Implementation</td>
                        <td><field name="od_qualiy_kpi" /></td>
                      </tr>
                       <tr>
-                        <td>Documentation Points</td>
+                        <td>Quality of Documentation</td>
                         <td><field name="od_doc_kpi" /></td>
                       </tr>
-                      <tr>
+                      <!-- <tr>
                         <td>Complexiety Points</td>
                         <td><field name="od_complexiety_kpi" /></td>
-                      </tr>
+                      </tr> -->
                       <tr>
-                        <td>Overnight</td>
+                        <td>Overnight Activity</td>
                         <td><field name="od_overnight_kpi" /></td>
                       </tr>
                        <tr>
-                         <td>Outstation</td>
+                         <td>Outstation Activity</td>
                          <td><field name="od_outstation_kpi" /></td>
+                       </tr>
+                       	 <tr>
+                         <td> <strong> Total Score </strong> </td>
+                         <td> <strong> <field name="od_total_kpi" /> </strong>  </td>
                        </tr>
                      </tbody>
                      </table>
@@ -328,7 +332,7 @@
                        	 </thead>
                        	 <tbody>
                        	 <tr>
-                            <td>Evalution On Time</td>
+                            <td>Evaluation On Time</td>
                             <td><field name="od_technical_kpi" /></td>
                           </tr>
                           </tbody>

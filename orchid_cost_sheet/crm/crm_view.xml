@@ -41,18 +41,18 @@
           		<attribute name="required">True</attribute>
           	</field>
             <xpath expr="/form/sheet/notebook/page[@string='Internal Notes']" position="before">
-            <page string="Information">
+           <!--  <page string="Information">
             	<group >
             	<group>
             		<field name="od_buisiness_type_id" required="1"/>
             		<field name="od_territory_id"/>
-            	<!-- 	<field name="od_opp_sector_id" /> -->
+            		<field name="od_opp_sector_id" />
             	    <field name="od_inquiry_type_id" options="{'no_create': True}" required="1"/>
             	    <field name="od_buisiness_type_ids" widget="many2many_tags" required="1"/>
             	    <field name="od_submission_date" invisible="1"/>
             	    <field name="od_protected_by_vendor" required="1" />
             	    <field name="od_existing_customer" required="1"/>
-            	  <!--   <field name="od_customer_need" /> -->
+            	    <field name="od_customer_need" />
             	</group>
             	<group>
             	    <field name="od_installation_type_id" required="1"/>
@@ -85,7 +85,7 @@
             	
             	    
             	
-            </page>
+            </page> -->
             <page string="Appointments" >
             <group>
              <table style="width:100%">
