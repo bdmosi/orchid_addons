@@ -1710,7 +1710,7 @@ class od_cost_sheet(models.Model):
         self.summarize_revenue()
         self.generate_summary_weight()
         self.pull_branch_div()
-        self.update_submit_date()
+#         self.update_submit_date()
     
     def price_fix_line(self,line_id,xno=1):
         for line in line_id:
