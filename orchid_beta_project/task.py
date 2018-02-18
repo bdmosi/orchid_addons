@@ -651,15 +651,24 @@ class task(models.Model):
             else:
                 self.od_time_kpi = 0
 
+    def get_date_done(self):
+        date_done = False
+        for line in self.work_ids:
+            date_done  = line.od_complete_date 
+        if not date_done:
+            date_done = self.od_date_done
+        return date_done
+   
+    
     @api.one
     @api.depends('od_type','date_end','od_date_done')
     def _get_end_kpi(self):
         if self.od_type == 'activities':
             date_end = self.date_end
-            date_done = self.od_date_done
+#             date_done = self.od_date_done
+            date_done = self.get_date_done()
             if date_done and date_end:
-                day_diff = self.get_day_diff(date_end,date_done)
-                if day_diff > 1:
+                if date_done > date_end:
                     self.od_end_kpi = 0
                 else:
                     self.od_end_kpi = 60
