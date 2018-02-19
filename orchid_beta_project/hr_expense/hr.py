@@ -3,6 +3,8 @@ from openerp import models,fields,api,_
 from openerp.exceptions import Warning
 import re
 from datetime import date as dt
+from datetime import timedelta,datetime
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 class hr_employee(models.Model):
     _inherit ="hr.employee"
     
@@ -170,6 +172,8 @@ class hr_employee(models.Model):
     def update_audit_sample(self,sample_id,aud_date_start,aud_date_end,audit_temp_id):
         type = audit_temp_id.type
         user_id  = self.user_id and self.user_id.id
+        employee_id = self.id
+        dt_start = aud_date_start
         result = []
         if type =='post_sales':
             data_model = 'project.task'
@@ -182,15 +186,128 @@ class hr_employee(models.Model):
                 result.append((0,0,{'task_id':data.id,'score':data.od_total_kpi}))
             sample_id.post_sale_sample_line.unlink()
             sample_id.write({'post_sale_sample_line':result})
+        
+        if type =='ttl':
+            eng_ids = self.search([('coach_id','=',employee_id)]) 
+            user_ids = [emp.user_id.id for emp in eng_ids] 
+            data_model = 'project.task'
+            avl_time = self.get_available_time(dt_start) or 1
+            aud_date_start = aud_date_start +' 04:00:00'
+            aud_date_end = aud_date_end + ' 23:58:58'
+            fot_data = []
+            engineer_task_count = 0
+            utl_list = []
+            fot_list =[]
+            for user_id in user_ids:
+                domain = [('od_type','=','activities'),('user_id','=',user_id),('od_stage','=','done')]
+                domain.extend([('date_start','>=',aud_date_start),('date_start','<=',aud_date_end)]) 
+                data_ids =self.env[data_model].search(domain)
+                spent_time = 0.0
+                fot = sum([dat.od_end_kpi*(100/60.0) for dat in data_ids])/(float(len(data_ids)) or 1.0)
+                engineer_task_count += len(data_ids)
+                for data in data_ids:
+                    spent_time += sum([work.hours for work in data.work_ids])
+                utl = spent_time/avl_time
+                result.append((0,0,{'user_id':user_id,'available_time':avl_time,'actual_time_spent':spent_time,'utl':spent_time/avl_time}))
+                fot_data.append((0,0,{'user_id':user_id,'fot':fot}))
+                if utl >=.65:
+                    utl =1
+                utl_list.append(utl)
+                fot_list.append(fot)
             
+            utl_score = sum(utl_list)/(float(len(utl_list)) or 1.0)
+            fot_score  = sum(fot_list)/(float(len(fot_list)) or 1.0)
+            cancelled_activities = self.get_cancelled_activities(self.user_id.id,aud_date_start,aud_date_end,engineer_task_count) 
+            escalation_activities = self.get_escalation_activities(aud_date_start,aud_date_end,user_ids)
+            
+            weight_escalate = escalation_activities.get('weight_escalate',False)
+            weight_task_cancel = cancelled_activities.get('weight_task',False)
+            print "weight escalate>>>>>>>>>>>>>>>>>>>>>> weight task cancel>>>>>>>>>>>",weight_escalate,weight_task_cancel
+            wt_esc = wt_tsk_cncl = wt_utl = wt_fot =0.0
+            if weight_escalate and not weight_task_cancel:
+                wt_esc= 10+ (10 *(30/70.0))
+                wt_tsk_cncl =0.0
+                wt_utl = 30+ (30 *(30/70.0))
+                wt_fot = 30+ (30 *(30/70.0))
+            if not weight_escalate and weight_task_cancel:
+                wt_esc= 0.0
+                wt_tsk_cncl =30+ (30 *(10/90))
+                wt_utl = 30+ (30 *(10/90))
+                wt_fot = 30+ (30 *(10/90))
+            if not weight_escalate and not weight_task_cancel:
+                wt_esc= 0.0
+                wt_tsk_cncl =0.0
+                wt_utl = 30+ (30 *(40/60))
+                wt_fot = 30+ (30 *(40/60))
+            if weight_escalate and weight_task_cancel:
+                wt_esc= 10
+                wt_tsk_cncl =30
+                wt_utl = 30
+                wt_fot = 30
+            tsk_cncl_scr = cancelled_activities.get('score',0.0)
+            esc_scr =escalation_activities.get('score',0.0)
+            comp_data = []
+            comp_data.append((0,0,{'name':'Finished On Time','weight':wt_fot,'score':fot_score,'final_score':(wt_fot/100.0) * fot_score}))
+            comp_data.append((0,0,{'name':'Team Utilization','weight':wt_utl,'score':utl_score,'final_score':wt_utl * utl_score}))
+            if wt_tsk_cncl:
+                comp_data.append((0,0,{'name':'Percentage Of Cancelled Activities','weight':wt_tsk_cncl,'score':tsk_cncl_scr,'final_score':wt_tsk_cncl * tsk_cncl_scr}))
+            if wt_esc:
+                comp_data.append((0,0,{'name':'Escalation From Activity Owner','weight':wt_esc,'score':esc_scr,'final_score':wt_esc * esc_scr}))
+            sample_id.utl_sample_line.unlink()
+            sample_id.ttl_fot_line.unlink()
+            sample_id.comp_line.unlink()
+            sample_id.write({'utl_sample_line':result,'ttl_fot_line':fot_data,'comp_line':comp_data})
     
+    def get_available_time(self,aud_date_start):
+       
+        fromdate = datetime.strptime(aud_date_start, DEFAULT_SERVER_DATE_FORMAT)
+        todate = datetime.today()
+        daygenerator = (fromdate + timedelta(x + 1) for x in xrange((todate - fromdate).days))
+        days =sum(1 for day in daygenerator if day.weekday() not in (4,5)) 
+        days +=1
+        return days*9
+    
+    def get_cancelled_activities(self,user_id,aud_date_start,aud_date_end,engineer_task_count):
+        task = self.env['project.task']
+        domain = [('od_type','=','activities'),('cancel_tl_id','=',user_id),('od_stage','=','cancel_by_tl')]
+        domain.extend([('date_start','>=',aud_date_start),('date_start','<=',aud_date_end)]) 
+        task_ids  =task.search(domain)
+        if task_ids:
+            no_of_cancel_act = len(task_ids)
+            tolerance = no_of_cancel_act/engineer_task_count
+            if tolerance>10:
+                return {'score':0.0,'weight_task':True}
+            else:
+                return {'score':1.0,'weight_task':True}
+                
+        else:
+            return {'weight_task':False,'score':0.0}
+    def get_escalation_activities(self,aud_date_start,aud_date_end,user_ids):
+        resolved =0
+        escalated =0
+        for user_id in user_ids:
+            domain = [('od_type','=','activities'),('user_id','=',user_id)]
+            domain2=[('od_type','=','activities'),('user_id','=',user_id)]
+            domain.extend([('date_start','>=',aud_date_start),('date_start','<=',aud_date_end),('od_owner_esc_status','=','resolved')]) 
+            resolved_ids =self.env['project.task'].search(domain)
+            domain2.extend([('date_start','>=',aud_date_start),('date_start','<=',aud_date_end),('od_owner_esc_status','in',('escalated','not_solved'))])
+            resolved +=len(resolved_ids)
+            escalated_ids  = self.env['project.task'].search(domain2)
+            escalated += len(escalated_ids)
+        total_count = resolved + escalated
+        if total_count ==0:
+            return {'weight_escalate':False,'score':0}
+        else:
+            return {'weight_escalate':True,'score':resolved/float(total_count)}
+        
+        
     def create_audit_sample(self,aud_date_start,aud_date_end,audit_temp_id):
         type = audit_temp_id.type
         user_id  = self.user_id and self.user_id.id
         result = []
-        score_board = []
         sample_id = False
         employee_id = self.id
+        dt_start = aud_date_start
         name = self.name + '-' +aud_date_start +' To -'+aud_date_end
         vals = {}
         vals.update({'name':name,'date_start':aud_date_start,'date_end':aud_date_end,
@@ -207,6 +324,79 @@ class hr_employee(models.Model):
                 result.append((0,0,{'task_id':data.id,'score':data.od_total_kpi}))
             vals.update({'post_sale_sample_line':result})
             sample_id =self.env['audit.sample'].create(vals)
+        
+        
+        if type =='ttl':
+            eng_ids = self.search([('coach_id','=',employee_id)]) 
+            user_ids = [emp.user_id.id for emp in eng_ids] 
+            data_model = 'project.task'
+            avl_time = self.get_available_time(dt_start) or 1
+            aud_date_start = aud_date_start +' 04:00:00'
+            aud_date_end = aud_date_end + ' 23:58:58'
+            fot_data = []
+            engineer_task_count = 0
+            utl_list = []
+            fot_list =[]
+            for user_id in user_ids:
+                domain = [('od_type','=','activities'),('user_id','=',user_id),('od_stage','=','done')]
+                domain.extend([('date_start','>=',aud_date_start),('date_start','<=',aud_date_end)]) 
+                data_ids =self.env[data_model].search(domain)
+                spent_time = 0.0
+                fot = sum([dat.od_end_kpi*(100/60.0) for dat in data_ids])/(float(len(data_ids)) or 1.0)
+                engineer_task_count += len(data_ids)
+                for data in data_ids:
+                    spent_time += sum([work.hours for work in data.work_ids])
+                utl = spent_time/avl_time
+                result.append((0,0,{'user_id':user_id,'available_time':avl_time,'actual_time_spent':spent_time,'utl':spent_time/avl_time}))
+                fot_data.append((0,0,{'user_id':user_id,'fot':fot}))
+                if utl >=.65:
+                    utl =1
+                utl_list.append(utl)
+                fot_list.append(fot)
+            
+            utl_score = sum(utl_list)/(float(len(utl_list)) or 1.0)
+            fot_score  = sum(fot_list)/(float(len(fot_list)) or 1.0)
+            cancelled_activities = self.get_cancelled_activities(self.user_id.id,aud_date_start,aud_date_end,engineer_task_count) 
+            escalation_activities = self.get_escalation_activities(aud_date_start,aud_date_end,user_ids)
+            
+            weight_escalate = escalation_activities.get('weight_escalate',False)
+            weight_task_cancel = cancelled_activities.get('weight_task',False)
+            
+            wt_esc = wt_tsk_cncl = wt_utl = wt_fot =0.0
+            if weight_escalate and not weight_task_cancel:
+                wt_esc= 10+ (10 *(30/70.0))
+                wt_tsk_cncl =0.0
+                wt_utl = 30+ (30 *(30/70.0))
+                wt_fot = 30+ (30 *(30/70.0))
+            if not weight_escalate and weight_task_cancel:
+                wt_esc= 0.0
+                wt_tsk_cncl =30+ (30 *(10/90))
+                wt_utl = 30+ (30 *(10/90))
+                wt_fot = 30+ (30 *(10/90))
+            if not weight_escalate and not weight_task_cancel:
+                wt_esc= 0.0
+                wt_tsk_cncl =0.0
+                wt_utl = 30+ (30 *(40/60))
+                wt_fot = 30+ (30 *(40/60))
+            if weight_escalate and weight_task_cancel:
+                wt_esc= 10
+                wt_tsk_cncl =30
+                wt_utl = 30
+                wt_fot = 30
+            tsk_cncl_scr = cancelled_activities.get('score',0.0)
+            esc_scr =escalation_activities.get('score',0.0)
+            comp_data = []
+            comp_data.append((0,0,{'name':'Finished On Time','weight':wt_fot,'score':fot_score,'final_score':(wt_fot/100.0) * fot_score}))
+            comp_data.append((0,0,{'name':'Team Utilization','weight':wt_utl,'score':utl_score,'final_score':wt_utl * utl_score}))
+            if wt_tsk_cncl:
+                comp_data.append((0,0,{'name':'Percentage Of Cancelled Activities','weight':wt_tsk_cncl,'score':tsk_cncl_scr,'final_score':wt_tsk_cncl * tsk_cncl_scr}))
+            if wt_esc:
+                comp_data.append((0,0,{'name':'Escalation From Activity Owner','weight':wt_esc,'score':esc_scr,'final_score':wt_esc * esc_scr}))
+            vals.update({'utl_sample_line':result,'ttl_fot_line':fot_data,'comp_line':comp_data}) 
+            sample_id =self.env['audit.sample'].create(vals)
+            
+            
+            #create utlization line
         return sample_id
     
     
@@ -219,7 +409,8 @@ class hr_employee(models.Model):
                     cert_st ='cert_status'+ex_num
                     if eval('self.'+cert_st) == 'achieved':
                         score +=20
-                        
+            if score >100:
+                score = 100.0         
             return score
     
     @api.one
@@ -256,7 +447,6 @@ class hr_employee(models.Model):
         for i in range(1,13):
             date_start =year+'-'+str(month_start1)+'-'  + str(day_one)
             date_stop = year+'-'+str(month_start2)+'-'  + str(day_end)
-            print "date start>>>>>>>>>>>>>>>>>date stop>>>>>>>>>>>>>>>>",date_start,date_stop
             day_one =27
             month_start2+=1
             month_start1= month_start2-1
@@ -266,7 +456,10 @@ class hr_employee(models.Model):
     def audit_set_execution(self):
         today = dt.today()
         month_number = today.month
-        ext ='execute'+str(today.month)
+        day = today.day 
+        if day >26:
+            month_number +=1
+        ext ='execute'+str(month_number)
         self.write({ext:True})
         for i in range(1,13):
             if i != month_number:

@@ -34,9 +34,9 @@
                   <field name="od_complexiety" />
                   <field name="od_overnight" />
                   <field name="od_outstation" />
-                  <field name="od_owner_approval" />
+              <!--     <field name="od_owner_approval" />
                   <field name="od_satisfaction" />
-                  <field name="od_auto_approved" />
+                  <field name="od_auto_approved" /> -->
 
               </field>
 
@@ -60,6 +60,8 @@
                 <field name="od_stage" widget="statusbar" />
                  <button string="Done" name="btn_done" type="object" class="oe_highlight"  attrs="{'invisible':[('od_stage','!=','draft')]}"/>
                  <button string="Cancel" name="%(od_task_wiz_confirm_action)d" type="action" class="oe_highlight" attrs="{'invisible':[('od_stage','!=','draft')]}" />
+                  <button string="Cancel By TL" name="btn_cancel_by_tl" type="object" class="oe_highlight" attrs="{'invisible':[('od_stage','!=','draft')]}" />
+                 
                  <button string="Reset" name="btn_reset" type="object" class="oe_highlight" attrs="{'invisible':[('od_stage','!=','done')]}" />
             </field>
             <field name="categ_ids" position="after">
@@ -268,7 +270,7 @@
                     </tree>
                   </field>
             	</page>
-            	<page string="Owner Evaluation" attrs="{'invisible': [('od_stage','!=','done')]}">
+            	<!-- <page string="Owner Evaluation" attrs="{'invisible': [('od_stage','!=','done')]}">
             		<group>
             			<field name="od_owner_approval" string="Owner Feedback" />
             			<field name="od_satisfaction" />
@@ -281,6 +283,27 @@
                       <field name="date" />
                     </tree>
                   </field>
+            	</page> -->
+            	<page string="Owner Evaluation" attrs="{'invisible': [('od_stage','!=','done')]}">
+            		<field name="od_own_esc" invisible="1" />
+            		 <button string="Escalate" type="object" class="oe_highlight" name="btn_owner_esclate" attrs="{'invisible':[('od_own_esc','!=',False)]}"/>
+            		 <button string="Resolved" type="object" class="oe_highlight" name="btn_owner_resolved" attrs="{'invisible':['|',('od_own_esc','=',False),('od_owner_esc_status','in',('resolved','not_solved'))]}"/>
+            		 <table style="width:100%" class="table table-striped">
+                  	<thead>
+                  	 	<th>Escalation Time</th>
+                  	 	<th>Resolution Time</th>
+                  	 	<th>Status</th>
+                  	 </thead>
+                  	 <tbody>
+                     <tr>
+                       <td><field name="od_owner_esc_time" readonly="1"/></td>
+                       <td><field name="od_owner_res_time" readonly="1"/></td>
+                       <td><field name="od_owner_esc_status" readonly="1"/></td>
+                     </tr>
+                     </tbody>
+                    </table>
+            		
+            	
             	</page>
                 <page string="KPI" attrs="{'invisible': [('od_type','!=','activities')]}">
                 <separator string="Engineer" />
@@ -801,12 +824,12 @@
                             <div>
                                   <t t-if="record.od_type.raw_value=='activities'"><span>Complexity Points: <field name="od_complexiety"/></span></t>
                             </div>
-                            <div>
+                           <!--  <div>
                                   <t t-if="record.od_type.raw_value=='activities'"><span>Owner Approval: <field name="od_owner_approval"/></span></t>
                             </div>
                             <div>
                                   <t t-if="record.od_type.raw_value=='activities'"><span>Owner Satisfaction: <field name="od_satisfaction"/></span></t>
-                            </div>
+                            </div> -->
                               <div class="oe_kanban_footer_left">
                                   <span groups="project.group_time_work_estimation_tasks" title="Remaining hours">
                                       <span class="oe_e">N</span>

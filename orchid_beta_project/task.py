@@ -15,6 +15,29 @@ class task(models.Model):
     _inherit = 'project.task'
     
     
+    def check_audit_period(self):
+        today = date.today()
+        year = today.year
+        month = today.month 
+        day = today.day 
+        if day >26:
+            month = month +1
+        audit_end = str(year)+'-'+str(month)+'-'+str(26)
+        audit_end = datetime.strptime(audit_end,'%Y-%m-%d')
+        task_end_date = self.date_end 
+        task_end_date = datetime.strptime(task_end_date,DEFAULT_SERVER_DATETIME_FORMAT)
+        if task_end_date > audit_end:
+            return True
+        return False
+    @api.multi 
+    def btn_cancel_by_tl(self):
+        if self.check_audit_period():
+            self.unlink()
+        else:
+            self.work_ids.unlink()
+            self.od_stage ='cancel_by_tl'
+            self.cancel_tl_id = self._uid
+    
     def od_milestone_escalation_schedule(self,cr,uid,context=None):
         print "milestone escalation schedule starded"
         today = date.today()
@@ -573,7 +596,8 @@ class task(models.Model):
     date_start  = fields.Datetime('Starting Date',track_visibility='onchange')
     od_help_desk_issue_id = fields.Many2one('crm.helpdesk',string="Help Desk Issue Sequence")
     od_meeting_id = fields.Many2one('calendar.event',string='Meeting')
-    od_stage = fields.Selection([('draft','In Progress'),('done','Done')],string="Status",default='draft')
+    od_stage = fields.Selection([('draft','In Progress'),('done','Done'),('cancel_by_tl','Cancelled By TL'),('cancel_by_owner','Cancelled By Owner')],string="Status",default='draft',track_visibility='onchange')
+    cancel_tl_id = fields.Many2one('res.users',string="Cancel TL User")
     od_date_done = fields.Datetime(string="Date Done",readonly=True)
     od_opp_id = fields.Many2one('crm.lead',string="Opportunity")
     od_max_date = fields.Datetime(string="Computational Max Date",compute="od_get_max_end_date")
@@ -629,6 +653,12 @@ class task(models.Model):
     od_by_delegate = fields.Boolean('By Delegate')
     od_owner_eval_log_ids = fields.One2many('od.task.owner.eval.log','task_id',string="Owner Eval Log",readonly=True)
 
+#new Owner evaluation by escalation
+    od_owner_esc_time = fields.Datetime(string="Escalation Time",track_visibility='onchange') 
+    od_owner_res_time = fields.Datetime(string="Resolution Time",track_visibility='onchange')
+    od_owner_esc_status  = fields.Selection([('escalated','Escalated'),('resolved','Resolved'),('not_solved','Not Resolved')],string="Owner Escalation Status",track_visibility='onchange')
+    od_own_esc = fields.Boolean(string="Escalated?") 
+  
 #   Prerequisite
     od_activity_technical_obj = fields.Text(string="Activity Technical Objective")
     od_eqp_application = fields.Text(string="Equipment / Applications")
@@ -639,6 +669,28 @@ class task(models.Model):
     material_loaded = fields.Boolean(string="Material Loaded")
 #contact person details fields
     od_contact_person_details = fields.Text(string="Details")
+    
+    @api.multi 
+    def btn_owner_esclate(self):
+        self.od_own_esc =True
+        self.od_owner_esc_status ='escalated'
+        self.od_owner_esc_time = str(datetime.now())
+
+    @api.multi 
+    def btn_owner_resolved(self):
+        if self.od_owner_esc_status == 'not_solved':
+            raise Warning("24 Hr Time Exceeded to Resolve the Task, Now you cant Resolve this Activity")
+        resolve_time = datetime.strftime(datetime.now(),DEFAULT_SERVER_DATETIME_FORMAT)
+        escalation_time = self.od_owner_esc_time
+        hours = self.get_time_diff(escalation_time, resolve_time)
+        if hours > 24:
+            self.od_owner_esc_status ='not_solved'
+            return True
+        self.od_owner_res_time =str(datetime.now())
+        self.od_owner_esc_status ='resolved'
+
+
+
 #engineer KPI
     @api.one
     @api.depends('od_type','od_actual','planned_hours')
@@ -781,7 +833,6 @@ class od_material_request(models.Model):
         res = []
         product_ids = []
         context = self._context
-
         pprint(context)
         params = context.get('params',False)
         project_id =context.get('default_project_id')

@@ -18,11 +18,33 @@ class audit_sample(models.Model):
     method = fields.Text(string="Method")
     avg_score = fields.Float(string="Monthly Avg Score",compute="_get_avg_score")
     post_sale_sample_line = fields.One2many('post.sales.comp.sample','sample_id',string="Post Sales Samples")
-    
-    
+    utl_sample_line = fields.One2many('ttl.utl.sample','sample_id',string="Utilization Component")
+    ttl_fot_line = fields.One2many('ttl.ontime.sample','sample_id',string="Utilization FOT")
+    comp_line = fields.One2many('component.line','sample_id',string="Component Line")
 class post_sales_comp_sample(models.Model):
     _name ='post.sales.comp.sample'
     sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
     task_id = fields.Many2one('project.task',string="Activity",ondelete="cascade")
     score = fields.Float(string="Score")
+    
+class ttl_utilization_sample(models.Model):
+    _name ='ttl.utl.sample'
+    user_id = fields.Many2one('res.users',string="User")
+    sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
+    actual_time_spent = fields.Float(string="Actual Time Spent")
+    available_time = fields.Float(string="Available Time")
+    utl = fields.Float(string="Utilization")
+class ttl_on_time_sample(models.Model):
+    _name ='ttl.ontime.sample'
+    user_id = fields.Many2one('res.users',string="User")
+    sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
+    fot = fields.Float(string="Finished On Time")
+class component_line(models.Model):
+    _name = 'component.line'
+    sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
+    name = fields.Char(string="Component")
+    weight = fields.Float(string="Weight")
+    score = fields.Float(string="Score")
+    final_score = fields.Float(string="Final Score")
+    
     
