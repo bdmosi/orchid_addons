@@ -208,7 +208,7 @@ class hr_employee(models.Model):
                 for data in data_ids:
                     spent_time += sum([work.hours for work in data.work_ids])
                 utl = spent_time/avl_time
-                result.append((0,0,{'user_id':user_id,'available_time':avl_time,'actual_time_spent':spent_time,'utl':spent_time/avl_time}))
+                result.append((0,0,{'user_id':user_id,'available_time':avl_time,'actual_time_spent':spent_time,'utl':(spent_time/avl_time)*100.0}))
                 fot_data.append((0,0,{'user_id':user_id,'fot':fot}))
                 if utl >=.65:
                     utl =1
@@ -231,28 +231,31 @@ class hr_employee(models.Model):
                 wt_fot = 30+ (30 *(30/70.0))
             if not weight_escalate and weight_task_cancel:
                 wt_esc= 0.0
-                wt_tsk_cncl =30+ (30 *(10/90))
-                wt_utl = 30+ (30 *(10/90))
-                wt_fot = 30+ (30 *(10/90))
+                wt_tsk_cncl =30+ (30 *(10/90.0))
+                wt_utl = 30+ (30 *(10/90.0))
+                wt_fot = 30+ (30 *(10/90.0))
             if not weight_escalate and not weight_task_cancel:
                 wt_esc= 0.0
                 wt_tsk_cncl =0.0
-                wt_utl = 30+ (30 *(40/60))
-                wt_fot = 30+ (30 *(40/60))
+                wt_utl = 30+ (30 *(40/60.0))
+                wt_fot = 30+ (30 *(40/60.0))
+                print "here>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>xxxxxxxxxxxxxx",wt_fot
             if weight_escalate and weight_task_cancel:
+                print "here>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",weight_escalate,weight_escalate,weight_escalate and weight_task_cancel
                 wt_esc= 10
                 wt_tsk_cncl =30
                 wt_utl = 30
                 wt_fot = 30
+            print "wtfot>>>>>>>>>>>>>>>>>>>>",wt_fot
             tsk_cncl_scr = cancelled_activities.get('score',0.0)
             esc_scr =escalation_activities.get('score',0.0)
             comp_data = []
             comp_data.append((0,0,{'name':'Finished On Time','weight':wt_fot,'score':fot_score,'final_score':(wt_fot/100.0) * fot_score}))
-            comp_data.append((0,0,{'name':'Team Utilization','weight':wt_utl,'score':utl_score,'final_score':wt_utl * utl_score}))
+            comp_data.append((0,0,{'name':'Team Utilization','weight':wt_utl,'score':utl_score*100,'final_score':wt_utl * utl_score}))
             if wt_tsk_cncl:
                 comp_data.append((0,0,{'name':'Percentage Of Cancelled Activities','weight':wt_tsk_cncl,'score':tsk_cncl_scr,'final_score':wt_tsk_cncl * tsk_cncl_scr}))
             if wt_esc:
-                comp_data.append((0,0,{'name':'Escalation From Activity Owner','weight':wt_esc,'score':esc_scr,'final_score':wt_esc * esc_scr}))
+                comp_data.append((0,0,{'name':'Escalation From Activity Owner','weight':wt_esc,'score':esc_scr*100,'final_score':wt_esc * esc_scr}))
             sample_id.utl_sample_line.unlink()
             sample_id.ttl_fot_line.unlink()
             sample_id.comp_line.unlink()
@@ -347,7 +350,7 @@ class hr_employee(models.Model):
                 for data in data_ids:
                     spent_time += sum([work.hours for work in data.work_ids])
                 utl = spent_time/avl_time
-                result.append((0,0,{'user_id':user_id,'available_time':avl_time,'actual_time_spent':spent_time,'utl':spent_time/avl_time}))
+                result.append((0,0,{'user_id':user_id,'available_time':avl_time,'actual_time_spent':spent_time,'utl':(spent_time/avl_time)*100.0}))
                 fot_data.append((0,0,{'user_id':user_id,'fot':fot}))
                 if utl >=.65:
                     utl =1
@@ -387,11 +390,11 @@ class hr_employee(models.Model):
             esc_scr =escalation_activities.get('score',0.0)
             comp_data = []
             comp_data.append((0,0,{'name':'Finished On Time','weight':wt_fot,'score':fot_score,'final_score':(wt_fot/100.0) * fot_score}))
-            comp_data.append((0,0,{'name':'Team Utilization','weight':wt_utl,'score':utl_score,'final_score':wt_utl * utl_score}))
+            comp_data.append((0,0,{'name':'Team Utilization','weight':wt_utl,'score':utl_score*100,'final_score':wt_utl * utl_score}))
             if wt_tsk_cncl:
                 comp_data.append((0,0,{'name':'Percentage Of Cancelled Activities','weight':wt_tsk_cncl,'score':tsk_cncl_scr,'final_score':wt_tsk_cncl * tsk_cncl_scr}))
             if wt_esc:
-                comp_data.append((0,0,{'name':'Escalation From Activity Owner','weight':wt_esc,'score':esc_scr,'final_score':wt_esc * esc_scr}))
+                comp_data.append((0,0,{'name':'Escalation From Activity Owner','weight':wt_esc,'score':esc_scr*100,'final_score':wt_esc * esc_scr}))
             vals.update({'utl_sample_line':result,'ttl_fot_line':fot_data,'comp_line':comp_data}) 
             sample_id =self.env['audit.sample'].create(vals)
             
