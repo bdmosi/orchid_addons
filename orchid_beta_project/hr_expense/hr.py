@@ -169,97 +169,21 @@ class hr_employee(models.Model):
         return result[0]
     
     
-    def update_audit_sample(self,sample_id,aud_date_start,aud_date_end,audit_temp_id):
-        type = audit_temp_id.type
+    
+    def get_post_sales_vals(self,sample_id,aud_date_start,aud_date_end):
         user_id  = self.user_id and self.user_id.id
-        employee_id = self.id
-        dt_start = aud_date_start
         result = []
-        if type =='post_sales':
-            data_model = 'project.task'
-            domain = [('od_type','=','activities'),('user_id','=',user_id),('od_stage','=','done')]
-            aud_date_start = aud_date_start +' 04:00:00'
-            aud_date_end = aud_date_end + ' 23:58:58'
-            domain.extend([('date_start','>=',aud_date_start),('date_start','<=',aud_date_end)]) 
-            data_ids =self.env[data_model].search(domain)
-            for data in data_ids: 
-                result.append((0,0,{'task_id':data.id,'score':data.od_total_kpi}))
-            sample_id.post_sale_sample_line.unlink()
-            sample_id.write({'post_sale_sample_line':result})
-        
-        if type =='ttl':
-            eng_ids = self.search([('coach_id','=',employee_id)]) 
-            user_ids = [emp.user_id.id for emp in eng_ids] 
-            data_model = 'project.task'
-            avl_time = self.get_available_time(dt_start) or 1
-            aud_date_start = aud_date_start +' 04:00:00'
-            aud_date_end = aud_date_end + ' 23:58:58'
-            fot_data = []
-            engineer_task_count = 0
-            utl_list = []
-            fot_list =[]
-            for user_id in user_ids:
-                domain = [('od_type','=','activities'),('user_id','=',user_id),('od_stage','=','done')]
-                domain.extend([('date_start','>=',aud_date_start),('date_start','<=',aud_date_end)]) 
-                data_ids =self.env[data_model].search(domain)
-                spent_time = 0.0
-                fot = sum([dat.od_end_kpi*(100/60.0) for dat in data_ids])/(float(len(data_ids)) or 1.0)
-                engineer_task_count += len(data_ids)
-                for data in data_ids:
-                    spent_time += sum([work.hours for work in data.work_ids])
-                utl = spent_time/avl_time
-                result.append((0,0,{'user_id':user_id,'available_time':avl_time,'actual_time_spent':spent_time,'utl':(spent_time/avl_time)*100.0}))
-                fot_data.append((0,0,{'user_id':user_id,'fot':fot}))
-                if utl >=.65:
-                    utl =1
-                utl_list.append(utl)
-                fot_list.append(fot)
-            
-            utl_score = sum(utl_list)/(float(len(utl_list)) or 1.0)
-            fot_score  = sum(fot_list)/(float(len(fot_list)) or 1.0)
-            cancelled_activities = self.get_cancelled_activities(self.user_id.id,aud_date_start,aud_date_end,engineer_task_count) 
-            escalation_activities = self.get_escalation_activities(aud_date_start,aud_date_end,user_ids)
-            
-            weight_escalate = escalation_activities.get('weight_escalate',False)
-            weight_task_cancel = cancelled_activities.get('weight_task',False)
-            print "weight escalate>>>>>>>>>>>>>>>>>>>>>> weight task cancel>>>>>>>>>>>",weight_escalate,weight_task_cancel
-            wt_esc = wt_tsk_cncl = wt_utl = wt_fot =0.0
-            if weight_escalate and not weight_task_cancel:
-                wt_esc= 10+ (10 *(30/70.0))
-                wt_tsk_cncl =0.0
-                wt_utl = 30+ (30 *(30/70.0))
-                wt_fot = 30+ (30 *(30/70.0))
-            if not weight_escalate and weight_task_cancel:
-                wt_esc= 0.0
-                wt_tsk_cncl =30+ (30 *(10/90.0))
-                wt_utl = 30+ (30 *(10/90.0))
-                wt_fot = 30+ (30 *(10/90.0))
-            if not weight_escalate and not weight_task_cancel:
-                wt_esc= 0.0
-                wt_tsk_cncl =0.0
-                wt_utl = 30+ (30 *(40/60.0))
-                wt_fot = 30+ (30 *(40/60.0))
-                print "here>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>xxxxxxxxxxxxxx",wt_fot
-            if weight_escalate and weight_task_cancel:
-                print "here>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",weight_escalate,weight_escalate,weight_escalate and weight_task_cancel
-                wt_esc= 10
-                wt_tsk_cncl =30
-                wt_utl = 30
-                wt_fot = 30
-            print "wtfot>>>>>>>>>>>>>>>>>>>>",wt_fot
-            tsk_cncl_scr = cancelled_activities.get('score',0.0)
-            esc_scr =escalation_activities.get('score',0.0)
-            comp_data = []
-            comp_data.append((0,0,{'name':'Finished On Time','weight':wt_fot,'score':fot_score,'final_score':(wt_fot/100.0) * fot_score}))
-            comp_data.append((0,0,{'name':'Team Utilization','weight':wt_utl,'score':utl_score*100,'final_score':wt_utl * utl_score}))
-            if wt_tsk_cncl:
-                comp_data.append((0,0,{'name':'Percentage Of Cancelled Activities','weight':wt_tsk_cncl,'score':tsk_cncl_scr,'final_score':wt_tsk_cncl * tsk_cncl_scr}))
-            if wt_esc:
-                comp_data.append((0,0,{'name':'Escalation From Activity Owner','weight':wt_esc,'score':esc_scr*100,'final_score':wt_esc * esc_scr}))
-            sample_id.utl_sample_line.unlink()
-            sample_id.ttl_fot_line.unlink()
-            sample_id.comp_line.unlink()
-            sample_id.write({'utl_sample_line':result,'ttl_fot_line':fot_data,'comp_line':comp_data})
+        data_model = 'project.task'
+        domain = [('od_type','=','activities'),('user_id','=',user_id),('od_stage','=','done')]
+        aud_date_start = aud_date_start +' 04:00:00'
+        aud_date_end = aud_date_end + ' 23:58:58'
+        domain.extend([('date_start','>=',aud_date_start),('date_start','<=',aud_date_end)]) 
+        data_ids =self.env[data_model].search(domain)
+        for data in data_ids: 
+            result.append((0,0,{'task_id':data.id,'score':data.od_total_kpi}))
+        return result
+    
+    
     
     def get_available_time(self,aud_date_start):
        
@@ -304,6 +228,98 @@ class hr_employee(models.Model):
             return {'weight_escalate':True,'score':resolved/float(total_count)}
         
         
+    def get_ttl_vals(self,sample_id,aud_date_start,aud_date_end,audit_temp_id):
+        type = audit_temp_id.type
+        user_id  = self.user_id and self.user_id.id
+        employee_id = self.id
+        dt_start = aud_date_start
+        result = []
+        eng_ids = self.search([('coach_id','=',employee_id)]) 
+        user_ids = [emp.user_id.id for emp in eng_ids] 
+        data_model = 'project.task'
+        avl_time = self.get_available_time(dt_start) or 1
+        aud_date_start = aud_date_start +' 04:00:00'
+        aud_date_end = aud_date_end + ' 23:58:58'
+        fot_data = []
+        engineer_task_count = 0
+        utl_list = []
+        fot_list =[]
+        for user_id in user_ids:
+            domain = [('od_type','=','activities'),('user_id','=',user_id),('od_stage','=','done')]
+            domain.extend([('date_start','>=',aud_date_start),('date_start','<=',aud_date_end)]) 
+            data_ids =self.env[data_model].search(domain)
+            spent_time = 0.0
+            fot = sum([dat.od_end_kpi*(100/60.0) for dat in data_ids])/(float(len(data_ids)) or 1.0)
+            engineer_task_count += len(data_ids)
+            for data in data_ids:
+                spent_time += sum([work.hours for work in data.work_ids])
+            utl = spent_time/avl_time
+            result.append((0,0,{'user_id':user_id,'available_time':avl_time,'actual_time_spent':spent_time,'utl':(spent_time/avl_time)*100.0}))
+            fot_data.append((0,0,{'user_id':user_id,'fot':fot}))
+            if utl >=.65:
+                utl =1
+            utl_list.append(utl)
+            fot_list.append(fot)
+            
+        utl_score = sum(utl_list)/(float(len(utl_list)) or 1.0)
+        fot_score  = sum(fot_list)/(float(len(fot_list)) or 1.0)
+        cancelled_activities = self.get_cancelled_activities(self.user_id.id,aud_date_start,aud_date_end,engineer_task_count) 
+        escalation_activities = self.get_escalation_activities(aud_date_start,aud_date_end,user_ids)
+        weight_escalate = escalation_activities.get('weight_escalate',False)
+        weight_task_cancel = cancelled_activities.get('weight_task',False)
+        wt_esc = wt_tsk_cncl = wt_utl = wt_fot =0.0
+        if weight_escalate and not weight_task_cancel:
+            wt_esc= 10+ (10 *(30/70.0))
+            wt_tsk_cncl =0.0
+            wt_utl = 30+ (30 *(30/70.0))
+            wt_fot = 30+ (30 *(30/70.0))
+        if not weight_escalate and weight_task_cancel:
+            wt_esc= 0.0
+            wt_tsk_cncl =30+ (30 *(10/90.0))
+            wt_utl = 30+ (30 *(10/90.0))
+            wt_fot = 30+ (30 *(10/90.0))
+        if not weight_escalate and not weight_task_cancel:
+            wt_esc= 0.0
+            wt_tsk_cncl =0.0
+            wt_utl = 30+ (30 *(40/60.0))
+            wt_fot = 30+ (30 *(40/60.0))
+                
+        if weight_escalate and weight_task_cancel:
+                
+            wt_esc= 10
+            wt_tsk_cncl =30
+            wt_utl = 30
+            wt_fot = 30
+        tsk_cncl_scr = cancelled_activities.get('score',0.0)
+        esc_scr =escalation_activities.get('score',0.0)
+        comp_data = []
+        comp_data.append((0,0,{'name':'Finished On Time','weight':wt_fot,'score':fot_score,'final_score':(wt_fot/100.0) * fot_score}))
+        comp_data.append((0,0,{'name':'Team Utilization','weight':wt_utl,'score':utl_score*100,'final_score':wt_utl * utl_score}))
+        if wt_tsk_cncl:
+            comp_data.append((0,0,{'name':'Percentage Of Cancelled Activities','weight':wt_tsk_cncl,'score':tsk_cncl_scr,'final_score':wt_tsk_cncl * tsk_cncl_scr}))
+        if wt_esc:
+            comp_data.append((0,0,{'name':'Escalation From Activity Owner','weight':wt_esc,'score':esc_scr*100,'final_score':wt_esc * esc_scr})) 
+        return result,fot_data,comp_data
+    def update_audit_sample(self,sample_id,aud_date_start,aud_date_end,audit_temp_id):
+        type = audit_temp_id.type
+        user_id  = self.user_id and self.user_id.id
+        employee_id = self.id
+        dt_start = aud_date_start
+        result = []
+        if type =='post_sales':
+            result = self.get_post_sales_vals(sample_id, aud_date_start, aud_date_end)
+            sample_id.post_sale_sample_line.unlink()
+            sample_id.write({'post_sale_sample_line':result})
+        
+        if type =='ttl':
+            result,fot_data,comp_data = self.get_ttl_vals(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            sample_id.utl_sample_line.unlink()
+            sample_id.ttl_fot_line.unlink()
+            sample_id.comp_line.unlink()
+            sample_id.write({'utl_sample_line':result,'ttl_fot_line':fot_data,'comp_line':comp_data})
+    
+    
+    
     def create_audit_sample(self,aud_date_start,aud_date_end,audit_temp_id):
         type = audit_temp_id.type
         user_id  = self.user_id and self.user_id.id
@@ -317,84 +333,13 @@ class hr_employee(models.Model):
                 'aud_temp_id':audit_temp_id.id,'type':type,'employee_id':employee_id})
         
         if type =='post_sales':
-            data_model = 'project.task'
-            domain = [('od_type','=','activities'),('user_id','=',user_id),('od_stage','=','done')]
-            aud_date_start = aud_date_start +' 04:00:00'
-            aud_date_end = aud_date_end + ' 23:58:58'
-            domain.extend([('date_start','>=',aud_date_start),('date_start','<=',aud_date_end)]) 
-            data_ids =self.env[data_model].search(domain)
-            for data in data_ids: 
-                result.append((0,0,{'task_id':data.id,'score':data.od_total_kpi}))
+            result = self.get_post_sales_vals(sample_id, aud_date_start, aud_date_end)
             vals.update({'post_sale_sample_line':result})
             sample_id =self.env['audit.sample'].create(vals)
         
         
         if type =='ttl':
-            eng_ids = self.search([('coach_id','=',employee_id)]) 
-            user_ids = [emp.user_id.id for emp in eng_ids] 
-            data_model = 'project.task'
-            avl_time = self.get_available_time(dt_start) or 1
-            aud_date_start = aud_date_start +' 04:00:00'
-            aud_date_end = aud_date_end + ' 23:58:58'
-            fot_data = []
-            engineer_task_count = 0
-            utl_list = []
-            fot_list =[]
-            for user_id in user_ids:
-                domain = [('od_type','=','activities'),('user_id','=',user_id),('od_stage','=','done')]
-                domain.extend([('date_start','>=',aud_date_start),('date_start','<=',aud_date_end)]) 
-                data_ids =self.env[data_model].search(domain)
-                spent_time = 0.0
-                fot = sum([dat.od_end_kpi*(100/60.0) for dat in data_ids])/(float(len(data_ids)) or 1.0)
-                engineer_task_count += len(data_ids)
-                for data in data_ids:
-                    spent_time += sum([work.hours for work in data.work_ids])
-                utl = spent_time/avl_time
-                result.append((0,0,{'user_id':user_id,'available_time':avl_time,'actual_time_spent':spent_time,'utl':(spent_time/avl_time)*100.0}))
-                fot_data.append((0,0,{'user_id':user_id,'fot':fot}))
-                if utl >=.65:
-                    utl =1
-                utl_list.append(utl)
-                fot_list.append(fot)
-            
-            utl_score = sum(utl_list)/(float(len(utl_list)) or 1.0)
-            fot_score  = sum(fot_list)/(float(len(fot_list)) or 1.0)
-            cancelled_activities = self.get_cancelled_activities(self.user_id.id,aud_date_start,aud_date_end,engineer_task_count) 
-            escalation_activities = self.get_escalation_activities(aud_date_start,aud_date_end,user_ids)
-            
-            weight_escalate = escalation_activities.get('weight_escalate',False)
-            weight_task_cancel = cancelled_activities.get('weight_task',False)
-            
-            wt_esc = wt_tsk_cncl = wt_utl = wt_fot =0.0
-            if weight_escalate and not weight_task_cancel:
-                wt_esc= 10+ (10 *(30/70.0))
-                wt_tsk_cncl =0.0
-                wt_utl = 30+ (30 *(30/70.0))
-                wt_fot = 30+ (30 *(30/70.0))
-            if not weight_escalate and weight_task_cancel:
-                wt_esc= 0.0
-                wt_tsk_cncl =30+ (30 *(10/90))
-                wt_utl = 30+ (30 *(10/90))
-                wt_fot = 30+ (30 *(10/90))
-            if not weight_escalate and not weight_task_cancel:
-                wt_esc= 0.0
-                wt_tsk_cncl =0.0
-                wt_utl = 30+ (30 *(40/60))
-                wt_fot = 30+ (30 *(40/60))
-            if weight_escalate and weight_task_cancel:
-                wt_esc= 10
-                wt_tsk_cncl =30
-                wt_utl = 30
-                wt_fot = 30
-            tsk_cncl_scr = cancelled_activities.get('score',0.0)
-            esc_scr =escalation_activities.get('score',0.0)
-            comp_data = []
-            comp_data.append((0,0,{'name':'Finished On Time','weight':wt_fot,'score':fot_score,'final_score':(wt_fot/100.0) * fot_score}))
-            comp_data.append((0,0,{'name':'Team Utilization','weight':wt_utl,'score':utl_score*100,'final_score':wt_utl * utl_score}))
-            if wt_tsk_cncl:
-                comp_data.append((0,0,{'name':'Percentage Of Cancelled Activities','weight':wt_tsk_cncl,'score':tsk_cncl_scr,'final_score':wt_tsk_cncl * tsk_cncl_scr}))
-            if wt_esc:
-                comp_data.append((0,0,{'name':'Escalation From Activity Owner','weight':wt_esc,'score':esc_scr*100,'final_score':wt_esc * esc_scr}))
+            result,fot_data,comp_data = self.get_ttl_vals(sample_id, aud_date_start, aud_date_end, audit_temp_id)
             vals.update({'utl_sample_line':result,'ttl_fot_line':fot_data,'comp_line':comp_data}) 
             sample_id =self.env['audit.sample'].create(vals)
             
