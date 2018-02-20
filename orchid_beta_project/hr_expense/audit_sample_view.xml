@@ -46,15 +46,28 @@
 								</field>
 							</page>
 							
-							<page string="Opportunity Samples" attrs="{'invisible':[('type','!=','pre_sales')]}" >
+							<page string="Opportunity Samples" attrs="{'invisible':[('type','not in',('pre_sales','pre_sales_mgr'))]}" >
 								<field name="opp_sample_line">
 									<tree editable="bottom" create="false" delete="false">
 										<field name="opp_id" readonly="1"/>
+										<field name="user_id" readonly="1"/>
 										<field name="score" readonly="1"/>
 
 									</tree>
 								</field>
 							</page>
+							
+							
+							<page string="Team Score" attrs="{'invisible':[('type','!=','pre_sales_mgr')]}" >
+								<field name="team_line">
+									<tree editable="bottom" create="false" delete="false">
+										<field name="user_id" readonly="1"/>
+										<field name="score" readonly="1"/>
+
+									</tree>
+								</field>
+							</page>
+							
 							<page string="Utlization" attrs="{'invisible':[('type','!=','ttl')]}" >
 								<field name="utl_sample_line">
 									<tree editable="bottom" create="false" delete="false">

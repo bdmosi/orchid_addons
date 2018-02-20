@@ -301,6 +301,27 @@ class hr_employee(models.Model):
             comp_data.append((0,0,{'name':'Escalation From Activity Owner','weight':wt_esc,'score':esc_scr*100,'final_score':wt_esc * esc_scr})) 
         return result,fot_data,comp_data
     
+    
+    
+    def get_presale_data(self,user_id, aud_date_start, aud_date_end, audit_temp_id):
+        
+        result = []
+        data_model = 'crm.lead'
+        domain = [('stage_id','!=',8),('od_responsible_id','=',user_id)]
+        aud_date_start = aud_date_start 
+        aud_date_end = aud_date_end 
+        domain.extend([('od_req_on_7','>=',aud_date_start),('od_req_on_7','<=',aud_date_end)]) 
+        data_ids =self.env[data_model].search(domain)
+        score_boards = []
+        comp_data =[]
+        for data in data_ids:
+            score=0.0
+            if data.finished_on_7 <= data.od_req_on_7:
+                score = 100.0
+            score_boards.append(score) 
+            result.append((0,0,{'opp_id':data.id,'score':score,'user_id':user_id}))
+        avg_score = sum(score_boards)/float(len(score_boards))
+        return result,avg_score
     def get_presale_vals(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):
         user_id  = self.user_id and self.user_id.id
         result = []
@@ -317,7 +338,7 @@ class hr_employee(models.Model):
             if data.finished_on_7 <= data.od_req_on_7:
                 score = 100.0
             score_boards.append(score) 
-            result.append((0,0,{'opp_id':data.id,'score':score}))
+            result.append((0,0,{'opp_id':data.id,'score':score,'user_id':user_id}))
         avg_score = sum(score_boards)/float(len(score_boards))
         res = self.get_certificate_status()
         wt_cert = wt_opp =cert_score =0.0
@@ -333,6 +354,25 @@ class hr_employee(models.Model):
         if wt_cert:
             comp_data.append((0,0,{'name':'Certificate','weight':wt_cert,'score':cert_score,'final_score':(wt_cert/100.0)*cert_score}))
         return result,comp_data
+    
+    def get_presale_mgr_vals(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):
+        user_id  = self.user_id and self.user_id.id
+        employee_id = self.id
+        team_ids = self.search([('parent_id','=',employee_id)]) 
+        user_ids = [emp.user_id.id for emp in team_ids] + [user_id]
+        result = []
+        team_score =[]
+        team_vals =[] 
+        for uid in user_ids:
+            data,avg_score = self.get_presale_data(uid, aud_date_start, aud_date_end, audit_temp_id)
+            team_score.append(avg_score)
+            team_vals.append((0,0,{'user_id':uid,'score':avg_score}))
+            result.extend(data)
+            
+        team_avg_score = sum(team_score)/float(len(team_score))
+        comp_data =[(0,0,{'name':'Productivity','weight':100,'score':team_avg_score,'final_score':team_avg_score})]
+        return result,team_vals,comp_data
+    
     def update_audit_sample(self,sample_id,aud_date_start,aud_date_end,audit_temp_id):
         type = audit_temp_id.type
         user_id  = self.user_id and self.user_id.id
@@ -356,6 +396,12 @@ class hr_employee(models.Model):
             sample_id.opp_sample_line.unlink()
             sample_id.comp_line.unlink()
             sample_id.write({'opp_sample_line':opp_sample_line,'comp_line':comp_data})
+        if type  == 'pre_sales_mgr':
+            opp_sample_line,team_line,comp_data = self.get_presale_mgr_vals(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            sample_id.opp_sample_line.unlink()
+            sample_id.comp_line.unlink()
+            sample_id.team_line.unlink()
+            sample_id.write({'opp_sample_line':opp_sample_line,'comp_line':comp_data,'team_line':team_line})
     
     
     def create_audit_sample(self,aud_date_start,aud_date_end,audit_temp_id):
@@ -385,7 +431,10 @@ class hr_employee(models.Model):
             vals.update({'opp_sample_line':opp_sample_line,'comp_line':comp_data}) 
             sample_id =self.env['audit.sample'].create(vals)
             
-            
+        if type  == 'pre_sales_mgr':
+            opp_sample_line,team_line,comp_data = self.get_presale_mgr_vals(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            vals.update({'opp_sample_line':opp_sample_line,'comp_line':comp_data,'team_line':team_line}) 
+            sample_id =self.env['audit.sample'].create(vals)
             #create utlization line
         return sample_id
     

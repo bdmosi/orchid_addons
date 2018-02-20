@@ -16,7 +16,8 @@ class audit_sample(models.Model):
     date_start = fields.Date(string="Date Start")
     date_end = fields.Date(string="Date End")
     aud_temp_id = fields.Many2one('audit.template',string="Audit Template")
-    type = fields.Selection([('post_sales','Post Sales'),('pre_sales','Pre-Sales'),('bdm','Business Development Manager'),('ttl','Technical Team Lead')],string="Type")
+    type = fields.Selection([('post_sales','Post Sales'),('pre_sales','Pre-Sales Engineer'),
+                             ('pre_sales_mgr','Pre-Sales Manager'),('bdm','Business Development Manager'),('ttl','Technical Team Leader')],string="Type")
     employee_id = fields.Many2one('hr.employee',string="Employee")
     method = fields.Text(string="Method")
     avg_score = fields.Float(string="Monthly Avg Score",compute="_get_avg_score")
@@ -25,12 +26,12 @@ class audit_sample(models.Model):
     ttl_fot_line = fields.One2many('ttl.ontime.sample','sample_id',string="Utilization FOT")
     comp_line = fields.One2many('component.line','sample_id',string="Component Line")
     opp_sample_line = fields.One2many('presale.opp.sample','sample_id',string="Presales Opp Samples")
-    presale_mgr_team_line = fields.One2many('presale.mgr.team.line','sample_id',string="Presales Team")
+    team_line = fields.One2many('team.score.line','sample_id',string="Team Score")
 
 
 
-class presale_mgr_team_sample(models.Model):
-    _name ='presale.mgr.team.line'
+class TeamScore(models.Model):
+    _name ='team.score.line'
     sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
     user_id = fields.Many2one('res.users',string="User")
     score = fields.Float(string="Score")
@@ -38,6 +39,7 @@ class presale_opp_sample(models.Model):
     _name ='presale.opp.sample'
     sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
     opp_id = fields.Many2one('crm.lead',string="Opportunity",ondelete="cascade")
+    user_id = fields.Many2one('res.users',string="User")
     score = fields.Float(string="Score")
 
 class post_sales_comp_sample(models.Model):
