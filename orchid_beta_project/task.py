@@ -125,13 +125,15 @@ class task(models.Model):
         project_id = vals.get('project_id')
         project_obj = self.env['project.project'].browse(project_id)
         state = project_obj.state
-
+        od_type = self.od_type
+        print "od_type>>>>>>>>>>>>>>>>>>>>>>",od_type,vals
         if state in ('cancelled','close'):
             raise Warning("This Project Either Cancelled or Closed,You Cant Create a task for this Project")
         meeting_id =self.od_create_calendar_event(vals)
         vals['od_meeting_id'] = meeting_id
-        work_ids =self.sudo().create_task_line(vals)
-        vals['work_ids'] = work_ids
+        if vals.get('od_type') not in ('milestone','workpackage'):
+            work_ids =self.sudo().create_task_line(vals)
+            vals['work_ids'] = work_ids
         return super(task,self).create(vals)
 
     def get_saudi_company_id(self):
