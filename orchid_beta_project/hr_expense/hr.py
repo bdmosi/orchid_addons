@@ -300,6 +300,39 @@ class hr_employee(models.Model):
         if wt_esc:
             comp_data.append((0,0,{'name':'Escalation From Activity Owner','weight':wt_esc,'score':esc_scr*100,'final_score':wt_esc * esc_scr})) 
         return result,fot_data,comp_data
+    
+    def get_presale_vals(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):
+        user_id  = self.user_id and self.user_id.id
+        result = []
+        data_model = 'crm.lead'
+        domain = [('stage_id','!=',8),('od_responsible_id','=',user_id)]
+        aud_date_start = aud_date_start 
+        aud_date_end = aud_date_end 
+        domain.extend([('od_req_on_7','>=',aud_date_start),('od_req_on_7','<=',aud_date_end)]) 
+        data_ids =self.env[data_model].search(domain)
+        score_boards = []
+        comp_data =[]
+        for data in data_ids:
+            score=0.0
+            if data.finished_on_7 <= data.od_req_on_7:
+                score = 100.0
+            score_boards.append(score) 
+            result.append((0,0,{'opp_id':data.id,'score':score}))
+        avg_score = sum(score_boards)/float(len(score_boards))
+        res = self.get_certificate_status()
+        wt_cert = wt_opp =cert_score =0.0
+        if res.get('required'):
+            wt_cert =20.0
+            wt_opp =80
+            if res.get('achieved'):
+                cert_score =100.0
+        else:
+            wt_cert =0.0
+            wt_opp =100
+        comp_data.append((0,0,{'name':'Productivity','weight':wt_opp,'score':avg_score,'final_score':(wt_opp/100.0)*avg_score}))
+        if wt_cert:
+            comp_data.append((0,0,{'name':'Certificate','weight':wt_cert,'score':cert_score,'final_score':(wt_cert/100.0)*cert_score}))
+        return result,comp_data
     def update_audit_sample(self,sample_id,aud_date_start,aud_date_end,audit_temp_id):
         type = audit_temp_id.type
         user_id  = self.user_id and self.user_id.id
@@ -317,7 +350,12 @@ class hr_employee(models.Model):
             sample_id.ttl_fot_line.unlink()
             sample_id.comp_line.unlink()
             sample_id.write({'utl_sample_line':result,'ttl_fot_line':fot_data,'comp_line':comp_data})
-    
+        
+        if type == 'pre_sales':
+            opp_sample_line,comp_data = self.get_presale_vals(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            sample_id.opp_sample_line.unlink()
+            sample_id.comp_line.unlink()
+            sample_id.write({'opp_sample_line':opp_sample_line,'comp_line':comp_data})
     
     
     def create_audit_sample(self,aud_date_start,aud_date_end,audit_temp_id):
@@ -342,12 +380,30 @@ class hr_employee(models.Model):
             result,fot_data,comp_data = self.get_ttl_vals(sample_id, aud_date_start, aud_date_end, audit_temp_id)
             vals.update({'utl_sample_line':result,'ttl_fot_line':fot_data,'comp_line':comp_data}) 
             sample_id =self.env['audit.sample'].create(vals)
+        if type == 'pre_sales':
+            opp_sample_line,comp_data = self.get_presale_vals(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            vals.update({'opp_sample_line':opp_sample_line,'comp_line':comp_data}) 
+            sample_id =self.env['audit.sample'].create(vals)
             
             
             #create utlization line
         return sample_id
     
     
+    
+    def get_certificate_status(self):
+        res={}
+        ex_num = self.get_execution_number()
+        ex_num = str(ex_num)
+        cert='cert'+ ex_num
+        cert_st ='cert_status'+ex_num
+        if eval('self.'+cert):
+            res['required'] = True 
+            if eval('self.'+cert_st) == 'achieved':
+                res['achieved'] =True
+        return res
+            
+        
     def get_score(self,avg_score,type,ex_num):
             score =avg_score
             if type =='post_sales':

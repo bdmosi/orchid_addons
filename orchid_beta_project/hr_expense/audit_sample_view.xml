@@ -45,6 +45,16 @@
 									</tree>
 								</field>
 							</page>
+							
+							<page string="Opportunity Samples" attrs="{'invisible':[('type','!=','pre_sales')]}" >
+								<field name="opp_sample_line">
+									<tree editable="bottom" create="false" delete="false">
+										<field name="opp_id" readonly="1"/>
+										<field name="score" readonly="1"/>
+
+									</tree>
+								</field>
+							</page>
 							<page string="Utlization" attrs="{'invisible':[('type','!=','ttl')]}" >
 								<field name="utl_sample_line">
 									<tree editable="bottom" create="false" delete="false">
@@ -64,7 +74,7 @@
 								</field>
 							</page>
 							
-							<page string="Component" attrs="{'invisible':[('type','!=','ttl')]}" >
+							<page string="Component"  >
 								<field name="comp_line">
 									<tree editable="bottom" create="false" delete="false">
 										<field name="name" readonly="1"/>

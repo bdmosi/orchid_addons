@@ -285,9 +285,15 @@ class task(models.Model):
                 self.od_max_date = max(date_list)
                 self.date_start = max(date_list)
 
+    
+    def edit_block(self,vals):
+        if self.od_type == 'activities':
+            if vals.get('date_start') or vals.get('planned_hours') or vals.get('date_end'):
+                raise Warning("You Cannot Change Starting Date, Planned Hours or Complete Date, Please press the Discard Button")
+    
     @api.multi
     def write(self, vals):
-
+        self.edit_block(vals)
         tech_check = self.od_technical_eval_change(vals)
         owner_check = self.od_owner_eval_change(vals)
         uid =self._uid
