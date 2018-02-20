@@ -78,7 +78,7 @@ class OrchidVatRegisterInput(models.TransientModel):
 		obj_ls=[]
 		for res in inv_obj.browse(cr, uid, inv_datas,context=context):
 			# if inv_obj.search(cr,uid,[('journal_id.type','=','purchase')]):
-			if res.journal_id and res.journal_id.type=='purchase':
+			if res.journal_id:# and res.journal_id.type=='purchase':
 				
 				obj_ls.append(res)
 		# print 'listttttt',obj_ls
@@ -463,7 +463,7 @@ class OrchidVatRegisterOutput(models.TransientModel):
 
 		obj_ls=[]
 		for res in inv_obj.browse(cr, uid, inv_datas,context=context):
-			if res.journal_id and res.journal_id.type=='sale':
+			if res.journal_id:# and res.journal_id.type=='sale':
 				# print 'ifffffffffffff',res
 				obj_ls.append(res)
 
@@ -539,7 +539,7 @@ class OrchidVatRegisterOutput(models.TransientModel):
 
 		obj_ls=[]
 		for res in inv_obj.browse(cr, uid, inv_datas,context=context):
-			if res.journal_id and res.journal_id.type=='sale':
+			if res.journal_id:# and res.journal_id.type=='sale':
 				# print 'ifffffffffffff',res
 				obj_ls.append(res)
 
