@@ -7,11 +7,13 @@ class audit_sample(models.Model):
     @api.one 
     @api.depends('post_sale_sample_line')
     def _get_avg_score(self):
-        if self.post_sale_sample_line and self.type=='post_sales':
-            self.avg_score = sum([x.score for x in self.post_sale_sample_line ])/float(len([x.score for x in self.post_sale_sample_line ]))
-        if self.type !='post_sales':
-            self.avg_score = sum([x.final_score for x in self.comp_line])
-            
+#         if self.post_sale_sample_line and self.type=='post_sales':
+#             self.avg_score = sum([x.score for x in self.post_sale_sample_line ])/float(len([x.score for x in self.post_sale_sample_line ]))
+#         if self.type !='post_sales':
+        avg_score = sum([x.final_score for x in self.comp_line])
+        if avg_score >100.0:
+            avg_score =100.0
+        self.avg_score = avg_score    
     name = fields.Char(string="Name",required=True)
     date_start = fields.Date(string="Date Start")
     date_end = fields.Date(string="Date End")

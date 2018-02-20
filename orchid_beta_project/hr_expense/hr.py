@@ -179,9 +179,28 @@ class hr_employee(models.Model):
         aud_date_end = aud_date_end + ' 23:58:58'
         domain.extend([('date_start','>=',aud_date_start),('date_start','<=',aud_date_end)]) 
         data_ids =self.env[data_model].search(domain)
+        score_board = []
+        comp_data =[]
         for data in data_ids: 
             result.append((0,0,{'task_id':data.id,'score':data.od_total_kpi}))
-        return result
+            score_board.append(data.od_total_kpi)
+            
+        res = self.get_certificate_status()
+        wt_cert = wt_task =cert_score =0.0
+        if res.get('required'):
+            wt_cert =20.0
+            wt_task =80
+            if res.get('achieved'):
+                cert_score =100.0
+        else:
+            wt_cert =0.0
+            wt_task =100
+        avg_score =sum(score_board)/float(len(score_board))
+        comp_data.append((0,0,{'name':'Activity Integrity','weight':wt_task,'score':avg_score,'final_score':(wt_task/100.0)*avg_score}))
+        if wt_cert:
+            comp_data.append((0,0,{'name':'Certificate','weight':wt_cert,'score':cert_score,'final_score':(wt_cert/100.0)*cert_score}))
+        return result,comp_data
+        
     
     
     
@@ -380,9 +399,10 @@ class hr_employee(models.Model):
         dt_start = aud_date_start
         result = []
         if type =='post_sales':
-            result = self.get_post_sales_vals(sample_id, aud_date_start, aud_date_end)
+            result,comp_data = self.get_post_sales_vals(sample_id, aud_date_start, aud_date_end)
             sample_id.post_sale_sample_line.unlink()
-            sample_id.write({'post_sale_sample_line':result})
+            sample_id.comp_line.unlink()
+            sample_id.write({'post_sale_sample_line':result,'comp_line':comp_data})
         
         if type =='ttl':
             result,fot_data,comp_data = self.get_ttl_vals(sample_id, aud_date_start, aud_date_end, audit_temp_id)
@@ -417,8 +437,8 @@ class hr_employee(models.Model):
                 'aud_temp_id':audit_temp_id.id,'type':type,'employee_id':employee_id})
         
         if type =='post_sales':
-            result = self.get_post_sales_vals(sample_id, aud_date_start, aud_date_end)
-            vals.update({'post_sale_sample_line':result})
+            result,comp_data = self.get_post_sales_vals(sample_id, aud_date_start, aud_date_end)
+            vals.update({'post_sale_sample_line':result,'comp_line':comp_data})
             sample_id =self.env['audit.sample'].create(vals)
         
         
@@ -482,12 +502,14 @@ class hr_employee(models.Model):
             if aud_samp_check:
                 sample_id  = eval('self.'+aud_samp)
                 self.update_audit_sample(sample_id,aud_date_start,aud_date_end,audit_temp_id)
-                score =  self.get_score(sample_id.avg_score, type, ex_num)
+#                 score =  self.get_score(sample_id.avg_score, type, ex_num)
+                score = sample_id.avg_score
                 self.write({scr:score})
             else:
                 sample_id =self.create_audit_sample(aud_date_start,aud_date_end,audit_temp_id)
                 if sample_id:
-                    score =  self.get_score(sample_id.avg_score, type, ex_num)
+#                     score =  self.get_score(sample_id.avg_score, type, ex_num)
+                    score = sample_id.avg_score
                     self.write({aud_samp:sample_id.id,scr:score})
      
     
