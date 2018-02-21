@@ -108,7 +108,8 @@ class task(models.Model):
     def copy(self, default):
         
         #add your code here
-        print "defults>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",default
+        default.update({'od_duplicated':True})
+        
         return super(task, self).copy(default)
     
     def create_task_line(self,vals):
@@ -293,7 +294,10 @@ class task(models.Model):
     
     @api.multi
     def write(self, vals):
-        self.edit_block(vals)
+        ctx = self.env.context
+        print "my cccctx>>>>>>>>>>>>>>>>>>>>>>888888xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx>>>>",ctx
+        if not self.od_duplicated:
+            self.edit_block(vals)
         tech_check = self.od_technical_eval_change(vals)
         owner_check = self.od_owner_eval_change(vals)
         uid =self._uid
@@ -322,6 +326,7 @@ class task(models.Model):
         date_start = self.date_start
         if not vals.get('date_start',False):
             vals['date_start'] = date_start
+        vals['od_duplicated'] = False
         return super(task, self).write(vals)
     @api.constrains('user_id','date_start','date_end')
     def check_task_conflict(self):
@@ -601,6 +606,7 @@ class task(models.Model):
     #     return partner_id
     
     
+    od_duplicated = fields.Boolean(string="Duplicated")
     date_start  = fields.Datetime('Starting Date',track_visibility='onchange')
     od_help_desk_issue_id = fields.Many2one('crm.helpdesk',string="Help Desk Issue Sequence")
     od_meeting_id = fields.Many2one('calendar.event',string='Meeting')

@@ -40,6 +40,7 @@
 								<field name="post_sale_sample_line">
 									<tree editable="bottom" create="false" delete="false">
 										<field name="task_id" readonly="1"/>
+										<button name="btn_open" type="object" icon="STOCK_FIND" string="Open" />
 										<field name="score" readonly="1"/>
 
 									</tree>

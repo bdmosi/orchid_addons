@@ -49,6 +49,16 @@ class post_sales_comp_sample(models.Model):
     sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
     task_id = fields.Many2one('project.task',string="Activity",ondelete="cascade")
     score = fields.Float(string="Score")
+    def btn_open(self):
+        return {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'project.task',
+                'res_id':self.task_id and self.task_id.id or False,
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+
+            }
     
 class ttl_utilization_sample(models.Model):
     _name ='ttl.utl.sample'
