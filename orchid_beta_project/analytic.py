@@ -462,7 +462,20 @@ class account_analytic_account(models.Model):
     
     od_project_start = fields.Date(string="Project Start")
     od_project_end = fields.Date(string="Project End")
-    od_project_status = fields.Selection([('active','Active'),('inactive','Inactive')],string="Project Status")
+    od_project_status = fields.Selection([('active','Active'),('inactive','Inactive')],string="Project Status",default='inactive')
+
+    
+    od_amc_start = fields.Date(string="AMC Start")
+    od_amc_end = fields.Date(string="AMC End")
+    od_amc_status = fields.Selection([('active','Active'),('inactive','Inactive')],string="Project Status",default='inactive')
+
+    
+    od_om_start = fields.Date(string="O&M Start")
+    od_om_end = fields.Date(string="O&M End")
+    od_om_status = fields.Selection([('active','Active'),('inactive','Inactive')],string="O&M Status",default='inactive')
+
+
+
     
     od_cost_control_kpi = fields.Float(string="Cost Control KPI",compute="_od_get_cost_control_api")
     od_scope_control_kpi = fields.Float(string="Scope Control KPI",compute="_od_get_scope_control_kpi")

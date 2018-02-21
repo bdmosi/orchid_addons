@@ -89,6 +89,63 @@
             </div>
 
     </field> -->
+    <xpath expr="//field[@name='date_start']" position="replace" />
+    <xpath expr="//field[@name='date']" position="replace" />
+    <xpath expr="//label[@for='date']" position="replace" /> 
+    <xpath expr="//group[@name='contract']" position="attributes">
+          <attribute name="invisible">True</attribute>
+    </xpath>
+    		<xpath expr="//group[@name='contract']" position="after">
+    			<table style="width:100%" class="table table-striped">
+                   <thead>
+                       <th></th>
+                       <th>Analytic</th>
+                       <th>Project</th>
+                       <th>AMC</th>
+                       <th>O&amp;M</th>
+                      
+                    </thead>
+                    <tbody>
+                    <tr>
+                    <td><strong>Date Start</strong></td>
+                    <td><field name="date_start" /></td>
+                    <td><field name="od_project_start" /></td>
+                    <td><field name="od_amc_start" /></td>
+                    <td><field name="od_om_start" /></td>
+                    
+                    
+                    
+                    </tr>
+                    <tr>
+                    <td><strong>Date End</strong></td>
+                    <td><field name="date" /></td>
+                    <td><field name="od_project_end" /></td>
+                    <td><field name="od_amc_end" /></td>
+                    <td><field name="od_om_end" /></td>
+                    </tr>
+                    <tr>
+                   <td><strong>Status</strong></td>
+                   <td></td>
+                   <td><field name="od_project_status" readonly="1"/></td>
+                   <td><field name="od_amc_status" readonly="1"/></td>
+                   <td><field name="od_om_status" readonly="1"/></td>
+                    </tr>
+                    <tr>
+                    <td><strong>Action</strong></td>
+                    <td></td>
+                    <td><button name="btn_activate_project" string="Activate" class="oe_highlight" type="object"  attrs="{'invisible':[('od_project_status','!=','inactive')]}"/></td>
+                    <td><button name="btn_activate_amc" string="Activate" class="oe_highlight" type="object" attrs="{'invisible':[('od_amc_status','!=','inactive')]}"/></td>
+                    <td><button name="btn_activate_om" string="Activate" class="oe_highlight" type="object" attrs="{'invisible':[('od_om_status','!=','inactive')]}" /></td>
+                    
+                    </tr>
+                    </tbody>
+                    
+                    
+               </table>
+               
+    		</xpath>
+    		
+    
         <page string="Contract Information" position="after">
             <page string="KPI">
                 <separator string="Project KPI" />

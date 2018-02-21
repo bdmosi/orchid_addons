@@ -43,6 +43,21 @@ class presale_opp_sample(models.Model):
     opp_id = fields.Many2one('crm.lead',string="Opportunity",ondelete="cascade")
     user_id = fields.Many2one('res.users',string="User")
     score = fields.Float(string="Score")
+    
+    @api.multi
+    def btn_open(self):
+        model_data = self.env['ir.model.data']
+        form_view = model_data.get_object_reference('crm', 'crm_case_form_view_oppor')
+        return {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'crm.lead',
+                'res_id':self.opp_id and self.opp_id.id or False,
+                'views': [(form_view and form_view[1] or False, 'form')],
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+
+            }
 
 class post_sales_comp_sample(models.Model):
     _name ='post.sales.comp.sample'
