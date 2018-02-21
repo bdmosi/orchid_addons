@@ -36,6 +36,82 @@
          </div>
              ]]></field>
          </record>
+         
+         
+         
+         <record id="od_escalation_mail" model="email.template">
+             <field name="name">Activity Escalation From Owner UAE</field>
+             <field name="email_from">${(user.email or '')|safe}</field>
+             <field name="subject">Activity  Escalation From Owner</field>
+             <field name="email_to">${object.user_id.email},${object.reviewer_id.email}</field>
+             <field name="email_cc">${object.od_owner_id.email}</field>
+             <field name="model_id" ref="model_project_task"/>
+
+             <field name="body_html"><![CDATA[
+         <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+             <p>Dear ${object.user_id.name or ''},</p>
+
+             <p>Owner Not Satisfied with this Task/Activity</p>
+             <p>Info</p>
+             <ul>
+             <li> Activity ID:${object.id}  </li>
+			 <li> Project:${object.od_owner_id.name}</li>
+             <li> Project:${object.project_id.name}</li>
+             <li> Phase:${object.od_state.name}</li>
+             <li> Implementation Code:${object.od_implementation_id.name}</li>
+             <li> Activity Planned Start Date / Time:${object.date_start}</li>
+             <li> Activity Planned Duration/Time:${object.date_end}</li>
+             <li> Customer Name:${object.project_id.partner_id.name}</li>
+             <li> Contact Person Details:${object.od_contact_person_details}</li>
+             <li> City:${object.od_city.name}</li>
+             <li> Location:${object.od_location}</li>
+             <li> Access Method:${object.od_access_method}</li>
+             <li> link:http://betait.net/web#id=${object.id}&view_type=form&model=project.task&menu_id=304&action=392</li>
+             </ul>
+             <p>Thank You</p>
+
+         </div>
+             ]]></field>
+         </record>
+         
+           <record id="od_escalation_mail_saudi" model="email.template">
+             <field name="name">Activity Escalation From Owner Saudi</field>
+             <field name="email_from">${(user.email or '')|safe}</field>
+             <field name="subject">Activity  Escalation From Owner</field>
+             <field name="email_to">${object.user_id.email},${object.reviewer_id.email}</field>
+             <field name="email_cc">${object.od_owner_id.email}</field>
+             <field name="model_id" ref="model_project_task"/>
+
+             <field name="body_html"><![CDATA[
+         <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+             <p>Dear ${object.user_id.name or ''},</p>
+
+             <p>Owner Not Satisfied with this Task/Activity</p>
+             <p>Info</p>
+             <ul>
+             <li> Activity ID:${object.id}  </li>
+			 <li> Project:${object.od_owner_id.name}</li>
+             <li> Project:${object.project_id.name}</li>
+             <li> Phase:${object.od_state.name}</li>
+             <li> Implementation Code:${object.od_implementation_id.name}</li>
+             <li> Activity Planned Start Date / Time:${object.date_start}</li>
+             <li> Activity Planned Duration/Time:${object.date_end}</li>
+             <li> Customer Name:${object.project_id.partner_id.name}</li>
+             <li> Contact Person Details:${object.od_contact_person_details}</li>
+             <li> City:${object.od_city.name}</li>
+             <li> Location:${object.od_location}</li>
+             <li> Access Method:${object.od_access_method}</li>
+             <li> link:http://betait.net/web#id=${object.id}&view_type=form&model=project.task&menu_id=304&action=392</li>
+             </ul>
+             <p>Thank You</p>
+
+         </div>
+             ]]></field>
+         </record>
+         
+         
+         
+         
 
          <record id="od_task_delete_mail" model="email.template">
                   <field name="name">Delete/Cancellation of Task Mail UAE</field>

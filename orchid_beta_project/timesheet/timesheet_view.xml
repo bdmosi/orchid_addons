@@ -33,6 +33,14 @@
                     <field name="overtime_amount"/>
                     <field name="normal_amount"/>
                 </field>
+                <xpath expr="//group[@string='Accounting']" position="after">
+                	<group>
+                	 <field name="cancelled_by_owner"/>
+                	 <field name="cancelled_by_id"/>
+                	  <field name="narration"/>
+                	</group>
+                
+                </xpath>
 
             </field>
         </record>

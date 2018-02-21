@@ -59,8 +59,9 @@
             <field name="stage_id" position="replace">
                 <field name="od_stage" widget="statusbar" />
                  <button string="Done" name="btn_done" type="object" class="oe_highlight"  attrs="{'invisible':[('od_stage','!=','draft')]}"/>
-                 <button string="Cancel" name="%(od_task_wiz_confirm_action)d" type="action" class="oe_highlight" attrs="{'invisible':[('od_stage','!=','draft')]}" />
+                <!--  <button string="Cancel" name="%(od_task_wiz_confirm_action)d" type="action" class="oe_highlight" attrs="{'invisible':[('od_stage','!=','draft')]}" /> -->
                   <button string="Cancel By TL" name="btn_cancel_by_tl" type="object" class="oe_highlight" attrs="{'invisible':[('od_stage','!=','draft')]}" />
+                   <button string="Cancel By Owner" name="btn_cancel_by_owner" type="object" class="oe_highlight" attrs="{'invisible':[('od_stage','!=','draft')]}" />
                  
                  <button string="Reset" name="btn_reset" type="object" class="oe_highlight" attrs="{'invisible':[('od_stage','!=','done')]}" />
             </field>

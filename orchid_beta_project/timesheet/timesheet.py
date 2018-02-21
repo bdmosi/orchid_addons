@@ -25,7 +25,7 @@ class hr_analytic_timesheet(osv.osv):
         hourly_rate = contract_obj.od_hourly_rate
         return hourly_rate
     def on_change_user_id(self, cr, uid, ids, user_id, account_id=False, unit_amount=0):
-        res = super(hr_analytic_timesheet, self).on_change_user_id(cr, uid, ids, user_id,account_id,unit_amount)
+        res = super(hr_analytic_timesheet, self).on_change_user_id(cr, SUPERUSER_ID, ids, user_id,account_id,unit_amount)
         hourly_rate = self.od_get_hourly_rate(cr, uid,user_id)
         if res.get('value'):
             res['value']['hourly_rate'] = hourly_rate
@@ -33,7 +33,7 @@ class hr_analytic_timesheet(osv.osv):
     
     
     def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount, company_id, unit=False, journal_id=False, context=None):
-        res = super(hr_analytic_timesheet,self).on_change_unit_amount(cr, uid, id, prod_id, unit_amount, company_id, unit, journal_id, context)
+        res = super(hr_analytic_timesheet,self).on_change_unit_amount(cr, SUPERUSER_ID, id, prod_id, unit_amount, company_id, unit, journal_id, context)
         value  =  res.get('value',False)
     
         if value:

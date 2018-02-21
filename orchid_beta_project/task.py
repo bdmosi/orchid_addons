@@ -38,6 +38,27 @@ class task(models.Model):
             self.od_stage ='cancel_by_tl'
             self.cancel_tl_id = self._uid
     
+    @api.multi 
+    def btn_cancel_by_owner(self):
+        if self.check_audit_period():
+            name = self.name +': Cancelled By Owner'
+            cancelled_by_id = self._uid
+            cancelled_by_owner = True 
+            narration ='Cancelled By Owner'
+            user_id = self.user_id and self.user_id.id or False 
+            hours = self.planned_hours 
+            date = self.date_start
+            task_id = self.id
+            vals = {
+                'name':name,'user_id':user_id,'hours':hours,'date':date,'cancelled_by_id':cancelled_by_id,
+                'cancelled_by_owner':cancelled_by_owner,'narration':narration,'task_id':task_id
+                
+                }
+            self.env['project.task.work']._create_analytic_entries(vals)
+            self.unlink()
+        else:
+            self.unlink()   
+    
     def od_milestone_escalation_schedule(self,cr,uid,context=None):
         print "milestone escalation schedule starded"
         today = date.today()
@@ -169,8 +190,8 @@ class task(models.Model):
         email_obj.send_mail(self.env.cr,self.env.uid,template_id,task_id, force_send=True)
         return True
     
-    def write_on_work(self):
-        date_done = datetime.strftime(datetime.now(),DEFAULT_SERVER_DATETIME_FORMAT)
+    def write_on_work(self,date_done):
+#         date_done = datetime.strftime(datetime.now(),DEFAULT_SERVER_DATETIME_FORMAT)
         date_start = self.date_start
         duration = self.get_time_diff(date_start,date_done)
         for line in self.work_ids:
@@ -182,14 +203,23 @@ class task(models.Model):
     def check_activity_report(self):
         if not (self.od_initial_description and self.od_final_result and self.od_action_taken):
             raise Warning("Activity Report Not Completed!!!!!")
+    
+    def check_work_line(self):
+        if not self.work_ids:
+            raise Warning("Please Fill the Work Tab")
+    
     @api.one
     def btn_done(self):
+        
+        date_done = datetime.strftime(datetime.now(),DEFAULT_SERVER_DATETIME_FORMAT)
         self.check_activity_report()
         if self.od_type == 'activities':
             self.check_list_status()
-        self.od_date_done = str(datetime.now())
+            self.check_work_line()
+        self.od_date_done = date_done
+        self.write_on_work(date_done)
         self.od_send_mail('od_task_done_mail')
-        self.write_on_work()
+        
         self.write({'od_stage':'done','stage_id':1})
 
     @api.one
@@ -610,7 +640,7 @@ class task(models.Model):
     date_start  = fields.Datetime('Starting Date',track_visibility='onchange')
     od_help_desk_issue_id = fields.Many2one('crm.helpdesk',string="Help Desk Issue Sequence")
     od_meeting_id = fields.Many2one('calendar.event',string='Meeting')
-    od_stage = fields.Selection([('draft','In Progress'),('done','Done'),('cancel_by_tl','Cancelled By TL'),('cancel_by_owner','Cancelled By Owner')],string="Status",default='draft',track_visibility='onchange')
+    od_stage = fields.Selection([('draft','In Progress'),('done','Done'),('cancel_by_tl','Cancelled By TL')],string="Status",default='draft',track_visibility='onchange')
     cancel_tl_id = fields.Many2one('res.users',string="Cancel TL User")
     od_date_done = fields.Datetime(string="Date Done",readonly=True)
     od_opp_id = fields.Many2one('crm.lead',string="Opportunity")
@@ -688,6 +718,7 @@ class task(models.Model):
     def btn_owner_esclate(self):
         self.od_own_esc =True
         self.od_owner_esc_status ='escalated'
+        self.od_send_mail('od_escalation_mail')
         self.od_owner_esc_time = str(datetime.now())
 
     @api.multi 
@@ -732,7 +763,11 @@ class task(models.Model):
         if self.od_type == 'activities':
             date_end = self.date_end
 #             date_done = self.od_date_done
+            
             date_done = self.get_date_done()
+            date_end = datetime.strptime(date_end,DEFAULT_SERVER_DATETIME_FORMAT)
+            date_done = datetime.strptime(date_done,DEFAULT_SERVER_DATETIME_FORMAT)
+            date_end = date_end + timedelta(minutes=1)
             if date_done and date_end:
                 if date_done > date_end:
                     self.od_end_kpi = 0

@@ -16,6 +16,8 @@ class project_work(models.Model):
     
     def _create_analytic_entries(self, cr, uid, vals, context):
         """Create the hr analytic timesheet from project task work"""
+        
+        print "timesheet create vals>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",vals
         import datetime
         timesheet_obj = self.pool['hr.analytic.timesheet']
         task_obj = self.pool['project.task']
@@ -26,6 +28,7 @@ class project_work(models.Model):
 
         task_obj = task_obj.browse(cr, uid, vals['task_id'], context=context)
         result = self.get_user_related_details(cr, SUPERUSER_ID, vals.get('user_id', uid))
+        
         vals_line['name'] = '%s: %s' % (tools.ustr(task_obj.name), tools.ustr(vals['name'] or '/'))
         vals_line['user_id'] = vals['user_id']
         vals_line['product_id'] = result['product_id']
@@ -38,15 +41,19 @@ class project_work(models.Model):
                 vals_line['date'] = vals['date']
 
         # Calculate quantity based on employee's product's uom
-        vals_line['unit_amount'] = vals['hours']
+        vals_line['unit_amount'] = vals.get('hours',0.0)
+        vals_line['cancelled_by_owner'] = vals.get('cancelled_by_owner',False)
+        vals_line['cancelled_by_id'] = vals.get('cancelled_by_id',False)
+        vals_line['narration'] = vals.get('narration','')
+        
 
-        default_uom = self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.project_time_mode_id.id
+        default_uom = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).company_id.project_time_mode_id.id
         if result['product_uom_id'] != default_uom:
-            vals_line['unit_amount'] = self.pool['product.uom']._compute_qty(cr, uid, default_uom, vals['hours'], result['product_uom_id'])
+            vals_line['unit_amount'] = self.pool['product.uom']._compute_qty(cr, SUPERUSER_ID, default_uom, vals['hours'], result['product_uom_id'])
         acc_id = task_obj.project_id and task_obj.project_id.analytic_account_id.id or acc_id
         if acc_id:
             vals_line['account_id'] = acc_id
-            res = timesheet_obj.on_change_account_id(cr, uid, False, acc_id)
+            res = timesheet_obj.on_change_account_id(cr, SUPERUSER_ID, False, acc_id)
             if res.get('value'):
                 vals_line.update(res['value'])
             vals_line['general_account_id'] = result['general_account_id']
@@ -57,19 +64,19 @@ class project_work(models.Model):
             amount = vals_line['unit_amount']
             prod_id = vals_line['product_id']
             unit = False
-            timeline_id = timesheet_obj.create(cr, uid, vals=vals_line, context=context)
-           
+            timeline_id = timesheet_obj.create(cr, SUPERUSER_ID, vals=vals_line, context=context)
+            print "timeline id>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",timeline_id
             # Compute based on pricetype
 #             amount_unit = timesheet_obj.on_change_unit_amount(cr, uid, timeline_id,
 #                 prod_id, amount, False, unit, vals_line['journal_id'], context=context)
-            hourly_rate = timesheet_obj.od_get_hourly_rate(cr,uid,vals['user_id'])
-            timesheet_obj.write(cr, uid, [timeline_id],{'hourly_rate':hourly_rate,}, context=context)
-            timesheet_data = timesheet_obj.browse(cr,uid,timeline_id)
+            hourly_rate = timesheet_obj.od_get_hourly_rate(cr,SUPERUSER_ID,vals['user_id'])
+            timesheet_obj.write(cr, SUPERUSER_ID, [timeline_id],{'hourly_rate':hourly_rate,}, context=context)
+            timesheet_data = timesheet_obj.browse(cr,SUPERUSER_ID,timeline_id)
             normal_amount = timesheet_data.normal_amount
             overtime_amount = timesheet_data.overtime_amount
             amount =  normal_amount + overtime_amount
             print  "amount>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",amount
-            timesheet_obj.write(cr, uid, [timeline_id],{'amount':amount}, context=context)
+            timesheet_obj.write(cr, SUPERUSER_ID, [timeline_id],{'amount':amount}, context=context)
         return timeline_id
     
     def default_get(self, cr, uid, fields, context=None):

@@ -459,7 +459,11 @@ class account_analytic_account(models.Model):
             self.od_original_closing_date = self.date
             self.od_date_set = True
     # od_original_closing_date = fields.Date(string="Original Closing Date",compute="_get_original_date",store=True)
-
+    
+    od_project_start = fields.Date(string="Project Start")
+    od_project_end = fields.Date(string="Project End")
+    od_project_status = fields.Selection([('active','Active'),('inactive','Inactive')],string="Project Status")
+    
     od_cost_control_kpi = fields.Float(string="Cost Control KPI",compute="_od_get_cost_control_api")
     od_scope_control_kpi = fields.Float(string="Scope Control KPI",compute="_od_get_scope_control_kpi")
     od_manpower_kpi = fields.Float(string="Manpower Cost Control KPI",compute="_get_manpower_cost_control")

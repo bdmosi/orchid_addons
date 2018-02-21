@@ -42,6 +42,9 @@ class hr_analytic_timesheet(models.Model):
     overtime_amount = fields.Float(string="Overtime Amount",compute="od_get_amount",store=True)
     normal_amount = fields.Float(string="Normal Amount",compute="od_get_amount",store=True)
     
+    narration  = fields.Char(string="Narration")
+    cancelled_by_owner = fields.Boolean(string="Cancelled By Owner")
+    cancelled_by_id  = fields.Many2one('res.users',string="Cancelled By")
     
     
     @api.model
