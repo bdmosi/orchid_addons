@@ -138,7 +138,7 @@
         <field name="res_model">od.document.request</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
- <field name="domain">[('state','=',('to_approve','approved','first_approval'))]</field>
+ <field name="domain">[('state','in',('to_approve','approved','first_approval'))]</field>
          <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to add new Document Request. 

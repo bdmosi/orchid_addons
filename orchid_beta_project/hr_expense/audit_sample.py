@@ -49,6 +49,7 @@ class post_sales_comp_sample(models.Model):
     sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
     task_id = fields.Many2one('project.task',string="Activity",ondelete="cascade")
     score = fields.Float(string="Score")
+    @api.multi
     def btn_open(self):
         return {
                 'view_type': 'form',
