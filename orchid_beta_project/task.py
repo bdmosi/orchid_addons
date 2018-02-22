@@ -765,14 +765,15 @@ class task(models.Model):
 #             date_done = self.od_date_done
             
             date_done = self.get_date_done()
-            date_end = datetime.strptime(date_end,DEFAULT_SERVER_DATETIME_FORMAT)
-            date_done = datetime.strptime(date_done,DEFAULT_SERVER_DATETIME_FORMAT)
-            date_end = date_end + timedelta(minutes=1)
-            if date_done and date_end:
-                if date_done > date_end:
-                    self.od_end_kpi = 0
-                else:
-                    self.od_end_kpi = 60
+            if date_done:
+                date_end = datetime.strptime(date_end,DEFAULT_SERVER_DATETIME_FORMAT)
+                date_done = datetime.strptime(date_done,DEFAULT_SERVER_DATETIME_FORMAT)
+                date_end = date_end + timedelta(minutes=1)
+                if date_done and date_end:
+                    if date_done > date_end:
+                        self.od_end_kpi = 0
+                    else:
+                        self.od_end_kpi = 60
 
 
     @api.one

@@ -135,7 +135,7 @@
 						<button name="update_vat" string="Link VAT" type="object" class="oe_highlight" states="draft,submitted,returned_by_pmo" />
 						<button name="btn_price_fix" string="Fix/Reset Selling" type="object" class="oe_highlight" states="draft,submitted,returned_by_pmo" />
 						
-						<button name="btn_submit" string="Submit" type="object" class="oe_highlight" states="draft" groups="orchid_beta.group_beta_presales_engineer,orchid_beta.group_beta_presales_manager,orchid_beta.group_executive_management_beta_1"/>
+						<button name="btn_submit" string="Design Ready" type="object" class="oe_highlight" states="draft" groups="orchid_beta.group_beta_presales_engineer,orchid_beta.group_beta_presales_manager,orchid_beta.group_executive_management_beta_1"/>
 					
 						<button name="btn_handover" string="Handover" type="object" class="oe_highlight" states="submitted,returned_by_pmo" groups="orchid_beta.group_beta_sale_account_mananger,orchid_beta.group_beta_sale_coordinator_1,orchid_beta.group_executive_management_beta_1"/>
 						<button name="btn_reset_draft" string="Reset to Draft" type="object" class="oe_highlight" states="submitted,returned_by_pmo" groups="orchid_beta.group_beta_presales_engineer,orchid_beta.group_beta_presales_manager,orchid_beta.group_executive_management_beta_1"/>

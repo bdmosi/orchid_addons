@@ -2812,7 +2812,7 @@ class od_cost_sheet(models.Model):
     #             ]
     #     return line
 
-    state = fields.Selection([('draft','Draft'),('submitted','Submitted'),('returned_by_pmo','Returned By PMO'),
+    state = fields.Selection([('draft','Draft'),('submitted','Design Ready'),('returned_by_pmo','Returned By PMO'),
                               ('handover','Hand-Over'),('waiting_po','Waiting PO'),('returned_by_fin','Returned By Finance'),('change','Change'),('analytic_change','Redistribute Analytic'),('processed','Processed'),
                               ('modify','Modify'),('approved','Approved'),('done','Done'),('cancel','Cancelled')],string="Status",default='draft',track_visibility='always')
     ren_filled = fields.Boolean('Ren Filled')
