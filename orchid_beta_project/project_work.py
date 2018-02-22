@@ -215,7 +215,7 @@ class project_project(models.Model):
             vals['od_quantity_max'] = quantity_max
             vals['od_type_of_project'] = type_of_project
         project = super(project_project,self).create(vals)
-        self.od_create_default_tasks(project)
+#         self.od_create_default_tasks(project)
         return project
     @api.one
     def od_get_total_invoice(self):
