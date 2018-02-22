@@ -275,7 +275,7 @@ class project_work(osv.osv):
                 'od_start_date':fields.datetime('Start Date'),
                 'od_complete_date':fields.datetime('Complete Date'),
                 'state':fields.selection([('completed','Completed Entirely'),('partial','Partially Completed')],'Status',required=True),
-                'locked':fields.boolean('Locked',default=True),
+                'locked':fields.boolean('Locked',default=False),
                 
                 }
 

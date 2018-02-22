@@ -795,7 +795,7 @@ class od_cost_sheet(models.Model):
     handover_reviewer = fields.Many2one('res.users','Projects / Service Desk Review')
     finance_reviewer = fields.Many2one('res.users','Finance Review')
     company_id = fields.Many2one('res.company', string='Company',default=od_get_company_id)
-    submitted_date = fields.Datetime('Submitted Date',readonly=True)
+    submitted_date = fields.Datetime('Design Ready Date',readonly=True)
     handover_date = fields.Datetime('Hand-Over Date',readonly=True)
     processed_date = fields.Datetime('Processed Date',readonly=True)
     approved_date = fields.Datetime('Approved Date',readonly=False)
@@ -1356,17 +1356,41 @@ class od_cost_sheet(models.Model):
         self.set_om_extra_exp_cost_group(res)
         return res
 
-    @api.one
-    def btn_submit(self):
+           
+    def update_opp_stage_design_ready(self):
+        
+        opp_design_ready_state_id =4
+        check_ids = [6,12,5]#won pipeline commit stage ids
+        if self.lead_id.stage_id.id not in check_ids:
+            self.lead_id.write({'stage_id':opp_design_ready_state_id})
+    
+    def update_opp_stage_submitted(self):
+        pipe_stage_id =12
+        check_ids = [1,4] #approved, design ready stage
+        if self.lead_id.stage_id.id in check_ids:
+            self.lead_id.write({'stage_id':pipe_stage_id})
+            
+    @api.one 
+    def btn_design_ready(self):
         self.update_cost_sheet()
         self.submitted_date = str(datetime.now())
         if self.status == 'active':
             date =str(datetime.now())
             self.lead_id.finished_on_7 =date[:10]
-        self.state ='submitted'
-        self.date_log_history_line = [{'name':'Submitted Date','date':str(datetime.now())}]
-        self.update_opp_stage_submitted()
+        self.state ='design_ready'
+        self.date_log_history_line = [{'name':'Design Ready','date':str(datetime.now())}]
+        self.update_opp_stage_design_ready()
         self.od_send_mail('cst_sheet_submit_mail')
+
+        
+    
+    
+    @api.one
+    def btn_submit(self):
+        self.state ='submitted'
+        self.date_log_history_line = [{'name':'Submit To Customer','date':str(datetime.now())}]
+        self.update_opp_stage_submitted()
+
     
     
     @api.multi
@@ -1461,15 +1485,7 @@ class od_cost_sheet(models.Model):
             raise Warning("Won Stage Not Available Please Create One for Opportunity")
         stage_id = stage_ob.id
         self.lead_id.write({'stage_id':stage_id})
-        
-    def update_opp_stage_submitted(self):
-        stage_pool = self.env['crm.case.stage']
-        stage_ob = stage_pool.search([('name','=','Submitted')],limit =1)
-        if not stage_ob:
-            raise Warning("Submitted Stage Not Available Please Create One for Opportunity")
-        stage_id = stage_ob.id
-        self.lead_id.write({'stage_id':stage_id})
-    
+
     def check_adv_payment(self):
         if self.adv_payment_status == 'required':
             raise Warning("Advance Payment Not Collected Yet")

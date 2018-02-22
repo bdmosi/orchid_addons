@@ -132,13 +132,13 @@
 							string="Un-Freeze" type='object' class='oe_highlight' attrs="{'invisible':[('freeze','!=',True)]}" 
 							/> -->
 						
-						<button name="update_vat" string="Link VAT" type="object" class="oe_highlight" states="draft,submitted,returned_by_pmo" />
-						<button name="btn_price_fix" string="Fix/Reset Selling" type="object" class="oe_highlight" states="draft,submitted,returned_by_pmo" />
-						
-						<button name="btn_submit" string="Design Ready" type="object" class="oe_highlight" states="draft" groups="orchid_beta.group_beta_presales_engineer,orchid_beta.group_beta_presales_manager,orchid_beta.group_executive_management_beta_1"/>
+						<button name="update_vat" string="Link VAT" type="object" class="oe_highlight" states="draft,design_ready,submitted,returned_by_pmo" />
+						<button name="btn_price_fix" string="Fix/Reset Selling" type="object" class="oe_highlight" states="draft,design_ready,submitted,returned_by_pmo" />
+						<button name="btn_design_ready" string="Design Ready" type="object" class="oe_highlight" states="draft" groups="orchid_beta.group_beta_presales_engineer,orchid_beta.group_beta_presales_manager,orchid_beta.group_executive_management_beta_1"/>
+						<button name="btn_submit" string="Submit To Customer" type="object" class="oe_highlight" states="design_ready" groups="orchid_beta.group_beta_presales_engineer,orchid_beta.group_beta_presales_manager,orchid_beta.group_executive_management_beta_1"/>
 					
 						<button name="btn_handover" string="Handover" type="object" class="oe_highlight" states="submitted,returned_by_pmo" groups="orchid_beta.group_beta_sale_account_mananger,orchid_beta.group_beta_sale_coordinator_1,orchid_beta.group_executive_management_beta_1"/>
-						<button name="btn_reset_draft" string="Reset to Draft" type="object" class="oe_highlight" states="submitted,returned_by_pmo" groups="orchid_beta.group_beta_presales_engineer,orchid_beta.group_beta_presales_manager,orchid_beta.group_executive_management_beta_1"/>
+						<button name="btn_reset_draft" string="Reset to Draft" type="object" class="oe_highlight" states="design_ready,submitted,returned_by_pmo" groups="orchid_beta.group_beta_presales_engineer,orchid_beta.group_beta_presales_manager,orchid_beta.group_executive_management_beta_1"/>
 
 						<button name="btn_waiting_po" string="Waiting PO" type="object" class="oe_highlight" attrs="{'invisible':['|',('po_status','!=','waiting_po'),('state','!=','handover')]}" groups="orchid_beta.group_od_project_manager,orchid_beta.group_od_project_user,orchid_beta.group_executive_management_beta_1"/>
 						<button name="btn_waiting_to_handover" string="Reset To Sales" type="object" class="oe_highlight" states="waiting_po" groups="orchid_beta.group_od_project_manager,orchid_beta.group_od_project_user,orchid_beta.group_executive_management_beta_1"/>
@@ -163,7 +163,7 @@
 						<button name="button_cancel" string="Cancel" type="object" class="oe_highlight" attrs="{'invisible':[('state','in',('done','cancel'))]}" 
  groups="orchid_beta.group_beta_presales_engineer,orchid_beta.group_beta_presales_manager,orchid_beta.group_executive_management_beta_1"/>
 						
-						<field name="state" widget="statusbar" readonly="1" statusbar_visible="draft,submitted,handover,processed,done"/>
+						<field name="state" widget="statusbar" readonly="1" statusbar_visible="draft,design_ready,submitted,handover,processed,done"/>
 					</header>
 					<div class="oe_right oe_button_box">
 						<button class="oe_inline oe_stat_button" name="od_open_attachement" type="object" icon="fa-book">
@@ -255,7 +255,7 @@
 										<td/>
 									</tr>
 									<tr>
-										<td>Submitted Date</td>
+										<td>Design Ready Date</td>
 										<td>
 											<field name="submitted_date"/>
 										</td>
