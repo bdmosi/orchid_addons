@@ -28,8 +28,6 @@ def od_task_vals():
   'amc':True,
   'val_parent_id': '0'},
  
-
- 
  {'name': 'Preventive Maintenance',
   'od_state': '8',
   'od_type': 'milestone',
@@ -49,7 +47,4 @@ def od_task_vals():
   'amc':True,
   'val_parent_id': '0'},
  
- 
-
-
   ]

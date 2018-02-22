@@ -2,6 +2,7 @@
 from openerp import models, fields, api, _
 from pprint import pprint
 from datetime import datetime
+from od_default_milestone import od_project_vals
 class account_move_line(models.Model):
     _inherit = "account.move.line"
     od_state = fields.Selection([('draft','Unposted'),('posted','Posted')],string="Parent Status",related="move_id.state")
@@ -13,6 +14,37 @@ class account_analytic_account(models.Model):
    
     
     
+    def get_projet_id(self):
+        analytic_account_id = self.id 
+        project =self.env['project.project'].search([('analytic_account_id','=',analytic_account_id)],limit=1)
+        
+        return project
+    
+    
+    def create_milestone_tasks(self,task_vals,date_start,date_end):
+        task_pool = self.env['project.task']
+        project = self.get_projet_id()
+        project_id = project.id
+        user_id = project.user_id and project.user_id.id
+        partner_ids = [(6,0,[user_id])],
+        for val in task_vals:
+            val.update({
+            'project_id':project_id,
+            'user_id':user_id,
+            'partner_ids':partner_ids,
+            'date_start':date_start,
+            'date_end':date_end
+            })
+            task = task_pool.create(val)
+        return True
+    
+    @api.multi
+    def btn_activate_project(self):
+        task_vals = od_project_vals()
+        date_start = self.od_project_start 
+        date_end = self.od_project_end
+        self.create_milestone_tasks(task_vals, date_start, date_end)
+        self.od_project_status = 'active'
     
     def cron_od_contract_expiry(self, cr, uid,context=None):
         context = dict(context or {})
