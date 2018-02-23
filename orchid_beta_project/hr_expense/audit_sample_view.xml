@@ -58,6 +58,28 @@
 									</tree>
 								</field>
 							</page>
+							<page string="Commit" attrs="{'invisible':[('type','!=','sales_acc_mgr')]}" >
+								<field name="commit_gp_line">
+									<tree editable="bottom" create="false" delete="false">
+										<field name="cost_sheet_id" readonly="1"/>
+										<button name="btn_open" type="object" icon="STOCK_FIND" string="Open" />
+										<field name="gp" readonly="1" sum="Total"/>
+										
+									</tree>
+								</field>
+							</page>
+							
+							<page string="Achieved" attrs="{'invisible':[('type','!=','sales_acc_mgr')]}" >
+								<field name="achieved_gp_line">
+									<tree editable="bottom" create="false" delete="false">
+										<field name="cost_sheet_id" readonly="1"/>
+										<button name="btn_open" type="object" icon="STOCK_FIND" string="Open" />
+										<field name="gp" readonly="1" sum="Total"/>
+										
+									</tree>
+								</field>
+							</page>
+							
 							
 							
 							<page string="Team Score" attrs="{'invisible':[('type','!=','pre_sales_mgr')]}" >

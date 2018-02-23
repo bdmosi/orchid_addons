@@ -234,6 +234,8 @@ class task(models.Model):
 
     @api.one
     def unlink(self):
+        if self.no_delete:
+            raise Warning("This Task Blocked to Delete")
         if self.od_child_ids:
             raise Warning("Milestone/Workpackages Cannot be Deleted if they have Child Tasks")
         self.od_send_mail('od_task_delete_mail')
@@ -635,7 +637,7 @@ class task(models.Model):
     #     print "context>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",context
     #     return partner_id
     
-    
+    no_delete = fields.Boolean(string="Delete Blocked")
     od_duplicated = fields.Boolean(string="Duplicated")
     date_start  = fields.Datetime('Starting Date',track_visibility='onchange')
     od_help_desk_issue_id = fields.Many2one('crm.helpdesk',string="Help Desk Issue Sequence")

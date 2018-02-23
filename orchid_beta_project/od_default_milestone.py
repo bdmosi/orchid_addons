@@ -5,3 +5,17 @@ def od_project_vals():
             {'name': 'Closing','od_state': 7}
             
             ]
+
+def od_amc_vals():
+    return [
+            {'name': 'Maintenance','od_state': 8}
+            
+            ]
+
+def od_om_vals():
+    return [
+          
+            {'name': 'Operation','od_state': 9}
+            
+            ]
+    

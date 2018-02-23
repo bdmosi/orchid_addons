@@ -2,7 +2,7 @@
 from openerp import models, fields, api, _
 from pprint import pprint
 from datetime import datetime
-from od_default_milestone import od_project_vals
+from od_default_milestone import od_project_vals,od_om_vals,od_amc_vals
 class account_move_line(models.Model):
     _inherit = "account.move.line"
     od_state = fields.Selection([('draft','Unposted'),('posted','Posted')],string="Parent Status",related="move_id.state")
@@ -11,7 +11,9 @@ class account_analytic_account(models.Model):
     _inherit = "account.analytic.account"
     DOMAIN = [('credit','Credit'),('sup','Supply'),('imp','Implementation'),('sup_imp','Supply & Implementation'),('amc','AMC'),('o_m','O&M')]
     od_type_of_project = fields.Selection(DOMAIN,string="Type Of Project")
-   
+    use_timesheets = fields.Boolean(string="Timesheets",readonly=True)
+    use_tasks = fields.Boolean(string="Tasks",readonly=True)
+    use_issues = fields.Boolean(string="Issues",readonly=True)
     
     
     def get_projet_id(self):
@@ -33,18 +35,44 @@ class account_analytic_account(models.Model):
             'user_id':user_id,
             'partner_ids':partner_ids,
             'date_start':date_start,
-            'date_end':date_end
+            'date_end':date_end,
+            'no_delete':True
             })
             task = task_pool.create(val)
         return True
     
+    
+    def update_bools(self):
+        self.write({'use_timesheets':True,'use_tasks':True,'use_issues':True})
+    
     @api.multi
     def btn_activate_project(self):
+        self.update_bools()
         task_vals = od_project_vals()
         date_start = self.od_project_start 
         date_end = self.od_project_end
         self.create_milestone_tasks(task_vals, date_start, date_end)
         self.od_project_status = 'active'
+    
+    @api.multi
+    def btn_activate_amc(self):
+        self.update_bools()
+        task_vals = od_amc_vals()
+        date_start = self.od_amc_start 
+        date_end = self.od_amc_end
+        self.create_milestone_tasks(task_vals, date_start, date_end)
+        self.od_amc_status = 'active'
+        
+    @api.multi
+    def btn_activate_om(self):
+        self.update_bools()
+        task_vals = od_om_vals()
+        date_start = self.od_om_start
+        date_end = self.od_om_end
+        self.create_milestone_tasks(task_vals, date_start, date_end)
+        self.od_om_status = 'active'
+    
+    
     
     def cron_od_contract_expiry(self, cr, uid,context=None):
         context = dict(context or {})

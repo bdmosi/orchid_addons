@@ -9,9 +9,10 @@ class hr_employee(models.Model):
     _inherit ="hr.employee"
     
    
-    
+    mgr_score_selection =[(x, x) for x in range(1,11)]
     #audit fileds
     audit_temp_id = fields.Many2one('audit.template',string="Audit Template")
+    annual_target = fields.Float(string="Annual Target")
     aud_date_start1 = fields.Date(string="Audit Start")
     aud_date_end1 = fields.Date(string="Audit End")
     execute1 = fields.Boolean("Execute")
@@ -22,6 +23,11 @@ class hr_employee(models.Model):
     cert_id1 = fields.Many2one('employee.certificate',string="Certificate")
     cert_weight1 = fields.Float(string="Certificate Weight")
     cert_status1 = fields.Selection([('not_achieved','Not Achieved'),('achieved','Achieved')],string="Certificate Status")
+    mgr_feedback1 = fields.Boolean(string="Manager Feedback")
+    mgr_score1 = fields.Selection(mgr_score_selection,string="Manager Score")
+    utl1= fields.Float(string="Utilization")
+    
+    
     aud_date_start2 = fields.Date(string="Audit Start")
     aud_date_end2 = fields.Date(string="Audit End")
     execute2 = fields.Boolean("Currently Executing")
@@ -32,6 +38,9 @@ class hr_employee(models.Model):
     cert_id2 = fields.Many2one('employee.certificate',string="Certificate")
     cert_weight2 = fields.Float(string="Certificate Weight")
     cert_status2 = fields.Selection([('not_achieved','Not Achieved'),('achieved','Achieved')],string="Certificate Status")
+    mgr_feedback2 = fields.Boolean(string="Manager Feedback")
+    mgr_score2 = fields.Selection(mgr_score_selection,string="Manager Score")
+    utl2= fields.Float(string="Utilization")
     
     aud_date_start3 = fields.Date(string="Audit Start")
     aud_date_end3 = fields.Date(string="Audit End")
@@ -43,7 +52,10 @@ class hr_employee(models.Model):
     cert_id3 = fields.Many2one('employee.certificate',string="Certificate")
     cert_weight3 = fields.Float(string="Certificate Weight")
     cert_status3 = fields.Selection([('not_achieved','Not Achieved'),('achieved','Achieved')],string="Certificate Status")
-
+    mgr_feedback3 = fields.Boolean(string="Manager Feedback")
+    mgr_score3 = fields.Selection(mgr_score_selection,string="Manager Score")
+    utl3= fields.Float(string="Utilization")
+    
     
     aud_date_start4 = fields.Date(string="Audit Start")
     aud_date_end4 = fields.Date(string="Audit End")
@@ -55,7 +67,10 @@ class hr_employee(models.Model):
     cert_id4 = fields.Many2one('employee.certificate',string="Certificate")
     cert_weight4 = fields.Float(string="Certificate Weight")
     cert_status4 = fields.Selection([('not_achieved','Not Achieved'),('achieved','Achieved')],string="Certificate Status")
-
+    mgr_feedback4 = fields.Boolean(string="Manager Feedback")
+    mgr_score4 = fields.Selection(mgr_score_selection,string="Manager Score")
+    utl4= fields.Float(string="Utilization")
+    
     
     aud_date_start5 = fields.Date(string="Audit Start")
     aud_date_end5 = fields.Date(string="Audit End")
@@ -67,7 +82,10 @@ class hr_employee(models.Model):
     cert_id5 = fields.Many2one('employee.certificate',string="Certificate")
     cert_weight5 = fields.Float(string="Certificate Weight")
     cert_status5 = fields.Selection([('not_achieved','Not Achieved'),('achieved','Achieved')],string="Certificate Status")
-
+    mgr_feedback5 = fields.Boolean(string="Manager Feedback")
+    mgr_score5 = fields.Selection(mgr_score_selection,string="Manager Score")
+    utl5= fields.Float(string="Utilization")
+    
     
     aud_date_start6 = fields.Date(string="Audit Start")
     aud_date_end6 = fields.Date(string="Audit End")
@@ -79,7 +97,10 @@ class hr_employee(models.Model):
     cert_id6 = fields.Many2one('employee.certificate',string="Certificate")
     cert_weight6 = fields.Float(string="Certificate Weight")
     cert_status6 = fields.Selection([('not_achieved','Not Achieved'),('achieved','Achieved')],string="Certificate Status")
-
+    mgr_feedback6 = fields.Boolean(string="Manager Feedback")
+    mgr_score6 = fields.Selection(mgr_score_selection,string="Manager Score")
+    utl6= fields.Float(string="Utilization")
+    
     
     aud_date_start7 = fields.Date(string="Audit Start")
     aud_date_end7 = fields.Date(string="Audit End")
@@ -91,6 +112,10 @@ class hr_employee(models.Model):
     cert_id7 = fields.Many2one('employee.certificate',string="Certificate")
     cert_weight7 = fields.Float(string="Certificate Weight")
     cert_status7 = fields.Selection([('not_achieved','Not Achieved'),('achieved','Achieved')],string="Certificate Status")
+    mgr_feedback7 = fields.Boolean(string="Manager Feedback")
+    mgr_score7 = fields.Selection(mgr_score_selection,string="Manager Score")
+    utl7= fields.Float(string="Utilization")
+    
     
     aud_date_start8 = fields.Date(string="Audit Start")
     aud_date_end8 = fields.Date(string="Audit End")
@@ -102,6 +127,9 @@ class hr_employee(models.Model):
     cert_id8 = fields.Many2one('employee.certificate',string="Certificate")
     cert_weight8 = fields.Float(string="Certificate Weight")
     cert_status8 = fields.Selection([('not_achieved','Not Achieved'),('achieved','Achieved')],string="Certificate Status")
+    mgr_feedback8 = fields.Boolean(string="Manager Feedback")
+    mgr_score8 = fields.Selection(mgr_score_selection,string="Manager Score")
+    utl8= fields.Float(string="Utilization")
 
     
     aud_date_start9 = fields.Date(string="Audit Start")
@@ -114,6 +142,9 @@ class hr_employee(models.Model):
     cert_id9 = fields.Many2one('employee.certificate',string="Certificate")
     cert_weight9 = fields.Float(string="Certificate Weight")
     cert_status9 = fields.Selection([('not_achieved','Not Achieved'),('achieved','Achieved')],string="Certificate Status")
+    mgr_feedback9 = fields.Boolean(string="Manager Feedback")
+    mgr_score9 = fields.Selection(mgr_score_selection,string="Manager Score")
+    utl9= fields.Float(string="Utilization")
     
     
     aud_date_start10 = fields.Date(string="Audit Start")
@@ -126,6 +157,9 @@ class hr_employee(models.Model):
     cert_id10 = fields.Many2one('employee.certificate',string="Certificate")
     cert_weight10 = fields.Float(string="Certificate Weight")
     cert_status10 = fields.Selection([('not_achieved','Not Achieved'),('achieved','Achieved')],string="Certificate Status")
+    mgr_feedback10 = fields.Boolean(string="Manager Feedback")
+    mgr_score10 = fields.Selection(mgr_score_selection,string="Manager Score")
+    utl10= fields.Float(string="Utilization")
 
     
     aud_date_start11 = fields.Date(string="Audit Start")
@@ -138,6 +172,9 @@ class hr_employee(models.Model):
     cert_id11 = fields.Many2one('employee.certificate',string="Certificate")
     cert_weight11 = fields.Float(string="Certificate Weight")
     cert_status11 = fields.Selection([('not_achieved','Not Achieved'),('achieved','Achieved')],string="Certificate Status")
+    mgr_feedback11 = fields.Boolean(string="Manager Feedback")
+    mgr_score11 = fields.Selection(mgr_score_selection,string="Manager Score")
+    utl11= fields.Float(string="Utilization")
     
     
     aud_date_start12 = fields.Date(string="Audit Start")
@@ -150,8 +187,9 @@ class hr_employee(models.Model):
     cert_id12 = fields.Many2one('employee.certificate',string="Certificate")
     cert_weight12 = fields.Float(string="Certificate Weight")
     cert_status12 = fields.Selection([('not_achieved','Not Achieved'),('achieved','Achieved')],string="Certificate Status")
-    
-    
+    mgr_feedback12 = fields.Boolean(string="Manager Feedback")
+    mgr_score12 = fields.Selection(mgr_score_selection,string="Manager Score")
+    utl12= fields.Float(string="Utilization")
     
     def get_execution_number(self):
         mstr = 'execute'
@@ -391,6 +429,104 @@ class hr_employee(models.Model):
         team_avg_score = sum(team_score)/float(len(team_score))
         comp_data =[(0,0,{'name':'Productivity','weight':100,'score':team_avg_score,'final_score':team_avg_score})]
         return result,team_vals,comp_data
+    def get_sales_commit_data(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):
+        
+        total_gp = 0.0
+        user_id  = self.user_id and self.user_id.id
+        result =[]
+        domain = [('sales_acc_manager','=',user_id)]
+        domain.extend([('op_expected_booking','>=',aud_date_start),('op_expected_booking','<=',aud_date_end)])
+        domain1 = domain + [('state','not in',('approved','done','cancel','modify','change','analytic_change','draft','design_ready','submitted'))]
+        domain2 = domain + [('state','in',('draft','design_ready','submitted'))]
+        
+        sheet_ids =self.env['od.cost.sheet'].search(domain1)
+        
+        for sheet in sheet_ids:
+            gp =sheet.total_gp
+            result.append((0,0,{'cost_sheet_id':sheet.id,'gp':gp}))
+            total_gp += gp
+        sheet_ids =self.env['od.cost.sheet'].search(domain2)
+        for sheet in sheet_ids:
+            stage_id = sheet.op_stage_id and sheet.op_stage_id.id 
+            if stage_id in (5,12):
+                gp = sheet.total_gp
+                result.append((0,0,{'cost_sheet_id':sheet.id,'gp':gp}))
+                total_gp +=gp
+        return result,total_gp
+    def get_sales_achieved_data(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):
+        user_id  = self.user_id and self.user_id.id
+        result =[]
+        total_gp = 0.0
+        domain = [('sales_acc_manager','=',user_id)]
+        domain.extend([('op_expected_booking','>=',aud_date_start),('op_expected_booking','<=',aud_date_end)])
+        domain1 = domain + [('state','in',('approved','done','modify','change','analytic_change'))]
+        sheet_ids =self.env['od.cost.sheet'].search(domain1)
+        for sheet in sheet_ids:
+            gp = sheet.total_gp
+            result.append((0,0,{'cost_sheet_id':sheet.id,'gp':sheet.total_gp}))
+            total_gp +=gp
+        return result,total_gp
+    def get_sales_acc_mgr_component(self,commit_total,achieved_total):
+        target = self.annual_target/12.0
+        result =0.0
+        exclude_wt = 0.0
+        comp_data =[]
+        if target:
+            if achieved_total >= commit_total:
+                result = commit_total/target
+                if result >3.0:
+                    result =3
+            elif achieved_total < commit_total:
+                result = achieved_total/target 
+                if result > 1.5:
+                    result =1.5
+        mgr_score = self.get_mgr_feedback()
+        cert = self.get_certificate_status()
+        cert_ach = cert.get('achieved',False)
+        cert_req = cert.get('required',False)
+        if not mgr_score:
+            exclude_wt += 10
+        if not cert_req:
+            exclude_wt += 10
+        
+        wt_cmt = 80.0
+        wt_cert =10.0
+        wt_mgr =10.0
+        if exclude_wt:
+            wt_cmt =  wt_cmt + (wt_cmt*exclude_wt)/float(100-exclude_wt)
+            wt_cert =  wt_cert + (wt_cert*exclude_wt)/float(100-exclude_wt)
+            wt_mgr =  wt_mgr + (wt_mgr*exclude_wt)/float(100-exclude_wt)
+        
+        comp_data.append((0,0,
+                              {'name':'Commitment Performance',
+                               'weight':wt_cmt,
+                               'score':result*100,
+                               'final_score':wt_cmt *result}
+                              ))
+            
+        if cert_req:
+            cert_score  =0.0
+            if cert_ach:
+                cert_score = 100
+            comp_data.append((0,0,
+                              {'name':'Certificate',
+                               'weight':wt_cert,
+                               'score':cert_score,
+                               'final_score':(wt_cert/100)*cert_score}
+                              ))
+        if mgr_score:
+            comp_data.append((0,0,
+                              {'name':'Direct Manager Feedback',
+                               'weight':wt_mgr,
+                               'score':mgr_score*10,
+                               'final_score':mgr_score}
+                              ))
+        
+        return comp_data
+            
+        
+            
+        
     
     def update_audit_sample(self,sample_id,aud_date_start,aud_date_end,audit_temp_id):
         type = audit_temp_id.type
@@ -422,6 +558,16 @@ class hr_employee(models.Model):
             sample_id.comp_line.unlink()
             sample_id.team_line.unlink()
             sample_id.write({'opp_sample_line':opp_sample_line,'comp_line':comp_data,'team_line':team_line})
+            
+        if type == 'sales_acc_mgr':
+            
+            achieved_line,achieved_total = self.get_sales_achieved_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            commit_total = sample_id.commit_total
+            component_data = self.get_sales_acc_mgr_component(commit_total,achieved_total)
+            sample_id.comp_line.unlink()
+            sample_id.achieved_gp_line.unlink()
+            sample_id.write({'achieved_gp_line':achieved_line,'comp_line':component_data,})
+           
     
     
     def create_audit_sample(self,aud_date_start,aud_date_end,audit_temp_id):
@@ -456,6 +602,14 @@ class hr_employee(models.Model):
             vals.update({'opp_sample_line':opp_sample_line,'comp_line':comp_data,'team_line':team_line}) 
             sample_id =self.env['audit.sample'].create(vals)
             #create utlization line
+        
+        
+        if type == 'sales_acc_mgr':
+            commit_line,commit_total = self.get_sales_commit_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            achieved_line,achieved_total = self.get_sales_achieved_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            component_data = self.get_sales_acc_mgr_component(commit_total,achieved_total)
+            vals.update({'commit_gp_line':commit_line,'achieved_gp_line':achieved_line,'comp_line':component_data})
+            sample_id =self.env['audit.sample'].create(vals)
         return sample_id
     
     
@@ -471,6 +625,15 @@ class hr_employee(models.Model):
             if eval('self.'+cert_st) == 'achieved':
                 res['achieved'] =True
         return res
+    def get_mgr_feedback(self):
+        result =0.0
+        ex_num = self.get_execution_number()
+        ex_num = str(ex_num)
+        feedback='mgr_feedback'+ ex_num
+        score ='mgr_score'+ex_num
+        if eval('self.'+feedback):
+            result = eval('self.'+score) 
+        return result
             
         
     def get_score(self,avg_score,type,ex_num):

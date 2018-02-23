@@ -12,6 +12,10 @@
 						<group>
 							<group>
 								<field name="audit_temp_id" />
+								
+							</group>
+							<group>
+								<field name="annual_target" />
 							</group>
 						</group>
 						<!-- start1 -->
@@ -36,9 +40,20 @@
 								</tr>
 							</tbody>
 						</table>
+						
+						<group>
+							<group><field name="mgr_feedback1" /></group>
+							<group><field name="mgr_score1" attrs="{'invisible':[('mgr_feedback1','=',False)]}" /></group>
+						
+						</group>
+						
 						<group>
 							<field name="cert1" />
 						</group>
+						
+						
+						
+						
 						<table style="width:100%" class="table table-striped"
 							attrs="{'invisible':[('cert1','=',False)]}">
 							<thead>
@@ -80,9 +95,17 @@
 								</tr>
 							</tbody>
 						</table>
+						
+						<group>
+							<group><field name="mgr_feedback2" /></group>
+							<group><field name="mgr_score2" attrs="{'invisible':[('mgr_feedback2','=',False)]}" /></group>
+						
+						</group>
+						
 						<group>
 							<field name="cert2" />
 						</group>
+						
 						<table style="width:100%" class="table table-striped"
 							attrs="{'invisible':[('cert2','=',False)]}">
 							<thead>
@@ -124,9 +147,19 @@
 								</tr>
 							</tbody>
 						</table>
+					
+					
+					
+						<group>
+							<group><field name="mgr_feedback3" /></group>
+							<group><field name="mgr_score3" attrs="{'invisible':[('mgr_feedback3','=',False)]}" /></group>
+						
+						</group>
+					
 						<group>
 							<field name="cert3" />
 						</group>
+					
 						<table style="width:100%" class="table table-striped"
 							attrs="{'invisible':[('cert3','=',False)]}">
 							<thead>
@@ -168,9 +201,17 @@
 								</tr>
 							</tbody>
 						</table>
+						
+						<group>
+							<group><field name="mgr_feedback4" /></group>
+							<group><field name="mgr_score4" attrs="{'invisible':[('mgr_feedback4','=',False)]}" /></group>
+						
+						</group>
+						
 						<group>
 							<field name="cert4" />
 						</group>
+						
 						<table style="width:100%" class="table table-striped"
 							attrs="{'invisible':[('cert4','=',False)]}">
 							<thead>
@@ -212,9 +253,19 @@
 								</tr>
 							</tbody>
 						</table>
+						
+						
+						
+						<group>
+							<group><field name="mgr_feedback5" /></group>
+							<group><field name="mgr_score5" attrs="{'invisible':[('mgr_feedback5','=',False)]}" /></group>
+						
+						</group>
+						
 						<group>
 							<field name="cert5" />
 						</group>
+						
 						<table style="width:100%" class="table table-striped"
 							attrs="{'invisible':[('cert5','=',False)]}">
 							<thead>
@@ -256,9 +307,16 @@
 								</tr>
 							</tbody>
 						</table>
+						
+						<group>
+							<group><field name="mgr_feedback6" /></group>
+							<group><field name="mgr_score6" attrs="{'invisible':[('mgr_feedback6','=',False)]}" /></group>
+						
+						</group>
 						<group>
 							<field name="cert6" />
 						</group>
+						
 						<table style="width:100%" class="table table-striped"
 							attrs="{'invisible':[('cert6','=',False)]}">
 							<thead>
@@ -300,9 +358,18 @@
 								</tr>
 							</tbody>
 						</table>
+						
+						
+						<group>
+							<group><field name="mgr_feedback7" /></group>
+							<group><field name="mgr_score7" attrs="{'invisible':[('mgr_feedback7','=',False)]}" /></group>
+						
+						</group>
+						
 						<group>
 							<field name="cert7" />
 						</group>
+						
 						<table style="width:100%" class="table table-striped"
 							attrs="{'invisible':[('cert7','=',False)]}">
 							<thead>
@@ -343,9 +410,17 @@
 								</tr>
 							</tbody>
 						</table>
+						
+						<group>
+							<group><field name="mgr_feedback8" /></group>
+							<group><field name="mgr_score8" attrs="{'invisible':[('mgr_feedback8','=',False)]}" /></group>
+						
+						</group>
+						
 						<group>
 							<field name="cert8" />
 						</group>
+						
 						<table style="width:100%" class="table table-striped"
 							attrs="{'invisible':[('cert8','=',False)]}">
 							<thead>
@@ -387,9 +462,17 @@
 								</tr>
 							</tbody>
 						</table>
+						
+							<group>
+							<group><field name="mgr_feedback9" /></group>
+							<group><field name="mgr_score9" attrs="{'invisible':[('mgr_feedback9','=',False)]}" /></group>
+						
+						</group>
+						
 						<group>
 							<field name="cert9" />
 						</group>
+					
 						<table style="width:100%" class="table table-striped"
 							attrs="{'invisible':[('cert9','=',False)]}">
 							<thead>
@@ -431,9 +514,18 @@
 								</tr>
 							</tbody>
 						</table>
+						
+						
+						<group>
+							<group><field name="mgr_feedback10" /></group>
+							<group><field name="mgr_score10" attrs="{'invisible':[('mgr_feedback10','=',False)]}" /></group>
+						
+						</group>
+						
 						<group>
 							<field name="cert10" />
 						</group>
+						
 						<table style="width:100%" class="table table-striped"
 							attrs="{'invisible':[('cert10','=',False)]}">
 							<thead>
@@ -475,9 +567,16 @@
 								</tr>
 							</tbody>
 						</table>
+						
+						
+							<group>
+							<group><field name="mgr_feedback11" /></group>
+							<group><field name="mgr_score11" attrs="{'invisible':[('mgr_feedback11','=',False)]}" /></group>
+						</group>
 						<group>
 							<field name="cert11" />
 						</group>
+					
 						<table style="width:100%" class="table table-striped"
 							attrs="{'invisible':[('cert11','=',False)]}">
 							<thead>
@@ -519,9 +618,17 @@
 								</tr>
 							</tbody>
 						</table>
+						
+						
+						<group>
+							<group><field name="mgr_feedback12" /></group>
+							<group><field name="mgr_score12" attrs="{'invisible':[('mgr_feedback12','=',False)]}" /></group>
+						
+						</group>
 						<group>
 							<field name="cert12" />
 						</group>
+						
 						<table style="width:100%" class="table table-striped"
 							attrs="{'invisible':[('cert12','=',False)]}">
 							<thead>
