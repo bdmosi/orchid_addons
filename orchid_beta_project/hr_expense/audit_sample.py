@@ -41,7 +41,8 @@ class audit_sample(models.Model):
     achieved_gp_line = fields.One2many('achieved.gp.sample.line','sample_id',string="Commit GP Samples")
     commit_total = fields.Float(string="Commit Total",compute="_get_total")
     achieved_total = fields.Float(string="Achieved Total",compute="_get_total")
-
+    utilization = fields.Float(string="Utilization")
+    target = fields.Float(string="Monthly Target")
 
 
 class CommitGpSample(models.Model):

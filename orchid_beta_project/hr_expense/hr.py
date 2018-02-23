@@ -211,12 +211,16 @@ class hr_employee(models.Model):
     def get_post_sales_vals(self,sample_id,aud_date_start,aud_date_end):
         user_id  = self.user_id and self.user_id.id
         result = []
+        avl_time = self.get_available_time(aud_date_start) or 1
         data_model = 'project.task'
         domain = [('od_type','=','activities'),('user_id','=',user_id),('od_stage','=','done')]
         aud_date_start = aud_date_start +' 04:00:00'
         aud_date_end = aud_date_end + ' 23:58:58'
         domain.extend([('date_start','>=',aud_date_start),('date_start','<=',aud_date_end)]) 
         data_ids =self.env[data_model].search(domain)
+       
+        spent_time  = sum([dat.od_actual for dat in data_ids])
+        utilization = (spent_time/avl_time) *100
         score_board = []
         comp_data =[]
         for data in data_ids: 
@@ -237,7 +241,7 @@ class hr_employee(models.Model):
         comp_data.append((0,0,{'name':'Activity Integrity','weight':wt_task,'score':avg_score,'final_score':(wt_task/100.0)*avg_score}))
         if wt_cert:
             comp_data.append((0,0,{'name':'Certificate','weight':wt_cert,'score':cert_score,'final_score':(wt_cert/100.0)*cert_score}))
-        return result,comp_data
+        return result,comp_data,utilization
         
     
     
@@ -281,7 +285,7 @@ class hr_employee(models.Model):
         total_count = resolved + escalated
         if total_count ==0:
             return {'weight_escalate':False,'score':0}
-        else:
+        else:   
             return {'weight_escalate':True,'score':resolved/float(total_count)}
         
         
@@ -305,11 +309,11 @@ class hr_employee(models.Model):
             domain = [('od_type','=','activities'),('user_id','=',user_id),('od_stage','=','done')]
             domain.extend([('date_start','>=',aud_date_start),('date_start','<=',aud_date_end)]) 
             data_ids =self.env[data_model].search(domain)
-            spent_time = 0.0
+            spent_time = sum([dat.od_actual for dat in data_ids])
             fot = sum([dat.od_end_kpi*(100/60.0) for dat in data_ids])/(float(len(data_ids)) or 1.0)
             engineer_task_count += len(data_ids)
-            for data in data_ids:
-                spent_time += sum([work.hours for work in data.work_ids])
+#             for data in data_ids:
+#                 spent_time += sum([work.hours for work in data.work_ids])
             utl = spent_time/avl_time
             result.append((0,0,{'user_id':user_id,'available_time':avl_time,'actual_time_spent':spent_time,'utl':(spent_time/avl_time)*100.0}))
             fot_data.append((0,0,{'user_id':user_id,'fot':fot}))
@@ -522,7 +526,7 @@ class hr_employee(models.Model):
                                'final_score':mgr_score}
                               ))
         
-        return comp_data
+        return comp_data,target
             
         
             
@@ -535,10 +539,10 @@ class hr_employee(models.Model):
         dt_start = aud_date_start
         result = []
         if type =='post_sales':
-            result,comp_data = self.get_post_sales_vals(sample_id, aud_date_start, aud_date_end)
+            result,comp_data,utilization = self.get_post_sales_vals(sample_id, aud_date_start, aud_date_end)
             sample_id.post_sale_sample_line.unlink()
             sample_id.comp_line.unlink()
-            sample_id.write({'post_sale_sample_line':result,'comp_line':comp_data})
+            sample_id.write({'post_sale_sample_line':result,'comp_line':comp_data,'utilization':utilization})
         
         if type =='ttl':
             result,fot_data,comp_data = self.get_ttl_vals(sample_id, aud_date_start, aud_date_end, audit_temp_id)
@@ -563,10 +567,10 @@ class hr_employee(models.Model):
             
             achieved_line,achieved_total = self.get_sales_achieved_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
             commit_total = sample_id.commit_total
-            component_data = self.get_sales_acc_mgr_component(commit_total,achieved_total)
+            component_data,target = self.get_sales_acc_mgr_component(commit_total,achieved_total)
             sample_id.comp_line.unlink()
             sample_id.achieved_gp_line.unlink()
-            sample_id.write({'achieved_gp_line':achieved_line,'comp_line':component_data,})
+            sample_id.write({'achieved_gp_line':achieved_line,'comp_line':component_data,'target':target})
            
     
     
@@ -583,8 +587,8 @@ class hr_employee(models.Model):
                 'aud_temp_id':audit_temp_id.id,'type':type,'employee_id':employee_id})
         
         if type =='post_sales':
-            result,comp_data = self.get_post_sales_vals(sample_id, aud_date_start, aud_date_end)
-            vals.update({'post_sale_sample_line':result,'comp_line':comp_data})
+            result,comp_data,utilization = self.get_post_sales_vals(sample_id, aud_date_start, aud_date_end)
+            vals.update({'post_sale_sample_line':result,'comp_line':comp_data,'utilization':utilization})
             sample_id =self.env['audit.sample'].create(vals)
         
         
@@ -607,8 +611,8 @@ class hr_employee(models.Model):
         if type == 'sales_acc_mgr':
             commit_line,commit_total = self.get_sales_commit_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
             achieved_line,achieved_total = self.get_sales_achieved_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
-            component_data = self.get_sales_acc_mgr_component(commit_total,achieved_total)
-            vals.update({'commit_gp_line':commit_line,'achieved_gp_line':achieved_line,'comp_line':component_data})
+            component_data,target = self.get_sales_acc_mgr_component(commit_total,achieved_total)
+            vals.update({'commit_gp_line':commit_line,'achieved_gp_line':achieved_line,'comp_line':component_data,'target':target})
             sample_id =self.env['audit.sample'].create(vals)
         return sample_id
     
@@ -662,18 +666,21 @@ class hr_employee(models.Model):
             aud_samp = 'audit_sample'+str(ex_num)
             aud_samp_check = eval('self.'+aud_samp)
             scr = 'score'+ex_num
+            utl ='utl'+ex_num
             if aud_samp_check:
                 sample_id  = eval('self.'+aud_samp)
                 self.update_audit_sample(sample_id,aud_date_start,aud_date_end,audit_temp_id)
 #                 score =  self.get_score(sample_id.avg_score, type, ex_num)
                 score = sample_id.avg_score
-                self.write({scr:score})
+                utilization = sample_id.utilization
+                self.write({scr:score,utl:utilization})
             else:
                 sample_id =self.create_audit_sample(aud_date_start,aud_date_end,audit_temp_id)
                 if sample_id:
 #                     score =  self.get_score(sample_id.avg_score, type, ex_num)
                     score = sample_id.avg_score
-                    self.write({aud_samp:sample_id.id,scr:score})
+                    utilization = sample_id.utilization
+                    self.write({aud_samp:sample_id.id,scr:score,utl:utilization})
      
     
     def audit_set_date(self):

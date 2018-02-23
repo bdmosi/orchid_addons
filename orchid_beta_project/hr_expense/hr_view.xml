@@ -27,6 +27,7 @@
 								<th>Audit Period Start</th>
 								<th>Audit Period End</th>
 								<th>Monthly Score</th>
+								<th>Utilization</th>
 								<th>Audit Sample</th>
 							</thead>
 							<tbody>
@@ -36,6 +37,7 @@
 									<td><field name="aud_date_start1" /></td>
 									<td><field name="aud_date_end1" /></td>
 									<td><field name="score1" readonly="1" /></td>
+									<td><field name="utl1" readonly="1" /></td>
 									<td><field name="audit_sample1" readonly="1" /></td>
 								</tr>
 							</tbody>
@@ -82,6 +84,7 @@
 								<th>Audit Period Start</th>
 								<th>Audit Period End</th>
 								<th>Monthly Score</th>
+								<th>Utilization</th>
 								<th>Audit Sample</th>
 							</thead>
 							<tbody>
@@ -91,6 +94,7 @@
 									<td><field name="aud_date_start2" /></td>
 									<td><field name="aud_date_end2" /></td>
 									<td><field name="score2" readonly="1" /></td>
+									<td><field name="utl2" readonly="1" /></td>
 									<td><field name="audit_sample2" readonly="1" /></td>
 								</tr>
 							</tbody>
@@ -134,6 +138,7 @@
 								<th>Audit Period Start</th>
 								<th>Audit Period End</th>
 								<th>Monthly Score</th>
+								<th>Utilization</th>
 								<th>Audit Sample</th>
 							</thead>
 							<tbody>
@@ -143,6 +148,7 @@
 									<td><field name="aud_date_start3" /></td>
 									<td><field name="aud_date_end3" /></td>
 									<td><field name="score3" readonly="1" /></td>
+									<td><field name="utl3" readonly="1" /></td>
 									<td><field name="audit_sample3" readonly="1" /></td>
 								</tr>
 							</tbody>
@@ -188,6 +194,7 @@
 								<th>Audit Period Start</th>
 								<th>Audit Period End</th>
 								<th>Monthly Score</th>
+								 <th>Utilization</th>
 								<th>Audit Sample</th>
 							</thead>
 							<tbody>
@@ -197,6 +204,7 @@
 									<td><field name="aud_date_start4" /></td>
 									<td><field name="aud_date_end4" /></td>
 									<td><field name="score4" readonly="1" /></td>
+									<td><field name="utl4" readonly="1" /></td>
 									<td><field name="audit_sample4" readonly="1" /></td>
 								</tr>
 							</tbody>
@@ -240,6 +248,7 @@
 								<th>Audit Period Start</th>
 								<th>Audit Period End</th>
 								<th>Monthly Score</th>
+								<th>Utilization</th>
 								<th>Audit Sample</th>
 							</thead>
 							<tbody>
@@ -249,6 +258,7 @@
 									<td><field name="aud_date_start5" /></td>
 									<td><field name="aud_date_end5" /></td>
 									<td><field name="score5" readonly="1" /></td>
+									<td><field name="utl5" readonly="1" /></td>
 									<td><field name="audit_sample5" readonly="1" /></td>
 								</tr>
 							</tbody>
@@ -294,6 +304,7 @@
 								<th>Audit Period Start</th>
 								<th>Audit Period End</th>
 								<th>Monthly Score</th>
+								<th>Utilization</th>
 								<th>Audit Sample</th>
 							</thead>
 							<tbody>
@@ -303,6 +314,7 @@
 									<td><field name="aud_date_start6" /></td>
 									<td><field name="aud_date_end6" /></td>
 									<td><field name="score6" readonly="1" /></td>
+									<td><field name="utl6" readonly="1" /></td>
 									<td><field name="audit_sample6" readonly="1" /></td>
 								</tr>
 							</tbody>
@@ -345,6 +357,7 @@
 								<th>Audit Period Start</th>
 								<th>Audit Period End</th>
 								<th>Monthly Score</th>
+								<th>Utilization</th>
 								<th>Audit Sample</th>
 							</thead>
 							<tbody>
@@ -354,6 +367,7 @@
 									<td><field name="aud_date_start7" /></td>
 									<td><field name="aud_date_end7" /></td>
 									<td><field name="score7" readonly="1" /></td>
+									<td><field name="utl7" readonly="1" /></td>
 									<td><field name="audit_sample7" readonly="1" /></td>
 								</tr>
 							</tbody>
@@ -397,6 +411,7 @@
 								<th>Audit Period Start</th>
 								<th>Audit Period End</th>
 								<th>Monthly Score</th>
+								<th>Utilization</th>
 								<th>Audit Sample</th>
 							</thead>
 							<tbody>
@@ -406,6 +421,7 @@
 									<td><field name="aud_date_start8" /></td>
 									<td><field name="aud_date_end8" /></td>
 									<td><field name="score8" readonly="1" /></td>
+									<td><field name="utl8" readonly="1" /></td>
 									<td><field name="audit_sample8" readonly="1" /></td>
 								</tr>
 							</tbody>
@@ -449,6 +465,7 @@
 								<th>Audit Period Start</th>
 								<th>Audit Period End</th>
 								<th>Monthly Score</th>
+								<th>Utilization</th>
 								<th>Audit Sample</th>
 							</thead>
 							<tbody>
@@ -458,6 +475,7 @@
 									<td><field name="aud_date_start9" /></td>
 									<td><field name="aud_date_end9" /></td>
 									<td><field name="score9" readonly="1" /></td>
+									<td><field name="utl9" readonly="1" /></td>
 									<td><field name="audit_sample9" readonly="1" /></td>
 								</tr>
 							</tbody>
@@ -510,6 +528,7 @@
 									<td><field name="aud_date_start10" /></td>
 									<td><field name="aud_date_end10" /></td>
 									<td><field name="score10" readonly="1" /></td>
+									<td><field name="utl10" readonly="1" /></td>
 									<td><field name="audit_sample10" readonly="1" /></td>
 								</tr>
 							</tbody>
@@ -554,6 +573,7 @@
 								<th>Audit Period Start</th>
 								<th>Audit Period End</th>
 								<th>Monthly Score</th>
+								<th>Utilization</th>
 								<th>Audit Sample</th>
 							</thead>
 							<tbody>
@@ -563,6 +583,7 @@
 									<td><field name="aud_date_start11" /></td>
 									<td><field name="aud_date_end11" /></td>
 									<td><field name="score11" readonly="1" /></td>
+								    <td><field name="utl11" readonly="1" /></td>
 									<td><field name="audit_sample11" readonly="1" /></td>
 								</tr>
 							</tbody>
@@ -605,6 +626,7 @@
 								<th>Audit Period Start</th>
 								<th>Audit Period End</th>
 								<th>Monthly Score</th>
+								<th>Utilization</th>
 								<th>Audit Sample</th>
 							</thead>
 							<tbody>
