@@ -523,7 +523,7 @@ class hr_employee(models.Model):
                               {'name':'Direct Manager Feedback',
                                'weight':wt_mgr,
                                'score':mgr_score*10,
-                               'final_score':mgr_score}
+                               'final_score':(wt_mgr/10)*mgr_score}
                               ))
         
         return comp_data,target
