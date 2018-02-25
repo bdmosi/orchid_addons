@@ -15,6 +15,9 @@ class account_analytic_account(models.Model):
     use_tasks = fields.Boolean(string="Tasks",readonly=True)
     use_issues = fields.Boolean(string="Issues",readonly=True)
     
+    od_project_invoice_schedule_line  = fields.One2many('od.project.invoice.schedule','analytic_id',string="Project Invoice Schedule")
+    od_amc_invoice_schedule_line  = fields.One2many('od.amc.invoice.schedule','analytic_id',string="AMC Invoice Schedule")
+    od_om_invoice_schedule_line  = fields.One2many('od.om.invoice.schedule','analytic_id',string="Operation Invoice Schedule")
     
     def get_projet_id(self):
         analytic_account_id = self.id 
@@ -566,3 +569,23 @@ class account_analytic_account(models.Model):
     od_amnt_invoiced2 = fields.Float(string="Customer Invoice Amount",compute="od_get_total_invoice")
     od_amnt_purchased = fields.Float(string="Supplier Purchase Amount",compute="od_get_total_purchase")
     od_amnt_purchased2 = fields.Float(string="Supplier Purchase Amount",compute="od_get_total_purchase")
+
+
+class od_project_invoice_schedule(models.Model):
+    _name = "od.project.invoice.schedule"
+    analytic_id  = fields.Many2one('account.analytic.account',string="Analytic Account")
+    name = fields.Char(string="Name",required=True)
+    date = fields.Date(string="Planned Date",required=True)
+    amount = fields.Float(string="Amount",required=True)
+class od_amc_invoice_schedule(models.Model):
+    _name = "od.amc.invoice.schedule"
+    analytic_id  = fields.Many2one('account.analytic.account',string="Analytic Account")
+    name = fields.Char(string="Name",required=True)
+    date = fields.Date(string="Planned Date",required=True)
+    amount = fields.Float(string="Amount",required=True)
+class od_om_invoice_schedule(models.Model):
+    _name = "od.om.invoice.schedule"
+    analytic_id  = fields.Many2one('account.analytic.account',string="Analytic Account")
+    name = fields.Char(string="Name",required=True)
+    date = fields.Date(string="Planned Date",required=True)
+    amount = fields.Float(string="Amount",required=True)

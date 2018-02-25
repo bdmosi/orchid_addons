@@ -423,7 +423,7 @@ class hr_employee(models.Model):
     def get_presale_mgr_vals(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):
         user_id  = self.user_id and self.user_id.id
         employee_id = self.id
-        team_ids = self.search([('parent_id','=',employee_id)]) 
+        team_ids = self.search([('coach_id','=',employee_id)]) 
         user_ids = [emp.user_id.id for emp in team_ids] + [user_id]
         result = []
         team_score =[]

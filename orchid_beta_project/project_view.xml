@@ -550,8 +550,91 @@
                <field name="analytic_account_id" readonly="1" required="0" class="oe_inline" nolabel="1"/>.
               </p>
             </xpath>
+            <xpath expr="//field[@name='date_start']" position="replace" />
+           <xpath expr="//field[@name='date']" position="replace" />
 
             <xpath expr="/form/sheet/notebook/page[@string='Project Stages']" position="after">
+            	
+            	
+            	<page string="Contract Information">
+            	    <table style="width:100%" class="table table-striped">
+                   <thead>
+                       <th></th>
+                       <th>Analytic</th>
+                       <th>Project</th>
+                       <th>AMC</th>
+                       <th>O&amp;M</th>
+                      
+                    </thead>
+                    <tbody>
+                    <tr>
+                    <td><strong>Date Start</strong></td>
+                    <td><field name="date_start" readonly="1"/></td>
+                    <td><field name="od_project_start" readonly="1" /></td>
+                    <td><field name="od_amc_start" readonly="1"/></td>
+                    <td><field name="od_om_start" readonly="1"/></td>
+                    
+                    
+                    
+                    </tr>
+                    <tr>
+                    <td><strong>Date End</strong></td>
+                    <td><field name="date" readonly="1" /></td>
+                    <td><field name="od_project_end" readonly="1"/></td>
+                    <td><field name="od_amc_end" readonly="1" /></td>
+                    <td><field name="od_om_end" readonly="1" /></td>
+                    </tr>
+                    <tr>
+                   <td><strong>Status</strong></td>
+                   <td></td>
+                   <td><field name="od_project_status" readonly="1"/></td>
+                   <td><field name="od_amc_status" readonly="1"/></td>
+                   <td><field name="od_om_status" readonly="1"/></td>
+                    </tr>
+                    <tr>
+                    <td><strong>Action</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    
+                    </tr>
+                    </tbody>
+                    
+                    
+               </table>
+               <separator string="Project Invoice Schedule" />
+               <field name="od_project_invoice_schedule_line" readonly="1">
+               	<tree editable="bottom">
+               		<field name="name" />
+               		<field name="date" />
+               		<field name="amount" />
+               	</tree>
+               </field>
+               
+                <separator string="AMC Invoice Schedule" />
+               <field name="od_amc_invoice_schedule_line" readonly="1">
+               	<tree editable="bottom">
+               		<field name="name" />
+               		<field name="date" />
+               		<field name="amount" />
+               	</tree>
+               </field>
+              
+               <separator string="O&amp;M Invoice Schedule" />
+               <field name="od_om_invoice_schedule_line" readonly="1">
+               	<tree editable="bottom">
+               		<field name="name" />
+               		<field name="date" />
+               		<field name="amount" />
+               	</tree>
+               </field>
+               
+    		
+            	
+            	
+            	</page>
+            	
             	<page string="Issue Log">
             		<field name="od_issue_log_line" >
             		<tree>
