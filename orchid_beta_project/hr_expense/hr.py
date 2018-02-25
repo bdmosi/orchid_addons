@@ -206,7 +206,11 @@ class hr_employee(models.Model):
 #             raise Warning("Only 1 Execution Allowed and At least One Execution Needed ")
         return result[0]
     
-    
+    def get_avg_score(self,score_board):
+        avg_score =0.0
+        if score_board:
+            avg_score =sum(score_board)/float(len(score_board))
+        return avg_score
     
     def get_post_sales_vals(self,sample_id,aud_date_start,aud_date_end):
         user_id  = self.user_id and self.user_id.id
@@ -220,7 +224,7 @@ class hr_employee(models.Model):
         data_ids =self.env[data_model].search(domain)
        
         spent_time  = sum([dat.od_actual for dat in data_ids])
-        utilization = (spent_time/avl_time) *100
+        utilization = (spent_time/float(avl_time)) *100
         score_board = []
         comp_data =[]
         for data in data_ids: 
@@ -237,7 +241,7 @@ class hr_employee(models.Model):
         else:
             wt_cert =0.0
             wt_task =100
-        avg_score =sum(score_board)/float(len(score_board))
+        avg_score =self.get_avg_score(score_board)
         comp_data.append((0,0,{'name':'Activity Integrity','weight':wt_task,'score':avg_score,'final_score':(wt_task/100.0)*avg_score}))
         if wt_cert:
             comp_data.append((0,0,{'name':'Certificate','weight':wt_cert,'score':cert_score,'final_score':(wt_cert/100.0)*cert_score}))
@@ -252,7 +256,6 @@ class hr_employee(models.Model):
         todate = datetime.today()
         daygenerator = (fromdate + timedelta(x + 1) for x in xrange((todate - fromdate).days))
         days =sum(1 for day in daygenerator if day.weekday() not in (4,5)) 
-        days +=1
         return days*9
     
     def get_cancelled_activities(self,user_id,aud_date_start,aud_date_end,engineer_task_count):
@@ -262,7 +265,7 @@ class hr_employee(models.Model):
         task_ids  =task.search(domain)
         if task_ids:
             no_of_cancel_act = len(task_ids)
-            tolerance = no_of_cancel_act/engineer_task_count
+            tolerance = no_of_cancel_act/float(engineer_task_count)
             if tolerance>10:
                 return {'score':0.0,'weight_task':True}
             else:
@@ -310,11 +313,12 @@ class hr_employee(models.Model):
             domain.extend([('date_start','>=',aud_date_start),('date_start','<=',aud_date_end)]) 
             data_ids =self.env[data_model].search(domain)
             spent_time = sum([dat.od_actual for dat in data_ids])
-            fot = sum([dat.od_end_kpi*(100/60.0) for dat in data_ids])/(float(len(data_ids)) or 1.0)
+            fot_board = [dat.od_end_kpi*(100/60.0) for dat in data_ids]
+            fot = self.get_avg_score(fot_board)
             engineer_task_count += len(data_ids)
 #             for data in data_ids:
 #                 spent_time += sum([work.hours for work in data.work_ids])
-            utl = spent_time/avl_time
+            utl = spent_time/float(avl_time)
             result.append((0,0,{'user_id':user_id,'available_time':avl_time,'actual_time_spent':spent_time,'utl':(spent_time/avl_time)*100.0}))
             fot_data.append((0,0,{'user_id':user_id,'fot':fot}))
             if utl >=.65:
@@ -322,8 +326,8 @@ class hr_employee(models.Model):
             utl_list.append(utl)
             fot_list.append(fot)
             
-        utl_score = sum(utl_list)/(float(len(utl_list)) or 1.0)
-        fot_score  = sum(fot_list)/(float(len(fot_list)) or 1.0)
+        utl_score =  self.get_avg_score(utl_list)  
+        fot_score  = self.get_avg_score(fot_list)   
         cancelled_activities = self.get_cancelled_activities(self.user_id.id,aud_date_start,aud_date_end,engineer_task_count) 
         escalation_activities = self.get_escalation_activities(aud_date_start,aud_date_end,user_ids)
         weight_escalate = escalation_activities.get('weight_escalate',False)
@@ -381,7 +385,7 @@ class hr_employee(models.Model):
                 score = 100.0
             score_boards.append(score) 
             result.append((0,0,{'opp_id':data.id,'score':score,'user_id':user_id}))
-        avg_score = sum(score_boards)/float(len(score_boards))
+        avg_score = self.get_avg_score(score_boards)
         return result,avg_score
     def get_presale_vals(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):
         user_id  = self.user_id and self.user_id.id
@@ -400,7 +404,7 @@ class hr_employee(models.Model):
                 score = 100.0
             score_boards.append(score) 
             result.append((0,0,{'opp_id':data.id,'score':score,'user_id':user_id}))
-        avg_score = sum(score_boards)/float(len(score_boards))
+        avg_score = self.get_avg_score(score_boards)
         res = self.get_certificate_status()
         wt_cert = wt_opp =cert_score =0.0
         if res.get('required'):
@@ -430,7 +434,7 @@ class hr_employee(models.Model):
             team_vals.append((0,0,{'user_id':uid,'score':avg_score}))
             result.extend(data)
             
-        team_avg_score = sum(team_score)/float(len(team_score))
+        team_avg_score =  self.get_avg_score(team_score)  
         comp_data =[(0,0,{'name':'Productivity','weight':100,'score':team_avg_score,'final_score':team_avg_score})]
         return result,team_vals,comp_data
     def get_sales_commit_data(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):
@@ -516,14 +520,14 @@ class hr_employee(models.Model):
                               {'name':'Certificate',
                                'weight':wt_cert,
                                'score':cert_score,
-                               'final_score':(wt_cert/100)*cert_score}
+                               'final_score':(wt_cert/100.0)*cert_score}
                               ))
         if mgr_score:
             comp_data.append((0,0,
                               {'name':'Direct Manager Feedback',
                                'weight':wt_mgr,
                                'score':mgr_score*10,
-                               'final_score':(wt_mgr/10)*mgr_score}
+                               'final_score':(wt_mgr/10.0)*mgr_score}
                               ))
         
         return comp_data,target
