@@ -24,6 +24,7 @@ class sale_order(models.Model):
                              'od_branch_id':order.od_branch_id and order.od_branch_id.id or False,
                              'od_cost_centre_id':order.od_cost_centre_id and order.od_cost_centre_id.id or False,
                              'od_division_id':order.od_division_id and order.od_division_id.id or False,
+                             'od_analytic_account':order.project_id and order.project_id.id or False
                              })
         
 

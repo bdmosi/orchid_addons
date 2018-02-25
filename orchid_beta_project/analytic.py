@@ -526,17 +526,17 @@ class account_analytic_account(models.Model):
     od_project_start = fields.Date(string="Project Start")
     od_project_end = fields.Date(string="Project End")
     od_project_status = fields.Selection([('active','Active'),('inactive','Inactive')],string="Project Status",default='inactive')
-
+    od_project_owner_id = fields.Many2one('res.users',string="Project Owner")
     
     od_amc_start = fields.Date(string="AMC Start")
     od_amc_end = fields.Date(string="AMC End")
     od_amc_status = fields.Selection([('active','Active'),('inactive','Inactive')],string="Project Status",default='inactive')
-
+    od_amc_owner_id = fields.Many2one('res.users',string="AMC Owner")
     
     od_om_start = fields.Date(string="O&M Start")
     od_om_end = fields.Date(string="O&M End")
     od_om_status = fields.Selection([('active','Active'),('inactive','Inactive')],string="O&M Status",default='inactive')
-
+    od_om_owner_id = fields.Many2one('res.users',string="OM Owner")
 
 
     

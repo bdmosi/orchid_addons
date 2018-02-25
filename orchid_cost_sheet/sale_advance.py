@@ -46,11 +46,13 @@ class sale_advance_payment_inv(osv.osv_memory):
         od_cost_sheet_id = sale.od_cost_sheet_id and sale.od_cost_sheet_id.id or False
         branch_id = sale.od_branch_id and sale.od_branch_id.id or False 
         division_id = sale.od_division_id and sale.od_division_id or False
+        project_id = sale.project_id and sale.project_id.id
         if od_cost_sheet_id:
             if result:
                 res_id = result[0][0]
                 data_dict = result[0][1]
-                data_dict.update({'od_cost_sheet_id':od_cost_sheet_id,'od_branch_id':branch_id,'od_division_id':division_id})
+                data_dict.update({'od_cost_sheet_id':od_cost_sheet_id,'od_branch_id':branch_id,'od_division_id':division_id,
+                                  'od_analytic_account':project_id})
                 result =[(res_id,data_dict)]
         if order_type_id:
             income_account_id = sale.od_order_type_id and sale.od_order_type_id.income_acc_id and sale.od_order_type_id.income_acc_id.id
@@ -75,10 +77,12 @@ class sale_order_line_make_invoice(osv.osv_memory):
         cost_centre_id = order.od_cost_centre_id and order.od_cost_centre_id.id or False
         branch_id = order.od_branch_id and order.od_branch_id.id or False 
         division_id = order.od_division_id and order.od_division_id.id or False 
+        project_id = order.project_id and order.project_id.id or False
         result.update({
                 'od_cost_sheet_id':cost_sheet_id,
                 'od_cost_centre_id':cost_centre_id,
                 'od_branch_id':branch_id,
-                'od_division_id':division_id
+                'od_division_id':division_id,
+                'od_analytic_account':project_id
             })
         return result

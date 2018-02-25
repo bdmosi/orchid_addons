@@ -533,9 +533,49 @@ class hr_employee(models.Model):
         return comp_data,target
             
         
+    def check_date_in_audit(self,aud_date_start, aud_date_end,date):
+        res = False
+        if aud_date_start <= date <= aud_date_end:
+            res = True
+        if date <= aud_date_start:
+            res = True
+        return res
+    def get_pm_invoice_data(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):        
+        user_id  = self.user_id and self.user_id.id
+        analytic_pool = self.env['account.analytic.account']
+        analytic_ids = analytic_pool.search([('od_owner_id','=',user_id),('state','not in',('close','cancelled'))])
+        project_closed_on_audit = analytic_pool.search([('od_owner_id','=',user_id),('state','=','close'),('date','>=',aud_date_start),('date','<=',aud_date_end)])
+        projects = analytic_ids + project_closed_on_audit 
+        planned_date_vals = []
+        customer_invoice_vals = {}
+        for proj in projects:
+            pl_amount =0.0
+            type = proj.od_type_of_project 
+            if type == 'amc':
+                for line in proj.od_amc_invoice_schedule_line:
+                    date = line.date 
+                    check = self.check_date_in_audit(aud_date_start, aud_date_end, date)
+                    if check:
+                        pl_amount += line.amount
+                planned_date_vals.append({'analytic_id':proj.id,'amount':pl_amount})
+            if type  == 'o_m':
+                for line in proj.od_om_invoice_schedule_line:
+                    date = line.date 
+                    check = self.check_date_in_audit(aud_date_start, aud_date_end, date)
+                    if check:
+                        pl_amount += line.amount
+                planned_date_vals.append({'analytic_id':proj.id,'amount':pl_amount}) 
+            if type not in ('credit','amc','o_m'):
+                for line in proj.od_project_invoice_schedule_line:
+                    date = line.date 
+                    check = self.check_date_in_audit(aud_date_start, aud_date_end, date)
+                    if check:
+                        pl_amount += line.amount
+                planned_date_vals.append({'analytic_id':proj.id,'amount':pl_amount})
             
-        
-    
+           # need iterate over invoices with analytic id 
+            
+            
     def update_audit_sample(self,sample_id,aud_date_start,aud_date_end,audit_temp_id):
         type = audit_temp_id.type
         user_id  = self.user_id and self.user_id.id
@@ -618,6 +658,14 @@ class hr_employee(models.Model):
             component_data,target = self.get_sales_acc_mgr_component(commit_total,achieved_total)
             vals.update({'commit_gp_line':commit_line,'achieved_gp_line':achieved_line,'comp_line':component_data,'target':target})
             sample_id =self.env['audit.sample'].create(vals)
+        
+        if type == 'pm':
+            planned_invoice_line,actual_invoice_line = self.get_pm_invoice_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            
+#             component_data,target = self.get_sales_acc_mgr_component(commit_total,achieved_total)
+#             vals.update({'commit_gp_line':commit_line,'achieved_gp_line':achieved_line,'comp_line':component_data,'target':target})
+            sample_id =self.env['audit.sample'].create(vals)
+        
         return sample_id
     
     

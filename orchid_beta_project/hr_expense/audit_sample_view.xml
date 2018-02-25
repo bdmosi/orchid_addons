@@ -40,6 +40,30 @@
 							</group>
 						</group>
 						<notebook>
+						
+						    <page string="Planned Invoices" attrs="{'invisible':[('type','!=','pm')]}" >
+								<field name="planned_invoice_line">
+									<tree editable="bottom" create="false" delete="false">
+										<field name="analytic_id" readonly="1"/>
+										<field name="invoice_id" readonly="1"/>
+										<field name="amount" readonly="1"/>
+
+									</tree>
+								</field>
+							</page>
+						    
+						     <page string="Customer Invoices" attrs="{'invisible':[('type','!=','pm')]}" >
+								<field name="actual_invoice_line">
+									<tree editable="bottom" create="false" delete="false">
+										<field name="analytic_id" readonly="1"/>
+										<field name="invoice_id" readonly="1"/>
+										<field name="amount" readonly="1"/>
+
+									</tree>
+								</field>
+							</page>
+						    
+						    
 							<page string="Post Sales Sample" attrs="{'invisible':[('type','!=','post_sales')]}" >
 								<field name="post_sale_sample_line">
 									<tree editable="bottom" create="false" delete="false">

@@ -123,6 +123,16 @@
                     <td><field name="od_amc_end" /></td>
                     <td><field name="od_om_end" /></td>
                     </tr>
+                   
+                     <tr>
+                   <td><strong>Owner</strong></td>
+                   <td></td>
+                   <td><field name="od_project_owner_id" readonly="0"/></td>
+                   <td><field name="od_amc_owner_id" readonly="0"/></td>
+                   <td><field name="od_om_owner_id" readonly="0"/></td>
+                    </tr>
+                   
+                   
                     <tr>
                    <td><strong>Status</strong></td>
                    <td></td>
@@ -130,6 +140,9 @@
                    <td><field name="od_amc_status" readonly="1"/></td>
                    <td><field name="od_om_status" readonly="1"/></td>
                     </tr>
+                    
+                     
+                    
                     <tr>
                     <td><strong>Action</strong></td>
                     <td></td>

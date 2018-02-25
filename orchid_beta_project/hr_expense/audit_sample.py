@@ -26,7 +26,10 @@ class audit_sample(models.Model):
     date_end = fields.Date(string="Date End")
     aud_temp_id = fields.Many2one('audit.template',string="Audit Template")
     type = fields.Selection([('post_sales','Post Sales'),('pre_sales','Pre-Sales Engineer'),
-                             ('pre_sales_mgr','Pre-Sales Manager'),('sales_acc_mgr','Sales Account Manager'),('bdm','Business Development Manager'),('ttl','Technical Team Leader')],string="Type",required=True)
+                             ('pre_sales_mgr','Pre-Sales Manager'),('sales_acc_mgr','Sales Account Manager'),
+                             ('bdm','Business Development Manager'),('ttl','Technical Team Leader'),
+                             ('pm','Project Manager'),
+                             ],string="Type",required=True)
     employee_id = fields.Many2one('hr.employee',string="Employee")
     method = fields.Text(string="Method")
     avg_score = fields.Float(string="Monthly Avg Score",compute="_get_avg_score")
@@ -43,7 +46,25 @@ class audit_sample(models.Model):
     achieved_total = fields.Float(string="Achieved Total",compute="_get_total")
     utilization = fields.Float(string="Utilization")
     target = fields.Float(string="Monthly Target")
+    planned_invoice_line = fields.One2many('planned.analytic.invoice.line','sample_id',string="Planned Invoices")
+    actual_invoice_line = fields.One2many('actual.analytic.invoice.line','sample_id',string="Actual Invoices")
+    
 
+
+
+class PlannedInvoices(models.Model):
+    _name ='planned.analytic.invoice.line'
+    sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
+    analytic_id = fields.Many2one('account.anlaytic.account',string="Analytic/Project")
+    invoice_id = fields.Many2one('account.invoice',string="Invoice")
+    amount = fields.Float(string="Amount")
+
+class ActualInvoices(models.Model):
+    _name ='actual.analytic.invoice.line'
+    sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
+    analytic_id = fields.Many2one('account.anlaytic.account',string="Analytic/Project")
+    invoice_id = fields.Many2one('account.invoice',string="Invoice")
+    amount = fields.Float(string="Amount")
 
 class CommitGpSample(models.Model):
     _name ='commit.gp.sample.line'
