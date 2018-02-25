@@ -545,37 +545,64 @@ class hr_employee(models.Model):
         analytic_pool = self.env['account.analytic.account']
         analytic_ids = analytic_pool.search([('od_owner_id','=',user_id),('state','not in',('close','cancelled'))])
         project_closed_on_audit = analytic_pool.search([('od_owner_id','=',user_id),('state','=','close'),('date','>=',aud_date_start),('date','<=',aud_date_end)])
-        projects = analytic_ids + project_closed_on_audit 
+        
+        pr_ids  = [a.id for a in analytic_ids] 
+        closed_ids =[y.id for y in project_closed_on_audit]
+        project_ids = pr_ids + closed_ids 
+        project_ids = list(set(project_ids))
         planned_date_vals = []
-        customer_invoice_vals = {}
-        for proj in projects:
-            pl_amount =0.0
-            type = proj.od_type_of_project 
-            if type == 'amc':
-                for line in proj.od_amc_invoice_schedule_line:
-                    date = line.date 
-                    check = self.check_date_in_audit(aud_date_start, aud_date_end, date)
-                    if check:
-                        pl_amount += line.amount
-                planned_date_vals.append({'analytic_id':proj.id,'amount':pl_amount})
-            if type  == 'o_m':
-                for line in proj.od_om_invoice_schedule_line:
-                    date = line.date 
-                    check = self.check_date_in_audit(aud_date_start, aud_date_end, date)
-                    if check:
-                        pl_amount += line.amount
-                planned_date_vals.append({'analytic_id':proj.id,'amount':pl_amount}) 
-            if type not in ('credit','amc','o_m'):
-                for line in proj.od_project_invoice_schedule_line:
-                    date = line.date 
-                    check = self.check_date_in_audit(aud_date_start, aud_date_end, date)
-                    if check:
-                        pl_amount += line.amount
-                planned_date_vals.append({'analytic_id':proj.id,'amount':pl_amount})
+        customer_invoice_vals = []
+        pl_amounts = []
+        inv_amounts = []
+        print "project ids>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",project_ids
+        if project_ids:
+            print "inside the looooooooooooooooooooooooooooooop"
+            for proj in analytic_pool.browse(project_ids):
+                pl_amount =0.0
+                type = proj.od_type_of_project 
+                if type == 'amc':
+                    for line in proj.od_amc_invoice_schedule_line:
+                        date = line.date 
+                        check = self.check_date_in_audit(aud_date_start, aud_date_end, date)
+                        if check:
+                            pl_amount += line.amount
+                            pl_amounts.append(line.amount)
+                    if pl_amount:
+                        planned_date_vals.append((0,0,{'analytic_id':proj.id,'amount':pl_amount}))
+                if type  == 'o_m':
+                    for line in proj.od_om_invoice_schedule_line:
+                        date = line.date 
+                        check = self.check_date_in_audit(aud_date_start, aud_date_end, date)
+                        if check:
+                            pl_amount += line.amount
+                            pl_amounts.append(line.amount)
+                    if pl_amount:
+                        planned_date_vals.append((0,0,{'analytic_id':proj.id,'amount':pl_amount}))
+                if type not in ('credit','amc','o_m'):
+                    for line in proj.od_project_invoice_schedule_line:
+                        date = line.date 
+                        check = self.check_date_in_audit(aud_date_start, aud_date_end, date)
+                        if check:
+                            pl_amount += line.amount
+                            pl_amounts.append(line.amount)
+                    if pl_amount:
+                        planned_date_vals.append((0,0,{'analytic_id':proj.id,'amount':pl_amount}))
+                
+                invoice_ids = self.env['account.invoice'].search([('od_analytic_account','=',proj.id),('state','in',('open','paid'))])
+                for inv in invoice_ids:
+                    customer_invoice_vals.append((0,0,{'invoice_id':inv.id,'analytic_id':proj.id,'amount':inv.amount_total}))
+                    inv_amounts.append(inv.amount_total)
+        return planned_date_vals,customer_invoice_vals,sum(pl_amounts),sum(inv_amounts)
             
-           # need iterate over invoices with analytic id 
-            
-            
+    def get_pm_component(self,planned_amount,invoice_amount):
+        comp_data  =[]
+        wt_inv =30
+        if planned_amount:
+            inv_scr = (invoice_amount/float(planned_amount))*100
+            comp_data.append((0,0,{'name':'Invoice Schedule','weight':wt_inv,'final_score':(wt_inv/100.0)*inv_scr,'score':inv_scr}))
+        return comp_data
+    
+    
     def update_audit_sample(self,sample_id,aud_date_start,aud_date_end,audit_temp_id):
         type = audit_temp_id.type
         user_id  = self.user_id and self.user_id.id
@@ -615,8 +642,14 @@ class hr_employee(models.Model):
             sample_id.comp_line.unlink()
             sample_id.achieved_gp_line.unlink()
             sample_id.write({'achieved_gp_line':achieved_line,'comp_line':component_data,'target':target})
-           
-    
+        if type == 'pm':
+            planned_invoice_line,actual_invoice_line,planned_amount,inv_amount = self.get_pm_invoice_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            comp_line = self.get_pm_component(planned_amount,inv_amount)
+            sample_id.comp_line.unlink()
+            sample_id.planned_invoice_line.unlink()
+            sample_id.actual_invoice_line.unlink()
+            sample_id.write({'planned_invoice_line':planned_invoice_line,'actual_invoice_line':actual_invoice_line,'comp_line':comp_line})
+            
     
     def create_audit_sample(self,aud_date_start,aud_date_end,audit_temp_id):
         type = audit_temp_id.type
@@ -660,10 +693,9 @@ class hr_employee(models.Model):
             sample_id =self.env['audit.sample'].create(vals)
         
         if type == 'pm':
-            planned_invoice_line,actual_invoice_line = self.get_pm_invoice_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
-            
-#             component_data,target = self.get_sales_acc_mgr_component(commit_total,achieved_total)
-#             vals.update({'commit_gp_line':commit_line,'achieved_gp_line':achieved_line,'comp_line':component_data,'target':target})
+            planned_invoice_line,actual_invoice_line,planned_amount,inv_amount = self.get_pm_invoice_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            comp_line = self.get_pm_component(planned_amount,inv_amount)
+            vals.update({'planned_invoice_line':planned_invoice_line,'actual_invoice_line':actual_invoice_line,'comp_line':comp_line})
             sample_id =self.env['audit.sample'].create(vals)
         
         return sample_id

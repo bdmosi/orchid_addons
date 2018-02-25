@@ -55,16 +55,16 @@ class audit_sample(models.Model):
 class PlannedInvoices(models.Model):
     _name ='planned.analytic.invoice.line'
     sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
-    analytic_id = fields.Many2one('account.anlaytic.account',string="Analytic/Project")
-    invoice_id = fields.Many2one('account.invoice',string="Invoice")
-    amount = fields.Float(string="Amount")
+    analytic_id = fields.Many2one('account.analytic.account',string="Analytic/Project")
+   
+    amount = fields.Float(string="Planned Amount")
 
 class ActualInvoices(models.Model):
     _name ='actual.analytic.invoice.line'
     sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
-    analytic_id = fields.Many2one('account.anlaytic.account',string="Analytic/Project")
+    analytic_id = fields.Many2one('account.analytic.account',string="Analytic/Project")
     invoice_id = fields.Many2one('account.invoice',string="Invoice")
-    amount = fields.Float(string="Amount")
+    amount = fields.Float(string="Invoice Amount")
 
 class CommitGpSample(models.Model):
     _name ='commit.gp.sample.line'
