@@ -131,6 +131,14 @@
                    <td><field name="od_amc_owner_id" readonly="0"/></td>
                    <td><field name="od_om_owner_id" readonly="0"/></td>
                     </tr>
+                    
+                     <tr>
+                   <td><strong>Actual Cost</strong></td>
+                   <td></td>
+                   <td><field name="od_project_cost" /></td>
+                   <td><field name="od_amc_cost" /></td>
+                   <td><field name="od_om_cost" readonly="1"/></td>
+                    </tr>
                    
                    
                     <tr>
@@ -144,13 +152,36 @@
                      
                     
                     <tr>
-                    <td><strong>Action</strong></td>
+                    <td><strong>Activation</strong></td>
                     <td></td>
                     <td><button name="btn_activate_project" string="Activate" class="oe_highlight" type="object"  attrs="{'invisible':[('od_project_status','!=','inactive')]}"/></td>
                     <td><button name="btn_activate_amc" string="Activate" class="oe_highlight" type="object" attrs="{'invisible':[('od_amc_status','!=','inactive')]}"/></td>
                     <td><button name="btn_activate_om" string="Activate" class="oe_highlight" type="object" attrs="{'invisible':[('od_om_status','!=','inactive')]}" /></td>
                     
                     </tr>
+                    
+                    
+                    <tr>
+                   <td><strong>Closing Date</strong></td>
+                   <td></td>
+                   <td><field name="od_project_closing" attrs="{'readonly':[('od_project_status','=','close')]}"/></td>
+                   <td><field name="od_amc_closing" attrs="{'readonly':[('od_amc_status','=','close')]}" /></td>
+                   <td><field name="od_om_closing"  attrs="{'readonly':[('od_om_status','=','close')]}" /></td>
+                    </tr>
+                   
+                   
+                   
+                   
+                    <tr>
+                    <td><strong>Close</strong></td>
+                    <td></td>
+                    <td><button name="btn_close_project" string="Close" class="oe_highlight" type="object"  attrs="{'invisible':[('od_project_status','!=','active')]}"/></td>
+                    <td><button name="btn_close_amc" string="Close" class="oe_highlight" type="object" attrs="{'invisible':[('od_amc_status','!=','active')]}"/></td>
+                    <td><button name="btn_close_om" string="Close" class="oe_highlight" type="object" attrs="{'invisible':[('od_om_status','!=','active')]}" /></td>
+                    
+                    </tr>
+                    
+                    
                     </tbody>
                     
                     

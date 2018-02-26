@@ -3,6 +3,7 @@ from openerp import models, fields, api, _
 from pprint import pprint
 from datetime import datetime
 from od_default_milestone import od_project_vals,od_om_vals,od_amc_vals
+from openerp.exceptions import Warning
 class account_move_line(models.Model):
     _inherit = "account.move.line"
     od_state = fields.Selection([('draft','Unposted'),('posted','Posted')],string="Parent Status",related="move_id.state")
@@ -74,6 +75,36 @@ class account_analytic_account(models.Model):
         date_end = self.od_om_end
         self.create_milestone_tasks(task_vals, date_start, date_end)
         self.od_om_status = 'active'
+        
+    #closing
+    
+    @api.multi
+    def btn_close_project(self):
+        #need to update to acutal cost from jv
+        closing_date = self.od_project_closing
+        if not closing_date:
+            raise Warning("Please Fill the Closing Date")
+        self.od_project_status = 'close'
+    
+    
+    @api.multi
+    def btn_close_amc(self):
+        #need to update to acutal cost from jv
+        closing_date = self.od_amc_closing
+        if self.od_project_status == 'active':
+            raise Warning("Please Close the Project First")
+        if not closing_date:
+            raise Warning("Please Fill the Closing Date")
+        self.od_amc_status = 'close'
+    
+    @api.multi
+    def btn_close_om(self):
+        #need to update to acutal cost from jv
+        closing_date = self.od_om_closing
+        if not closing_date:
+            raise Warning("Please Fill the Closing Date")
+        self.od_om_status = 'close'
+    
     
     
     
@@ -143,6 +174,10 @@ class account_analytic_account(models.Model):
     def set_close(self):
         project_obj = self.od_get_project()
         project_obj.write({'state':'close'})
+        if self.od_project_status == 'active':
+            self.btn_close_project()
+        if self.od_amc_status == 'active':
+            self.btn_close_amc()
         return super(account_analytic_account,self).set_close()
 
     @api.multi
@@ -514,31 +549,84 @@ class account_analytic_account(models.Model):
             else:
                 self.od_manpower_kpi = 0
 
-    @api.one
-    @api.depends('date')
-    def _get_original_date(self):
-        print "original date>>>>>>>>>>>>>>>",self.od_original_closing_date
-        if not self.od_date_set and self.date:
-            self.od_original_closing_date = self.date
-            self.od_date_set = True
+#     @api.one
+#     @api.depends('date')
+#     def _get_original_date(self):
+#         print "original date>>>>>>>>>>>>>>>",self.od_original_closing_date
+#         if not self.od_date_set and self.date:
+#             self.od_original_closing_date = self.date
+#             self.od_date_set = True
     # od_original_closing_date = fields.Date(string="Original Closing Date",compute="_get_original_date",store=True)
     
+    
+    def get_value_from_param(self,param):
+        parameter_obj = self.env['ir.config_parameter']
+        key =[('key', '=', param)]
+        param_obj = parameter_obj.search(key)
+        if not param_obj:
+            raise Warning(_('Settings Warning!'),_('NoParameter Not defined\nconfig it in System Parameters with %s'%param))
+        result = param_obj.value
+        return result
+    def get_exclude_journal_ids(self):
+        company_id =self.company_id and self.company_id.id 
+        exclude_param ='exclude_journals'
+        if company_id ==6:
+            exclude_param = exclude_param +'_ksa'
+        vals = self.get_value_from_param(exclude_param)
+        vals = vals.split(',')
+        result = [int(val) for val in vals]
+        print "valssssssssssssssssssssss",vals,type(vals),result
+        return result
+    
+    
+    @api.one
+    def _get_cost_from_jv(self):
+        analytic_id = self.id
+        move_line_pool = self.env['account.move.line']
+        exclude_journal_ids = self.get_exclude_journal_ids()
+        domain = [('analytic_account_id','=',analytic_id),('journal_id','not in',exclude_journal_ids)]
+        move_line_ids = move_line_pool.search(domain)
+        actual_cost = sum([mvl.debit for mvl in move_line_ids])
+        project_cost =0.0
+        amc_cost =0.0
+        if self.od_project_closing:
+            closing_date = self.od_project_closing 
+            project_cost = sum([mvl.debit for mvl in move_line_ids if mvl.date <= closing_date])
+        if self.od_amc_closing:
+            if self.od_project_closing:
+                closing_date = self.od_project_closing 
+                amc_cost = sum([mvl.debit for mvl in move_line_ids if mvl.date > closing_date])
+            else:
+                amc_cost = sum([mvl.debit for mvl in move_line_ids])
+        
+        self.od_actual_cost = actual_cost
+        self.od_project_cost = project_cost 
+        self.od_amc_cost = amc_cost
+    
+    od_actual_cost = fields.Float(string="Actual Cost",compute="_get_cost_from_jv")
     od_project_start = fields.Date(string="Project Start")
     od_project_end = fields.Date(string="Project End")
-    od_project_status = fields.Selection([('active','Active'),('inactive','Inactive')],string="Project Status",default='inactive')
+    od_project_status = fields.Selection([('active','Active'),('inactive','Inactive'),('close','Closed')],string="Project Status",default='inactive')
     od_project_owner_id = fields.Many2one('res.users',string="Project Owner")
+    od_project_closing = fields.Date(string="Project Closing Date")
+    od_project_cost = fields.Float(string="Project Cost",compute="_get_cost_from_jv")
     
     od_amc_start = fields.Date(string="AMC Start")
     od_amc_end = fields.Date(string="AMC End")
-    od_amc_status = fields.Selection([('active','Active'),('inactive','Inactive')],string="Project Status",default='inactive')
+    od_amc_status = fields.Selection([('active','Active'),('inactive','Inactive'),('close','Closed')],string="Project Status",default='inactive')
     od_amc_owner_id = fields.Many2one('res.users',string="AMC Owner")
+    od_amc_closing = fields.Date(string="AMC Closing Date")
+    od_amc_cost = fields.Float(string="AMC Cost",compute="_get_cost_from_jv")
+    
+    
     
     od_om_start = fields.Date(string="O&M Start")
     od_om_end = fields.Date(string="O&M End")
-    od_om_status = fields.Selection([('active','Active'),('inactive','Inactive')],string="O&M Status",default='inactive')
+    od_om_status = fields.Selection([('active','Active'),('inactive','Inactive'),('close','Closed')],string="O&M Status",default='inactive')
     od_om_owner_id = fields.Many2one('res.users',string="OM Owner")
-
-
+    od_om_closing = fields.Date(string="O&M Closing Date")
+    od_om_cost = fields.Float(string="O&M Cost")
+    
     
     od_cost_control_kpi = fields.Float(string="Cost Control KPI",compute="_od_get_cost_control_api")
     od_scope_control_kpi = fields.Float(string="Scope Control KPI",compute="_od_get_scope_control_kpi")
