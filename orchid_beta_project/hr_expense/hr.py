@@ -560,24 +560,24 @@ class hr_employee(models.Model):
             for proj in analytic_pool.browse(project_ids):
                 pl_amount =0.0
                 type = proj.od_type_of_project 
-                if type == 'amc':
-                    for line in proj.od_amc_invoice_schedule_line:
-                        date = line.date 
-                        check = self.check_date_in_audit(aud_date_start, aud_date_end, date)
-                        if check:
-                            pl_amount += line.amount
-                            pl_amounts.append(line.amount)
-                    if pl_amount:
-                        planned_date_vals.append((0,0,{'analytic_id':proj.id,'amount':pl_amount}))
-                if type  == 'o_m':
-                    for line in proj.od_om_invoice_schedule_line:
-                        date = line.date 
-                        check = self.check_date_in_audit(aud_date_start, aud_date_end, date)
-                        if check:
-                            pl_amount += line.amount
-                            pl_amounts.append(line.amount)
-                    if pl_amount:
-                        planned_date_vals.append((0,0,{'analytic_id':proj.id,'amount':pl_amount}))
+#                 if type == 'amc':
+#                     for line in proj.od_amc_invoice_schedule_line:
+#                         date = line.date 
+#                         check = self.check_date_in_audit(aud_date_start, aud_date_end, date)
+#                         if check:
+#                             pl_amount += line.amount
+#                             pl_amounts.append(line.amount)
+#                     if pl_amount:
+#                         planned_date_vals.append((0,0,{'analytic_id':proj.id,'amount':pl_amount}))
+#                 if type  == 'o_m':
+#                     for line in proj.od_om_invoice_schedule_line:
+#                         date = line.date 
+#                         check = self.check_date_in_audit(aud_date_start, aud_date_end, date)
+#                         if check:
+#                             pl_amount += line.amount
+#                             pl_amounts.append(line.amount)
+#                     if pl_amount:
+#                         planned_date_vals.append((0,0,{'analytic_id':proj.id,'amount':pl_amount}))
                 if type not in ('credit','amc','o_m'):
                     for line in proj.od_project_invoice_schedule_line:
                         date = line.date 
@@ -658,7 +658,9 @@ class hr_employee(models.Model):
         sample_id = False
         employee_id = self.id
         dt_start = aud_date_start
+        print "employeee id>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",employee_id
         name = self.name + '-' +aud_date_start +' To -'+aud_date_end
+        
         vals = {}
         vals.update({'name':name,'date_start':aud_date_start,'date_end':aud_date_end,
                 'aud_temp_id':audit_temp_id.id,'type':type,'employee_id':employee_id})

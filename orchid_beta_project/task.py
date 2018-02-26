@@ -144,6 +144,7 @@ class task(models.Model):
     
     @api.model
     def create(self,vals):
+        self.check_task_user_overlap(vals)
         project_id = vals.get('project_id')
         project_obj = self.env['project.project'].browse(project_id)
         state = project_obj.state
@@ -360,21 +361,43 @@ class task(models.Model):
             vals['date_start'] = date_start
         vals['od_duplicated'] = False
         return super(task, self).write(vals)
-    @api.constrains('user_id','date_start','date_end')
-    def check_task_conflict(self):
-        od_type = self.od_type
-        if od_type == 'activities':
+#     @api.constrains('user_id','date_start','date_end')
+#     def check_task_conflict(self):
+#         od_type = self.od_type
+#         if od_type == 'activities':
+#             task = self.env['project.task']
+#             user_id = self.user_id and self.user_id.id
+#             date_start = self.date_start
+#             date_end = self.date_end
+#             dom = [('user_id','=',user_id),('date_start','>=',date_start),('date_start','<=',date_end)]
+#             tasks = task.search(dom)
+#             task_ids = [tk.id for tk in tasks]
+#             if len(tasks)>1:
+#                 raise Warning("This User Assigned Another Task in This Time with these %s Active  Task Ids "%task_ids)
+    
+    
+    def check_task_user_overlap(self,vals):
+        imp_cod = vals.get('od_implementation_id',False)
+        print "imp code>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",imp_cod
+        if imp_cod:
             task = self.env['project.task']
-            user_id = self.user_id and self.user_id.id
-            date_start = self.date_start
-            date_end = self.date_end
+            user_id = vals.get('user_id')
+            date_start = vals.get('date_start')
+            date_end = vals.get('date_end')
+            print "user id>>>>>>>>>>>>>>>>>",user_id,date_end
             dom = [('user_id','=',user_id),('date_start','>=',date_start),('date_start','<=',date_end)]
             tasks = task.search(dom)
             task_ids = [tk.id for tk in tasks]
-            if len(tasks)>1:
-                raise Warning("This User Assigned Another Task in This Time with these %s Active  Task Ids "%task_ids)
-
-
+            print "task ids>>>>>>>>>>>>>>>>>>>>1>>>>>>",task_ids
+            if len(tasks)>0:
+                raise Warning("Task Overlap!!!!!This User Assigned Another Task in This Time with these %s Active  Task Ids "%task_ids)
+            dom = [('user_id','=',user_id),('date_end','>=',date_start),('date_end','<=',date_end)]
+            tasks = task.search(dom)
+            task_ids = [tk.id for tk in tasks]
+            print "task ids>>>>>>>>>>>>>>>>>>>>>>>>>>",task_ids
+            if len(task_ids)>0:
+                raise Warning("Task Overlap!!!!!This User Assigned Another Task in This Time with these %s Active  Task Ids "%task_ids)
+            
     @api.constrains('date_start','date_end',)
     def check_date(self):
         if self.od_type == 'milestone':
