@@ -823,7 +823,7 @@ class od_cost_sheet(models.Model):
     @api.one 
     def double_check_vat(self):
         vat = .05
-        check_vat_amount =self.sum_tot_sale * vat 
+        check_vat_amount =self.sum_total_sale * vat 
         vat_amount = self.sum_vat
         if not self.ignore_vat and abs(vat_amount -check_vat_amount) >1:
             raise Warning("Please Double Check the VAT Amount")
@@ -2360,9 +2360,10 @@ class od_cost_sheet(models.Model):
         total_weight = self.mat_weight + self.trn_weight + self.bim_weight + self.oim_weight + self.bmn_weight + self.omn_weight + self.o_m_weight
         self.sum_tot_sale = total_sale
         self.sum_total_sale = sum_total_sale
-        special_discount = self.special_discount
-        
-        total_vat = self.mat_vat + self.trn_vat + self.bim_vat + self.oim_vat + self.bmn_vat + self.omn_vat + self.o_m_vat
+        special_discount = self.special_discount 
+        special_discount_vat = special_discount *.05
+        self.special_discount_vat = special_discount_vat
+        total_vat = self.mat_vat + self.trn_vat + self.bim_vat + self.oim_vat + self.bmn_vat + self.omn_vat + self.o_m_vat + special_discount_vat
         self.sum_vat = total_vat
         self.sum_total_with_vat = sum_total_sale + total_vat
         if special_discount and total_sale:
@@ -2524,7 +2525,8 @@ class od_cost_sheet(models.Model):
 #     sum_od_new_profit = fields.Float(string="New Profit",compute="_get_total_summary",store=True)
     sum_profit_per = fields.Float(string="Total Profit Percentage",compute="_get_total_summary",store=True)
     sum_total_weight = fields.Float(string="Total Weight",compute="_get_total_summary",store=True)
-    special_discount = fields.Float(string="Special Discount")
+    special_discount = fields.Float(string="Special Discount") 
+    special_discount_vat = fields.Float(string="Discount VAT",compute="_get_total_summary",store=True)
     sum_total_sale =fields.Float(string="Total Sale Final",compute="_get_total_summary",store=True)
     sum_total_with_vat =  fields.Float(string="Total Sale With VAT",compute="_get_total_summary",store=True)
     sum_vat = fields.Float(string="Total VAT",compute="_get_total_summary",store=True)

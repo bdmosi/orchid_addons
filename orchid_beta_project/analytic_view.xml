@@ -132,12 +132,31 @@
                    <td><field name="od_om_owner_id" readonly="0"/></td>
                     </tr>
                     
+                    
+                   
+                   
+                   <tr>
+                   <td><strong>Actual Sale</strong></td>
+                   <td></td>
+                   <td><field name="od_project_sale" /></td>
+                   <td><field name="od_amc_sale" /></td>
+                   <td><field name="od_om_sale" readonly="1"/></td>
+                    </tr>
+                    
                      <tr>
                    <td><strong>Actual Cost</strong></td>
                    <td></td>
                    <td><field name="od_project_cost" /></td>
                    <td><field name="od_amc_cost" /></td>
                    <td><field name="od_om_cost" readonly="1"/></td>
+                    </tr>
+                   
+                    <tr>
+                   <td><strong>Actual Profit</strong></td>
+                   <td></td>
+                   <td><field name="od_project_profit" /></td>
+                   <td><field name="od_amc_profit" /></td>
+                   <td><field name="od_om_profit" readonly="1"/></td>
                     </tr>
                    
                    
@@ -217,6 +236,68 @@
     		
     
         <page string="Contract Information" position="after">
+            <page string="Project Compliance">
+            <separator string="Initiation" />
+            <field name="od_comp_initiation_line">
+                <tree editable="bottom">
+                		<field name="name" />
+                	 	<field name="score" />
+                </tree>
+            </field>
+            <separator string="Planning" />
+            <field name="od_comp_planning_line">
+                <tree editable="bottom">
+                		<field name="name" />
+                	 	<field name="score" />
+                </tree>
+            </field>
+            
+            <separator string="Execution" />
+            <field name="od_comp_excecution_line">
+                <tree editable="bottom">
+                		<field name="name" />
+                	 	<field name="score" />
+                </tree>
+            </field>
+           
+            
+            <separator string="Monitoring &amp; Control" />
+            <field name="od_comp_monitor_line">
+                <tree editable="bottom">
+                		<field name="name" />
+                	 	<field name="score" />
+                </tree>
+            </field>
+            
+            <separator string="Closing" />
+            <field name="od_comp_closing_line">
+                <tree editable="bottom">
+                		<field name="name" />
+                	 	<field name="score" />
+                </tree>
+            </field>
+            
+            
+            </page>
+            
+            <page string="AMC Compliance">
+            		<separator string="Handover from Projects" />
+	            <field name="od_comp_handover_line">
+	                <tree editable="bottom">
+	                		<field name="name" />
+	                	 	<field name="score" />
+	                </tree>
+	            </field>
+                
+                <separator string="Maintenance" />
+	            <field name="od_comp_maint_line">
+	                <tree editable="bottom">
+	                		<field name="name" />
+	                	 	<field name="score" />
+	                </tree>
+	            </field>
+            </page>
+            
             <page string="KPI">
                 <separator string="Project KPI" />
                 <table style="width:100%" class="table table-striped">
@@ -264,12 +345,19 @@
                             <td></td>
                           </tr>
                           <tr>
-                             <td>Actual Timesheets</td>
+                             <td>Actual Profit</td>
+                             <td><field name="od_actual_sale"/></td>
+		                        <td><field name="od_actual_cost"/></td>
+		                        <td><field name="od_actual_profit"/></td>
+		                        <td><field name="od_actual_profit_percent"/></td>
+                           </tr>
+                          <tr>
+                          <td>Actual Timesheets</td>
                              <td></td>
                              <td><field name="od_timesheet_amount2"/></td>
                              <td></td>
                              <td></td>
-                           </tr>
+                          </tr>
                      </tbody>
                      </table>
                      <separator string="Project Manager" />

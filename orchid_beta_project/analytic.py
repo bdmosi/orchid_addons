@@ -20,6 +20,22 @@ class account_analytic_account(models.Model):
     od_amc_invoice_schedule_line  = fields.One2many('od.amc.invoice.schedule','analytic_id',string="AMC Invoice Schedule")
     od_om_invoice_schedule_line  = fields.One2many('od.om.invoice.schedule','analytic_id',string="Operation Invoice Schedule")
     
+    
+    
+    
+    def get_product_id_from_param(self,product_param):
+        parameter_obj = self.env['ir.config_parameter']
+        key =[('key', '=', product_param)]
+        product_param_obj = parameter_obj.search(key)
+        if not product_param_obj:
+            raise Warning(_('Settings Warning!'),_('NoParameter Not defined\nconfig it in System Parameters with %s'%product_param))
+        product_id = product_param_obj.od_model_id and product_param_obj.od_model_id.id or False
+        return product_id
+    
+    
+    
+    
+    
     def get_projet_id(self):
         analytic_account_id = self.id 
         project =self.env['project.project'].search([('analytic_account_id','=',analytic_account_id)],limit=1)
@@ -586,30 +602,74 @@ class account_analytic_account(models.Model):
         exclude_journal_ids = self.get_exclude_journal_ids()
         domain = [('analytic_account_id','=',analytic_id),('journal_id','not in',exclude_journal_ids)]
         move_line_ids = move_line_pool.search(domain)
-        actual_cost = sum([mvl.debit for mvl in move_line_ids])
+        actual_cost = sum([mvl.debit for mvl in move_line_ids if mvl.od_state =='posted'])
         project_cost =0.0
         amc_cost =0.0
         if self.od_project_closing:
             closing_date = self.od_project_closing 
-            project_cost = sum([mvl.debit for mvl in move_line_ids if mvl.date <= closing_date])
+            project_cost = sum([mvl.debit for mvl in move_line_ids if mvl.date <= closing_date and mvl.od_state =='posted'])
         if self.od_amc_closing:
             if self.od_project_closing:
                 closing_date = self.od_project_closing 
-                amc_cost = sum([mvl.debit for mvl in move_line_ids if mvl.date > closing_date])
+                amc_cost = sum([mvl.debit for mvl in move_line_ids if mvl.date > closing_date and mvl.od_state =='posted'])
             else:
-                amc_cost = sum([mvl.debit for mvl in move_line_ids])
+                amc_cost = sum([mvl.debit for mvl in move_line_ids if mvl.od_state =='posted'])
         
         self.od_actual_cost = actual_cost
         self.od_project_cost = project_cost 
         self.od_amc_cost = amc_cost
+        
     
+    @api.one 
+    def _get_sale_value(self):
+        analytic_id = self.id
+        bmn_product_id = self.get_product_id_from_param('product_bmn')
+        bmn_exp_product_id = self.get_product_id_from_param('product_bmn_extra_expense')
+        omn_product_id = self.get_product_id_from_param('product_omn')
+        omn_exp_product_id = self.get_product_id_from_param('product_omn_extra_expense')
+        amc_products = [bmn_product_id,bmn_exp_product_id,omn_product_id,omn_exp_product_id]
+        sale_order = self.env['sale.order'].search([('project_id','=',analytic_id),('state','!=','cancel')],limit=1)
+        amc_sale =0.0
+        project_sale =0.0
+        actual_sale = 0.0
+        if sale_order:
+            for line in sale_order.order_line:
+                actual_sale += line.price_subtotal
+                if line.product_id.id in amc_products:
+                    amc_sale += line.price_subtotal 
+                else:
+                    project_sale += line.price_subtotal
+        self.od_actual_sale = actual_sale
+        self.od_amc_sale = amc_sale 
+        self.od_project_sale = project_sale
+        
+    
+    
+    @api.one 
+    def _get_actual_profit(self):
+        actual_profit = self.od_actual_sale - self.od_actual_cost
+        actual_sale = self.od_actual_sale
+        if actual_sale:
+            actual_profit_percent = (actual_profit/float(actual_sale))*100.0
+            self.od_actual_profit_percent = actual_profit_percent
+        self.od_actual_profit = actual_profit
+        self.od_project_profit = self.od_project_sale - self.od_project_cost 
+        self.od_amc_profit = self.od_amc_sale - self.od_amc_cost 
+       
+        
     od_actual_cost = fields.Float(string="Actual Cost",compute="_get_cost_from_jv")
+    od_actual_sale = fields.Float(string="Actual Sale",compute="_get_sale_value")
+    od_actual_profit = fields.Float(string="Actual Profit",compute="_get_actual_profit")
+    od_actual_profit_percent = fields.Float(string="Actual Profit",compute="_get_actual_profit")
+    
     od_project_start = fields.Date(string="Project Start")
     od_project_end = fields.Date(string="Project End")
     od_project_status = fields.Selection([('active','Active'),('inactive','Inactive'),('close','Closed')],string="Project Status",default='inactive')
     od_project_owner_id = fields.Many2one('res.users',string="Project Owner")
     od_project_closing = fields.Date(string="Project Closing Date")
     od_project_cost = fields.Float(string="Project Cost",compute="_get_cost_from_jv")
+    od_project_sale =  fields.Float(string="Project Sale",compute="_get_sale_value")
+    od_project_profit = fields.Float(string="Project Profit",compute="_get_actual_profit")
     
     od_amc_start = fields.Date(string="AMC Start")
     od_amc_end = fields.Date(string="AMC End")
@@ -617,8 +677,8 @@ class account_analytic_account(models.Model):
     od_amc_owner_id = fields.Many2one('res.users',string="AMC Owner")
     od_amc_closing = fields.Date(string="AMC Closing Date")
     od_amc_cost = fields.Float(string="AMC Cost",compute="_get_cost_from_jv")
-    
-    
+    od_amc_sale =  fields.Float(string="AMC Sale",compute="_get_sale_value")
+    od_amc_profit = fields.Float(string="AMC Profit",compute="_get_actual_profit")
     
     od_om_start = fields.Date(string="O&M Start")
     od_om_end = fields.Date(string="O&M End")
@@ -626,6 +686,8 @@ class account_analytic_account(models.Model):
     od_om_owner_id = fields.Many2one('res.users',string="OM Owner")
     od_om_closing = fields.Date(string="O&M Closing Date")
     od_om_cost = fields.Float(string="O&M Cost")
+    od_om_sale =  fields.Float(string="O&M Sale")
+    od_om_profit = fields.Float(string="O&M Profit")
     
     
     od_cost_control_kpi = fields.Float(string="Cost Control KPI",compute="_od_get_cost_control_api")
@@ -657,7 +719,124 @@ class account_analytic_account(models.Model):
     od_amnt_invoiced2 = fields.Float(string="Customer Invoice Amount",compute="od_get_total_invoice")
     od_amnt_purchased = fields.Float(string="Supplier Purchase Amount",compute="od_get_total_purchase")
     od_amnt_purchased2 = fields.Float(string="Supplier Purchase Amount",compute="od_get_total_purchase")
+    
+    
+    
+    def get_initiation_line(self):
+        data = [
+            (0,0,{'name':'Project Charter'}),
+            (0,0,{'name':'Sales Handover'}),
+            
+            ]
+        return data
+    
+    def get_planning_line(self):
+        data = [
+            (0,0,{'name':'High Level Design (HLD) & Its Approval'}),
+            (0,0,{'name':'Project Scope Document & Its Approval'}),
+            (0,0,{'name':'Low Level Design (LLD) & Its Approval'}),
+            (0,0,{'name':'Project Plan & Its Approval'}),
+            (0,0,{'name':'Migration Plans & Their Approvals'}),
+            (0,0,{'name':'User Acceptance Test Document (UAT) & Its Approval'}),
+            (0,0,{'name':'Technical Drawings'}),
+            ]
+        return data
+    def get_execution_line(self):
+        data = [
+            (0,0,{'name':' Customer Invoices'}),
+            (0,0,{'name':'Delivery Notes'}),
+            (0,0,{'name':'Supplier Purchases'}),
+            (0,0,{'name':'Correspondence'}),
+           
+            ]
+        return data
+    
+    def get_monitor_line(self):
+        data = [
+            (0,0,{'name':'Change Management (Change Requests)'}),
+            (0,0,{'name':'Project Logs (Issues & Risks)'}),
+            (0,0,{'name':'Progress / Status Reports'}),
+            (0,0,{'name':'Updated Project Plans'}),
+           
+            ]
+        return data
+    
+    def get_closing_line(self):
+        data = [
+            (0,0,{'name':'Completion Certificates'}),
+            (0,0,{'name':'Final Project Documentation'}),
+            (0,0,{'name':'Serial Numbers'}),
+            (0,0,{'name':'Backup Configuration'}),
+            (0,0,{'name':'Lessons Learn'}),
+            (0,0,{'name':'Handover to Service Desk (Signed SLA)'}),
+           
+            ]
+        return data
+    
+    def get_handover_line(self):
+        data = [
+            (0,0,{'name':'Final Project Documentation'}),
+            (0,0,{'name':'Serial Numbers'}),
+            (0,0,{'name':'Backup Configuration'}),
+            (0,0,{'name':'Signed SLA'}),
+           
+           
+            ]
+        return data
+    
+    def get_maint_line(self):
+        data = [
+            (0,0,{'name':'Reports (Preventive, RMA, etc.)'}),
+            (0,0,{'name':'Issue Updates'}),
+            ]
+        return data
+    
+    od_comp_initiation_line  = fields.One2many('od.compliance.initiation','analytic_id',string="Detail Line",default=get_initiation_line)
+    od_comp_planning_line  = fields.One2many('od.compliance.planning','analytic_id',string="Detail Line",default=get_planning_line)
+    od_comp_excecution_line  = fields.One2many('od.compliance.execution','analytic_id',string="Detail Line",default=get_execution_line)
+    od_comp_monitor_line  = fields.One2many('od.compliance.monitor','analytic_id',string="Detail Line",default=get_monitor_line)
+    od_comp_closing_line  = fields.One2many('od.compliance.closing','analytic_id',string="Detail Line",default=get_closing_line)
+    od_comp_handover_line  = fields.One2many('od.compliance.handover','analytic_id',string="Detail Line",default=get_handover_line)
+    od_comp_maint_line  = fields.One2many('od.compliance.maint','analytic_id',string="Detail Line",default=get_maint_line)
+    
+   
+    
 
+class od_compliance_initiation(models.Model):
+    _name = "od.compliance.initiation"
+    analytic_id  = fields.Many2one('account.analytic.account',string="Analytic Account")
+    name = fields.Char(string="Name",required=True)
+    score = fields.Float(string="Score")
+class od_compliance_planning(models.Model):
+    _name = "od.compliance.planning"
+    analytic_id  = fields.Many2one('account.analytic.account',string="Analytic Account")
+    name = fields.Char(string="Name",required=True)
+    score = fields.Float(string="Score")
+class od_compliance_execution(models.Model):
+    _name = "od.compliance.execution"
+    analytic_id  = fields.Many2one('account.analytic.account',string="Analytic Account")
+    name = fields.Char(string="Name",required=True)
+    score = fields.Float(string="Score")
+class od_compliance_monitor(models.Model):
+    _name = "od.compliance.monitor"
+    analytic_id  = fields.Many2one('account.analytic.account',string="Analytic Account")
+    name = fields.Char(string="Name",required=True)
+    score = fields.Float(string="Score")
+class od_compliance_closing(models.Model):
+    _name = "od.compliance.closing"
+    analytic_id  = fields.Many2one('account.analytic.account',string="Analytic Account")
+    name = fields.Char(string="Name",required=True)
+    score = fields.Float(string="Score")
+class od_compliance_handover(models.Model):
+    _name = "od.compliance.handover"
+    analytic_id  = fields.Many2one('account.analytic.account',string="Analytic Account")
+    name = fields.Char(string="Name",required=True)
+    score = fields.Float(string="Score")
+class od_compliance_maint(models.Model):
+    _name = "od.compliance.maint"
+    analytic_id  = fields.Many2one('account.analytic.account',string="Analytic Account")
+    name = fields.Char(string="Name",required=True)
+    score = fields.Float(string="Score")
 
 class od_project_invoice_schedule(models.Model):
     _name = "od.project.invoice.schedule"

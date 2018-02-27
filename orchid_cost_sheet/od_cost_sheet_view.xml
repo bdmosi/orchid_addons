@@ -199,7 +199,7 @@
 					</div>
 					<!-- <sheet> -->
 					<group col="6" colspan="2">
-						<field name="name" attrs="{'readonly':[('state','not in',('draft','submitted'))]}"/>
+						<field name="name" attrs="{'readonly':[('state','not in',('draft','submitted','design_ready'))]}"/>
 						<field name="number"/>
 						<field name="od_customer_id"/>
 
@@ -535,6 +535,12 @@
 												</td>
 												<td>
 													<field name="special_discount" attrs="{'readonly':[('state','=','done')]}"/>
+												</td>
+												<td>
+												<field name="special_discount_vat" readonly="1"/>
+												</td>
+												<td>
+												Discount Percentage :
 												</td>
 												<td>
 													<field name="sp_disc_percentage"/>
