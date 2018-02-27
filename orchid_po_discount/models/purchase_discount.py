@@ -183,7 +183,7 @@ class PurchaseOrderLine(orm.Model):
         'price_subtotal': fields.function(
             _amount_line, string='Subtotal',
             digits_compute=dp.get_precision('Account')),
-        'od_gross':fields.float('Unit Price',required="1")
+        'od_gross':fields.float('Unit Price',required="1",digits_compute= dp.get_precision('Product Price'))
     }
 
     _defaults = {
