@@ -110,6 +110,8 @@
 		                              	</tr>
 		                             </tbody>
 				                </table>
+				                <p>Local Purchase:<span t-esc="local_purchase"/><br/></p>
+				                <p>Foreign Purchase:<span t-esc="foreign_purchase"/><br/></p>
 				            </div>
 				        </div>
 				    </t>

@@ -2,12 +2,12 @@
 <openerp>
 	<data>
 
-		<record id="view_vat_register_input_form" model="ir.ui.view">
+		<!-- <record id="view_vat_register_input_form" model="ir.ui.view">
 			<field name="name">orchid.vat.register.input.form</field>
 			<field name="model">orchid.vat.register.input</field>
 			<field name="arch" type="xml">
 				<form string="Vat Register Input">
-					<!-- <sheet> -->
+					
 					<group>
 						<group>
 							<field name="from_date" required="1"/>
@@ -30,10 +30,10 @@
 						</page>
 					</notebook>
 
-					<!-- </sheet> -->
+					
 					<footer>
-						<button string="Excel" name="generate" type="object" class="btn-primary"/>
-						<button string="Print" name="print_pdf" type="object" class="btn-primary"/>
+						<button string="Generate" name="generate" type="object" class="btn-primary"/>
+						<button string="pdf" name="print_pdf" type="object" class="btn-primary"/>
 					</footer>
 			   </form>
 			</field>
@@ -47,13 +47,13 @@
 			<field name="view_id" ref="view_vat_register_input_form"/>
 			<field name="target">new</field>
 		</record>
-
+ -->
 
 		<record id="view_vat_register_output_form" model="ir.ui.view">
 			<field name="name">orchid.vat.register.output.form</field>
 			<field name="model">orchid.vat.register.output</field>
 			<field name="arch" type="xml">
-				<form string="Vat Register Output">
+				<form string="Vat Register ">
 					<!-- <sheet> -->
 					<group>
 						<group>
@@ -76,8 +76,8 @@
 					</notebook>
 					<!-- </sheet> -->
 					<footer>
-						<button string="Generate" name="generate" type="object" class="btn-primary"/>
-						<button string="pdf" name="print_pdf" type="object" class="btn-primary"/>
+						<button string="Excel" name="generate" type="object" class="btn-primary"/>
+						<button string="Print" name="print_pdf" type="object" class="btn-primary"/>
 					</footer>
 			   </form>
 			</field>
@@ -94,16 +94,16 @@
 
 
 
-		<menuitem
+		<!-- <menuitem
 			id="menu_view_vat_register_input"
 			name="Vat Input Register"
 			parent="account.menu_finance_reporting"
 			sequence="150"
-			action="action_view_vat_register_input" />
+			action="action_view_vat_register_input" /> -->
 
 		 <menuitem
 			id="menu_view_tax_register_purchase"
-			name="Vat Output Register"
+			name="Vat Register"
 			parent="account.menu_finance_reporting"
 			sequence="151"
 			action="action_view_vat_register_output" />

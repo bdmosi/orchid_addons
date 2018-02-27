@@ -439,6 +439,7 @@ class OrchidVatRegisterOutput(models.TransientModel):
 
 	def print_pdf(self, cr, uid, ids, context=None):
 		data={}
+		pflag=0
 
 		if context is None:
 			context={}
@@ -463,6 +464,8 @@ class OrchidVatRegisterOutput(models.TransientModel):
 
 		obj_ls=[]
 		for res in inv_obj.browse(cr, uid, inv_datas,context=context):
+			if res.journal_id and res.journal_id.type=='purchase':
+				pflag=1
 			if res.journal_id:# and res.journal_id.type=='sale':
 				# print 'ifffffffffffff',res
 				obj_ls.append(res)
@@ -483,7 +486,7 @@ class OrchidVatRegisterOutput(models.TransientModel):
 				data = {}
 				flag=0
 				data['doc_num']=record.move_id.name
-				data['description']=ls.name
+				data['description']=record.partner_id.name
 				data['doc_type']=record.journal_id.name
 				data['doc_date']=record.date
 				data['debit']=ls.debit
@@ -515,7 +518,7 @@ class OrchidVatRegisterOutput(models.TransientModel):
 		
 	def generate(self, cr, uid, ids, context=None):
 		data={}
-
+		pflag=0
 		if context is None:
 			context={}
 		
@@ -539,17 +542,21 @@ class OrchidVatRegisterOutput(models.TransientModel):
 
 		obj_ls=[]
 		for res in inv_obj.browse(cr, uid, inv_datas,context=context):
+			
+			if res.journal_id and res.journal_id.type=='purchase':
+				pflag=1
+
 			if res.journal_id:# and res.journal_id.type=='sale':
 				# print 'ifffffffffffff',res
 				obj_ls.append(res)
 
 		# print 'listttttt',obj_ls
-		return self.generate_excel(cr,uid,ids,data,obj_ls,inv_datas,context=None)
+		return self.generate_excel(cr,uid,ids,data,obj_ls,inv_datas,pflag,context=None)
 
 
 
 
-	def generate_excel(self,cr,uid,ids,data,obj_ls,inv_datas,context=None):
+	def generate_excel(self,cr,uid,ids,data,obj_ls,inv_datas,pflag,context=None):
 
 
 		vat_period=datetime.strptime(data.get('from_date'), '%Y-%m-%d').strftime('%d/%m/%Y')+"\tto\t"+datetime.strptime(data.get('to_date'), '%Y-%m-%d').strftime('%d/%m/%Y')
@@ -567,8 +574,8 @@ class OrchidVatRegisterOutput(models.TransientModel):
 		xlwt.add_palette_colour("custom_colour", 0x10)
 		workbook.set_colour_RGB(0x10,178, 190, 181)
 
-		filename='OutputVat.xls'
-		sheet= workbook.add_sheet('Output VAT Report',cell_overwrite_ok=True)
+		filename='VatRegister.xls'
+		sheet= workbook.add_sheet('VAT Report',cell_overwrite_ok=True)
 		
 		style_coloured = xlwt.easyxf('font:name calibri,height 200;align: horiz center, vert center;pattern: fore_colour custom_colour,pattern solid;borders:top_color black, bottom_color black, right_color black, left_color black, top thin,right thin,bottom thin,left thin;pattern: fore_colour custom_colour,pattern solid')
 		style_title= xlwt.easyxf('font:name calibri,height 200;align: horiz left, vert center;')
@@ -604,7 +611,9 @@ class OrchidVatRegisterOutput(models.TransientModel):
 			sheet.write(row,col,header[i],style_coloured)
 			col=col+1
 		
-		print 'dataaaaaaaaaaaaaaaaaaaa'
+		# print 'dataaaaaaaaaaaaaaaaaaaa'
+		local_purchase=0
+		foreign_purchase=0
 		row=row+1
 		total_credit=0
 		total_debit=0
@@ -612,8 +621,9 @@ class OrchidVatRegisterOutput(models.TransientModel):
 			for record in ls:
 				data = {}
 				flag=0
+				
 				data['doc_num']=record.move_id.name
-				data['description']=ls.name
+				data['description']=record.partner_id.name
 				data['doc_type']=record.journal_id.name
 				data['doc_date']=record.date
 				data['debit']=ls.debit
@@ -621,12 +631,24 @@ class OrchidVatRegisterOutput(models.TransientModel):
 				data['currency']=ls.company_id.currency_id.name
 				
 				data['trans_type']=ls.invoice.od_order_type_id.name
-				print 'ccccccc',data['trans_type']
+				# print 'ccccccc',data['trans_type']
 				data['tax_code']=record.account_id.name
 				# print 'aaaaaaaaa',data['tax_code']
 				# print 'recorddddddddd',data
 				if data['trans_type']==0:
 					flag=1
+
+				if data['trans_type']=='Local Purchase':
+					
+					trans_d=trans_d+data['debit']
+					trans_c=trans_c+data['credit']
+					local_purchase=trans_c-trans_d
+
+				if data['trans_type']=='Foreign Purchase':
+					
+					trans_d=trans_d+data['debit']
+					trans_c=trans_c+data['credit']
+					foreign_purchase=trans_c-trans_d
 
 
 				data['doc_date']=datetime.strptime(data['doc_date'], '%Y-%m-%d').strftime('%d/%m/%Y')
@@ -674,6 +696,8 @@ class OrchidVatRegisterOutput(models.TransientModel):
 		col=0		
 		footer=['Total','Net Output Payable']
 
+		footer1=['Local purchases','Foreign Purchases']
+
 		sheet.write(row,col,footer[0],style_coloured)
 
 		for col in range(1,5):
@@ -688,18 +712,35 @@ class OrchidVatRegisterOutput(models.TransientModel):
 			sheet.write(row,col,"",style_coloured)
 
 		row=row+1
+		temp=0
+		temp=row
 		col=0
 		for col in range(0,5):
 			sheet.write(row,col,"",style_filter)
 		col=2
 		sheet.write(row,col,footer[1],style_filter)
+		if pflag==1:
+			print 'jjjjjjjjjjjj',pflag
+			col=2
+			row=row+1
+			sheet.write(row,col,footer1[0],style_centre)
+			row=row+1
+			sheet.write(row,col,footer1[1],style_centre)
+
+		row=temp
 		col=5
 		payable=total_debit-total_credit
 		sheet.write(row,col,payable,style_coloured)
-		
+
+		if pflag==1:
+			row=row+1
+			print 'gggggggggggggggggg',pflag
+			col=5
+			sheet.write(row,col,local_purchase,style_right)
+			row=row+1
+			sheet.write(row,col,foreign_purchase,style_right)
+
 			
-			
-				
 
 		fp = StringIO()
 		workbook.save(fp)
