@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from openerp import models, fields, api, _
 from pprint import pprint
-from datetime import datetime
+from datetime import datetime,date as dt
 from od_default_milestone import od_project_vals,od_om_vals,od_amc_vals
 from openerp.exceptions import Warning
 class account_move_line(models.Model):
@@ -721,6 +721,97 @@ class account_analytic_account(models.Model):
     od_amnt_purchased2 = fields.Float(string="Supplier Purchase Amount",compute="od_get_total_purchase")
     
     
+    def get_day_procss_score(self):
+        res =0.0
+        cost_sheet_id = self.od_cost_sheet_id
+        if cost_sheet_id:
+            owner_kpi = cost_sheet_id.owner_kpi 
+            if owner_kpi == 'ok':
+                res =100.0
+        return res
+    
+    
+    def get_invoice_amounts(self):
+    
+        invoice_ids = self.env['account.invoice'].search([('od_analytic_account','=',self.id),('state','in',('open','paid'))])
+        inv_amount =0.0
+        for inv in invoice_ids:
+            inv_amount+=inv.amount_total
+        return inv_amount
+    
+    def get_invoice_schedule_score(self):
+        result =0.0
+        type = self.od_type_of_project
+        planned_amount = 0.0
+        today = str(dt.today())
+        if type not in ('credit','amc','o_m'):
+            
+            for line in self.od_project_invoice_schedule_line:
+                date =line.date 
+                if date <= today:
+                    planned_amount += line.amount
+            inv_amount = self.get_invoice_amounts()
+            if planned_amount:
+                result = (inv_amount/float(planned_amount))*100  
+        return result
+    def get_cost_control_score(self):
+        result =0.0
+        actual_profit = self.od_project_profit
+        original_profit = self.od_original_sale_profit 
+        if original_profit:
+            result = actual_profit/original_profit 
+        return result
+    
+    
+    
+    def get_avg_score_board(self,score_board):
+        result =0.0
+        if score_board:
+            result = sum(score_board)/float(len(score_board))
+        return result
+    def get_compliance_score(self):
+        score_board =[]
+        
+        score = [x.score for x in self.od_comp_planning_line if x.add_score]
+        score_board.extend(score)
+        
+        score = [x.score for x in self.od_comp_initiation_line if x.add_score]
+        score_board.extend(score)
+        
+        score = [x.score for x in self.od_comp_excecution_line if x.add_score]
+        score_board.extend(score)
+        
+        score = [x.score for x in self.od_comp_monitor_line if x.add_score]
+        score_board.extend(score)    
+        
+        score = [x.score for x in self.od_comp_closing_line if x.add_score]
+        score_board.extend(score)
+        result = self.get_avg_score_board(score_board)
+        return result
+    @api.one
+    def _kpi_score(self):
+        day_process_score = .2 *self.get_day_procss_score()
+        invoice_schedule_score =  .3 *self.get_invoice_schedule_score()
+        cost_control_score = .3 * self.get_cost_control_score()
+        compliance_score = .2 * self.get_compliance_score()
+        total_score = day_process_score + invoice_schedule_score + cost_control_score+ compliance_score
+        self.day_process_score = day_process_score 
+        self.invoice_schedule_score = invoice_schedule_score 
+        self.cost_control_score = cost_control_score 
+        self.compliance_score = compliance_score 
+        self.total_score = total_score
+    day_process_score = fields.Float(string="Day Process Score",compute="_kpi_score")
+    invoice_schedule_score = fields.Float(string="Invoice Schedule Score",compute="_kpi_score")
+    cost_control_score = fields.Float(string="Cost Control Score",compute="_kpi_score")
+    compliance_score = fields.Float(string="Compliance Score",compute="_kpi_score")
+    total_score = fields.Float(string="Total Score",compute="_kpi_score")
+    
+    
+    
+    
+        
+
+    
     
     def get_initiation_line(self):
         data = [
@@ -806,37 +897,44 @@ class od_compliance_initiation(models.Model):
     _name = "od.compliance.initiation"
     analytic_id  = fields.Many2one('account.analytic.account',string="Analytic Account")
     name = fields.Char(string="Name",required=True)
+    add_score = fields.Boolean(string="Add Score")
     score = fields.Float(string="Score")
 class od_compliance_planning(models.Model):
     _name = "od.compliance.planning"
     analytic_id  = fields.Many2one('account.analytic.account',string="Analytic Account")
     name = fields.Char(string="Name",required=True)
     score = fields.Float(string="Score")
+    add_score = fields.Boolean(string="Add Score")
 class od_compliance_execution(models.Model):
     _name = "od.compliance.execution"
     analytic_id  = fields.Many2one('account.analytic.account',string="Analytic Account")
     name = fields.Char(string="Name",required=True)
     score = fields.Float(string="Score")
+    add_score = fields.Boolean(string="Add Score")
 class od_compliance_monitor(models.Model):
     _name = "od.compliance.monitor"
     analytic_id  = fields.Many2one('account.analytic.account',string="Analytic Account")
     name = fields.Char(string="Name",required=True)
     score = fields.Float(string="Score")
+    add_score = fields.Boolean(string="Add Score")
 class od_compliance_closing(models.Model):
     _name = "od.compliance.closing"
     analytic_id  = fields.Many2one('account.analytic.account',string="Analytic Account")
     name = fields.Char(string="Name",required=True)
     score = fields.Float(string="Score")
+    add_score = fields.Boolean(string="Add Score")
 class od_compliance_handover(models.Model):
     _name = "od.compliance.handover"
     analytic_id  = fields.Many2one('account.analytic.account',string="Analytic Account")
     name = fields.Char(string="Name",required=True)
     score = fields.Float(string="Score")
+    add_score = fields.Boolean(string="Add Score")
 class od_compliance_maint(models.Model):
     _name = "od.compliance.maint"
     analytic_id  = fields.Many2one('account.analytic.account',string="Analytic Account")
     name = fields.Char(string="Name",required=True)
     score = fields.Float(string="Score")
+    add_score = fields.Boolean(string="Add Score")
 
 class od_project_invoice_schedule(models.Model):
     _name = "od.project.invoice.schedule"
