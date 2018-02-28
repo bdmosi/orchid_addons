@@ -3510,9 +3510,9 @@ class od_cost_sheet(models.Model):
 
     def create_analytic_map_sale_order(self,anal_maped_dict,so_vals,so_line_map):
         od_discount = so_vals.get('od_discount',0)
-        if od_discount:
-            discount = od_discount
-            so_line_map = self.apply_discount_create(so_line_map,discount)
+#         if od_discount:
+#             discount = od_discount
+#             so_line_map = self.apply_discount_create(so_line_map,discount)
         analytic = self.env['account.analytic.account']
         for analytic_id,tabs in anal_maped_dict.iteritems():
             so_vals['project_id'] = analytic_id
