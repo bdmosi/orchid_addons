@@ -650,8 +650,8 @@ class hr_employee(models.Model):
     def get_pm_data(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):
         user_id  = self.user_id and self.user_id.id
         analytic_pool = self.env['account.analytic.account']
-        analytic_ids = analytic_pool.search([('od_project_owner_id','=',user_id),('state','not in',('close','cancelled'))])
-        project_closed_on_audit = analytic_pool.search([('od_project_owner_id','=',user_id),('state','=','close'),('date','>=',aud_date_start),('date','<=',aud_date_end)])
+        analytic_ids = analytic_pool.search([('od_project_owner_id','=',user_id),('od_type_of_project','not in',('amc','o_m','credit')),('state','not in',('close','cancelled'))])
+        project_closed_on_audit = analytic_pool.search([('od_project_owner_id','=',user_id),('od_type_of_project','not in',('amc','o_m','credit')),('state','=','close'),('date','>=',aud_date_start),('date','<=',aud_date_end)])
         sample_project_ids = analytic_ids + project_closed_on_audit
         
         day_score_vals  =[]
