@@ -606,15 +606,47 @@ class hr_employee(models.Model):
 #         return comp_data
     
     
-#     def get_pm_component(self,day_weight_scr,cc_weight_scr,inv_weight_scr,comp_weight_scr):
-#         comp_data =[]
-#         day_wt  =.2
-#         cc_wt = .3
-#         inv_wt =.3
-#         comp_wt =.2
-#         
-#         comp_data.append((0,0,{'name':'Invoice Schedule','weight':wt_inv,'final_score':(wt_inv/100.0)*inv_scr,'score':inv_scr}))
-#         return comp_data
+    def get_pm_component(self,day_weight_scr,cc_weight_scr,inv_weight_scr,comp_weight_scr,day_flag,cost_flag):
+        comp_data =[]
+        day_wt  =.2
+        cc_wt = .3
+        inv_wt =.3
+        comp_wt =.2
+        exclude_wt = 0.0
+        if not day_flag:
+            exclude_wt += day_wt
+            day_wt =0.0 
+        if not cost_flag:
+            exclude_wt += cc_wt
+            cc_wt =0.0
+        if exclude_wt:
+            day_wt =  day_wt + (day_wt*exclude_wt)/float(1.0-exclude_wt)
+            cc_wt =  cc_wt + (cc_wt*exclude_wt)/float(1.0-exclude_wt)
+            inv_wt =  inv_wt + (inv_wt*exclude_wt)/float(1.0-exclude_wt)
+            comp_wt =  comp_wt + (comp_wt*exclude_wt)/float(1.0-exclude_wt)
+            
+        if day_wt:
+            score = (day_weight_scr/20.0) *100.0
+            final_score = day_wt * score
+            comp_data.append((0,0,{'name':'5 Day Processing Score','weight':day_wt*100.0,'final_score':final_score,'score':score}))
+        
+        if cc_wt:
+            score = (cc_weight_scr/30.0) *100.0
+            final_score = cc_wt * score
+            comp_data.append((0,0,{'name':'Cost Control','weight':cc_wt*100.0,'final_score':final_score,'score':score}))
+            
+        if inv_wt:
+            score = (inv_weight_scr/30.0) *100.0
+            final_score = inv_wt * score
+            comp_data.append((0,0,{'name':'Invoice Schedule','weight':inv_wt*100,'final_score':final_score,'score':score}))
+            
+        if comp_wt:
+            score = (comp_weight_scr/20.0) *100.0
+            final_score = comp_wt * score
+            comp_data.append((0,0,{'name':'Compliance Provided By PMO','weight':comp_wt*100.0,'final_score':final_score,'score':score}))
+         
+       
+        return comp_data
     def get_pm_data(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):
         user_id  = self.user_id and self.user_id.id
         analytic_pool = self.env['account.analytic.account']
@@ -628,7 +660,7 @@ class hr_employee(models.Model):
         
         
         cost_control_vals = []
-        total_gp_value = sum([a.od_amended_profit for a in sample_project_ids])
+#         total_gp_value = sum([a.od_amended_profit for a in sample_project_ids])
         max_cc_sore = 30 * len(sample_project_ids)
         
         invoice_schedule_vals =[] 
@@ -637,46 +669,90 @@ class hr_employee(models.Model):
         cc_weight =[]
         inv_weight =[]
         comp_weight =[]
+        tot_sale_day =0.0
+        tot_gp =0.0
+        day_score_main = []
+        cost_control_val_main =[]
         for proj in sample_project_ids:
             #5 day score
             sale_value_percent =0.0
             sale_value = proj.od_project_sale
-            dayscore = proj.day_process_score
             if total_sale_value:
                 sale_value_percent = sale_value/float(total_sale_value)
-            weight = max_day_sore * sale_value_percent * (dayscore/20.0)
-            day_score_vals.append((0,0,{'analytic_id':proj.id,'sale_value':sale_value,'score':dayscore,'sale_value_percent':sale_value_percent*100,'weight':weight}))
-            day_weight.append(weight)
+            processed_date = proj.od_cost_sheet_id and proj.od_cost_sheet_id.processed_date 
+            if processed_date and aud_date_start <= processed_date <= aud_date_end:
+                sale_val = proj.od_project_sale
+                 
+                tot_sale_day += sale_val
+                dayscore = proj.day_process_score
+#                 weight = max_day_sore * sale_value_percent * (dayscore/20.0)
+                day_score_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':dayscore})
+#                 day_weight.append(weight)
             
             #cost control score
-            gp_value_percent = 0.0
-            gp_value = proj.od_amended_profit 
-            cost_control_score = proj.cost_control_score 
-            if total_gp_value:
-                gp_value_percent = gp_value/float(total_gp_value)
-            
-            weight_cc = max_cc_sore * gp_value_percent * (cost_control_score/30.0)
-            cost_control_vals.append((0,0,{'analytic_id':proj.id,'gp_value':gp_value,'score':cost_control_score,'gp_value_percent':gp_value_percent*100,'weight':weight_cc}))
-            cc_weight.append(weight_cc)
+            if proj.state == 'close':
+                
+                gp_value = proj.od_amended_profit 
+                tot_gp += gp_value
+                cost_control_score = proj.cost_control_score 
+#                 if total_gp_value:
+#                     gp_value_percent = gp_value/float(total_gp_value)
+                
+#                 weight_cc = max_cc_sore * gp_value_percent * (cost_control_score/30.0)
+                cost_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':cost_control_score})
+#                 cc_weight.append(weight_cc)
             #invoice Schedule Score
+            
             invoice_sc_score = proj.invoice_schedule_score 
             weight_isc = max_cc_sore *sale_value_percent * (invoice_sc_score/30.0)
             invoice_schedule_vals.append((0,0,{'analytic_id':proj.id,'sale_value':sale_value,'score':invoice_sc_score,'sale_value_percent':sale_value_percent*100,'weight':weight_isc}))
-            inv_weight.append(inv_weight)
+            inv_weight.append(weight_isc)
             
             compliance_score = proj.compliance_score 
             weight_comp = max_day_sore * sale_value_percent * (compliance_score/20.0)
             compliance_vals.append((0,0,{'analytic_id':proj.id,'sale_value':sale_value,'score':compliance_score,'sale_value_percent':sale_value_percent*100,'weight':weight_comp}))
-            comp_weight.append(comp_weight)
+            comp_weight.append(weight_comp)
         
-#         day_weight_scr = self.get_avg_score(day_weight)
-#         cc_weight_scr = self.get_avg_score(cc_weight)
-#         inv_weight_scr = self.get_avg_score(inv_weight)
-#         comp_weight_scr = self.get_avg_score(comp_weight)
-        
-#         comp_line = self.get_pm_component(day_weight_scr,cc_weight_scr,inv_weight_scr,comp_weight_scr)
+        max_day_sore = 20 * len(day_score_vals)
+        for data in day_score_vals:
+            sal_val_percent =0.0
+            sale_value  = data.get('sale_value')
+            if tot_sale_day:
+                sal_val_percent = sale_value/float(tot_sale_day)
+            dayscore = data.get('score')
+            weight_day = max_day_sore * sal_val_percent * (dayscore/20.0)
+            data['sale_value_percent'] = sal_val_percent *100.0
+            data['weight'] = weight_day
+            day_weight.append(weight_day)
+            day_score_main.append((0,0,data))
+        max_cc_sore = 30 * len(cost_control_vals)
+        for data in cost_control_vals:
+            gp_val_percent =0.0
+            gp_value = data.get('gp_value')
+            if tot_gp:
+                gp_val_percent = gp_value/float(tot_gp)
+            score = data.get('score')
+            weight_cc = max_cc_sore * gp_val_percent * (score/30.0)
+            data['weight'] = weight_cc
+            data['gp_value_percent'] = gp_val_percent *100.0
+            cc_weight.append(weight_cc)
+            cost_control_val_main.append((0,0,data))
             
-        return day_score_vals,cost_control_vals,invoice_schedule_vals,compliance_vals
+        day_weight_scr = self.get_avg_score(day_weight)
+        cc_weight_scr = self.get_avg_score(cc_weight)
+        inv_weight_scr = self.get_avg_score(inv_weight)
+        comp_weight_scr = self.get_avg_score(comp_weight )
+        
+        day_flag = cost_flag = False 
+        if day_score_main:
+            day_flag =True 
+        if cost_control_val_main:
+            cost_flag = True
+        comp_line = self.get_pm_component(day_weight_scr,cc_weight_scr,inv_weight_scr,comp_weight_scr,day_flag,cost_flag)
+        
+        
+            
+        return day_score_main,cost_control_val_main,invoice_schedule_vals,compliance_vals,comp_line
     
     
     def update_audit_sample(self,sample_id,aud_date_start,aud_date_end,audit_temp_id):
@@ -724,12 +800,14 @@ class hr_employee(models.Model):
 #             sample_id.comp_line.unlink()
 #             sample_id.planned_invoice_line.unlink()
 #             sample_id.actual_invoice_line.unlink()
-            day_score_vals,cost_control_vals,invoice_schedule_vals,compliance_vals = self.get_pm_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            day_score_vals,cost_control_vals,invoice_schedule_vals,compliance_vals,comp_line = self.get_pm_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
             sample_id.dayscore_line.unlink()
             sample_id.cost_control_line.unlink()
             sample_id.invoice_schedule_line.unlink()
             sample_id.compliance_line.unlink()
-            sample_id.write({'dayscore_line':day_score_vals,'cost_control_line':cost_control_vals,'invoice_schedule_line':invoice_schedule_vals,'compliance_line':compliance_vals})
+            sample_id.comp_line.unlink()
+            sample_id.write({'dayscore_line':day_score_vals,'cost_control_line':cost_control_vals,
+                             'invoice_schedule_line':invoice_schedule_vals,'compliance_line':compliance_vals,'comp_line':comp_line})
             
             
     
@@ -782,8 +860,9 @@ class hr_employee(models.Model):
 #             vals.update({'planned_invoice_line':planned_invoice_line,'actual_invoice_line':actual_invoice_line,'comp_line':comp_line})
             
             
-            day_score_vals,cost_control_vals,invoice_schedule_vals,compliance_vals = self.get_pm_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
-            vals.update({'dayscore_line':day_score_vals,'cost_control_line':cost_control_vals,'invoice_schedule_line':invoice_schedule_vals,'compliance_line':compliance_vals})
+            day_score_vals,cost_control_vals,invoice_schedule_vals,compliance_vals,comp_line = self.get_pm_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            vals.update({'dayscore_line':day_score_vals,'cost_control_line':cost_control_vals,'invoice_schedule_line':invoice_schedule_vals,
+                         'compliance_line':compliance_vals,'comp_line':comp_line})
             sample_id =self.env['audit.sample'].create(vals)
         
         return sample_id

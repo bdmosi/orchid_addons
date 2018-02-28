@@ -64,6 +64,18 @@ class compliance_line(models.Model):
     sale_value = fields.Float(string="Sale Value")
     sale_value_percent = fields.Float("%Sale Value")
     weight = fields.Float(string="Weight")
+    @api.multi
+    def btn_open(self):
+       
+        return {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'account.analytic.account',
+                'res_id':self.analytic_id and self.analytic_id.id or False,
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+
+            }
 
 
 class invoice_schedule_line(models.Model):
@@ -74,6 +86,19 @@ class invoice_schedule_line(models.Model):
     sale_value = fields.Float(string="Sale Value")
     sale_value_percent = fields.Float("%Sale Value")
     weight = fields.Float(string="Weight")
+    
+    @api.multi
+    def btn_open(self):
+       
+        return {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'account.analytic.account',
+                'res_id':self.analytic_id and self.analytic_id.id or False,
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+
+            }
 
 
 
@@ -85,6 +110,19 @@ class cost_control_line(models.Model):
     gp_value = fields.Float(string="GP Value")
     gp_value_percent = fields.Float("%GP Value")
     weight = fields.Float(string="Weight")
+    
+    @api.multi
+    def btn_open(self):
+       
+        return {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'account.analytic.account',
+                'res_id':self.analytic_id and self.analytic_id.id or False,
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+
+            }
 
 
 class pm_dayscore(models.Model):
@@ -95,6 +133,19 @@ class pm_dayscore(models.Model):
     sale_value = fields.Float(string="Sale Value")
     sale_value_percent = fields.Float("%Sale Value")
     weight = fields.Float(string="Weight")
+    
+    @api.multi
+    def btn_open(self):
+       
+        return {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'account.analytic.account',
+                'res_id':self.analytic_id and self.analytic_id.id or False,
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+
+            }
 
 
 

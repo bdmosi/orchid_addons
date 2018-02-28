@@ -46,7 +46,7 @@
 								<field name="dayscore_line">
 									<tree editable="bottom" create="false" delete="false">
 										<field name="analytic_id" readonly="1"/>
-										
+										<button name="btn_open" type="object" icon="STOCK_FIND" string="Open" />
 										<field name="score" readonly="1" />
 										<field name="sale_value" readonly="1" sum="Total"/>
 										<field name="sale_value_percent" readonly="1" />
@@ -59,7 +59,7 @@
 								<field name="cost_control_line">
 									<tree editable="bottom" create="false" delete="false">
 										<field name="analytic_id" readonly="1"/>
-										
+										<button name="btn_open" type="object" icon="STOCK_FIND" string="Open" />
 										<field name="score" readonly="1" />
 										<field name="gp_value" readonly="1" sum="Total"/>
 										<field name="gp_value_percent" readonly="1" />
@@ -72,7 +72,7 @@
 								<field name="invoice_schedule_line">
 									<tree editable="bottom" create="false" delete="false">
 										<field name="analytic_id" readonly="1"/>
-										
+										<button name="btn_open" type="object" icon="STOCK_FIND" string="Open" />
 										<field name="score" readonly="1" />
 										<field name="sale_value" readonly="1" sum="Total"/>
 										<field name="sale_value_percent" readonly="1" />
@@ -85,6 +85,7 @@
 								<field name="compliance_line">
 									<tree editable="bottom" create="false" delete="false">
 										<field name="analytic_id" readonly="1"/>
+										<button name="btn_open" type="object" icon="STOCK_FIND" string="Open" />
 										<field name="score" readonly="1" />
 										<field name="sale_value" readonly="1" sum="Total"/>
 										<field name="sale_value_percent" readonly="1" />
