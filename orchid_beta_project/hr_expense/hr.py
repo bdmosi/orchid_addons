@@ -870,12 +870,15 @@ class hr_employee(models.Model):
             sdate ='aud_date_start'+str(i)
             edate ='aud_date_end'+str(i)
             self.write({sdate:date_start,edate:date_stop})
-    def audit_set_execution(self):
+    def audit_set_execution(self,number=False):
         today = dt.today()
         month_number = today.month
+       
         day = today.day 
         if day >26:
             month_number +=1
+        if number:
+            month_number = number
         ext ='execute'+str(month_number)
         self.write({ext:True})
         for i in range(1,13):
