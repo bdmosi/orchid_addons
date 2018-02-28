@@ -635,6 +635,115 @@
             	
             	</page>
             	
+            	
+            	 <page string="Project Compliance">
+            <separator string="Initiation" />
+            <field name="od_comp_initiation_line">
+                <tree editable="bottom">
+                		<field name="name" />
+                		<field name="add_score" />
+                	 	<field name="score" attrs="{'readonly':[('add_score','=',False)]}"/>
+                </tree>
+            </field>
+            <separator string="Planning" />
+            <field name="od_comp_planning_line">
+                <tree editable="bottom">
+                		<field name="name" />
+                	 	<field name="add_score" />
+                	 	<field name="score" attrs="{'readonly':[('add_score','=',False)]}"/>
+                </tree>
+            </field>
+            
+            <separator string="Execution" />
+            <field name="od_comp_excecution_line">
+                <tree editable="bottom">
+                		<field name="name" />
+                	 	<field name="add_score" />
+                	 	<field name="score" attrs="{'readonly':[('add_score','=',False)]}"/>
+                </tree>
+            </field>
+           
+            
+            <separator string="Monitoring &amp; Control" />
+            <field name="od_comp_monitor_line">
+                <tree editable="bottom">
+                		<field name="name" />
+                	 	<field name="add_score" />
+                	 	<field name="score" attrs="{'readonly':[('add_score','=',False)]}"/>
+                </tree>
+            </field>
+            
+            <separator string="Closing" />
+            <field name="od_comp_closing_line">
+                <tree editable="bottom">
+                		<field name="name" />
+                	 	<field name="add_score" />
+                	 	<field name="score" attrs="{'readonly':[('add_score','=',False)]}"/>
+                </tree>
+            </field>
+            
+            
+            </page>
+            
+            <page string="AMC Compliance">
+            		<separator string="Handover from Projects" />
+	            <field name="od_comp_handover_line">
+	                <tree editable="bottom">
+	                		<field name="name" />
+	                	 	<field name="add_score" />
+                	 	<field name="score" attrs="{'readonly':[('add_score','=',False)]}"/>
+	                </tree>
+	            </field>
+                
+                <separator string="Maintenance" />
+	            <field name="od_comp_maint_line">
+	                <tree editable="bottom">
+	                		<field name="name" />
+	                	 	<field name="add_score" />
+                	 	<field name="score" attrs="{'readonly':[('add_score','=',False)]}"/>
+	                </tree>
+	            </field>
+            </page>
+            
+            <page string="Project KPI Audit">
+            <table style="width:100%" class="table table-striped">
+                   <thead>
+                       <th>Components</th>
+                       <th>Score</th>
+                    </thead>
+                    <tbody>
+                    <tr>
+                       <td>5 Day Processing</td>
+                       <td><field name="day_process_score"/></td>
+                     </tr>
+                    
+                    <tr>
+                       <td>Invoice Schedule</td>
+                       <td><field name="invoice_schedule_score"/></td>
+                     </tr>
+                     
+                     <tr>
+                       <td>Cost Control</td>
+                       <td><field name="cost_control_score"/></td>
+                     </tr>
+                     
+                     <tr>
+                       <td>Compliance Provided By PMO</td>
+                       <td><field name="compliance_score"/></td>
+                     </tr>
+                    
+                     <tr>
+                       <td><strong>Total Score</strong></td>
+                       <td><strong><field name="total_score"/></strong></td>
+                     </tr>
+                    
+                      </tbody>
+                     </table>
+            
+            </page>
+            	
+            	
+            	
             	<page string="Issue Log">
             		<field name="od_issue_log_line" >
             		<tree>
@@ -698,7 +807,7 @@
             		</form>
             		</field>
             	</page>
-                <page string="KPI">
+               <!--  <page string="KPI">
                     <separator string="Project KPI" />
                     <table style="width:100%" class="table table-striped">
                        <thead>
@@ -787,7 +896,7 @@
                                   </tbody>
                                   </table>
                 </page>
-
+ -->
             	<!-- <page string="Material Budget">
                 <field name="material_pulled" invisible="1" />
 

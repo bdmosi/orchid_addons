@@ -41,7 +41,60 @@
 						</group>
 						<notebook>
 						
-						    <page string="Planned Invoices" attrs="{'invisible':[('type','!=','pm')]}" >
+						
+						      <page string="5 Day Processing Score" attrs="{'invisible':[('type','!=','pm')]}" >
+								<field name="dayscore_line">
+									<tree editable="bottom" create="false" delete="false">
+										<field name="analytic_id" readonly="1"/>
+										
+										<field name="score" readonly="1" />
+										<field name="sale_value" readonly="1" sum="Total"/>
+										<field name="sale_value_percent" readonly="1" />
+                                        <field name="weight" readonly="1" />
+									</tree>
+								</field>
+							</page>
+							
+							<page string="Cost Control" attrs="{'invisible':[('type','!=','pm')]}" >
+								<field name="cost_control_line">
+									<tree editable="bottom" create="false" delete="false">
+										<field name="analytic_id" readonly="1"/>
+										
+										<field name="score" readonly="1" />
+										<field name="gp_value" readonly="1" sum="Total"/>
+										<field name="gp_value_percent" readonly="1" />
+                                        <field name="weight" readonly="1" />
+									</tree>
+								</field>
+							</page>
+							
+							<page string="Invoice Schedule" attrs="{'invisible':[('type','!=','pm')]}" >
+								<field name="invoice_schedule_line">
+									<tree editable="bottom" create="false" delete="false">
+										<field name="analytic_id" readonly="1"/>
+										
+										<field name="score" readonly="1" />
+										<field name="sale_value" readonly="1" sum="Total"/>
+										<field name="sale_value_percent" readonly="1" />
+                                        <field name="weight" readonly="1" />
+									</tree>
+								</field>
+							</page>
+							
+							 <page string="Compliance By PMO" attrs="{'invisible':[('type','!=','pm')]}" >
+								<field name="compliance_line">
+									<tree editable="bottom" create="false" delete="false">
+										<field name="analytic_id" readonly="1"/>
+										<field name="score" readonly="1" />
+										<field name="sale_value" readonly="1" sum="Total"/>
+										<field name="sale_value_percent" readonly="1" />
+                                        <field name="weight" readonly="1" />
+									</tree>
+								</field>
+							</page>
+							
+						
+						 <!--    <page string="Planned Invoices" attrs="{'invisible':[('type','!=','pm')]}" >
 								<field name="planned_invoice_line">
 									<tree editable="bottom" create="false" delete="false">
 										<field name="analytic_id" readonly="1"/>
@@ -61,7 +114,7 @@
 
 									</tree>
 								</field>
-							</page>
+							</page> -->
 						    
 						    
 							<page string="Post Sales Sample" attrs="{'invisible':[('type','!=','post_sales')]}" >

@@ -136,6 +136,62 @@
                    
                    
                    <tr>
+                   <td><strong>Original Sale</strong></td>
+                   <td></td>
+                   <td><field name="od_original_sale_price" /></td>
+                   <td></td>
+                   <td></td>
+                    </tr>
+                    
+                   <tr>
+                   <td><strong>Original Cost</strong></td>
+                   <td></td>
+                   <td><field name="od_original_sale_cost" /></td>
+                   <td></td>
+                   <td></td>
+                    </tr>
+                   
+                   
+                   <tr>
+                   <td><strong>Original Profit</strong></td>
+                   <td></td>
+                   <td><field name="od_original_sale_profit" /></td>
+                   <td></td>
+                   <td></td>
+                    </tr>
+                   
+                   
+                   
+                     <tr>
+                   <td><strong>Amended Sale</strong></td>
+                   <td></td>
+                   <td><field name="od_amended_sale_price" /></td>
+                   <td></td>
+                   <td></td>
+                    </tr>
+                    
+                   <tr>
+                   <td><strong>Amended Cost</strong></td>
+                   <td></td>
+                   <td><field name="od_amended_sale_cost" /></td>
+                   <td></td>
+                   <td></td>
+                    </tr>
+                   
+                   
+                   <tr>
+                   <td><strong>Amended Profit</strong></td>
+                   <td></td>
+                   <td><field name="od_amended_profit" /></td>
+                   <td></td>
+                   <td></td>
+                    </tr>
+                   
+                   
+                   
+                   
+                   
+                   <tr>
                    <td><strong>Actual Sale</strong></td>
                    <td></td>
                    <td><field name="od_project_sale" /></td>
@@ -238,7 +294,7 @@
         <page string="Contract Information" position="after">
             <page string="Project Compliance">
             <separator string="Initiation" />
-            <field name="od_comp_initiation_line">
+            <field name="od_comp_initiation_line" readonly="1">
                 <tree editable="bottom">
                 		<field name="name" />
                 		<field name="add_score" />
@@ -246,7 +302,7 @@
                 </tree>
             </field>
             <separator string="Planning" />
-            <field name="od_comp_planning_line">
+            <field name="od_comp_planning_line" readonly="1">
                 <tree editable="bottom">
                 		<field name="name" />
                 	 	<field name="add_score" />
@@ -255,7 +311,7 @@
             </field>
             
             <separator string="Execution" />
-            <field name="od_comp_excecution_line">
+            <field name="od_comp_excecution_line" readonly="1">
                 <tree editable="bottom">
                 		<field name="name" />
                 	 	<field name="add_score" />
@@ -265,7 +321,7 @@
            
             
             <separator string="Monitoring &amp; Control" />
-            <field name="od_comp_monitor_line">
+            <field name="od_comp_monitor_line" readonly="1">
                 <tree editable="bottom">
                 		<field name="name" />
                 	 	<field name="add_score" />
@@ -274,7 +330,7 @@
             </field>
             
             <separator string="Closing" />
-            <field name="od_comp_closing_line">
+            <field name="od_comp_closing_line" readonly="1">
                 <tree editable="bottom">
                 		<field name="name" />
                 	 	<field name="add_score" />
@@ -287,7 +343,7 @@
             
             <page string="AMC Compliance">
             		<separator string="Handover from Projects" />
-	            <field name="od_comp_handover_line">
+	            <field name="od_comp_handover_line" readonly="1">
 	                <tree editable="bottom">
 	                		<field name="name" />
 	                	 	<field name="add_score" />
@@ -296,7 +352,7 @@
 	            </field>
                 
                 <separator string="Maintenance" />
-	            <field name="od_comp_maint_line">
+	            <field name="od_comp_maint_line" readonly="1">
 	                <tree editable="bottom">
 	                		<field name="name" />
 	                	 	<field name="add_score" />

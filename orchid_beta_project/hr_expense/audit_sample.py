@@ -48,7 +48,55 @@ class audit_sample(models.Model):
     target = fields.Float(string="Monthly Target")
     planned_invoice_line = fields.One2many('planned.analytic.invoice.line','sample_id',string="Planned Invoices")
     actual_invoice_line = fields.One2many('actual.analytic.invoice.line','sample_id',string="Actual Invoices")
-    
+    dayscore_line = fields.One2many('pm.dayscore.line','sample_id',string="Details")
+    cost_control_line = fields.One2many('pm.cost.control.line','sample_id',string="Details")
+    invoice_schedule_line = fields.One2many('pm.invoice.schedule.line','sample_id',string="Details")
+    compliance_line  =  fields.One2many('pm.compliance.line','sample_id',string="Details")
+
+
+
+
+class compliance_line(models.Model):
+    _name ="pm.compliance.line"
+    sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
+    analytic_id = fields.Many2one('account.analytic.account',string="Analytic/Project")
+    score = fields.Float("Score From Project")
+    sale_value = fields.Float(string="Sale Value")
+    sale_value_percent = fields.Float("%Sale Value")
+    weight = fields.Float(string="Weight")
+
+
+class invoice_schedule_line(models.Model):
+    _name ="pm.invoice.schedule.line"
+    sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
+    analytic_id = fields.Many2one('account.analytic.account',string="Analytic/Project")
+    score = fields.Float("Score From Project")
+    sale_value = fields.Float(string="Sale Value")
+    sale_value_percent = fields.Float("%Sale Value")
+    weight = fields.Float(string="Weight")
+
+
+
+class cost_control_line(models.Model):
+    _name ="pm.cost.control.line"
+    sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
+    analytic_id = fields.Many2one('account.analytic.account',string="Analytic/Project")
+    score = fields.Float("Score From Project")
+    gp_value = fields.Float(string="GP Value")
+    gp_value_percent = fields.Float("%GP Value")
+    weight = fields.Float(string="Weight")
+
+
+class pm_dayscore(models.Model):
+    _name ="pm.dayscore.line"
+    sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
+    analytic_id = fields.Many2one('account.analytic.account',string="Analytic/Project")
+    score = fields.Float("Score From Project")
+    sale_value = fields.Float(string="Sale Value")
+    sale_value_percent = fields.Float("%Sale Value")
+    weight = fields.Float(string="Weight")
+
+
 
 
 

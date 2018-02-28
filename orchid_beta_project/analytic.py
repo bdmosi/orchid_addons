@@ -759,7 +759,7 @@ class account_analytic_account(models.Model):
         actual_profit = self.od_project_profit
         original_profit = self.od_original_sale_profit 
         if original_profit:
-            result = actual_profit/original_profit 
+            result = (actual_profit/original_profit) * 100 
         return result
     
     
