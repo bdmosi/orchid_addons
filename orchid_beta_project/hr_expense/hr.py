@@ -669,10 +669,10 @@ class hr_employee(models.Model):
             compliance_vals.append((0,0,{'analytic_id':proj.id,'sale_value':sale_value,'score':compliance_score,'sale_value_percent':sale_value_percent*100,'weight':weight_comp}))
             comp_weight.append(comp_weight)
         
-        day_weight_scr = self.get_avg_score(day_weight)
-        cc_weight_scr = self.get_avg_score(cc_weight)
-        inv_weight_scr = self.get_avg_score(inv_weight)
-        comp_weight_scr = self.get_avg_score(comp_weight)
+#         day_weight_scr = self.get_avg_score(day_weight)
+#         cc_weight_scr = self.get_avg_score(cc_weight)
+#         inv_weight_scr = self.get_avg_score(inv_weight)
+#         comp_weight_scr = self.get_avg_score(comp_weight)
         
 #         comp_line = self.get_pm_component(day_weight_scr,cc_weight_scr,inv_weight_scr,comp_weight_scr)
             
