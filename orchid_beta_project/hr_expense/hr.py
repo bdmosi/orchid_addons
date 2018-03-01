@@ -445,7 +445,7 @@ class hr_employee(models.Model):
         total_gp = 0.0
         user_id  = self.user_id and self.user_id.id
         result =[]
-        domain = [('sales_acc_manager','=',user_id)]
+        domain = [('sales_acc_manager','=',user_id),('status','=','active')]
         domain.extend([('op_expected_booking','>=',aud_date_start),('op_expected_booking','<=',aud_date_end)])
         domain1 = domain + [('state','not in',('approved','done','cancel','modify','change','analytic_change','draft','design_ready','submitted'))]
         domain2 = domain + [('state','in',('draft','design_ready','submitted'))]
@@ -468,7 +468,7 @@ class hr_employee(models.Model):
         user_id  = self.user_id and self.user_id.id
         result =[]
         total_gp = 0.0
-        domain = [('sales_acc_manager','=',user_id)]
+        domain = [('sales_acc_manager','=',user_id),('status','=','active')]
         domain.extend([('op_expected_booking','>=',aud_date_start),('op_expected_booking','<=',aud_date_end)])
         domain1 = domain + [('state','in',('approved','done','modify','change','analytic_change'))]
         sheet_ids =self.env['od.cost.sheet'].search(domain1)
@@ -647,6 +647,13 @@ class hr_employee(models.Model):
          
        
         return comp_data
+    
+    def check_inv_sch_dates(self,inv_sch_dates,aud_date_start,aud_date_end):
+        for date in inv_sch_dates:
+            if date <=aud_date_end:
+                return True
+        return False
+    
     def get_pm_data(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):
         user_id  = self.user_id and self.user_id.id
         analytic_pool = self.env['account.analytic.account']
@@ -671,8 +678,10 @@ class hr_employee(models.Model):
         comp_weight =[]
         tot_sale_day =0.0
         tot_gp =0.0
+        tot_sal_inv =0.0
         day_score_main = []
         cost_control_val_main =[]
+        invoice_schedule_main =[]
         for proj in sample_project_ids:
             #5 day score
             sale_value_percent =0.0
@@ -702,11 +711,15 @@ class hr_employee(models.Model):
                 cost_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':cost_control_score})
 #                 cc_weight.append(weight_cc)
             #invoice Schedule Score
-            
-            invoice_sc_score = proj.invoice_schedule_score 
-            weight_isc = max_cc_sore *sale_value_percent * (invoice_sc_score/30.0)
-            invoice_schedule_vals.append((0,0,{'analytic_id':proj.id,'sale_value':sale_value,'score':invoice_sc_score,'sale_value_percent':sale_value_percent*100,'weight':weight_isc}))
-            inv_weight.append(weight_isc)
+            inv_sch_dates = [a.date for a in proj.od_project_invoice_schedule_line]
+            check = self.check_inv_sch_dates(inv_sch_dates,aud_date_start,aud_date_end)
+            if check:
+                invoice_sc_score = proj.invoice_schedule_score 
+                sale_val = proj.od_project_sale
+                tot_sal_inv  += sale_val
+#                 weight_isc = max_cc_sore *sale_value_percent * (invoice_sc_score/30.0)
+                invoice_schedule_vals.append({'analytic_id':proj.id,'sale_value':sale_value,'score':invoice_sc_score})
+#                 inv_weight.append(weight_isc)
             
             compliance_score = proj.compliance_score 
             weight_comp = max_day_sore * sale_value_percent * (compliance_score/20.0)
@@ -737,6 +750,20 @@ class hr_employee(models.Model):
             data['gp_value_percent'] = gp_val_percent *100.0
             cc_weight.append(weight_cc)
             cost_control_val_main.append((0,0,data))
+        
+        max_inv_scr = 30 * len(invoice_schedule_vals)
+        for data in invoice_schedule_vals:
+            sal_val_percent =0.0
+            sale_value  = data.get('sale_value')
+            if tot_sal_inv:
+                sal_val_percent = sale_value/float(tot_sal_inv)
+            score = data.get('score')
+            weight_inv = max_inv_scr * sal_val_percent * (score/30.0)
+            data['sale_value_percent'] = sal_val_percent *100.0
+            data['weight'] = weight_inv
+            inv_weight.append(weight_inv)
+            invoice_schedule_main.append((0,0,data))
+        
             
         day_weight_scr = self.get_avg_score(day_weight)
         cc_weight_scr = self.get_avg_score(cc_weight)
@@ -752,7 +779,7 @@ class hr_employee(models.Model):
         
         
             
-        return day_score_main,cost_control_val_main,invoice_schedule_vals,compliance_vals,comp_line
+        return day_score_main,cost_control_val_main,invoice_schedule_main,compliance_vals,comp_line
     
     
     def update_audit_sample(self,sample_id,aud_date_start,aud_date_end,audit_temp_id):

@@ -546,7 +546,7 @@ class od_cost_sheet(models.Model):
         if not financial_proposal_date:
             self.presale_kpi = 'not_available'
         else:
-            if submitted_date > financial_proposal_date:
+            if submitted_date > financial_proposal_date[:10]:
                 self.presale_kpi = 'not_ok'
             else:
                 self.presale_kpi = "ok"
@@ -796,6 +796,7 @@ class od_cost_sheet(models.Model):
     finance_reviewer = fields.Many2one('res.users','Finance Review')
     company_id = fields.Many2one('res.company', string='Company',default=od_get_company_id)
     submitted_date = fields.Datetime('Design Ready Date',readonly=True)
+    submit_to_customer_date = fields.Datetime("Submit To Customer Date")
     handover_date = fields.Datetime('Hand-Over Date',readonly=True)
     processed_date = fields.Datetime('Processed Date',readonly=True)
     approved_date = fields.Datetime('Approved Date',readonly=False)
@@ -1388,7 +1389,9 @@ class od_cost_sheet(models.Model):
     @api.one
     def btn_submit(self):
         self.state ='submitted'
-        self.date_log_history_line = [{'name':'Submit To Customer','date':str(datetime.now())}]
+        date_now =str(datetime.now())
+        self.submit_to_customer_date = date_now
+        self.date_log_history_line = [{'name':'Submit To Customer','date':date_now}]
         self.update_opp_stage_submitted()
 
     

@@ -60,13 +60,13 @@
 							attrs="{'invisible':[('cert1','=',False)]}">
 							<thead>
 								<th>Career Certificate</th>
-								<th>Points</th>
+								<!-- <th>Points</th> -->
 								<th>Status</th>
 							</thead>
 							<tbody>
 								<tr>
 									<td><field name="cert_id1" /></td>
-									<td><field name="cert_weight1" readonly="1" /></td>
+									<!-- <td><field name="cert_weight1" readonly="1" /></td> -->
 									<td><field name="cert_status1" /></td>
 								</tr>
 							</tbody>
@@ -114,13 +114,13 @@
 							attrs="{'invisible':[('cert2','=',False)]}">
 							<thead>
 								<th>Career Certificate</th>
-								<th>Points</th>
+								<!-- <th>Points</th> -->
 								<th>Status</th>
 							</thead>
 							<tbody>
 								<tr>
 									<td><field name="cert_id2" /></td>
-									<td><field name="cert_weight2" readonly="1" /></td>
+									<!-- <td><field name="cert_weight2" readonly="1" /></td> -->
 									<td><field name="cert_status2" /></td>
 								</tr>
 							</tbody>
@@ -170,13 +170,13 @@
 							attrs="{'invisible':[('cert3','=',False)]}">
 							<thead>
 								<th>Career Certificate</th>
-								<th>Points</th>
+								<!-- <th>Points</th> -->
 								<th>Status</th>
 							</thead>
 							<tbody>
 								<tr>
 									<td><field name="cert_id3" /></td>
-									<td><field name="cert_weight3" readonly="1" /></td>
+									<!-- <td><field name="cert_weight3" readonly="1" /></td> -->
 									<td><field name="cert_status3" /></td>
 								</tr>
 							</tbody>
@@ -224,13 +224,13 @@
 							attrs="{'invisible':[('cert4','=',False)]}">
 							<thead>
 								<th>Career Certificate</th>
-								<th>Weight</th>
+							<!-- 	<th>Weight</th> -->
 								<th>Status</th>
 							</thead>
 							<tbody>
 								<tr>
 									<td><field name="cert_id4" /></td>
-									<td><field name="cert_weight4" readonly="1" /></td>
+									<!-- <td><field name="cert_weight4" readonly="1" /></td> -->
 									<td><field name="cert_status4" /></td>
 								</tr>
 							</tbody>
@@ -280,13 +280,13 @@
 							attrs="{'invisible':[('cert5','=',False)]}">
 							<thead>
 								<th>Career Certificate</th>
-								<th>Points</th>
+								<!-- <th>Points</th> -->
 								<th>Status</th>
 							</thead>
 							<tbody>
 								<tr>
 									<td><field name="cert_id5" /></td>
-									<td><field name="cert_weight5" readonly="1" /></td>
+								<!-- 	<td><field name="cert_weight5" readonly="1" /></td> -->
 									<td><field name="cert_status5" /></td>
 								</tr>
 							</tbody>
@@ -333,13 +333,13 @@
 							attrs="{'invisible':[('cert6','=',False)]}">
 							<thead>
 								<th>Career Certificate</th>
-								<th>Points</th>
+								<!-- <th>Points</th> -->
 								<th>Status</th>
 							</thead>
 							<tbody>
 								<tr>
 									<td><field name="cert_id6" /></td>
-									<td><field name="cert_weight6" readonly="1" /></td>
+								<!-- 	<td><field name="cert_weight6" readonly="1" /></td> -->
 									<td><field name="cert_status6" /></td>
 								</tr>
 							</tbody>
@@ -388,13 +388,13 @@
 							attrs="{'invisible':[('cert7','=',False)]}">
 							<thead>
 								<th>Career Certificate</th>
-								<th>Points</th>
+								<!-- <th>Points</th> -->
 								<th>Status</th>
 							</thead>
 							<tbody>
 								<tr>
 									<td><field name="cert_id7" /></td>
-									<td><field name="cert_weight7" readonly="1" /></td>
+								<!-- 	<td><field name="cert_weight7" readonly="1" /></td> -->
 									<td><field name="cert_status7" /></td>
 								</tr>
 							</tbody>
@@ -441,13 +441,13 @@
 							attrs="{'invisible':[('cert8','=',False)]}">
 							<thead>
 								<th>Career Certificate</th>
-								<th>Points</th>
+								<!-- <th>Points</th> -->
 								<th>Status</th>
 							</thead>
 							<tbody>
 								<tr>
 									<td><field name="cert_id8" /></td>
-									<td><field name="cert_weight8" readonly="1" /></td>
+								<!-- 	<td><field name="cert_weight8" readonly="1" /></td> -->
 									<td><field name="cert_status8" /></td>
 								</tr>
 							</tbody>
@@ -495,13 +495,13 @@
 							attrs="{'invisible':[('cert9','=',False)]}">
 							<thead>
 								<th>Career Certificate</th>
-								<th>Points</th>
+								<!-- <th>Points</th> -->
 								<th>Status</th>
 							</thead>
 							<tbody>
 								<tr>
 									<td><field name="cert_id9" /></td>
-									<td><field name="cert_weight9" readonly="1" /></td>
+									<!-- <td><field name="cert_weight9" readonly="1" /></td> -->
 									<td><field name="cert_status9" /></td>
 								</tr>
 							</tbody>
@@ -549,14 +549,14 @@
 							attrs="{'invisible':[('cert10','=',False)]}">
 							<thead>
 								<th>Career Certificate</th>
-								<th>Points</th>
-								<th>Status</th>
+								<!-- <th>Points</th>
+ -->								<th>Status</th>
 							</thead>
 							<tbody>
 								<tr>
 									<td><field name="cert_id10" /></td>
-									<td><field name="cert_weight10" readonly="1" /></td>
-									<td><field name="cert_status10" /></td>
+									<!-- <td><field name="cert_weight10" readonly="1" /></td>
+ -->									<td><field name="cert_status10" /></td>
 								</tr>
 							</tbody>
 						</table>
@@ -602,13 +602,13 @@
 							attrs="{'invisible':[('cert11','=',False)]}">
 							<thead>
 								<th>Career Certificate</th>
-								<th>Points</th>
+								<!-- <th>Points</th> -->
 								<th>Status</th>
 							</thead>
 							<tbody>
 								<tr>
 									<td><field name="cert_id11" /></td>
-									<td><field name="cert_weight11" readonly="1" /></td>
+									<!-- <td><field name="cert_weight11" readonly="1" /></td> -->
 									<td><field name="cert_status11" /></td>
 								</tr>
 							</tbody>
@@ -655,13 +655,13 @@
 							attrs="{'invisible':[('cert12','=',False)]}">
 							<thead>
 								<th>Career Certificate</th>
-								<th>Points</th>
+								<!-- <th>Points</th> -->
 								<th>Status</th>
 							</thead>
 							<tbody>
 								<tr>
 									<td><field name="cert_id12" /></td>
-									<td><field name="cert_weight12" readonly="1" /></td>
+									<!-- <td><field name="cert_weight12" readonly="1" /></td> -->
 									<td><field name="cert_status12" /></td>
 								</tr>
 							</tbody>

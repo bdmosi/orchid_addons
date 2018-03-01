@@ -265,10 +265,18 @@
 												<field name="presale_kpi"/>
 											</div>
 										</td>
-
-
-
 									</tr>
+									<tr>
+										<td>Submit To Customer</td>
+										<td>
+											<field name="submit_to_customer_date" readonly="1"/>
+										</td>
+										<td/>
+										<td/>
+									</tr>
+									
+									
+									
 									<tr>
 										<td>Hand-Over Date</td>
 										<td>
