@@ -543,28 +543,46 @@ class hr_employee(models.Model):
         if date <= aud_date_start:
             res = True
         return res
-    def get_pm_invoice_data(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):        
-        user_id  = self.user_id and self.user_id.id
-        analytic_pool = self.env['account.analytic.account']
-        analytic_ids = analytic_pool.search([('od_owner_id','=',user_id),('state','not in',('close','cancelled'))])
-        project_closed_on_audit = analytic_pool.search([('od_owner_id','=',user_id),('state','=','close'),('date','>=',aud_date_start),('date','<=',aud_date_end)])
-        
-        pr_ids  = [a.id for a in analytic_ids] 
-        closed_ids =[y.id for y in project_closed_on_audit]
-        project_ids = pr_ids + closed_ids 
-        project_ids = list(set(project_ids))
-        planned_date_vals = []
-        customer_invoice_vals = []
-        pl_amounts = []
-        inv_amounts = []
-        print "project ids>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",project_ids
-        if project_ids:
-            print "inside the looooooooooooooooooooooooooooooop"
-            for proj in analytic_pool.browse(project_ids):
-                pl_amount =0.0
-                type = proj.od_type_of_project 
-#                 if type == 'amc':
-#                     for line in proj.od_amc_invoice_schedule_line:
+#     def get_pm_invoice_data(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):        
+#         user_id  = self.user_id and self.user_id.id
+#         analytic_pool = self.env['account.analytic.account']
+#         analytic_ids = analytic_pool.search([('od_owner_id','=',user_id),('state','not in',('close','cancelled'))])
+#         project_closed_on_audit = analytic_pool.search([('od_owner_id','=',user_id),('state','=','close'),('date','>=',aud_date_start),('date','<=',aud_date_end)])
+#         
+#         pr_ids  = [a.id for a in analytic_ids] 
+#         closed_ids =[y.id for y in project_closed_on_audit]
+#         project_ids = pr_ids + closed_ids 
+#         project_ids = list(set(project_ids))
+#         planned_date_vals = []
+#         customer_invoice_vals = []
+#         pl_amounts = []
+#         inv_amounts = []
+#         print "project ids>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",project_ids
+#         if project_ids:
+#             print "inside the looooooooooooooooooooooooooooooop"
+#             for proj in analytic_pool.browse(project_ids):
+#                 pl_amount =0.0
+#                 type = proj.od_type_of_project 
+# #                 if type == 'amc':
+# #                     for line in proj.od_amc_invoice_schedule_line:
+# #                         date = line.date 
+# #                         check = self.check_date_in_audit(aud_date_start, aud_date_end, date)
+# #                         if check:
+# #                             pl_amount += line.amount
+# #                             pl_amounts.append(line.amount)
+# #                     if pl_amount:
+# #                         planned_date_vals.append((0,0,{'analytic_id':proj.id,'amount':pl_amount}))
+# #                 if type  == 'o_m':
+# #                     for line in proj.od_om_invoice_schedule_line:
+# #                         date = line.date 
+# #                         check = self.check_date_in_audit(aud_date_start, aud_date_end, date)
+# #                         if check:
+# #                             pl_amount += line.amount
+# #                             pl_amounts.append(line.amount)
+# #                     if pl_amount:
+# #                         planned_date_vals.append((0,0,{'analytic_id':proj.id,'amount':pl_amount}))
+#                 if type not in ('credit','amc','o_m'):
+#                     for line in proj.od_project_invoice_schedule_line:
 #                         date = line.date 
 #                         check = self.check_date_in_audit(aud_date_start, aud_date_end, date)
 #                         if check:
@@ -572,30 +590,12 @@ class hr_employee(models.Model):
 #                             pl_amounts.append(line.amount)
 #                     if pl_amount:
 #                         planned_date_vals.append((0,0,{'analytic_id':proj.id,'amount':pl_amount}))
-#                 if type  == 'o_m':
-#                     for line in proj.od_om_invoice_schedule_line:
-#                         date = line.date 
-#                         check = self.check_date_in_audit(aud_date_start, aud_date_end, date)
-#                         if check:
-#                             pl_amount += line.amount
-#                             pl_amounts.append(line.amount)
-#                     if pl_amount:
-#                         planned_date_vals.append((0,0,{'analytic_id':proj.id,'amount':pl_amount}))
-                if type not in ('credit','amc','o_m'):
-                    for line in proj.od_project_invoice_schedule_line:
-                        date = line.date 
-                        check = self.check_date_in_audit(aud_date_start, aud_date_end, date)
-                        if check:
-                            pl_amount += line.amount
-                            pl_amounts.append(line.amount)
-                    if pl_amount:
-                        planned_date_vals.append((0,0,{'analytic_id':proj.id,'amount':pl_amount}))
-                
-                invoice_ids = self.env['account.invoice'].search([('od_analytic_account','=',proj.id),('state','in',('open','paid'))])
-                for inv in invoice_ids:
-                    customer_invoice_vals.append((0,0,{'invoice_id':inv.id,'analytic_id':proj.id,'amount':inv.amount_total}))
-                    inv_amounts.append(inv.amount_total)
-        return planned_date_vals,customer_invoice_vals,sum(pl_amounts),sum(inv_amounts)
+#                 
+#                 invoice_ids = self.env['account.invoice'].search([('od_analytic_account','=',proj.id),('state','in',('open','paid'))])
+#                 for inv in invoice_ids:
+#                     customer_invoice_vals.append((0,0,{'invoice_id':inv.id,'analytic_id':proj.id,'amount':inv.amount_total}))
+#                     inv_amounts.append(inv.amount_total)
+#         return planned_date_vals,customer_invoice_vals,sum(pl_amounts),sum(inv_amounts)
             
 #     def get_pm_component(self,planned_amount,invoice_amount):
 #         comp_data  =[]
@@ -625,6 +625,8 @@ class hr_employee(models.Model):
         if not comp_flag:
             exclude_wt += comp_wt 
             comp_wt =0.0
+        if exclude_wt == 1.0:
+            return comp_data
         if exclude_wt:
             day_wt =  day_wt + (day_wt*exclude_wt)/float(1.0-exclude_wt)
             cc_wt =  cc_wt + (cc_wt*exclude_wt)/float(1.0-exclude_wt)
@@ -809,6 +811,57 @@ class hr_employee(models.Model):
         return day_score_main,cost_control_val_main,invoice_schedule_main,compliance_vals_main,comp_line
     
     
+    
+        
+    def get_bdm_component(self,total_gp):
+        target = self.annual_target/12.0
+        result =0.0
+        
+        comp_data = []
+        wt_lead = .9 
+        wt_cert = .1
+        cert_score = 0.0
+        cert = self.get_certificate_status()
+        cert_ach = cert.get('achieved',False)
+        cert_req = cert.get('required',False)
+        if cert_ach:
+            cert_score =100
+        if target:
+            result = total_gp/target 
+            if result >1.5:
+                result =1.5
+        
+        if not cert_req:
+            wt_lead =1
+            wt_cert =0.0 
+        if wt_lead:
+            score = result *100
+            final_score = score * wt_lead
+            comp_data.append((0,0,{'name':'Lead Performance','score':score,'weight':wt_lead*100.0,'final_score':final_score}))
+        if wt_cert:
+            score = cert_score
+            final_score = score * wt_cert
+            comp_data.append((0,0,{'name':'Career Certificate','score':score,'weight':wt_cert*100.0,'final_score':final_score}))
+        return comp_data,target
+            
+    
+    def get_bdm_data(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):
+        result =[]
+        total_gp =0.0
+        user_id  = self.user_id and self.user_id.id
+        domain = [('lead_created_by','=',user_id),('status','=','active')]
+        domain.extend([('submit_to_customer_date','>=',aud_date_start),('submit_to_customer_date','<=',aud_date_end)])
+        domain1 = domain + [('state','in',('submitted','handover','processed'))]
+        sheet_ids =self.env['od.cost.sheet'].search(domain1)
+        for sheet in sheet_ids:
+            gp = sheet.total_gp
+            result.append((0,0,{'cost_sheet_id':sheet.id,'gp':sheet.total_gp}))
+            total_gp +=gp
+        comp_data,target = self.get_bdm_component(total_gp)
+        return result,comp_data,target
+        
+        
+    
     def update_audit_sample(self,sample_id,aud_date_start,aud_date_end,audit_temp_id):
         type = audit_temp_id.type
         user_id  = self.user_id and self.user_id.id
@@ -849,11 +902,7 @@ class hr_employee(models.Model):
             sample_id.achieved_gp_line.unlink()
             sample_id.write({'achieved_gp_line':achieved_line,'comp_line':component_data,'target':target})
         if type == 'pm':
-#             planned_invoice_line,actual_invoice_line,planned_amount,inv_amount = self.get_pm_invoice_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
-#             comp_line = self.get_pm_component(planned_amount,inv_amount)
-#             sample_id.comp_line.unlink()
-#             sample_id.planned_invoice_line.unlink()
-#             sample_id.actual_invoice_line.unlink()
+
             day_score_vals,cost_control_vals,invoice_schedule_vals,compliance_vals,comp_line = self.get_pm_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
             sample_id.dayscore_line.unlink()
             sample_id.cost_control_line.unlink()
@@ -862,6 +911,12 @@ class hr_employee(models.Model):
             sample_id.comp_line.unlink()
             sample_id.write({'dayscore_line':day_score_vals,'cost_control_line':cost_control_vals,
                              'invoice_schedule_line':invoice_schedule_vals,'compliance_line':compliance_vals,'comp_line':comp_line})
+        
+        if type == 'bdm':
+            bmd_costsheet_line,comp_line,target = self.get_bdm_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            sample_id.bmd_costsheet_line.unlink()
+            sample_id.comp_line.unlink()
+            sample_id.write({'bmd_costsheet_line':bmd_costsheet_line,'comp_line':comp_line,'target':target})
             
             
     
@@ -909,16 +964,15 @@ class hr_employee(models.Model):
             sample_id =self.env['audit.sample'].create(vals)
         
         if type == 'pm':
-#             planned_invoice_line,actual_invoice_line,planned_amount,inv_amount = self.get_pm_invoice_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
-#             comp_line = self.get_pm_component(planned_amount,inv_amount)
-#             vals.update({'planned_invoice_line':planned_invoice_line,'actual_invoice_line':actual_invoice_line,'comp_line':comp_line})
-            
             
             day_score_vals,cost_control_vals,invoice_schedule_vals,compliance_vals,comp_line = self.get_pm_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
             vals.update({'dayscore_line':day_score_vals,'cost_control_line':cost_control_vals,'invoice_schedule_line':invoice_schedule_vals,
                          'compliance_line':compliance_vals,'comp_line':comp_line})
             sample_id =self.env['audit.sample'].create(vals)
-        
+        if type == 'bdm':
+            bmd_costsheet_line,comp_line,target = self.get_bdm_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            vals.update({'bmd_costsheet_line':bmd_costsheet_line,'comp_line':comp_line,'target':target})
+            sample_id =self.env['audit.sample'].create(vals)
         return sample_id
     
     
@@ -1008,7 +1062,7 @@ class hr_employee(models.Model):
         month_number = today.month
        
         day = today.day 
-        if day >26:
+        if day >27:
             month_number +=1
         if number:
             month_number = number

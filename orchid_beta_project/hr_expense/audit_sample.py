@@ -52,8 +52,29 @@ class audit_sample(models.Model):
     cost_control_line = fields.One2many('pm.cost.control.line','sample_id',string="Details")
     invoice_schedule_line = fields.One2many('pm.invoice.schedule.line','sample_id',string="Details")
     compliance_line  =  fields.One2many('pm.compliance.line','sample_id',string="Details")
+    bmd_costsheet_line = fields.One2many('bdm.costsheet.sample.line','sample_id',string="Details")
 
 
+
+class BdmCostsheetSample(models.Model):
+    _name ='bdm.costsheet.sample.line'
+    sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
+    cost_sheet_id = fields.Many2one('od.cost.sheet',string="Cost Sheet")
+    gp = fields.Float(string="GP")
+    
+    
+    @api.multi
+    def btn_open(self):
+       
+        return {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'od.cost.sheet',
+                'res_id':self.cost_sheet_id and self.cost_sheet_id.id or False,
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+
+            }
 
 
 class compliance_line(models.Model):
@@ -146,6 +167,8 @@ class pm_dayscore(models.Model):
                 'target': 'new',
 
             }
+
+
 
 
 
