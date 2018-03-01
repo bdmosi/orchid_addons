@@ -637,16 +637,20 @@
             	
             	
             	 <page string="Project Compliance">
-            <separator string="Initiation" />
-            <field name="od_comp_initiation_line">
+            	 <group>
+            	 	<group><field name="start_project_comp" /></group>
+            	 	<group></group>
+            	 </group>
+            <separator string="Initiation" attrs="{'invisible':[('start_project_comp','=',False)]}"/>
+            <field name="od_comp_initiation_line" attrs="{'invisible':[('start_project_comp','=',False)]}">
                 <tree editable="bottom">
                 		<field name="name" />
                 		<field name="add_score" />
                 	 	<field name="score" attrs="{'readonly':[('add_score','=',False)]}"/>
                 </tree>
             </field>
-            <separator string="Planning" />
-            <field name="od_comp_planning_line">
+            <separator string="Planning" attrs="{'invisible':[('start_project_comp','=',False)]}"/>
+            <field name="od_comp_planning_line" attrs="{'invisible':[('start_project_comp','=',False)]}">
                 <tree editable="bottom">
                 		<field name="name" />
                 	 	<field name="add_score" />
@@ -654,8 +658,8 @@
                 </tree>
             </field>
             
-            <separator string="Execution" />
-            <field name="od_comp_excecution_line">
+            <separator string="Execution" attrs="{'invisible':[('start_project_comp','=',False)]}"/>
+            <field name="od_comp_excecution_line" attrs="{'invisible':[('start_project_comp','=',False)]}">
                 <tree editable="bottom">
                 		<field name="name" />
                 	 	<field name="add_score" />
@@ -664,8 +668,8 @@
             </field>
            
             
-            <separator string="Monitoring &amp; Control" />
-            <field name="od_comp_monitor_line">
+            <separator string="Monitoring &amp; Control" attrs="{'invisible':[('start_project_comp','=',False)]}"/>
+            <field name="od_comp_monitor_line" attrs="{'invisible':[('start_project_comp','=',False)]}">
                 <tree editable="bottom">
                 		<field name="name" />
                 	 	<field name="add_score" />
@@ -673,8 +677,8 @@
                 </tree>
             </field>
             
-            <separator string="Closing" />
-            <field name="od_comp_closing_line">
+            <separator string="Closing" attrs="{'invisible':[('start_project_comp','=',False)]}"/>
+            <field name="od_comp_closing_line" attrs="{'invisible':[('start_project_comp','=',False)]}">
                 <tree editable="bottom">
                 		<field name="name" />
                 	 	<field name="add_score" />
@@ -686,8 +690,12 @@
             </page>
             
             <page string="AMC Compliance">
-            		<separator string="Handover from Projects" />
-	            <field name="od_comp_handover_line">
+             <group>
+            	 	<group><field name="start_amc_comp" /></group>
+            	 	<group></group>
+            	 </group>
+            		<separator string="Handover from Projects" attrs="{'invisible':[('start_amc_comp','=',False)]}"/>
+	            <field name="od_comp_handover_line" attrs="{'invisible':[('start_amc_comp','=',False)]}">
 	                <tree editable="bottom">
 	                		<field name="name" />
 	                	 	<field name="add_score" />
@@ -695,8 +703,8 @@
 	                </tree>
 	            </field>
                 
-                <separator string="Maintenance" />
-	            <field name="od_comp_maint_line">
+                <separator string="Maintenance" attrs="{'invisible':[('start_amc_comp','=',False)]}"/>
+	            <field name="od_comp_maint_line" attrs="{'invisible':[('start_amc_comp','=',False)]}">
 	                <tree editable="bottom">
 	                		<field name="name" />
 	                	 	<field name="add_score" />

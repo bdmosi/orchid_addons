@@ -881,7 +881,8 @@ class account_analytic_account(models.Model):
             (0,0,{'name':'Issue Updates'}),
             ]
         return data
-    
+    start_project_comp = fields.Boolean(string="Start Project Compliance")
+    start_amc_comp = fields.Boolean(string="Start AMC Compliance")
     od_comp_initiation_line  = fields.One2many('od.compliance.initiation','analytic_id',string="Detail Line",default=get_initiation_line)
     od_comp_planning_line  = fields.One2many('od.compliance.planning','analytic_id',string="Detail Line",default=get_planning_line)
     od_comp_excecution_line  = fields.One2many('od.compliance.execution','analytic_id',string="Detail Line",default=get_execution_line)

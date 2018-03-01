@@ -606,7 +606,7 @@ class hr_employee(models.Model):
 #         return comp_data
     
     
-    def get_pm_component(self,day_weight_scr,cc_weight_scr,inv_weight_scr,comp_weight_scr,day_flag,cost_flag):
+    def get_pm_component(self,day_weight_scr,cc_weight_scr,inv_weight_scr,comp_weight_scr,day_flag,cost_flag,inv_flag,comp_flag):
         comp_data =[]
         day_wt  =.2
         cc_wt = .3
@@ -619,6 +619,12 @@ class hr_employee(models.Model):
         if not cost_flag:
             exclude_wt += cc_wt
             cc_wt =0.0
+        if not inv_flag:
+            exclude_wt += inv_wt
+            inv_wt =0.0
+        if not comp_flag:
+            exclude_wt += comp_wt 
+            comp_wt =0.0
         if exclude_wt:
             day_wt =  day_wt + (day_wt*exclude_wt)/float(1.0-exclude_wt)
             cc_wt =  cc_wt + (cc_wt*exclude_wt)/float(1.0-exclude_wt)
@@ -662,13 +668,13 @@ class hr_employee(models.Model):
         sample_project_ids = analytic_ids + project_closed_on_audit
         
         day_score_vals  =[]
-        total_sale_value = sum([a.od_project_sale for a in sample_project_ids])
-        max_day_sore = 20 * len(sample_project_ids)
+#         total_sale_value = sum([a.od_project_sale for a in sample_project_ids])
+#         max_day_sore = 20 * len(sample_project_ids)
         
         
         cost_control_vals = []
 #         total_gp_value = sum([a.od_amended_profit for a in sample_project_ids])
-        max_cc_sore = 30 * len(sample_project_ids)
+#         max_cc_sore = 30 * len(sample_project_ids)
         
         invoice_schedule_vals =[] 
         compliance_vals =[]
@@ -679,15 +685,17 @@ class hr_employee(models.Model):
         tot_sale_day =0.0
         tot_gp =0.0
         tot_sal_inv =0.0
+        tot_sal_comp =0.0
         day_score_main = []
         cost_control_val_main =[]
         invoice_schedule_main =[]
+        compliance_vals_main =[]
         for proj in sample_project_ids:
             #5 day score
-            sale_value_percent =0.0
-            sale_value = proj.od_project_sale
-            if total_sale_value:
-                sale_value_percent = sale_value/float(total_sale_value)
+#             sale_value_percent =0.0
+#             sale_value = proj.od_project_sale
+#             if total_sale_value:
+#                 sale_value_percent = sale_value/float(total_sale_value)
             processed_date = proj.od_cost_sheet_id and proj.od_cost_sheet_id.processed_date 
             if processed_date and aud_date_start <= processed_date <= aud_date_end:
                 sale_val = proj.od_project_sale
@@ -718,13 +726,15 @@ class hr_employee(models.Model):
                 sale_val = proj.od_project_sale
                 tot_sal_inv  += sale_val
 #                 weight_isc = max_cc_sore *sale_value_percent * (invoice_sc_score/30.0)
-                invoice_schedule_vals.append({'analytic_id':proj.id,'sale_value':sale_value,'score':invoice_sc_score})
+                invoice_schedule_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':invoice_sc_score})
 #                 inv_weight.append(weight_isc)
-            
-            compliance_score = proj.compliance_score 
-            weight_comp = max_day_sore * sale_value_percent * (compliance_score/20.0)
-            compliance_vals.append((0,0,{'analytic_id':proj.id,'sale_value':sale_value,'score':compliance_score,'sale_value_percent':sale_value_percent*100,'weight':weight_comp}))
-            comp_weight.append(weight_comp)
+            if proj.start_project_comp:
+                compliance_score = proj.compliance_score
+                sale_val = proj.od_project_sale
+                tot_sal_comp  += sale_val 
+#                 weight_comp = max_day_sore * sale_value_percent * (compliance_score/20.0)
+                compliance_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':compliance_score})
+#                 comp_weight.append(weight_comp)
         
         max_day_sore = 20 * len(day_score_vals)
         for data in day_score_vals:
@@ -764,22 +774,39 @@ class hr_employee(models.Model):
             inv_weight.append(weight_inv)
             invoice_schedule_main.append((0,0,data))
         
+        max_comp_scr = 20 * len(compliance_vals)
+        for data in compliance_vals:
+            sal_val_percent =0.0
+            sale_value  = data.get('sale_value')
+            if tot_sal_comp:
+                sal_val_percent = sale_value/float(tot_sal_comp)
+            score = data.get('score')
+            weight_comp = max_comp_scr * sal_val_percent * (score/20.0)
+            data['sale_value_percent'] = sal_val_percent *100.0
+            data['weight'] = weight_comp
+            comp_weight.append(weight_comp)
+            compliance_vals_main.append((0,0,data))
+        
             
         day_weight_scr = self.get_avg_score(day_weight)
         cc_weight_scr = self.get_avg_score(cc_weight)
         inv_weight_scr = self.get_avg_score(inv_weight)
         comp_weight_scr = self.get_avg_score(comp_weight )
         
-        day_flag = cost_flag = False 
+        day_flag = cost_flag = inv_flag= comp_flag= False 
         if day_score_main:
             day_flag =True 
         if cost_control_val_main:
             cost_flag = True
-        comp_line = self.get_pm_component(day_weight_scr,cc_weight_scr,inv_weight_scr,comp_weight_scr,day_flag,cost_flag)
+        if invoice_schedule_main:
+            inv_flag = True 
+        if compliance_vals_main:
+            comp_flag = True
+        comp_line = self.get_pm_component(day_weight_scr,cc_weight_scr,inv_weight_scr,comp_weight_scr,day_flag,cost_flag,inv_flag,comp_flag)
         
         
             
-        return day_score_main,cost_control_val_main,invoice_schedule_main,compliance_vals,comp_line
+        return day_score_main,cost_control_val_main,invoice_schedule_main,compliance_vals_main,comp_line
     
     
     def update_audit_sample(self,sample_id,aud_date_start,aud_date_end,audit_temp_id):
