@@ -248,28 +248,38 @@ class account_analytic_account(models.Model):
     def od_get_total_sale_value(self):
         sale_order = self.env['sale.order']
         analytic_id = self.id
-        domain =[('project_id','=',analytic_id)]
-        sales = sale_order.search(domain)
-        total = sum([sal.amount_total for sal in sales])
+        domain =[('project_id','=',analytic_id),('state','!=','cancel')]
+        sales = sale_order.search(domain,limit=1)
+#         total = sum([sal.amount_total for sal in sales])
         original_price = 0.0
         original_cost = 0.0
+        original_profit =0.0
         original_profit_perc = 0.0
         amended_profit_perc = 0.0
         amended_price = 0.0
         amended_cost = 0.0
         planned_timesheet_cost = 0.0
-        for sale in sales:
-            for line in sale.order_line:
-                if line.product_id.id in (211961,208829,208831):
-                    planned_timesheet_cost += line.od_original_line_cost
-                original_price += line.od_original_line_price
-                original_cost += line.od_original_line_cost
-                amended_price += line.price_subtotal
-                amended_cost += line.od_amended_line_cost
+#         for sale in sales:
+#             for line in sale.order_line:
+#                 if line.product_id.id in (211961,208829,208831):
+#                     planned_timesheet_cost += line.od_original_line_cost
+#                 original_price += line.od_original_line_price
+#                 original_cost += line.od_original_line_cost
+#                 amended_price += line.price_subtotal
+#                 amended_cost += line.od_amended_line_cost
+#         original_profit = original_price - original_cost
+        
+        
+        if sales:
+            original_price = sales.od_original_total_price
+            original_cost = sales.od_original_total_cost
+            
+            amended_price = sales.od_amd_total_price
+            amended_cost = sales.od_amd_total_cost
         original_profit = original_price - original_cost
         if original_price:
             original_profit_perc = (original_profit/original_price) *100
-
+        
         amended_profit = amended_price - amended_cost
         if amended_price:
             amended_profit_perc = (amended_profit/amended_price) * 100

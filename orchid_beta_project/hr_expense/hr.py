@@ -259,6 +259,7 @@ class hr_employee(models.Model):
             todate = date_end
         daygenerator = (fromdate + timedelta(x + 1) for x in xrange((todate - fromdate).days))
         days =sum(1 for day in daygenerator if day.weekday() not in (4,5)) 
+        days = days+1
         return days*9
     
     def get_cancelled_activities(self,user_id,aud_date_start,aud_date_end,engineer_task_count):

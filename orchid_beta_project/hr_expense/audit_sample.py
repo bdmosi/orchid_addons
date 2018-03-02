@@ -27,7 +27,7 @@ class audit_sample(models.Model):
     aud_temp_id = fields.Many2one('audit.template',string="Audit Template")
     type = fields.Selection([('post_sales','Post Sales'),('pre_sales','Pre-Sales Engineer'),
                              ('pre_sales_mgr','Pre-Sales Manager'),('sales_acc_mgr','Sales Account Manager'),
-                             ('bdm','Business Development Manager'),('ttl','Technical Team Leader'),
+                             ('bdm','BDM'), ('bdm_sec','BDM-SEC'),('bdm_net','BDM-NET-DC'),('ttl','Technical Team Leader'),
                              ('pm','Project Manager'),
                              ],string="Type",required=True)
     employee_id = fields.Many2one('hr.employee',string="Employee")
@@ -53,7 +53,24 @@ class audit_sample(models.Model):
     invoice_schedule_line = fields.One2many('pm.invoice.schedule.line','sample_id',string="Details")
     compliance_line  =  fields.One2many('pm.compliance.line','sample_id',string="Details")
     bmd_costsheet_line = fields.One2many('bdm.costsheet.sample.line','sample_id',string="Details")
+    bdm_sec_sample_line = fields.One2many('bdm.sec.sample.line','sample_id',string="Details")
 
+
+
+
+class BdmSecuritySample(models.Model):
+    _name ='bdm.sec.sample.line'
+    sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
+    cost_sheet_id = fields.Many2one('od.cost.sheet',string="Cost Sheet")
+    product_group_id = fields.Many2one('od.product.group',string="Product Group")
+    sales = fields.Float(string="Sales")
+    sales_aftr_disc = fields.Float(string="Sales After Discount")
+    cost = fields.Float(string="Cost")
+    profit = fields.Float(string="Profit")
+    profit_percent = fields.Float(string="Profit Percentage")
+    manpower_cost = fields.Float("Manpower Cost")
+    gp = fields.Float(string="GP")
+    
 
 
 class BdmCostsheetSample(models.Model):

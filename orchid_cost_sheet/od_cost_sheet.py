@@ -239,7 +239,7 @@ class od_cost_sheet(models.Model):
     def get_pdtgrp_vals(self):
         res = []
         all_group_cost = 0.0
-        disc =self.sp_disc_percentage
+        disc =abs(self.sp_disc_percentage)
         for line in self.mat_main_pro_line:
             res.append({'pdt_grp_id':line.part_no and line.part_no.od_pdt_group_id and line.part_no.od_pdt_group_id.id,
                 'total_sale':line.line_price,
@@ -317,7 +317,7 @@ class od_cost_sheet(models.Model):
         res = []
         vals = self.get_pdtgrp_vals()
         imp_vals = self.get_imp_vals()
-        disc = self.sp_disc_percentage
+        disc =  abs(self.sp_disc_percentage)
         for imp_val in imp_vals:
             tab = imp_val.get('tab')
             sale = imp_val.get('sale')
@@ -346,7 +346,7 @@ class od_cost_sheet(models.Model):
         res = []
         vals = self.get_pdtgrp_vals()
         imp_vals = self.get_amc_vals()
-        disc = self.sp_disc_percentage
+        disc = abs(self.sp_disc_percentage)
         for imp_val in imp_vals:
             tab = imp_val.get('tab')
             sale = imp_val.get('sale')
@@ -374,7 +374,7 @@ class od_cost_sheet(models.Model):
         res = []
         vals = self.get_pdtgrp_vals()
         imp_vals = self.get_om_vals()
-        disc = self.sp_disc_percentage
+        disc = abs(self.sp_disc_percentage)
         for imp_val in imp_vals:
             tab = imp_val.get('tab')
             sale = imp_val.get('sale')
@@ -403,7 +403,7 @@ class od_cost_sheet(models.Model):
         res = []
         vals = self.get_pdtgrp_vals()
         imp_vals = self.get_extra_vals()
-        disc = self.sp_disc_percentage
+        disc = abs(self.sp_disc_percentage)
         for imp_val in imp_vals:
             tab = imp_val.get('tab')
             sale = imp_val.get('sale')
@@ -1536,6 +1536,27 @@ class od_cost_sheet(models.Model):
 
     
     
+    
+    def get_imp_cost(self):
+        cost =0.0
+        
+        if self.included_bim_in_quotation:
+            cost = sum([x.line_cost for x in self.manpower_manual_line ])
+            
+            if self.bim_log_select:
+                cost += self.bim_log_cost
+               
+            if self.bim_imp_select:
+                cost += sum([x.line_cost for x in self.bim_implementation_code_line])
+               
+        return cost
+    
+    def get_bmn_cost(self):
+        cost =0.0
+        if self.included_bmn_in_quotation:
+            cost =sum([x.line_cost for x in self.bmn_it_preventive_line ])+sum([x.line_cost for x in self.bmn_it_remedial_line])
+        return cost
+    
     def calculate_imp(self):
         sale =cost =profit=profit_per=0.0
         bim_vat  = 0.0
@@ -1654,7 +1675,7 @@ class od_cost_sheet(models.Model):
     def get_weight_summary(self):
         res = {}
         for line in self.mat_group_weight_line:
-            res[line.pdt_grp_id.id] = {'sale':line.total_sale,'sale_aftr_disc':line.sale_aftr_disc,'cost':line.total_cost}
+            res[line.pdt_grp_id.id] = {'sale':line.total_sale,'sale_aftr_disc':line.sale_aftr_disc,'cost':line.total_cost,'manpower_cost':0.0}
         for line in self.extra_weight_line:
             data = res.get(line.pdt_grp_id.id,{})
             if data:
@@ -1667,6 +1688,8 @@ class od_cost_sheet(models.Model):
                 data['sale'] += line.total_sale
                 data['sale_aftr_disc'] += line.sale_aftr_disc 
                 data['cost'] += line.total_cost
+                
+
         
         for line in self.amc_weight_line:
             data = res.get(line.pdt_grp_id.id,{})
@@ -1674,6 +1697,8 @@ class od_cost_sheet(models.Model):
                 data['sale'] += line.total_sale
                 data['sale_aftr_disc'] += line.sale_aftr_disc 
                 data['cost'] += line.total_cost
+               
+                
         
         for line in self.om_weight_line:
             data = res.get(line.pdt_grp_id.id,{})
@@ -1690,12 +1715,29 @@ class od_cost_sheet(models.Model):
     def generate_summary_weight(self):
         result = self.get_weight_summary()
         data = []
+        total_cost =0.0
         for key,val in result.iteritems():
             pdt_grp_id = key 
             sale = val.get('sale')
             sale_aftr_disc = val.get('sale_aftr_disc')
             cost = val.get('cost')
-            data.append({'pdt_grp_id':pdt_grp_id,'total_sale':sale,'total_cost':cost,'sale_aftr_disc':sale_aftr_disc,'profit':(sale_aftr_disc- cost)})
+            total_cost += cost
+            profit = sale_aftr_disc- cost
+            data.append({'pdt_grp_id':pdt_grp_id,'total_sale':sale,'total_cost':cost,'sale_aftr_disc':sale_aftr_disc,'profit':profit,'total_gp':profit})
+        
+        
+        if total_cost:
+            total_manpower_cost = self.get_imp_cost() + self.get_bmn_cost()
+            for val in data:
+                cost = val.get('total_cost')
+                manpower_cost = total_manpower_cost *(cost/total_cost)
+                val['manpower_cost'] = manpower_cost
+                profit = val.get('profit')
+                total_gp = profit + manpower_cost 
+                val['total_gp'] = total_gp
+            
+                
+        
         self.summary_weight_line.unlink()
         self.summary_weight_line = data
     
@@ -3043,6 +3085,7 @@ class od_cost_sheet(models.Model):
     baseline_sheet_ref = fields.Char("Baseline Cost Sheet Reference",readonly=True)
     date = fields.Date(string="Submission Date",default=fields.Date.today)
     lead_id = fields.Many2one('crm.lead',string='Opportunity',readonly="1",copy=True,required=True)
+    lead_created_by = fields.Many2one('res.users',string="Lead Created By",related="lead_id.create_uid",store=True)
     financial_proposal_date = fields.Date(string="Financial Proposal Required On",related="lead_id.od_req_on_7",readonly=True)
     change_date = fields.Datetime(string="Latest Change Date",readonly=True)
     number = fields.Char(string='Number',default='/',readonly="1")
@@ -3530,7 +3573,8 @@ class od_cost_sheet(models.Model):
                 raise Warning("No Order Line to Create Sale Order")
             so_vals['order_line'] =  order_line
             so_vals['name'] = '/'
-
+            company_id = self.company_id and self.company_id.id
+            so_vals['company_id'] =company_id
             # sdfsfsfs
             pprint(so_vals)
             so_id = self.env['sale.order'].create(so_vals)
@@ -5400,6 +5444,8 @@ class od_cost_summary_weight(models.Model):
     sale_aftr_disc = fields.Float(string="Sales After Disc")
     total_cost = fields.Float(string="Cost")
     profit = fields.Float(string="Profit")
+    manpower_cost = fields.Float(string="Manpower Cost")
+    total_gp = fields.Float(string="Total GP")
     
     
     @api.one
