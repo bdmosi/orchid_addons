@@ -48,7 +48,7 @@
 
                 <xpath expr="//field[@name='user_id']" position="replace">
                     <field name="user_id" on_change="on_change_user(user_id, context)" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}" required="1"/>
-                   <!--  <field name="od_bdm_user_id"/> -->
+                    <!--  <field name="od_bdm_user_id"/>  -->
                     <field name="od_responsible_id"/>
                </xpath>
             
@@ -90,12 +90,12 @@
 <!--              <xpath expr="//button[@name='121']" position="attributes">-->
 <!--		       	<attribute name="attrs">{'invisible': [('od_approval_state','!=','approved')]}</attribute>-->
 <!--		       </xpath>-->
-              <xpath expr="//field[@name='referred']" position="after">
+             <!--  <xpath expr="//field[@name='referred']" position="after">
 
               		<field name="od_lead_bdm_user_id"/>
                     <field name="od_lead_responsible_id"/>
 
-              </xpath>
+              </xpath> -->
             </field>
         </record>
 

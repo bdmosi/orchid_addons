@@ -325,8 +325,7 @@ class hr_employee(models.Model):
             utl = spent_time/float(avl_time)
             result.append((0,0,{'user_id':user_id,'available_time':avl_time,'actual_time_spent':spent_time,'utl':(spent_time/avl_time)*100.0}))
             fot_data.append((0,0,{'user_id':user_id,'fot':fot}))
-            if utl >=.65:
-                utl =1
+            utl  = (utl/0.65)
             utl_list.append(utl)
             fot_list.append(fot)
             
@@ -861,7 +860,83 @@ class hr_employee(models.Model):
         comp_data,target = self.get_bdm_component(total_gp)
         return result,comp_data,target
         
+    
+    
+    def get_bdm_sec_pip_data(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):
+        result =[]
         
+       
+        domain = [('status','=','active')]
+        domain.extend([('submit_to_customer_date','>=',aud_date_start),('submit_to_customer_date','<=',aud_date_end)])
+        domain1 = domain + [('state','in',('submitted','handover','processed'))]
+        sheet_ids =self.env['od.cost.sheet'].search(domain1)
+        for sheet in sheet_ids:
+            sheet.update_cost_sheet()
+            for line in sheet.summary_weight_line:
+                if line.pdt_grp_id.id ==2:
+                    gp = line.total_gp
+                    result.append((0,0,{'cost_sheet_id':sheet.id,'gp':line.total_gp,'sales':line.total_sale,
+                                        'sales_aftr_disc':line.sale_aftr_disc,'cost':line.total_cost,'profit':line.profit,'profit_percent':line.profit_percent,'manpower_cost':line.manpower_cost,'product_group_id':line.pdt_grp_id.id}))
+                   
+       
+        return result
+    
+    
+    def get_bdm_sec_data(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):
+        result =[]
+        total_gp =0.0
+        user_id  = self.user_id and self.user_id.id
+        domain = [('lead_created_by','=',user_id),('status','=','active')]
+        domain.extend([('submit_to_customer_date','>=',aud_date_start),('submit_to_customer_date','<=',aud_date_end)])
+        domain1 = domain + [('state','not in',('draft','design_ready','cancelled'))]
+        sheet_ids =self.env['od.cost.sheet'].search(domain1)
+        for sheet in sheet_ids:
+            sheet.update_cost_sheet()
+            for line in sheet.summary_weight_line:
+                if line.pdt_grp_id.id ==2:
+                    gp = line.total_gp
+                    result.append((0,0,{'cost_sheet_id':sheet.id,'gp':line.total_gp,'sales':line.total_sale,'sales_aftr_disc':line.sale_aftr_disc,'cost':line.total_cost,
+                                        'profit':line.profit,'profit_percent':line.profit_percent,'manpower_cost':line.manpower_cost,'product_group_id':line.pdt_grp_id.id}))
+                    total_gp +=gp
+        comp_data,target = self.get_bdm_component(total_gp)
+        return result,comp_data,target
+    
+    def get_bdm_net_data(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):
+        result =[]
+        total_gp =0.0
+        user_id  = self.user_id and self.user_id.id
+        domain = [('lead_created_by','=',user_id),('status','=','active')]
+        domain.extend([('submit_to_customer_date','>=',aud_date_start),('submit_to_customer_date','<=',aud_date_end)])
+        domain1 = domain + [('state','not in',('draft','design_ready','cancelled'))]
+        sheet_ids =self.env['od.cost.sheet'].search(domain1)
+        for sheet in sheet_ids:
+            sheet.update_cost_sheet()
+            for line in sheet.summary_weight_line:
+                if line.pdt_grp_id.id in (1,3):
+                    gp = line.total_gp
+                    result.append((0,0,{'cost_sheet_id':sheet.id,'gp':line.total_gp,'sales':line.total_sale,'sales_aftr_disc':line.sale_aftr_disc,'cost':line.total_cost,
+                                        'profit':line.profit,'profit_percent':line.profit_percent,'manpower_cost':line.manpower_cost,'product_group_id':line.pdt_grp_id.id}))
+                    total_gp +=gp
+        comp_data,target = self.get_bdm_component(total_gp)
+        return result,comp_data,target        
+    
+    def get_bdm_net_pip_data(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):
+        result =[]
+        
+        user_id  = self.user_id and self.user_id.id
+        domain = [('status','=','active')]
+        domain.extend([('submit_to_customer_date','>=',aud_date_start),('submit_to_customer_date','<=',aud_date_end)])
+        domain1 = domain + [('state','in',('submitted','handover','processed'))]
+        sheet_ids =self.env['od.cost.sheet'].search(domain1)
+        for sheet in sheet_ids:
+            sheet.update_cost_sheet()
+            for line in sheet.summary_weight_line:
+                if line.pdt_grp_id.id in (1,3):
+                    gp = line.total_gp
+                    result.append((0,0,{'cost_sheet_id':sheet.id,'gp':line.total_gp,'sales':line.total_sale,'sales_aftr_disc':line.sale_aftr_disc,'cost':line.total_cost,
+                                        'profit':line.profit,'profit_percent':line.profit_percent,'manpower_cost':line.manpower_cost,'product_group_id':line.pdt_grp_id.id}))
+                  
+        return result 
     
     def update_audit_sample(self,sample_id,aud_date_start,aud_date_end,audit_temp_id):
         type = audit_temp_id.type
@@ -918,8 +993,22 @@ class hr_employee(models.Model):
             sample_id.bmd_costsheet_line.unlink()
             sample_id.comp_line.unlink()
             sample_id.write({'bmd_costsheet_line':bmd_costsheet_line,'comp_line':comp_line,'target':target})
-            
-            
+        if type == 'bdm_sec':
+            bdm_sec_sample_line,comp_line,target = self.get_bdm_sec_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            pipline_data = self.get_bdm_sec_pip_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            sample_id.bdm_sec_sample_line.unlink()
+            sample_id.bdm_sec_pip_sample_line.unlink()
+            sample_id.comp_line.unlink()
+            sample_id.write({'bdm_sec_sample_line':bdm_sec_sample_line,'comp_line':comp_line,'target':target,'bdm_sec_pip_sample_line':pipline_data})
+
+        if type == 'bdm_net':
+            bdm_net_sample_line,comp_line,target = self.get_bdm_net_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            pipline_data = self.get_bdm_net_pip_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            sample_id.bdm_net_sample_line.unlink()
+            sample_id.bdm_net_pip_sample_line.unlink()
+            sample_id.comp_line.unlink()
+            sample_id.write({'bdm_net_sample_line':bdm_net_sample_line,'comp_line':comp_line,'target':target,'bdm_net_pip_sample_line':pipline_data})
+
     
     def create_audit_sample(self,aud_date_start,aud_date_end,audit_temp_id):
         type = audit_temp_id.type
@@ -928,7 +1017,7 @@ class hr_employee(models.Model):
         sample_id = False
         employee_id = self.id
         dt_start = aud_date_start
-        print "employeee id>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",employee_id
+        
         name = self.name + '-' +aud_date_start +' To -'+aud_date_end
         
         vals = {}
@@ -974,6 +1063,19 @@ class hr_employee(models.Model):
             bmd_costsheet_line,comp_line,target = self.get_bdm_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
             vals.update({'bmd_costsheet_line':bmd_costsheet_line,'comp_line':comp_line,'target':target})
             sample_id =self.env['audit.sample'].create(vals)
+        
+        if type == 'bdm_sec':
+            bdm_sec_sample_line,comp_line,target = self.get_bdm_sec_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            pipline_data = self.get_bdm_sec_pip_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            vals.update({'bdm_sec_sample_line':bdm_sec_sample_line,'comp_line':comp_line,'target':target,'bdm_sec_pip_sample_line':pipline_data})
+            sample_id =self.env['audit.sample'].create(vals)
+        
+        if type == 'bdm_net':
+            bdm_net_sample_line,comp_line,target = self.get_bdm_net_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            pipline_data = self.get_bdm_net_pip_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            vals.update({'bdm_net_sample_line':bdm_net_sample_line,'comp_line':comp_line,'target':target,'bdm_net_pip_sample_line':pipline_data})
+            sample_id =self.env['audit.sample'].create(vals)
+        
         return sample_id
     
     

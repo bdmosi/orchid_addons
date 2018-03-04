@@ -41,6 +41,85 @@
 						</group>
 						<notebook>
 						       
+						     
+						     
+						     
+						      
+						      
+						      <page string="Costsheet-Net-DC" attrs="{'invisible':[('type','!=','bdm_net')]}" >
+								<field name="bdm_net_sample_line">
+									<tree editable="bottom" create="false" delete="false">
+										<field name="cost_sheet_id" readonly="1"/>
+										<button name="btn_open" type="object" icon="STOCK_FIND" string="Open" />
+										<field name="product_group_id" readonly="1"/>
+										<field name="sales" readonly="1"  sum="Total"/>
+										<field name="sales_aftr_disc" readonly="1"  sum="Total"/>
+										<field name="cost" readonly="1"  sum="Total"/>
+										<field name="profit" readonly="1"  sum="Total"/>
+										<field name="profit_percent" readonly="1"/>
+										<field name="manpower_cost" readonly="1"  sum="Total"/>
+										<field name="gp" readonly="1" sum="Total"/>
+										
+									</tree>
+								</field>
+							</page>
+							
+							  <page string="Pipeline" attrs="{'invisible':[('type','!=','bdm_net')]}" >
+								<field name="bdm_net_pip_sample_line">
+									<tree editable="bottom" create="false" delete="false">
+										<field name="cost_sheet_id" readonly="1"/>
+										<button name="btn_open" type="object" icon="STOCK_FIND" string="Open" />
+										<field name="product_group_id" readonly="1"/>
+										<field name="sales" readonly="1"  sum="Total"/>
+										<field name="sales_aftr_disc" readonly="1"  sum="Total"/>
+										<field name="cost" readonly="1"  sum="Total"/>
+										<field name="profit" readonly="1"  sum="Total"/>
+										<field name="profit_percent" readonly="1"/>
+										<field name="manpower_cost" readonly="1"  sum="Total"/>
+										<field name="gp" readonly="1" sum="Total"/>
+										
+									</tree>
+								</field>
+							</page>
+							
+							
+							
+						     
+						        <page string="Costsheet-SEC" attrs="{'invisible':[('type','!=','bdm_sec')]}" >
+								<field name="bdm_sec_sample_line">
+									<tree editable="bottom" create="false" delete="false">
+										<field name="cost_sheet_id" readonly="1"/>
+										<button name="btn_open" type="object" icon="STOCK_FIND" string="Open" />
+										<field name="product_group_id" readonly="1"/>
+										<field name="sales" readonly="1"  sum="Total"/>
+										<field name="sales_aftr_disc" readonly="1"  sum="Total"/>
+										<field name="cost" readonly="1"  sum="Total"/>
+										<field name="profit" readonly="1"  sum="Total"/>
+										<field name="profit_percent" readonly="1"/>
+										<field name="manpower_cost" readonly="1"  sum="Total"/>
+										<field name="gp" readonly="1" sum="Total"/>
+										
+									</tree>
+								</field>
+							</page>
+							
+							 <page string="Pipeline" attrs="{'invisible':[('type','!=','bdm_sec')]}" >
+								<field name="bdm_sec_pip_sample_line">
+									<tree editable="bottom" create="false" delete="false">
+										<field name="cost_sheet_id" readonly="1"/>
+										<button name="btn_open" type="object" icon="STOCK_FIND" string="Open" />
+										<field name="product_group_id" readonly="1"/>
+										<field name="sales" readonly="1"  sum="Total"/>
+										<field name="sales_aftr_disc" readonly="1"  sum="Total"/>
+										<field name="cost" readonly="1"  sum="Total"/>
+										<field name="profit" readonly="1"  sum="Total"/>
+										<field name="profit_percent" readonly="1"/>
+										<field name="manpower_cost" readonly="1"  sum="Total"/>
+										<field name="gp" readonly="1" sum="Total"/>
+										
+									</tree>
+								</field>
+							</page>
 						       
 						       <page string="Costsheet" attrs="{'invisible':[('type','!=','bdm')]}" >
 								<field name="bmd_costsheet_line">

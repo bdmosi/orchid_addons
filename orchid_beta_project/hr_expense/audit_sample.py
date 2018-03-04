@@ -54,6 +54,10 @@ class audit_sample(models.Model):
     compliance_line  =  fields.One2many('pm.compliance.line','sample_id',string="Details")
     bmd_costsheet_line = fields.One2many('bdm.costsheet.sample.line','sample_id',string="Details")
     bdm_sec_sample_line = fields.One2many('bdm.sec.sample.line','sample_id',string="Details")
+    bdm_net_sample_line = fields.One2many('bdm.net.sample.line','sample_id',string="Details")
+    
+    bdm_sec_pip_sample_line = fields.One2many('bdm.sec.pip.sample.line','sample_id',string="Details")
+    bdm_net_pip_sample_line = fields.One2many('bdm.net.pip.sample.line','sample_id',string="Details")
 
 
 
@@ -70,6 +74,100 @@ class BdmSecuritySample(models.Model):
     profit_percent = fields.Float(string="Profit Percentage")
     manpower_cost = fields.Float("Manpower Cost")
     gp = fields.Float(string="GP")
+     
+    @api.multi
+    def btn_open(self):
+       
+        return {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'od.cost.sheet',
+                'res_id':self.cost_sheet_id and self.cost_sheet_id.id or False,
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+
+            }
+
+class BdmSecurityPipSample(models.Model):
+    _name ='bdm.sec.pip.sample.line'
+    sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
+    cost_sheet_id = fields.Many2one('od.cost.sheet',string="Cost Sheet")
+    product_group_id = fields.Many2one('od.product.group',string="Product Group")
+    sales = fields.Float(string="Sales")
+    sales_aftr_disc = fields.Float(string="Sales After Discount")
+    cost = fields.Float(string="Cost")
+    profit = fields.Float(string="Profit")
+    profit_percent = fields.Float(string="Profit Percentage")
+    manpower_cost = fields.Float("Manpower Cost")
+    gp = fields.Float(string="GP")
+    
+     
+    @api.multi
+    def btn_open(self):
+       
+        return {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'od.cost.sheet',
+                'res_id':self.cost_sheet_id and self.cost_sheet_id.id or False,
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+
+            }
+    
+class BdmNetwrokSample(models.Model):
+    _name ='bdm.net.sample.line'
+    sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
+    cost_sheet_id = fields.Many2one('od.cost.sheet',string="Cost Sheet")
+    product_group_id = fields.Many2one('od.product.group',string="Product Group")
+    sales = fields.Float(string="Sales")
+    sales_aftr_disc = fields.Float(string="Sales After Discount")
+    cost = fields.Float(string="Cost")
+    profit = fields.Float(string="Profit")
+    profit_percent = fields.Float(string="Profit Percentage")
+    manpower_cost = fields.Float("Manpower Cost")
+    gp = fields.Float(string="GP")
+    
+     
+    @api.multi
+    def btn_open(self):
+       
+        return {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'od.cost.sheet',
+                'res_id':self.cost_sheet_id and self.cost_sheet_id.id or False,
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+
+            }
+    
+
+class BdmNetwrokPipSample(models.Model):
+    _name ='bdm.net.pip.sample.line'
+    sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
+    cost_sheet_id = fields.Many2one('od.cost.sheet',string="Cost Sheet")
+    product_group_id = fields.Many2one('od.product.group',string="Product Group")
+    sales = fields.Float(string="Sales")
+    sales_aftr_disc = fields.Float(string="Sales After Discount")
+    cost = fields.Float(string="Cost")
+    profit = fields.Float(string="Profit")
+    profit_percent = fields.Float(string="Profit Percentage")
+    manpower_cost = fields.Float("Manpower Cost")
+    gp = fields.Float(string="GP")
+     
+    @api.multi
+    def btn_open(self):
+       
+        return {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'od.cost.sheet',
+                'res_id':self.cost_sheet_id and self.cost_sheet_id.id or False,
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+
+            }
     
 
 
