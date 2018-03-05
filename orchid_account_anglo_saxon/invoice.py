@@ -42,6 +42,7 @@ class account_invoice_line(osv.osv):
         elif inv.type in ('in_invoice','in_refund'):
             for i_line in inv.invoice_line:
                 res.extend(self._anglo_saxon_purchase_move_lines(cr, uid, i_line, res, context=context))
+        
         return res
 
 
