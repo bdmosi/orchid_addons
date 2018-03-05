@@ -7,7 +7,7 @@
 	'summary': 'Orchid Beta Project',
 	'author': 'OrchidERP',
 	'website': 'https://orchiderp.com',
-	'depends': ['base','project','project_issue','hr','orchid_product','mail','analytic','hr_expense','orchid_cost_centre','orchid_cost_sheet'],
+	'depends': ['base','project','project_issue','hr','orchid_product','mail','analytic','hr_expense','orchid_cost_centre','orchid_cost_sheet','web'],
 	'data': [
 			'security/ir.model.access.csv',
 			'data/mail_template.xml',
@@ -42,6 +42,7 @@
             'hr_expense/audit_sample_view.xml',
             'hr_expense/audit_template_view.xml',
              'hr_expense/cert_view.xml',
+             'views/widget_view.xml',
 			],
 	'demo': [],
 	'test': [],

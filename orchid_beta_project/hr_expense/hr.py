@@ -1012,11 +1012,21 @@ class hr_employee(models.Model):
             discount = abs(sale.od_discount) or 0.0
             project_value = amount_total - discount
             customer_invoice = invoice_pool.search([('od_analytic_account','=',project.id),('type','=','out_invoice'),('state','not in',('draft','cancel'))])
+            customer_refund = invoice_pool.search([('od_analytic_account','=',project.id),('type','=','out_refund'),('state','not in',('draft','cancel'))])
             supplier_invoice = invoice_pool.search([('od_analytic_account','=',project.id),('type','=','in_invoice'),('state','not in',('draft','cancel'))])
+            supplier_refund= invoice_pool.search([('od_analytic_account','=',project.id),('type','=','in_refund'),('state','not in',('draft','cancel'))])
             customer_inv_amount = sum([inv.amount_total for inv in customer_invoice])
             supplier_inv_amount =sum([inv.amount_total for inv in supplier_invoice])
+            
+            customer_refund_amount = sum([inv.amount_total - inv.residual for inv in customer_refund])
+            supplier_refund_amount =sum([inv.amount_total - inv.residual for inv in supplier_refund])
+            
             collected = sum([inv.amount_total - inv.residual for inv in customer_invoice])
             paid = sum([inv.amount_total - inv.residual for inv in supplier_invoice])
+            
+            collected = collected - customer_refund_amount
+            paid = paid - supplier_refund_amount
+            
             if collected == customer_inv_amount and supplier_inv_amount== paid:
                 continue
             total_paid += project_value

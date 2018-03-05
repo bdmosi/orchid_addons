@@ -47,8 +47,8 @@
 									<tree editable="bottom" create="false" delete="false">
 										<field name="analytic_id" readonly="1"/>
 										<button name="btn_open" type="object" icon="STOCK_FIND" string="Open" />
-										<field name="paid" readonly="1"  sum="Total"/>
-										<field name="collected" readonly="1"  sum="Total"/>
+										<field name="paid" readonly="1"  sum="Total" widget="my_widget"/>
+										<field name="collected" readonly="1"  sum="Total" widget="green_widget"/>
 										<field name="project_value" readonly="1"  sum="Total"/>
 									</tree>
 								</field>
@@ -60,8 +60,8 @@
 										<field name="analytic_id" readonly="1"/>
 										<button name="btn_open" type="object" icon="STOCK_FIND" string="Open" />
 										<field name="paid" readonly="1"  sum="Total"/>
-										<field name="collected" readonly="1"  sum="Total"/>
-										<field name="project_value" readonly="1"  sum="Total"/>
+										<field name="collected" readonly="1"  sum="Total" widget="green_widget"/>
+										<field name="project_value" readonly="1"  sum="Total" widget="my_widget"/>
 									</tree>
 								</field>
 							</page>
