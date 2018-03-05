@@ -3462,7 +3462,7 @@ class od_cost_sheet(models.Model):
         current_line = self.env['sale.order.line']
         # pprint(order_vals)
         discount = self.special_discount
-        sale_id.write({'od_discount':discount})
+#         sale_id.write({'od_discount':discount})
         for _,_,line in order_vals:
             sale_order_line = sale_line.search([('order_id','=',sale_id.id),('product_id','=',line.get('product_id')),('od_inactive','=',False)])
             if sale_order_line:
@@ -3482,11 +3482,11 @@ class od_cost_sheet(models.Model):
         (old_lines - current_line).write({'product_uom_qty':0,'price_unit':0.0,'purchase_price':0.0,'od_inactive':True})
 
     def write_analytic_map_sale_order(self,anal_maped_dict,so_vals,so_line_map):
-        od_discount = so_vals.get('od_discount',0)
+        od_discount = so_vals.get('x_discount',0)
         new_sale_ob = False
         if od_discount:
             discount = od_discount
-#             so_line_map = self.apply_discount_write(so_line_map,discount)
+            so_line_map = self.apply_discount_write(so_line_map,discount)
         new_analytic_so_map = {}
         second_analytic_so_map = {}
         new_tab_so_map ={}
@@ -3555,10 +3555,10 @@ class od_cost_sheet(models.Model):
 
 
     def create_analytic_map_sale_order(self,anal_maped_dict,so_vals,so_line_map):
-        od_discount = so_vals.get('od_discount',0)
-#         if od_discount:
-#             discount = od_discount
-#             so_line_map = self.apply_discount_create(so_line_map,discount)
+        od_discount = so_vals.get('x_discount',0)
+        if od_discount:
+            discount = od_discount
+            so_line_map = self.apply_discount_create(so_line_map,discount)
         analytic = self.env['account.analytic.account']
         for analytic_id,tabs in anal_maped_dict.iteritems():
             so_vals['project_id'] = analytic_id
@@ -4153,7 +4153,7 @@ class od_cost_sheet(models.Model):
             'od_order_type_id':od_order_type_id,
             'od_cost_sheet_id':self.id,
             'section_id':section_id,
-            'od_discount':discount,
+            'x_discount':discount,
             'od_approved_date':self.approved_date,
         }
         if od_order_type_id in (12,26):

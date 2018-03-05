@@ -15,7 +15,7 @@
             	<field name='od_freight_charge'/> -->
             </xpath>
              <field name="amount_untaxed" position="after">
-                <field name="od_discount"/>
+                <field name="od_discount" invisible="1"/>
                </field>
               <field name="amount_total" position="after"> 
               <h2>
