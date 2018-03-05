@@ -378,25 +378,30 @@ class task(models.Model):
     
     def check_task_user_overlap(self,vals):
         imp_cod = vals.get('od_implementation_id',False)
-        print "imp code>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",imp_cod
         if imp_cod:
             task = self.env['project.task']
             user_id = vals.get('user_id')
             date_start = vals.get('date_start')
             date_end = vals.get('date_end')
-            print "user id>>>>>>>>>>>>>>>>>",user_id,date_end
             dom = [('user_id','=',user_id),('date_start','>=',date_start),('date_start','<=',date_end)]
             tasks = task.search(dom)
-            task_ids = [tk.id for tk in tasks]
-            print "task ids>>>>>>>>>>>>>>>>>>>>1>>>>>>",task_ids
-            if len(tasks)>0:
-                raise Warning("Task Overlap!!!!!This User Assigned Another Task in This Time with these %s Active  Task Ids "%task_ids)
+            for tk in tasks:
+                if tk.od_stage =='cancel_by_tl':
+                    continue
+                elif tk.od_stage =='done' and tk.od_date_done <= date_start:
+                    continue
+                else:
+                    raise Warning("Task Overlap!!!!!This User Assigned Another Task in This Time with these %s Active  Task Ids "%tk.id)
             dom = [('user_id','=',user_id),('date_end','>=',date_start),('date_end','<=',date_end)]
             tasks = task.search(dom)
-            task_ids = [tk.id for tk in tasks]
-            print "task ids>>>>>>>>>>>>>>>>>>>>>>>>>>",task_ids
-            if len(task_ids)>0:
-                raise Warning("Task Overlap!!!!!This User Assigned Another Task in This Time with these %s Active  Task Ids "%task_ids)
+            for tk in tasks:
+                if tk.od_stage =='cancel_by_tl':
+                    continue
+                elif tk.od_stage =='done' and tk.od_date_done <= date_start:
+                    continue
+                else:
+                    raise Warning("Task Overlap!!!!!This User Assigned Another Task in This Time with these %s Active  Task Ids "%tk.id)
+            
             
     @api.constrains('date_start','date_end',)
     def check_date(self):
