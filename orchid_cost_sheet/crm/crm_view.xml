@@ -100,7 +100,7 @@
              <tbody>
              <tr>
              <td><field name="financial_proposal" /><label string="Financial Proposal" /></td>
-             <td> <field name="od_req_on_7" nolabel="1" /></td>
+             <td> <field name="od_req_on_7" required="1" nolabel="1" /></td>
              <td><field name="od_status_id_7" nolabel="1"/></td>
              <td><field name="finished_on_7" nolabel="1" readonly="1" /></td>
              </tr>

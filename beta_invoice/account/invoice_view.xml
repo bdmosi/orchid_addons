@@ -85,8 +85,12 @@
           <field name="model">account.invoice</field>
           <field name="inherit_id" ref="account.invoice_supplier_form" />
           <field name="arch" type="xml">
+          		
+          			<field name="partner_id" position="after">
+               		<field name="od_analytic_account" required="1"/>
+               	</field>
+          		
           		<xpath expr="//notebook[last()]" position="inside">
-               
                  <page string="Cost Center">
                  <group>
                  	<group>

@@ -28,7 +28,7 @@ class audit_sample(models.Model):
     type = fields.Selection([('post_sales','Post Sales'),('pre_sales','Pre-Sales Engineer'),
                              ('pre_sales_mgr','Pre-Sales Manager'),('sales_acc_mgr','Sales Account Manager'),
                              ('bdm','BDM'), ('bdm_sec','BDM-SEC'),('bdm_net','BDM-NET-DC'),('ttl','Technical Team Leader'),
-                             ('pm','Project Manager'),
+                             ('pm','Project Manager'),('pmo','PMO Director')
                              ],string="Type",required=True)
     employee_id = fields.Many2one('hr.employee',string="Employee")
     method = fields.Text(string="Method")
@@ -59,9 +59,53 @@ class audit_sample(models.Model):
     bdm_sec_pip_sample_line = fields.One2many('bdm.sec.pip.sample.line','sample_id',string="Details")
     bdm_net_pip_sample_line = fields.One2many('bdm.net.pip.sample.line','sample_id',string="Details")
 
+    pmo_open_project_line = fields.One2many('pmo.open.project.sample','sample_id',string="Details")
+    pmo_closed_project_line = fields.One2many('pmo.closed.project.sample','sample_id',string="Details")
+    
 
 
+class PmoOpenProjects(models.Model):
+    _name ="pmo.open.project.sample"
+    sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
+    analytic_id = fields.Many2one('account.analytic.account',string="Analytic/Project")
+    paid = fields.Float(string="Paid to Supplier")
+    collected = fields.Float(string="Collected From Customer")
+    project_value = fields.Float(string="Project Value")
+    
+    @api.multi
+    def btn_open(self):
+       
+        return {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'account.analytic.account',
+                'res_id':self.analytic_id and self.analytic_id.id or False,
+                'type': 'ir.actions.act_window',
+                'target': 'new',
 
+            }
+    
+class PmoClosedProjects(models.Model):
+    _name ="pmo.closed.project.sample"
+    sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
+    analytic_id = fields.Many2one('account.analytic.account',string="Analytic/Project")
+    paid = fields.Float(string="Paid to Supplier")
+    collected = fields.Float(string="Collected From Customer")
+    project_value = fields.Float(string="Project Value")
+    
+    @api.multi
+    def btn_open(self):
+       
+        return {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'account.analytic.account',
+                'res_id':self.analytic_id and self.analytic_id.id or False,
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+
+            }
+    
 class BdmSecuritySample(models.Model):
     _name ='bdm.sec.sample.line'
     sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")

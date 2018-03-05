@@ -33,9 +33,23 @@
             <field name="od_type_of_project" attrs="{'invisible':[('type','!=','contract')],'required':[('type','=','contract')]}"/>
         </field>
         <xpath expr="//div[@name=&quot;buttons&quot;]" position="inside">
-                  <button name="od_btn_open_invoice_lines" type="object" class="oe_stat_button"  icon="fa-pencil-square-o"  >
-                        <div><strong><field name="od_amnt_invoiced" /></strong><br/>Invoiced</div>
+              <button name="od_btn_open_customer_invoice" type="object" class="oe_stat_button"  icon="fa-pencil-square-o"  >
+                        <div><strong><field name="od_amnt_invoiced" /></strong><br/>Customer Invoices</div>
             </button>
+            
+             <button name="od_btn_open_customer_refund" type="object" class="oe_stat_button"  icon="fa-pencil-square-o"  >
+                        <div><strong><field name="od_cust_refund_amt" /></strong><br/>Customer Refund</div>
+            </button>
+            
+             <button name="od_btn_open_sup_invoice" type="object" class="oe_stat_button"  icon="fa-pencil-square-o"  >
+                        <div><strong><field name="od_sup_inv_amt" /></strong><br/>Supplier Invoice</div>
+            </button>
+            
+             <button name="od_btn_open_sup_refund" type="object" class="oe_stat_button"  icon="fa-pencil-square-o"  >
+                        <div><strong><field name="od_sup_refund_amt" /></strong><br/>Supplier Refund</div>
+            </button>
+            
+            
              <button name="od_btn_open_purchase_lines" type="object" class="oe_stat_button"  icon="fa-list"  >
                        <div><strong><field name="od_amnt_purchased" /></strong><br/>Supplier PO's</div>
              </button>

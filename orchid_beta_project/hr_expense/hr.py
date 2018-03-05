@@ -8,7 +8,7 @@ from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 class hr_employee(models.Model):
     _inherit ="hr.employee"
     
-   
+    
     mgr_score_selection =[(x, x) for x in range(1,11)]
     #audit fileds
     audit_temp_id = fields.Many2one('audit.template',string="Audit Template")
@@ -190,6 +190,47 @@ class hr_employee(models.Model):
     mgr_feedback12 = fields.Boolean(string="Manager Feedback")
     mgr_score12 = fields.Selection(mgr_score_selection,string="Manager Score")
     utl12= fields.Float(string="Utilization")
+    
+    
+    def get_product_id_from_param(self,product_param):
+        parameter_obj = self.env['ir.config_parameter']
+        key =[('key', '=', product_param)]
+        product_param_obj = parameter_obj.search(key)
+        if not product_param_obj:
+            raise Warning(_('Settings Warning!'),_('NoParameter Not defined\nconfig it in System Parameters with %s'%product_param))
+        product_id = product_param_obj.od_model_id and product_param_obj.od_model_id.id or False
+        return product_id
+    
+    
+    def get_default_product_id(self):
+        company_id = self.company_id and self.company_id.id
+        param ='uae_engineer_product'
+        if company_id ==6:
+            param ='ksa_engineer_product'
+        product_id = self.get_product_id_from_param(param)
+        return product_id
+    
+    def get_default_timesheet_journal_id(self):
+        company_id = self.company_id and self.company_id.id
+        param ='uae_engineer_timesheet'
+        if company_id ==6:
+            param ='ksa_engineer_timesheet'
+        journal_id = self.get_product_id_from_param(param)
+        return journal_id
+    
+    
+    
+    
+    product_id = fields.Many2one('product.product',string="Product",domain=[('type','=','service')],default=get_default_product_id)
+    journal_id = fields.Many2one('account.analytic.journal',string="Analytic Journal",default=get_default_timesheet_journal_id)
+    
+    
+      
+    
+   
+    
+    
+    
     
     def get_execution_number(self):
         mstr = 'execute'
@@ -936,7 +977,56 @@ class hr_employee(models.Model):
                     result.append((0,0,{'cost_sheet_id':sheet.id,'gp':line.total_gp,'sales':line.total_sale,'sales_aftr_disc':line.sale_aftr_disc,'cost':line.total_cost,
                                         'profit':line.profit,'profit_percent':line.profit_percent,'manpower_cost':line.manpower_cost,'product_group_id':line.pdt_grp_id.id}))
                   
-        return result 
+        return result
+    
+    
+    
+        
+    def get_pmo_dir_data(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):
+        open_projects = []
+        closed_projects =[]
+        analytic_pool = self.env['account.analytic.account']
+        company_id = self.company_id and self.company_id.id
+        open_project_ids = analytic_pool.search([('company_id','=',company_id),('od_type_of_project','not in',('amc','o_m','credit')),('state','not in',('close','cancelled'))])
+        closed_project_ids = analytic_pool.search([('company_id','=',company_id),('od_type_of_project','not in',('amc','o_m','credit')),('state','=','close')])
+        sale_pool = self.env['sale.order']
+        invoice_pool = self.env['account.invoice']
+        total_collected =0.0
+        total_paid =0.0
+        for project in open_project_ids:
+            sale = sale_pool.search([('project_id','=',project.id),('state','!=','cancel')],limit=1)
+            amount_total = sale.amount_total or 0.0
+            discount = abs(sale.od_discount) or 0.0
+            project_value = amount_total - discount
+            customer_invoice = invoice_pool.search([('od_analytic_account','=',project.id),('type','=','out_invoice'),('state','not in',('draft','cancel'))])
+            supplier_invoice = invoice_pool.search([('od_analytic_account','=',project.id),('type','=','in_invoice'),('state','not in',('draft','cancel'))])
+            collected = sum([inv.amount_total - inv.residual for inv in customer_invoice])
+            paid = sum([inv.amount_total - inv.residual for inv in supplier_invoice])
+            total_collected += collected
+            total_paid += paid
+            open_projects.append((0,0,{'analytic_id':project.id,'project_value':project_value,'collected':collected,'paid':paid}))
+            
+        for project in closed_project_ids:
+            sale = sale_pool.search([('project_id','=',project.id),('state','!=','cancel')],limit=1)
+            amount_total = sale.amount_total or 0.0
+            discount = abs(sale.od_discount) or 0.0
+            project_value = amount_total - discount
+            customer_invoice = invoice_pool.search([('od_analytic_account','=',project.id),('type','=','out_invoice'),('state','not in',('draft','cancel'))])
+            supplier_invoice = invoice_pool.search([('od_analytic_account','=',project.id),('type','=','in_invoice'),('state','not in',('draft','cancel'))])
+            customer_inv_amount = sum([inv.amount_total for inv in customer_invoice])
+            supplier_inv_amount =sum([inv.amount_total for inv in supplier_invoice])
+            collected = sum([inv.amount_total - inv.residual for inv in customer_invoice])
+            paid = sum([inv.amount_total - inv.residual for inv in supplier_invoice])
+            if collected == customer_inv_amount and supplier_inv_amount== paid:
+                continue
+            total_paid += project_value
+            total_collected += collected
+            closed_projects.append((0,0,{'analytic_id':project.id,'project_value':project_value,'collected':collected,'paid':paid})) 
+        res =0.0
+        if total_paid:
+            res = total_collected/float(total_paid)
+        comp_line =[(0,0,{'name':'Cash Flow Management','weight':100,'score':res*100.0,'final_score':res*100.0})]
+        return open_projects,closed_projects,comp_line
     
     def update_audit_sample(self,sample_id,aud_date_start,aud_date_end,audit_temp_id):
         type = audit_temp_id.type
@@ -1008,7 +1098,15 @@ class hr_employee(models.Model):
             sample_id.bdm_net_pip_sample_line.unlink()
             sample_id.comp_line.unlink()
             sample_id.write({'bdm_net_sample_line':bdm_net_sample_line,'comp_line':comp_line,'target':target,'bdm_net_pip_sample_line':pipline_data})
-
+        
+        
+        
+        if type == 'pmo':
+            pmo_open_project_line,pmo_closed_project_line,comp_line = self.get_pmo_dir_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            sample_id.pmo_open_project_line.unlink()
+            sample_id.pmo_closed_project_line.unlink()
+            sample_id.comp_line.unlink()
+            sample_id.write({'pmo_open_project_line':pmo_open_project_line,'comp_line':comp_line,'pmo_closed_project_line':pmo_closed_project_line})
     
     def create_audit_sample(self,aud_date_start,aud_date_end,audit_temp_id):
         type = audit_temp_id.type
@@ -1059,6 +1157,13 @@ class hr_employee(models.Model):
             vals.update({'dayscore_line':day_score_vals,'cost_control_line':cost_control_vals,'invoice_schedule_line':invoice_schedule_vals,
                          'compliance_line':compliance_vals,'comp_line':comp_line})
             sample_id =self.env['audit.sample'].create(vals)
+        
+        
+        if type == 'pmo':
+            pmo_open_project_line,pmo_closed_project_line,comp_line = self.get_pmo_dir_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            vals.update({'pmo_open_project_line':pmo_open_project_line,'pmo_closed_project_line':pmo_closed_project_line,'comp_line':comp_line})
+            sample_id =self.env['audit.sample'].create(vals)
+            
         if type == 'bdm':
             bmd_costsheet_line,comp_line,target = self.get_bdm_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
             vals.update({'bmd_costsheet_line':bmd_costsheet_line,'comp_line':comp_line,'target':target})

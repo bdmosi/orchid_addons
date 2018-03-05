@@ -292,16 +292,7 @@ class account_analytic_account(models.Model):
         self.od_amended_profit = amended_profit
         self.od_amended_profit_perc = amended_profit_perc
         self.od_planned_timesheet_cost = planned_timesheet_cost
-    @api.one
-    def od_get_total_invoice(self):
-        invoice_line = self.env['account.invoice.line']
-        analytic_id = self.id
-        domain = [('account_analytic_id','=',analytic_id)]
-        lines = invoice_line.search(domain)
-        if lines:
-            amount = sum([line.price_subtotal for line in lines if line.invoice_id.state not in ('draft','cancel')])
-            self.od_amnt_invoiced = amount
-            self.od_amnt_invoiced2= amount
+    
 
     @api.one
     def od_get_total_purchase(self):
@@ -313,19 +304,48 @@ class account_analytic_account(models.Model):
             amount = sum([line.price_subtotal for line in lines])
             self.od_amnt_purchased = amount
             self.od_amnt_purchased2 = amount
-    @api.multi
-    def od_btn_open_invoice_lines(self):
+#     @api.multi
+#     def od_btn_open_invoice_lines(self):
+#         analytic_id = self.id
+#         inv_li_pool = self.env['account.invoice.line']
+#         domain = [('account_analytic_id','=',analytic_id)]
+#         raw_inv_ids = inv_li_pool.search(domain)
+#         inv_li_ids = [line.id for line in raw_inv_ids if line.invoice_id.state not in ('draft','cancel')]
+#         dom = [('id','in',inv_li_ids)]
+#         return {
+#             'domain':dom,
+#             'view_type': 'form',
+#             'view_mode': 'tree,form',
+#             'res_model': 'account.invoice.line',
+#             'type': 'ir.actions.act_window',
+#         }
+        
+    
+    
+    
+    @api.one
+    def od_get_total_invoice(self):
         analytic_id = self.id
-        inv_li_pool = self.env['account.invoice.line']
-        domain = [('account_analytic_id','=',analytic_id)]
-        raw_inv_ids = inv_li_pool.search(domain)
-        inv_li_ids = [line.id for line in raw_inv_ids if line.invoice_id.state not in ('draft','cancel')]
+        invoice_pool = self.env['account.invoice']
+        domain = [('od_analytic_account','=',analytic_id),('type','=','out_invoice'),('state','not in',('draft','cancel'))]
+        inv_ids = invoice_pool.search(domain)
+        amount_total = sum([inv.amount_total for inv in inv_ids])
+        self.od_amnt_invoiced = amount_total
+        self.od_amnt_invoiced2= amount_total
+    
+    @api.multi
+    def od_btn_open_customer_invoice(self):
+        analytic_id = self.id
+        invoice_pool = self.env['account.invoice']
+        domain = [('od_analytic_account','=',analytic_id),('type','=','out_invoice'),('state','not in',('draft','cancel'))]
+        inv_ids = invoice_pool.search(domain)
+        inv_li_ids = [inv.id for inv in inv_ids]
         dom = [('id','in',inv_li_ids)]
         return {
             'domain':dom,
             'view_type': 'form',
             'view_mode': 'tree,form',
-            'res_model': 'account.invoice.line',
+            'res_model': 'account.invoice',
             'type': 'ir.actions.act_window',
         }
 
@@ -727,6 +747,95 @@ class account_analytic_account(models.Model):
     od_meeting_count = fields.Integer(string="Meeting Count",compute="_od_meeting_count")
     od_amnt_invoiced = fields.Float(string="Customer Invoice Amount",compute="od_get_total_invoice")
     od_amnt_invoiced2 = fields.Float(string="Customer Invoice Amount",compute="od_get_total_invoice")
+   
+    
+    
+    
+    @api.one
+    def od_get_cust_refund(self):
+        analytic_id = self.id
+        invoice_pool = self.env['account.invoice']
+        domain = [('od_analytic_account','=',analytic_id),('type','=','out_refund'),('state','not in',('draft','cancel'))]
+        inv_ids = invoice_pool.search(domain)
+        amount_total = sum([inv.amount_total for inv in inv_ids])
+        self.od_cust_refund_amt = amount_total
+       
+    
+    @api.multi
+    def od_btn_open_customer_refund(self):
+        analytic_id = self.id
+        invoice_pool = self.env['account.invoice']
+        domain = [('od_analytic_account','=',analytic_id),('type','=','out_refund'),('state','not in',('draft','cancel'))]
+        inv_ids = invoice_pool.search(domain)
+        inv_li_ids = [inv.id for inv in inv_ids]
+        dom = [('id','in',inv_li_ids)]
+        return {
+            'domain':dom,
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'account.invoice',
+            'type': 'ir.actions.act_window',
+        }
+    
+    @api.one
+    def od_get_sup_inv_amnt(self):
+        analytic_id = self.id
+        invoice_pool = self.env['account.invoice']
+        domain = [('od_analytic_account','=',analytic_id),('type','=','in_invoice'),('state','not in',('draft','cancel'))]
+        inv_ids = invoice_pool.search(domain)
+        amount_total = sum([inv.amount_total for inv in inv_ids])
+        self.od_sup_inv_amt = amount_total
+       
+    
+    @api.multi
+    def od_btn_open_sup_invoice(self):
+        analytic_id = self.id
+        invoice_pool = self.env['account.invoice']
+        domain = [('od_analytic_account','=',analytic_id),('type','=','in_invoice'),('state','not in',('draft','cancel'))]
+        inv_ids = invoice_pool.search(domain)
+        inv_li_ids = [inv.id for inv in inv_ids]
+        dom = [('id','in',inv_li_ids)]
+        return {
+            'domain':dom,
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'account.invoice',
+            'type': 'ir.actions.act_window',
+        }
+    
+    
+    @api.one
+    def od_get_sup_refund_amnt(self):
+        analytic_id = self.id
+        invoice_pool = self.env['account.invoice']
+        domain = [('od_analytic_account','=',analytic_id),('type','=','in_refund'),('state','not in',('draft','cancel'))]
+        inv_ids = invoice_pool.search(domain)
+        amount_total = sum([inv.amount_total for inv in inv_ids])
+        self.od_sup_refund_amt = amount_total
+       
+    
+    @api.multi
+    def od_btn_open_sup_refund(self):
+        analytic_id = self.id
+        invoice_pool = self.env['account.invoice']
+        domain = [('od_analytic_account','=',analytic_id),('type','=','in_refund'),('state','not in',('draft','cancel'))]
+        inv_ids = invoice_pool.search(domain)
+        inv_li_ids = [inv.id for inv in inv_ids]
+        dom = [('id','in',inv_li_ids)]
+        return {
+            'domain':dom,
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'account.invoice',
+            'type': 'ir.actions.act_window',
+        }
+    
+    
+    
+    
+    od_cust_refund_amt = fields.Float(string="Customer Refund Amount",compute="od_get_cust_refund")
+    od_sup_inv_amt = fields.Float(string="Supplier Invoice Amount",compute="od_get_sup_inv_amnt")
+    od_sup_refund_amt = fields.Float(string="Supplier Invoice Amount",compute="od_get_sup_refund_amnt")
     od_amnt_purchased = fields.Float(string="Supplier Purchase Amount",compute="od_get_total_purchase")
     od_amnt_purchased2 = fields.Float(string="Supplier Purchase Amount",compute="od_get_total_purchase")
     

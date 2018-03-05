@@ -35,14 +35,36 @@
 								<field name="method" readonly="1"  />
 							</group>
 							<group>
-							<field name="target" readonly="1" attrs="{'invisible':[('type','not in',('sales_acc_mgr','bdm'))]}"/>
+							<field name="target" readonly="1" attrs="{'invisible':[('type','not in',('sales_acc_mgr','bdm','bdm_sec','bdm_net'))]}"/>
 								<field name="utilization" readonly="1"   attrs="{'invisible':[('type','!=','post_sales')]}"/>
 							</group>
 						</group>
 						<notebook>
 						       
 						     
-						     
+						     <page string="Open Projects" attrs="{'invisible':[('type','!=','pmo')]}" >
+								<field name="pmo_open_project_line">
+									<tree editable="bottom" create="false" delete="false">
+										<field name="analytic_id" readonly="1"/>
+										<button name="btn_open" type="object" icon="STOCK_FIND" string="Open" />
+										<field name="paid" readonly="1"  sum="Total"/>
+										<field name="collected" readonly="1"  sum="Total"/>
+										<field name="project_value" readonly="1"  sum="Total"/>
+									</tree>
+								</field>
+							</page>
+							
+							<page string="Closed Projects" attrs="{'invisible':[('type','!=','pmo')]}" >
+								<field name="pmo_closed_project_line">
+									<tree editable="bottom" create="false" delete="false">
+										<field name="analytic_id" readonly="1"/>
+										<button name="btn_open" type="object" icon="STOCK_FIND" string="Open" />
+										<field name="paid" readonly="1"  sum="Total"/>
+										<field name="collected" readonly="1"  sum="Total"/>
+										<field name="project_value" readonly="1"  sum="Total"/>
+									</tree>
+								</field>
+							</page>
 						     
 						      
 						      

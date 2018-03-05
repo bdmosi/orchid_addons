@@ -23,6 +23,9 @@ class account_invoice(models.Model):
         convert_amount_in_words = amount_to_ar.amount_to_text_ar(amount, currency='')        
         return convert_amount_in_words
     
+    
+    
+    od_analytic_account = fields.Many2one('account.analytic.account',string='Analytic Account') 
     reason_for_credit_note = fields.Char(string="Reason For Credit Note")
     reason_for_debit_note = fields.Char(string="Reason For Debit Note")
     bank1_id = fields.Many2one('res.partner.bank',string="Bank 1",readonly=True,states={'draft':[('readonly',False)]})
