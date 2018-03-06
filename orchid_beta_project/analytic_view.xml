@@ -123,9 +123,9 @@
                     <tr>
                     <td><strong>Date Start</strong></td>
                     <td><field name="date_start" /></td>
-                    <td><field name="od_project_start" /></td>
-                    <td><field name="od_amc_start" /></td>
-                    <td><field name="od_om_start" /></td>
+                    <td><field name="od_project_start" attrs="{'readonly':[('od_project_status','!=','inactive')]}" /></td>
+                    <td><field name="od_amc_start" attrs="{'readonly':[('od_amc_status','!=','inactive')]}"/></td>
+                    <td><field name="od_om_start" attrs="{'readonly':[('od_amc_status','=','inactive')]}"/></td>
                     
                     
                     
@@ -133,9 +133,9 @@
                     <tr>
                     <td><strong>Date End</strong></td>
                     <td><field name="date" /></td>
-                    <td><field name="od_project_end" /></td>
-                    <td><field name="od_amc_end" /></td>
-                    <td><field name="od_om_end" /></td>
+                    <td><field name="od_project_end" attrs="{'readonly':[('od_project_status','!=','inactive')]}"/></td>
+                    <td><field name="od_amc_end" attrs="{'readonly':[('od_amc_status','!=','inactive')]}"/></td>
+                    <td><field name="od_om_end" attrs="{'readonly':[('od_amc_status','!=','inactive')]}"/></td>
                     </tr>
                    
                      <tr>

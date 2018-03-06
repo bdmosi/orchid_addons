@@ -7,7 +7,8 @@ class audit_template(models.Model):
     type = fields.Selection([('post_sales','Post Sales'),('pre_sales','Pre-Sales Engineer'),
                              ('pre_sales_mgr','Pre-Sales Manager'),('sales_acc_mgr','Sales Account Manager'),
                              ('bdm','BDM'), ('bdm_sec','BDM-SEC'),('bdm_net','BDM-NET-DC'),('ttl','Technical Team Leader'),
-                             ('pm','Project Manager'),('pmo','PMO Director')
+                             ('pm','Project Manager'),('pmo','PMO Director'),
+                             ('tc','Technology Consultant'),
                              ],string="Type",required=True)
     desc  = fields.Text(string="Description")
     calc = fields.Text(string="Calculation Method")

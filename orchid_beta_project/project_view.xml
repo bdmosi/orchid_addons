@@ -245,7 +245,7 @@
             	<xpath expr="/form/sheet/notebook/page[@string='Work']" position="after">
             	<page string="Activity Report" attrs="{'invisible': [('od_type','!=','activities')]}">
             	<group>
-            		<field name="od_date_done" />
+            		<field name="od_date_done" readonly="1"/>
                     <field name="od_initial_description" />
             		<field name="od_action_taken" />
             		<field name="od_final_result" />

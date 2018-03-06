@@ -310,11 +310,13 @@ class hr_employee(models.Model):
         task_ids  =task.search(domain)
         if task_ids:
             no_of_cancel_act = len(task_ids)
-            tolerance = no_of_cancel_act/float(engineer_task_count)
+            tolerance =0.0
+            if engineer_task_count:
+                tolerance = no_of_cancel_act/float(engineer_task_count)
             if tolerance>10:
                 return {'score':0.0,'weight_task':True}
             else:
-                return {'score':1.0,'weight_task':True}
+                return {'score':100.0,'weight_task':True}
                 
         else:
             return {'weight_task':False,'score':0.0}
@@ -405,7 +407,81 @@ class hr_employee(models.Model):
         comp_data.append((0,0,{'name':'Finished On Time','weight':wt_fot,'score':fot_score,'final_score':(wt_fot/100.0) * fot_score}))
         comp_data.append((0,0,{'name':'Team Utilization','weight':wt_utl,'score':utl_score*100,'final_score':wt_utl * utl_score}))
         if wt_tsk_cncl:
-            comp_data.append((0,0,{'name':'Percentage Of Cancelled Activities','weight':wt_tsk_cncl,'score':tsk_cncl_scr,'final_score':wt_tsk_cncl * tsk_cncl_scr}))
+            comp_data.append((0,0,{'name':'Percentage Of Cancelled Activities','weight':wt_tsk_cncl,'score':tsk_cncl_scr,'final_score':(wt_tsk_cncl/100.0) * tsk_cncl_scr}))
+        if wt_esc:
+            comp_data.append((0,0,{'name':'Escalation From Activity Owner','weight':wt_esc,'score':esc_scr*100,'final_score':wt_esc * esc_scr})) 
+        return result,fot_data,comp_data
+    
+    
+    def get_tech_cons_ps_vals(self,sample_id,aud_date_start,aud_date_end,audit_temp_id):
+        type = audit_temp_id.type
+        usr_id  = self.user_id and self.user_id.id
+        employee_id = self.id
+        dt_start = aud_date_start
+        result = []
+        eng_ids = self.search([('coach_id','=',employee_id)]) 
+        user_ids = [emp.user_id.id for emp in eng_ids if (emp.audit_temp_id and emp.audit_temp_id.type =='post_sales')] + [usr_id]
+        data_model = 'project.task'
+        avl_time = self.get_available_time(dt_start,aud_date_end) or 1
+        aud_date_start = aud_date_start +' 04:00:00'
+        aud_date_end = aud_date_end + ' 23:58:58'
+        fot_data = []
+        engineer_task_count = 0
+        utl_list = []
+        fot_list =[]
+        for user_id in user_ids:
+            domain = [('od_type','=','activities'),('user_id','=',user_id),('od_stage','=','done')]
+            domain.extend([('date_start','>=',aud_date_start),('date_start','<=',aud_date_end)]) 
+            data_ids =self.env[data_model].search(domain)
+            spent_time = sum([dat.od_actual for dat in data_ids])
+            fot_board = [dat.od_end_kpi*(100/60.0) for dat in data_ids]
+            fot = self.get_avg_score(fot_board)
+            engineer_task_count += len(data_ids)
+#             for data in data_ids:
+#                 spent_time += sum([work.hours for work in data.work_ids])
+            utl = spent_time/float(avl_time)
+            result.append((0,0,{'user_id':user_id,'available_time':avl_time,'actual_time_spent':spent_time,'utl':(spent_time/avl_time)*100.0}))
+            fot_data.append((0,0,{'user_id':user_id,'fot':fot}))
+            utl  = (utl/0.65)
+            utl_list.append(utl)
+            fot_list.append(fot)
+            
+        utl_score =  self.get_avg_score(utl_list)  
+        fot_score  = self.get_avg_score(fot_list)   
+        cancelled_activities = self.get_cancelled_activities(self.user_id.id,aud_date_start,aud_date_end,engineer_task_count) 
+        escalation_activities = self.get_escalation_activities(aud_date_start,aud_date_end,user_ids)
+        weight_escalate = escalation_activities.get('weight_escalate',False)
+        weight_task_cancel = cancelled_activities.get('weight_task',False)
+        wt_esc = wt_tsk_cncl = wt_utl = wt_fot =0.0
+        if weight_escalate and not weight_task_cancel:
+            wt_esc= 10+ (10 *(30/70.0))
+            wt_tsk_cncl =0.0
+            wt_utl = 30+ (30 *(30/70.0))
+            wt_fot = 30+ (30 *(30/70.0))
+        if not weight_escalate and weight_task_cancel:
+            wt_esc= 0.0
+            wt_tsk_cncl =30+ (30 *(10/90.0))
+            wt_utl = 30+ (30 *(10/90.0))
+            wt_fot = 30+ (30 *(10/90.0))
+        if not weight_escalate and not weight_task_cancel:
+            wt_esc= 0.0
+            wt_tsk_cncl =0.0
+            wt_utl = 30+ (30 *(40/60.0))
+            wt_fot = 30+ (30 *(40/60.0))
+                
+        if weight_escalate and weight_task_cancel:
+                
+            wt_esc= 10
+            wt_tsk_cncl =30
+            wt_utl = 30
+            wt_fot = 30
+        tsk_cncl_scr = cancelled_activities.get('score',0.0)
+        esc_scr =escalation_activities.get('score',0.0)
+        comp_data = []
+        comp_data.append((0,0,{'name':'Finished On Time','weight':wt_fot,'score':fot_score,'final_score':(wt_fot/100.0) * fot_score}))
+        comp_data.append((0,0,{'name':'Team Utilization','weight':wt_utl,'score':utl_score*100,'final_score':wt_utl * utl_score}))
+        if wt_tsk_cncl:
+            comp_data.append((0,0,{'name':'Percentage Of Cancelled Activities','weight':wt_tsk_cncl,'score':tsk_cncl_scr,'final_score':(wt_tsk_cncl/100.0) * tsk_cncl_scr}))
         if wt_esc:
             comp_data.append((0,0,{'name':'Escalation From Activity Owner','weight':wt_esc,'score':esc_scr*100,'final_score':wt_esc * esc_scr})) 
         return result,fot_data,comp_data
@@ -463,6 +539,24 @@ class hr_employee(models.Model):
         if wt_cert:
             comp_data.append((0,0,{'name':'Certificate','weight':wt_cert,'score':cert_score,'final_score':(wt_cert/100.0)*cert_score}))
         return result,comp_data
+    
+    def get_presale_mgr_vals_tc(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):
+        user_id  = self.user_id and self.user_id.id
+        employee_id = self.id
+        team_ids = self.search([('coach_id','=',employee_id)]) 
+        user_ids = [emp.user_id.id for emp in team_ids if (emp.audit_temp_id and emp.audit_temp_id.type=='pre_sales') ] + [user_id]
+        result = []
+        team_score =[]
+        team_vals =[] 
+        for uid in user_ids:
+            data,avg_score = self.get_presale_data(uid, aud_date_start, aud_date_end, audit_temp_id)
+            team_score.append(avg_score)
+            team_vals.append((0,0,{'user_id':uid,'score':avg_score}))
+            result.extend(data)
+            
+        team_avg_score =  self.get_avg_score(team_score)  
+        comp_data =[(0,0,{'name':'Productivity','weight':100,'score':team_avg_score,'final_score':team_avg_score})]
+        return result,team_vals,comp_data
     
     def get_presale_mgr_vals(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):
         user_id  = self.user_id and self.user_id.id
@@ -647,12 +741,13 @@ class hr_employee(models.Model):
 #         return comp_data
     
     
-    def get_pm_component(self,day_weight_scr,cc_weight_scr,inv_weight_scr,comp_weight_scr,day_flag,cost_flag,inv_flag,comp_flag):
+    def get_pm_component(self,day_weight_scr,cc_weight_scr,inv_weight_scr,comp_weight_scr,sc_weight_scr,day_flag,cost_flag,inv_flag,comp_flag,sc_flag):
         comp_data =[]
-        day_wt  =.2
-        cc_wt = .3
+        day_wt  =.1
+        cc_wt = .2
         inv_wt =.3
-        comp_wt =.2
+        comp_wt =.1
+        sc_wt = .3
         exclude_wt = 0.0
         if not day_flag:
             exclude_wt += day_wt
@@ -666,6 +761,9 @@ class hr_employee(models.Model):
         if not comp_flag:
             exclude_wt += comp_wt 
             comp_wt =0.0
+        if not sc_flag:
+            exclude_wt += sc_wt
+            sc_wt =0.0
         if exclude_wt == 1.0:
             return comp_data
         if exclude_wt:
@@ -673,14 +771,14 @@ class hr_employee(models.Model):
             cc_wt =  cc_wt + (cc_wt*exclude_wt)/float(1.0-exclude_wt)
             inv_wt =  inv_wt + (inv_wt*exclude_wt)/float(1.0-exclude_wt)
             comp_wt =  comp_wt + (comp_wt*exclude_wt)/float(1.0-exclude_wt)
-            
+            sc_wt = sc_wt + (sc_wt*exclude_wt)/float(1.0-exclude_wt)
         if day_wt:
-            score = (day_weight_scr/20.0) *100.0
+            score = (day_weight_scr/10.0) *100.0
             final_score = day_wt * score
             comp_data.append((0,0,{'name':'5 Day Processing Score','weight':day_wt*100.0,'final_score':final_score,'score':score}))
         
         if cc_wt:
-            score = (cc_weight_scr/30.0) *100.0
+            score = (cc_weight_scr/20.0) *100.0
             final_score = cc_wt * score
             comp_data.append((0,0,{'name':'Cost Control','weight':cc_wt*100.0,'final_score':final_score,'score':score}))
             
@@ -690,11 +788,16 @@ class hr_employee(models.Model):
             comp_data.append((0,0,{'name':'Invoice Schedule','weight':inv_wt*100,'final_score':final_score,'score':score}))
             
         if comp_wt:
-            score = (comp_weight_scr/20.0) *100.0
+            score = (comp_weight_scr/10.0) *100.0
             final_score = comp_wt * score
             comp_data.append((0,0,{'name':'Compliance Provided By PMO','weight':comp_wt*100.0,'final_score':final_score,'score':score}))
          
-       
+        if sc_wt:
+            score = (sc_weight_scr/30.0) *100.0
+            final_score = sc_wt * score
+            comp_data.append((0,0,{'name':'Schedule Control','weight':sc_wt*100.0,'final_score':final_score,'score':score}))
+            
+                   
         return comp_data
     
     def check_inv_sch_dates(self,inv_sch_dates,aud_date_start,aud_date_end):
@@ -721,12 +824,16 @@ class hr_employee(models.Model):
         
         invoice_schedule_vals =[] 
         compliance_vals =[]
+        schedule_control_vals =[]
+        schedule_control_vals_main =[]
         day_weight =[]
         cc_weight =[]
         inv_weight =[]
         comp_weight =[]
+        sc_weight =[]
         tot_sale_day =0.0
         tot_gp =0.0
+        sch_gp =0.0
         tot_sal_inv =0.0
         tot_sal_comp =0.0
         day_score_main = []
@@ -734,33 +841,18 @@ class hr_employee(models.Model):
         invoice_schedule_main =[]
         compliance_vals_main =[]
         for proj in sample_project_ids:
-            #5 day score
-#             sale_value_percent =0.0
-#             sale_value = proj.od_project_sale
-#             if total_sale_value:
-#                 sale_value_percent = sale_value/float(total_sale_value)
             processed_date = proj.od_cost_sheet_id and proj.od_cost_sheet_id.processed_date 
             if processed_date and aud_date_start <= processed_date <= aud_date_end:
                 sale_val = proj.od_project_sale
-                 
                 tot_sale_day += sale_val
                 dayscore = proj.day_process_score
-#                 weight = max_day_sore * sale_value_percent * (dayscore/20.0)
                 day_score_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':dayscore})
-#                 day_weight.append(weight)
-            
             #cost control score
             if proj.state == 'close':
-                
                 gp_value = proj.od_amended_profit 
                 tot_gp += gp_value
                 cost_control_score = proj.cost_control_score 
-#                 if total_gp_value:
-#                     gp_value_percent = gp_value/float(total_gp_value)
-                
-#                 weight_cc = max_cc_sore * gp_value_percent * (cost_control_score/30.0)
                 cost_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':cost_control_score})
-#                 cc_weight.append(weight_cc)
             #invoice Schedule Score
             inv_sch_dates = [a.date for a in proj.od_project_invoice_schedule_line]
             check = self.check_inv_sch_dates(inv_sch_dates,aud_date_start,aud_date_end)
@@ -768,41 +860,64 @@ class hr_employee(models.Model):
                 invoice_sc_score = proj.invoice_schedule_score 
                 sale_val = proj.od_project_sale
                 tot_sal_inv  += sale_val
-#                 weight_isc = max_cc_sore *sale_value_percent * (invoice_sc_score/30.0)
                 invoice_schedule_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':invoice_sc_score})
-#                 inv_weight.append(weight_isc)
             if proj.start_project_comp:
                 compliance_score = proj.compliance_score
                 sale_val = proj.od_project_sale
                 tot_sal_comp  += sale_val 
-#                 weight_comp = max_day_sore * sale_value_percent * (compliance_score/20.0)
                 compliance_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':compliance_score})
-#                 comp_weight.append(weight_comp)
-        
-        max_day_sore = 20 * len(day_score_vals)
+            if proj.od_project_status == 'close':
+                project_planned_end = proj.od_project_end 
+                closed_date = proj.od_project_closing 
+                if closed_date <= project_planned_end:
+                    sc_scr =30.0
+                    gp_value = proj.od_amended_profit 
+                    sch_gp += gp_value
+                    schedule_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':sc_scr})
+                else:
+                    sc_scr =0.0
+                    gp_value = proj.od_amended_profit 
+                    sch_gp += gp_value
+                    schedule_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':sc_scr})
+                    
+        max_day_sore = 10 * len(day_score_vals)
         for data in day_score_vals:
             sal_val_percent =0.0
             sale_value  = data.get('sale_value')
             if tot_sale_day:
                 sal_val_percent = sale_value/float(tot_sale_day)
             dayscore = data.get('score')
-            weight_day = max_day_sore * sal_val_percent * (dayscore/20.0)
+            weight_day = max_day_sore * sal_val_percent * (dayscore/10.0)
             data['sale_value_percent'] = sal_val_percent *100.0
             data['weight'] = weight_day
             day_weight.append(weight_day)
             day_score_main.append((0,0,data))
-        max_cc_sore = 30 * len(cost_control_vals)
+        max_cc_sore = 20 * len(cost_control_vals)
         for data in cost_control_vals:
             gp_val_percent =0.0
             gp_value = data.get('gp_value')
             if tot_gp:
                 gp_val_percent = gp_value/float(tot_gp)
             score = data.get('score')
-            weight_cc = max_cc_sore * gp_val_percent * (score/30.0)
+            weight_cc = max_cc_sore * gp_val_percent * (score/20.0)
             data['weight'] = weight_cc
             data['gp_value_percent'] = gp_val_percent *100.0
             cc_weight.append(weight_cc)
             cost_control_val_main.append((0,0,data))
+        
+        
+        max_sc_sore = 30 * len(schedule_control_vals)
+        for data in schedule_control_vals:
+            gp_val_percent =0.0
+            gp_value = data.get('gp_value')
+            if sch_gp:
+                gp_val_percent = gp_value/float(sch_gp)
+            score = data.get('score')
+            weight_sc = max_sc_sore * gp_val_percent * (score/30.0)
+            data['weight'] = weight_sc
+            data['gp_value_percent'] = gp_val_percent *100.0
+            sc_weight.append(weight_sc)
+            schedule_control_vals_main.append((0,0,data))
         
         max_inv_scr = 30 * len(invoice_schedule_vals)
         for data in invoice_schedule_vals:
@@ -817,14 +932,14 @@ class hr_employee(models.Model):
             inv_weight.append(weight_inv)
             invoice_schedule_main.append((0,0,data))
         
-        max_comp_scr = 20 * len(compliance_vals)
+        max_comp_scr = 10 * len(compliance_vals)
         for data in compliance_vals:
             sal_val_percent =0.0
             sale_value  = data.get('sale_value')
             if tot_sal_comp:
                 sal_val_percent = sale_value/float(tot_sal_comp)
             score = data.get('score')
-            weight_comp = max_comp_scr * sal_val_percent * (score/20.0)
+            weight_comp = max_comp_scr * sal_val_percent * (score/10.0)
             data['sale_value_percent'] = sal_val_percent *100.0
             data['weight'] = weight_comp
             comp_weight.append(weight_comp)
@@ -835,8 +950,8 @@ class hr_employee(models.Model):
         cc_weight_scr = self.get_avg_score(cc_weight)
         inv_weight_scr = self.get_avg_score(inv_weight)
         comp_weight_scr = self.get_avg_score(comp_weight )
-        
-        day_flag = cost_flag = inv_flag= comp_flag= False 
+        sc_weight_scr = self.get_avg_score(sc_weight)
+        day_flag = cost_flag = inv_flag= comp_flag= sc_flag=False 
         if day_score_main:
             day_flag =True 
         if cost_control_val_main:
@@ -845,11 +960,13 @@ class hr_employee(models.Model):
             inv_flag = True 
         if compliance_vals_main:
             comp_flag = True
-        comp_line = self.get_pm_component(day_weight_scr,cc_weight_scr,inv_weight_scr,comp_weight_scr,day_flag,cost_flag,inv_flag,comp_flag)
+        if schedule_control_vals_main:
+            sc_flag = True
+        comp_line = self.get_pm_component(day_weight_scr,cc_weight_scr,inv_weight_scr,comp_weight_scr,sc_weight_scr,day_flag,cost_flag,inv_flag,comp_flag,sc_flag)
         
         
             
-        return day_score_main,cost_control_val_main,invoice_schedule_main,compliance_vals_main,comp_line
+        return day_score_main,cost_control_val_main,invoice_schedule_main,compliance_vals_main,schedule_control_vals_main,comp_line
     
     
     
@@ -1038,6 +1155,26 @@ class hr_employee(models.Model):
         comp_line =[(0,0,{'name':'Cash Flow Management','weight':100,'score':res*100.0,'final_score':res*100.0})]
         return open_projects,closed_projects,comp_line
     
+    
+    def get_score_from_comp_data(self,vals):
+        res =0.0
+        for _,_,val in vals:
+            final_score = val.get('final_score',0.0)
+            res += final_score 
+        return res
+    
+    def get_tc_data(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):
+        opp_sample_line,team_line,presale_comp_data = self.get_presale_mgr_vals_tc(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+        utl_data,fot_data,tech_comp_data = self.get_tech_cons_ps_vals(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+        presale_score = self.get_score_from_comp_data(presale_comp_data)
+        tech_score = self.get_score_from_comp_data(tech_comp_data)
+        wt_tech =0.7
+        wt_presale =0.3
+        comp_line =[(0,0,{'name':'Technical Activity','weight':wt_tech *100,'score':tech_score,'final_score':wt_tech * tech_score}),
+                    (0,0,{'name':'Pre-sale Productivity','weight':wt_presale *100,'score':presale_score,'final_score':wt_presale * presale_score})
+                    ]
+        return opp_sample_line,team_line,presale_comp_data,utl_data,fot_data,tech_comp_data,comp_line
+        
     def update_audit_sample(self,sample_id,aud_date_start,aud_date_end,audit_temp_id):
         type = audit_temp_id.type
         user_id  = self.user_id and self.user_id.id
@@ -1068,7 +1205,25 @@ class hr_employee(models.Model):
             sample_id.comp_line.unlink()
             sample_id.team_line.unlink()
             sample_id.write({'opp_sample_line':opp_sample_line,'comp_line':comp_data,'team_line':team_line})
+        if type =='tc':
+            opp_sample_line,team_line,presale_comp_data,utl_data,fot_data,tech_comp_data,comp_line = self.get_tc_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            sample_id.utl_sample_line.unlink()
+            sample_id.ttl_fot_line.unlink()
+            sample_id.opp_sample_line.unlink()
             
+            sample_id.tc_tech_comp_line.unlink()
+            sample_id.tc_presale_comp_line.unlink()
+            
+            sample_id.team_line.unlink()
+            sample_id.comp_line.unlink()
+            
+            sample_id.write({'utl_sample_line':utl_data,'ttl_fot_line':fot_data,
+                             'opp_sample_line':opp_sample_line,'comp_line':comp_line,
+                             'tc_tech_comp_line':tech_comp_data,
+                             'tc_presale_comp_line':presale_comp_data,
+                             'team_line':team_line})
+        
+        
         if type == 'sales_acc_mgr':
             
             achieved_line,achieved_total = self.get_sales_achieved_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
@@ -1079,14 +1234,17 @@ class hr_employee(models.Model):
             sample_id.write({'achieved_gp_line':achieved_line,'comp_line':component_data,'target':target})
         if type == 'pm':
 
-            day_score_vals,cost_control_vals,invoice_schedule_vals,compliance_vals,comp_line = self.get_pm_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            day_score_vals,cost_control_vals,invoice_schedule_vals,compliance_vals,pm_sch_line,comp_line = self.get_pm_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
             sample_id.dayscore_line.unlink()
             sample_id.cost_control_line.unlink()
             sample_id.invoice_schedule_line.unlink()
             sample_id.compliance_line.unlink()
+            sample_id.pm_sch_line.unlink()
             sample_id.comp_line.unlink()
             sample_id.write({'dayscore_line':day_score_vals,'cost_control_line':cost_control_vals,
-                             'invoice_schedule_line':invoice_schedule_vals,'compliance_line':compliance_vals,'comp_line':comp_line})
+                             'invoice_schedule_line':invoice_schedule_vals,
+                             'pm_sch_line':pm_sch_line,
+                             'compliance_line':compliance_vals,'comp_line':comp_line})
         
         if type == 'bdm':
             bmd_costsheet_line,comp_line,target = self.get_bdm_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
@@ -1153,7 +1311,14 @@ class hr_employee(models.Model):
             sample_id =self.env['audit.sample'].create(vals)
             #create utlization line
         
-        
+        if type == 'tc':
+            opp_sample_line,team_line,presale_comp_data,utl_data,fot_data,tech_comp_data,comp_line = self.get_tc_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            vals.update({'utl_sample_line':utl_data,'ttl_fot_line':fot_data,
+                             'opp_sample_line':opp_sample_line,'comp_line':comp_line,
+                             'tc_tech_comp_line':tech_comp_data,
+                             'tc_presale_comp_line':presale_comp_data,
+                             'team_line':team_line})
+            sample_id =self.env['audit.sample'].create(vals)
         if type == 'sales_acc_mgr':
             commit_line,commit_total = self.get_sales_commit_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
             achieved_line,achieved_total = self.get_sales_achieved_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
@@ -1163,9 +1328,9 @@ class hr_employee(models.Model):
         
         if type == 'pm':
             
-            day_score_vals,cost_control_vals,invoice_schedule_vals,compliance_vals,comp_line = self.get_pm_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            day_score_vals,cost_control_vals,invoice_schedule_vals,compliance_vals,pm_sch_line,comp_line = self.get_pm_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
             vals.update({'dayscore_line':day_score_vals,'cost_control_line':cost_control_vals,'invoice_schedule_line':invoice_schedule_vals,
-                         'compliance_line':compliance_vals,'comp_line':comp_line})
+                         'compliance_line':compliance_vals,'pm_sch_line':pm_sch_line,'comp_line':comp_line})
             sample_id =self.env['audit.sample'].create(vals)
         
         

@@ -586,10 +586,10 @@ class task(models.Model):
         if self.user_id:
             user_id = self.user_id.id
             users_list =hr.search([('user_id','=',user_id)])
-            if users_list and users_list[0]:
-                coach_user=users_list[0].coach_id and  users_list[0].coach_id.user_id and users_list[0].coach_id.user_id.id or False
+#             if users_list and users_list[0]:
+#                 coach_user=users_list[0].coach_id and  users_list[0].coach_id.user_id and users_list[0].coach_id.user_id.id or False
 
-        self.reviewer_id = coach_user
+#         self.reviewer_id = coach_user
         # self.partner_ids = partner_ids
         self.partner_ids = [[6, False,partner_ids]]
     @api.onchange('od_common_partner_id')
@@ -672,7 +672,7 @@ class task(models.Model):
     od_meeting_id = fields.Many2one('calendar.event',string='Meeting')
     od_stage = fields.Selection([('draft','In Progress'),('done','Done'),('cancel_by_tl','Cancelled By TL')],string="Status",default='draft',track_visibility='onchange')
     cancel_tl_id = fields.Many2one('res.users',string="Cancel TL User")
-    od_date_done = fields.Datetime(string="Date Done",readonly=True)
+    od_date_done = fields.Datetime(string="Date Done",readonly=False)
     od_opp_id = fields.Many2one('crm.lead',string="Opportunity")
     od_max_date = fields.Datetime(string="Computational Max Date",compute="od_get_max_end_date")
     od_depend_task_lines = fields.One2many('od.depend.task.lines','depend_task_id',string="Depend Task Lines",ondelete="cascade")
@@ -798,7 +798,7 @@ class task(models.Model):
             if date_done and date_end:
                 date_end = datetime.strptime(date_end,DEFAULT_SERVER_DATETIME_FORMAT)
                 date_done = datetime.strptime(date_done,DEFAULT_SERVER_DATETIME_FORMAT)
-                date_end = date_end + timedelta(minutes=1)
+                date_end = date_end + timedelta(minutes=5)
                 if date_done and date_end:
                     if date_done > date_end:
                         self.od_end_kpi = 0

@@ -28,7 +28,8 @@ class audit_sample(models.Model):
     type = fields.Selection([('post_sales','Post Sales'),('pre_sales','Pre-Sales Engineer'),
                              ('pre_sales_mgr','Pre-Sales Manager'),('sales_acc_mgr','Sales Account Manager'),
                              ('bdm','BDM'), ('bdm_sec','BDM-SEC'),('bdm_net','BDM-NET-DC'),('ttl','Technical Team Leader'),
-                             ('pm','Project Manager'),('pmo','PMO Director')
+                             ('pm','Project Manager'),('pmo','PMO Director'),
+                             ('tc','Technology Consultant'),
                              ],string="Type",required=True)
     employee_id = fields.Many2one('hr.employee',string="Employee")
     method = fields.Text(string="Method")
@@ -51,6 +52,8 @@ class audit_sample(models.Model):
     dayscore_line = fields.One2many('pm.dayscore.line','sample_id',string="Details")
     cost_control_line = fields.One2many('pm.cost.control.line','sample_id',string="Details")
     invoice_schedule_line = fields.One2many('pm.invoice.schedule.line','sample_id',string="Details")
+    pm_sch_line = fields.One2many('pm.sch.control.line','sample_id',string="Details")
+    
     compliance_line  =  fields.One2many('pm.compliance.line','sample_id',string="Details")
     bmd_costsheet_line = fields.One2many('bdm.costsheet.sample.line','sample_id',string="Details")
     bdm_sec_sample_line = fields.One2many('bdm.sec.sample.line','sample_id',string="Details")
@@ -61,6 +64,29 @@ class audit_sample(models.Model):
 
     pmo_open_project_line = fields.One2many('pmo.open.project.sample','sample_id',string="Details")
     pmo_closed_project_line = fields.One2many('pmo.closed.project.sample','sample_id',string="Details")
+    tc_tech_comp_line =  fields.One2many('tc.tech.component.line','sample_id',string="Details")
+    tc_presale_comp_line =  fields.One2many('tc.presale.comp.line','sample_id',string="Details")
+
+
+
+
+
+
+class tc_tech_component_line(models.Model):
+    _name = 'tc.tech.component.line'
+    sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
+    name = fields.Char(string="Component")
+    weight = fields.Float(string="Weight")
+    score = fields.Float(string="Score")
+    final_score = fields.Float(string="Final Score")
+    
+class tc_presale_comp_line(models.Model):
+    _name = 'tc.presale.comp.line'
+    sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
+    name = fields.Char(string="Component")
+    weight = fields.Float(string="Weight")
+    score = fields.Float(string="Score")
+    final_score = fields.Float(string="Final Score")
     
 
 
@@ -304,6 +330,28 @@ class cost_control_line(models.Model):
 
             }
 
+class PmScheduleControl(models.Model):
+    _name ="pm.sch.control.line"
+    sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
+    analytic_id = fields.Many2one('account.analytic.account',string="Analytic/Project")
+    score = fields.Float("Score From Project")
+    gp_value = fields.Float(string="GP Value")
+    gp_value_percent = fields.Float("%GP Value")
+    weight = fields.Float(string="Weight")
+    
+    @api.multi
+    def btn_open(self):
+       
+        return {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'account.analytic.account',
+                'res_id':self.analytic_id and self.analytic_id.id or False,
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+
+            }
+
 
 class pm_dayscore(models.Model):
     _name ="pm.dayscore.line"
@@ -449,5 +497,5 @@ class component_line(models.Model):
     weight = fields.Float(string="Weight")
     score = fields.Float(string="Score")
     final_score = fields.Float(string="Final Score")
-    
+
     

@@ -97,28 +97,35 @@ class account_analytic_account(models.Model):
     @api.multi
     def btn_close_project(self):
         #need to update to acutal cost from jv
-        closing_date = self.od_project_closing
-        if not closing_date:
-            raise Warning("Please Fill the Closing Date")
+        today = str(dt.today())
+        closing_date = today 
+        self.od_project_closing = today
+        
         self.od_project_status = 'close'
     
     
     @api.multi
     def btn_close_amc(self):
         #need to update to acutal cost from jv
-        closing_date = self.od_amc_closing
+        
+        today = str(dt.today())
+        closing_date = today 
+        
         if self.od_project_status == 'active':
             raise Warning("Please Close the Project First")
-        if not closing_date:
-            raise Warning("Please Fill the Closing Date")
+        self.od_amc_closing = closing_date
         self.od_amc_status = 'close'
     
     @api.multi
     def btn_close_om(self):
         #need to update to acutal cost from jv
-        closing_date = self.od_om_closing
+        
+        today = str(dt.today())
+        closing_date = today 
+        
         if not closing_date:
             raise Warning("Please Fill the Closing Date")
+        self.od_om_closing = closing_date
         self.od_om_status = 'close'
     
     
