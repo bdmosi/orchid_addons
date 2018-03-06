@@ -200,6 +200,7 @@
                 <field name="probability" position="after">
                     <field name="financial_proposal" />
                     <field name="od_status_id_7" />
+                    <field name="od_req_on_7"/>
                     <field name="finished_on_7"/> 
                     <field name="od_buisiness_type_id"/>
                     <field name="od_territory_id"/>     
