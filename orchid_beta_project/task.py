@@ -5,7 +5,7 @@ from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 import decimal
 from openerp.exceptions import Warning
 from pprint import pprint
-
+from openerp.tools import SUPERUSER_ID
 
 class od_kind_of_work(models.Model):
     _name = 'od.kind.of.work'
@@ -573,11 +573,23 @@ class task(models.Model):
         self.od_total_time_spent = actual_time
 
 
-
+    def get_coach_user_id(self,cr,uid,user_id,context):
+        uid = SUPERUSER_ID
+        hr = self.pool.get('hr.employee')
+        coach_user = False
+        hr_id=hr.search(cr,uid,[('user_id','=',user_id)],limit=1)
+        hr_obj = hr.browse(cr,uid,hr_id,context)
+        coach_user=hr_obj.coach_id and  hr_obj.coach_id.user_id and hr_obj.coach_id.user_id.id or False
+        return coach_user
+        
+        
 
     @api.onchange('user_id')
     def onchange_user_id(self):
         hr = self.env['hr.employee']
+        cr = self.env.cr
+        uid = self.env.uid
+        context = self.env.context
         coach_user = False
         partner_ids = []
         partner_id = self.user_id and self.user_id.partner_id and self.user_id.partner_id.id
@@ -585,11 +597,11 @@ class task(models.Model):
             partner_ids.append(partner_id)
         if self.user_id:
             user_id = self.user_id.id
-            users_list =hr.search([('user_id','=',user_id)])
+            coach_user = self.get_coach_user_id(user_id)
 #             if users_list and users_list[0]:
 #                 coach_user=users_list[0].coach_id and  users_list[0].coach_id.user_id and users_list[0].coach_id.user_id.id or False
 
-#         self.reviewer_id = coach_user
+        self.reviewer_id = coach_user
         # self.partner_ids = partner_ids
         self.partner_ids = [[6, False,partner_ids]]
     @api.onchange('od_common_partner_id')
