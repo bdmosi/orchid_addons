@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
    <data>
-      	<template id="report_vat_outputregister_pdf">
+      	<template id="report_vat_register_pdf">
       		<t t-call="report.external_layout">
 				<t t-call="report.html_container">
 					<t t-foreach="docs" t-as="o">

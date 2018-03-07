@@ -28,9 +28,9 @@
         #'templates.xml',
         # 'vat_menu.xml',
         'vat_register_wiz.xml',
-        'vat_input_pdf.xml',
+        # 'vat_input_pdf.xml',
         'print_pdf.xml',
-        'vat_output_pdf.xml',
+        'vat_register_pdf.xml',
         # 
     ],
     # only loaded in demonstration mode

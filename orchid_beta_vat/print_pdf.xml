@@ -2,20 +2,12 @@
 <openerp>
     <data>
         <report 
-            id="report_vatregister_pdf_document"
+            id="report_vat_outputregister_pdf_document"
             string="VAT Register Print"
             model="orchid.vat.register.input" 
             report_type="qweb-pdf"
-            file="orchid_beta_vat.report_vatregister_pdf" 
-            name="orchid_beta_vat.report_vatregister_pdf"
-        />
-        <report 
-            id="report_vat_outputregister_pdf_document"
-            string="VAT  Output Register Print"
-            model="orchid.vat.register.input" 
-            report_type="qweb-pdf"
-            file="orchid_beta_vat.report_vat_outputregister_pdf" 
-            name="orchid_beta_vat.report_vat_outputregister_pdf"
+            file="orchid_beta_vat.report_vat_register_pdf" 
+            name="orchid_beta_vat.report_vat_register_pdf"
         />
     </data>
 </openerp>
