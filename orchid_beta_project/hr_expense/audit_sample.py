@@ -27,6 +27,7 @@ class audit_sample(models.Model):
     aud_temp_id = fields.Many2one('audit.template',string="Audit Template")
     type = fields.Selection([('post_sales','Post Sales'),('pre_sales','Pre-Sales Engineer'),
                              ('pre_sales_mgr','Pre-Sales Manager'),('sales_acc_mgr','Sales Account Manager'),
+                             ('sm','Sales Manager'),
                              ('bdm','BDM'), ('bdm_sec','BDM-SEC'),('bdm_net','BDM-NET-DC'),('ttl','Technical Team Leader'),
                              ('pm','Project Manager'),('pmo','PMO Director'),
                              ('tc','Technology Consultant'),
@@ -97,7 +98,7 @@ class PmoOpenProjects(models.Model):
     paid = fields.Float(string="Paid to Supplier")
     collected = fields.Float(string="Collected From Customer")
     project_value = fields.Float(string="Project Value")
-    
+    manpower_cost = fields.Float(string="Manpower Cost")
     @api.multi
     def btn_open(self):
        
@@ -116,6 +117,7 @@ class PmoClosedProjects(models.Model):
     sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
     analytic_id = fields.Many2one('account.analytic.account',string="Analytic/Project")
     paid = fields.Float(string="Paid to Supplier")
+    manpower_cost = fields.Float(string="Manpower Cost")
     collected = fields.Float(string="Collected From Customer")
     project_value = fields.Float(string="Project Value")
     
@@ -400,6 +402,7 @@ class CommitGpSample(models.Model):
     sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
     cost_sheet_id = fields.Many2one('od.cost.sheet',string="Cost Sheet")
     gp = fields.Float(string="GP")
+    user_id = fields.Many2one('res.users',string="User")
     @api.multi
     def btn_open(self):
        
@@ -418,7 +421,7 @@ class AchievedGpSample(models.Model):
     sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
     cost_sheet_id = fields.Many2one('od.cost.sheet',string="Cost Sheet")
     gp = fields.Float(string="GP")
-    
+    user_id = fields.Many2one('res.users',string="User")
     
     @api.multi
     def btn_open(self):

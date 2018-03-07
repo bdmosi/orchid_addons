@@ -678,7 +678,8 @@ class hr_holidays(osv.osv):
             old_str = str(leave_request_date[5:10])
             leave_request_date = string.replace(leave_request_date, old_str, '12-31')
             print "leave request date>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",type(leave_request_date),leave_request_date
-            leave_ids_for_current_date = self.search(cr,uid,[('employee_id', '=', employee_id), ('holiday_status_id', '=', holiday_status_id),('state', 'not in', ('cancel','refuse')),('date_from','<',str(leave_request_date)),('date_from','>',year_start_date)])
+            current_leave_id =ids and ids[0]
+            leave_ids_for_current_date = self.search(cr,uid,[('employee_id', '=', employee_id),('id','!=',current_leave_id), ('holiday_status_id', '=', holiday_status_id),('state', 'not in', ('cancel','refuse')),('date_from','<',str(leave_request_date)),('date_from','>',year_start_date)])
             if leave_ids_for_current_date:
                 for lv in leave_ids_for_current_date:
                     for levs in self.browse(cr,uid,lv,context=context):

@@ -47,8 +47,9 @@
 									<tree editable="bottom" create="false" delete="false">
 										<field name="analytic_id" readonly="1"/>
 										<button name="btn_open" type="object" icon="STOCK_FIND" string="Open" />
-										<field name="paid" readonly="1"  sum="Total" widget="my_widget"/>
-										<field name="collected" readonly="1"  sum="Total" widget="green_widget"/>
+										<field name="paid" readonly="1"  sum="Total" />
+										<field name="manpower_cost" readonly="1"  sum="Total" />
+										<field name="collected" readonly="1"  sum="Total" />
 										<field name="project_value" readonly="1"  sum="Total"/>
 									</tree>
 								</field>
@@ -60,8 +61,9 @@
 										<field name="analytic_id" readonly="1"/>
 										<button name="btn_open" type="object" icon="STOCK_FIND" string="Open" />
 										<field name="paid" readonly="1"  sum="Total"/>
-										<field name="collected" readonly="1"  sum="Total" widget="green_widget"/>
-										<field name="project_value" readonly="1"  sum="Total" widget="my_widget"/>
+										<field name="collected" readonly="1"  sum="Total" />
+										<field name="manpower_cost" readonly="1"  sum="Total" />
+										<field name="project_value" readonly="1"  sum="Total" />
 									</tree>
 								</field>
 							</page>
@@ -276,11 +278,12 @@
 								</field>
 							</page>
 							
-							<page string="Achieved" attrs="{'invisible':[('type','!=','sales_acc_mgr')]}" >
+							<page string="Achieved" attrs="{'invisible':[('type','not in',('sales_acc_mgr','sm'))]}" >
 								<field name="achieved_gp_line">
 									<tree editable="bottom" create="false" delete="false">
 										<field name="cost_sheet_id" readonly="1"/>
 										<button name="btn_open" type="object" icon="STOCK_FIND" string="Open" />
+										<field name="user_id" readonly="1"/>
 										<field name="gp" readonly="1" sum="Total"/>
 										
 									</tree>
@@ -289,7 +292,7 @@
 							
 							
 							
-							<page string="Team Score" attrs="{'invisible':[('type','not in',('pre_sales_mgr','tc'))]}" >
+							<page string="Team Score" attrs="{'invisible':[('type','not in',('pre_sales_mgr','tc','sm'))]}" >
 								<field name="team_line">
 									<tree editable="bottom" create="false" delete="false">
 										<field name="user_id" readonly="1"/>

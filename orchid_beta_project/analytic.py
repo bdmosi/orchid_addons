@@ -551,7 +551,7 @@ class account_analytic_account(models.Model):
         account_move_line = self.env['account.move.line']
         analytic_id = self.id
         exclude_journal_ids = self.get_exclude_journal_ids()
-        domain = [('analytic_account_id','=',analytic_id),('journal_id','not in',exclude_journal_ids),('od_state','!=','posted')]
+        domain = [('analytic_account_id','=',analytic_id),('journal_id','not in',exclude_journal_ids),('od_state','=','posted')]
         journal_lines = account_move_line.search(domain)
         amount = sum([mvl.debit for mvl in journal_lines])
         self.od_journal_amount = amount

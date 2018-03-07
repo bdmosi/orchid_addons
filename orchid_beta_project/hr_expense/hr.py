@@ -191,6 +191,7 @@ class hr_employee(models.Model):
     mgr_score12 = fields.Selection(mgr_score_selection,string="Manager Score")
     utl12= fields.Float(string="Utilization")
     
+    commit_total = fields.Float(string="Current Month Commit Total")
     
     def get_product_id_from_param(self,product_param):
         parameter_obj = self.env['ir.config_parameter']
@@ -440,10 +441,11 @@ class hr_employee(models.Model):
 #             for data in data_ids:
 #                 spent_time += sum([work.hours for work in data.work_ids])
             utl = spent_time/float(avl_time)
-            result.append((0,0,{'user_id':user_id,'available_time':avl_time,'actual_time_spent':spent_time,'utl':(spent_time/avl_time)*100.0}))
+            if user_id !=usr_id:
+                result.append((0,0,{'user_id':user_id,'available_time':avl_time,'actual_time_spent':spent_time,'utl':(spent_time/avl_time)*100.0}))
+                utl  = (utl/0.65)
+                utl_list.append(utl)
             fot_data.append((0,0,{'user_id':user_id,'fot':fot}))
-            utl  = (utl/0.65)
-            utl_list.append(utl)
             fot_list.append(fot)
             
         utl_score =  self.get_avg_score(utl_list)  
@@ -575,10 +577,10 @@ class hr_employee(models.Model):
         team_avg_score =  self.get_avg_score(team_score)  
         comp_data =[(0,0,{'name':'Productivity','weight':100,'score':team_avg_score,'final_score':team_avg_score})]
         return result,team_vals,comp_data
-    def get_sales_commit_data(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):
+    def get_sales_commit_data(self,sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id):
         
         total_gp = 0.0
-        user_id  = self.user_id and self.user_id.id
+        
         result =[]
         domain = [('sales_acc_manager','=',user_id),('status','=','active')]
         domain.extend([('op_expected_booking','>=',aud_date_start),('op_expected_booking','<=',aud_date_end)])
@@ -596,11 +598,11 @@ class hr_employee(models.Model):
             stage_id = sheet.op_stage_id and sheet.op_stage_id.id 
             if stage_id in (5,12):
                 gp = sheet.total_gp
-                result.append((0,0,{'cost_sheet_id':sheet.id,'gp':gp}))
+                result.append((0,0,{'cost_sheet_id':sheet.id,'gp':gp,'user_id':user_id}))
                 total_gp +=gp
         return result,total_gp
-    def get_sales_achieved_data(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):
-        user_id  = self.user_id and self.user_id.id
+    def get_sales_achieved_data(self,sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id):
+        
         result =[]
         total_gp = 0.0
         domain = [('sales_acc_manager','=',user_id),('status','=','active')]
@@ -609,7 +611,7 @@ class hr_employee(models.Model):
         sheet_ids =self.env['od.cost.sheet'].search(domain1)
         for sheet in sheet_ids:
             gp = sheet.total_gp
-            result.append((0,0,{'cost_sheet_id':sheet.id,'gp':sheet.total_gp}))
+            result.append((0,0,{'cost_sheet_id':sheet.id,'gp':sheet.total_gp,'user_id':user_id}))
             total_gp +=gp
         return result,total_gp
     def get_sales_acc_mgr_component(self,commit_total,achieved_total):
@@ -669,7 +671,89 @@ class hr_employee(models.Model):
                               ))
         
         return comp_data,target
+    
+    def get_sales_acc_mgr_component_sm(self,emp_id,commit_total,achieved_total):
+        emp = self.browse(emp_id)
+        target = emp.annual_target/12.0
+        result =0.0
+        exclude_wt = 0.0
+        comp_data =[]
+        if target:
+            if achieved_total >= commit_total:
+                result = commit_total/target
+                if result >3.0:
+                    result =3
+            elif achieved_total < commit_total:
+                result = achieved_total/target 
+                if result > 1.5:
+                    result =1.5
+        mgr_score = emp.get_mgr_feedback()
+        cert = emp.get_certificate_status()
+        cert_ach = cert.get('achieved',False)
+        cert_req = cert.get('required',False)
+        if not mgr_score:
+            exclude_wt += 10
+        if not cert_req:
+            exclude_wt += 10
+        
+        wt_cmt = 80.0
+        wt_cert =10.0
+        wt_mgr =10.0
+        if exclude_wt:
+            wt_cmt =  wt_cmt + (wt_cmt*exclude_wt)/float(100-exclude_wt)
+            wt_cert =  wt_cert + (wt_cert*exclude_wt)/float(100-exclude_wt)
+            wt_mgr =  wt_mgr + (wt_mgr*exclude_wt)/float(100-exclude_wt)
+        
+        comp_data.append((0,0,
+                              {'name':'Commitment Performance',
+                               'weight':wt_cmt,
+                               'score':result*100,
+                               'final_score':wt_cmt *result}
+                              ))
             
+        if cert_req:
+            cert_score  =0.0
+            if cert_ach:
+                cert_score = 100
+            comp_data.append((0,0,
+                              {'name':'Certificate',
+                               'weight':wt_cert,
+                               'score':cert_score,
+                               'final_score':(wt_cert/100.0)*cert_score}
+                              ))
+        if mgr_score:
+            comp_data.append((0,0,
+                              {'name':'Direct Manager Feedback',
+                               'weight':wt_mgr,
+                               'score':mgr_score*10,
+                               'final_score':(wt_mgr/10.0)*mgr_score}
+                              ))
+        
+        return comp_data,target
+    
+    def get_sm_data(self,sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id):
+        type = audit_temp_id.type
+        employee_id = self.id
+        sam_ids = self.search([('parent_id','=',employee_id)]) 
+        emp_ids = [emp for emp in sam_ids if (emp.audit_temp_id and emp.audit_temp_id.type =='sales_acc_mgr')]
+        ach_data =[]
+        team_comp_data = []
+        score_board =[]
+        for emp in emp_ids:
+            commit_total = emp.commit_total 
+            usr_id = emp.user_id and emp.user_id.id or False
+            ach_val,ach_total = self.get_sales_achieved_data(sample_id, usr_id, aud_date_start, aud_date_end, audit_temp_id)
+            team_comp_val,target = self.get_sales_acc_mgr_component_sm(emp.id,commit_total, ach_total)
+            ach_data.extend(ach_val)
+            score = self.get_score_from_comp_data(team_comp_val)
+            team_comp_data.append((0,0,{'user_id':usr_id,'score':score}))
+            score_board.append(score)
+        avg_score = self.get_avg_score(score_board)
+        wt =1.0
+        score =avg_score 
+        final_score = wt * avg_score
+        comp_line = [(0,0, {'name':'Average Team Performance','weight':wt*100.0,'score':score,'final_score':final_score})]
+        return ach_data,team_comp_data,comp_line
         
     def check_date_in_audit(self,aud_date_start, aud_date_end,date):
         res = False
@@ -1098,7 +1182,23 @@ class hr_employee(models.Model):
     
     
     
-        
+    def get_supplier_paid(self,supplier_invoice):
+        paid = 0.0
+        for sup_inv in supplier_invoice:
+            currency = sup_inv.currency_id
+            company_currency = sup_inv.company_id.currency_id
+            bal  = sup_inv.amount_total - sup_inv.residual 
+            paid += currency.compute(bal,company_currency,round=False)
+        return paid
+    
+    def get_supplier_amount(self,supplier_invoice):
+        amount = 0.0
+        for sup_inv in supplier_invoice:
+            currency = sup_inv.currency_id
+            company_currency = sup_inv.company_id.currency_id
+            bal  = sup_inv.amount_total
+            amount += currency.compute(bal,company_currency,round=False)
+        return amount
     def get_pmo_dir_data(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):
         open_projects = []
         closed_projects =[]
@@ -1110,6 +1210,7 @@ class hr_employee(models.Model):
         invoice_pool = self.env['account.invoice']
         total_collected =0.0
         total_paid =0.0
+        timesheet_pool = self.env['hr.analytic.timesheet']
         for project in open_project_ids:
             sale = sale_pool.search([('project_id','=',project.id),('state','!=','cancel')],limit=1)
             amount_total = sale.amount_total or 0.0
@@ -1118,10 +1219,13 @@ class hr_employee(models.Model):
             customer_invoice = invoice_pool.search([('od_analytic_account','=',project.id),('type','=','out_invoice'),('state','not in',('draft','cancel'))])
             supplier_invoice = invoice_pool.search([('od_analytic_account','=',project.id),('type','=','in_invoice'),('state','not in',('draft','cancel'))])
             collected = sum([inv.amount_total - inv.residual for inv in customer_invoice])
-            paid = sum([inv.amount_total - inv.residual for inv in supplier_invoice])
+#             paid = sum([inv.amount_total - inv.residual for inv in supplier_invoice])
+            paid = self.get_supplier_paid(supplier_invoice)
             total_collected += collected
             total_paid += paid
-            open_projects.append((0,0,{'analytic_id':project.id,'project_value':project_value,'collected':collected,'paid':paid}))
+            manpower_cost = sum([tm.normal_amount for tm in timesheet_pool.search([('account_id','=',project.id),('date','<=',aud_date_end)])])
+            total_paid += manpower_cost
+            open_projects.append((0,0,{'analytic_id':project.id,'project_value':project_value,'collected':collected,'paid':paid,'manpower_cost':manpower_cost}))
             
         for project in closed_project_ids:
             sale = sale_pool.search([('project_id','=',project.id),('state','!=','cancel')],limit=1)
@@ -1133,22 +1237,22 @@ class hr_employee(models.Model):
             supplier_invoice = invoice_pool.search([('od_analytic_account','=',project.id),('type','=','in_invoice'),('state','not in',('draft','cancel'))])
             supplier_refund= invoice_pool.search([('od_analytic_account','=',project.id),('type','=','in_refund'),('state','not in',('draft','cancel'))])
             customer_inv_amount = sum([inv.amount_total for inv in customer_invoice])
-            supplier_inv_amount =sum([inv.amount_total for inv in supplier_invoice])
-            
+            supplier_inv_amount =self.get_supplier_amount(supplier_invoice)
+            manpower_cost = sum([tm.normal_amount for tm in timesheet_pool.search([('account_id','=',project.id),('date','<=',aud_date_end)])])
             customer_refund_amount = sum([inv.amount_total - inv.residual for inv in customer_refund])
-            supplier_refund_amount =sum([inv.amount_total - inv.residual for inv in supplier_refund])
-            
+#             supplier_refund_amount =sum([inv.amount_total - inv.residual for inv in supplier_refund])
+            supplier_refund_amount = self.get_supplier_paid(supplier_refund)
             collected = sum([inv.amount_total - inv.residual for inv in customer_invoice])
-            paid = sum([inv.amount_total - inv.residual for inv in supplier_invoice])
-            
+            paid = self.get_supplier_paid(supplier_invoice)
             collected = collected - customer_refund_amount
             paid = paid - supplier_refund_amount
             
             if collected == customer_inv_amount and supplier_inv_amount== paid:
                 continue
             total_paid += project_value
+            total_paid += manpower_cost
             total_collected += collected
-            closed_projects.append((0,0,{'analytic_id':project.id,'project_value':project_value,'collected':collected,'paid':paid})) 
+            closed_projects.append((0,0,{'analytic_id':project.id,'project_value':project_value,'collected':collected,'paid':paid,'manpower_cost':manpower_cost})) 
         res =0.0
         if total_paid:
             res = total_collected/float(total_paid)
@@ -1226,12 +1330,20 @@ class hr_employee(models.Model):
         
         if type == 'sales_acc_mgr':
             
-            achieved_line,achieved_total = self.get_sales_achieved_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            achieved_line,achieved_total = self.get_sales_achieved_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
             commit_total = sample_id.commit_total
             component_data,target = self.get_sales_acc_mgr_component(commit_total,achieved_total)
             sample_id.comp_line.unlink()
             sample_id.achieved_gp_line.unlink()
             sample_id.write({'achieved_gp_line':achieved_line,'comp_line':component_data,'target':target})
+            self.write({'commit_total':commit_total})
+        
+        if type == 'sm':
+            achieved_gp_line,team_line,comp_line = self.get_sm_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
+            sample_id.comp_line.unlink()
+            sample_id.achieved_gp_line.unlink()
+            sample_id.team_line.unlink()
+            sample_id.write({'achieved_gp_line':achieved_gp_line,'comp_line':comp_line,'team_line':team_line})
         if type == 'pm':
 
             day_score_vals,cost_control_vals,invoice_schedule_vals,compliance_vals,pm_sch_line,comp_line = self.get_pm_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
@@ -1320,11 +1432,19 @@ class hr_employee(models.Model):
                              'team_line':team_line})
             sample_id =self.env['audit.sample'].create(vals)
         if type == 'sales_acc_mgr':
-            commit_line,commit_total = self.get_sales_commit_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
-            achieved_line,achieved_total = self.get_sales_achieved_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            commit_line,commit_total = self.get_sales_commit_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
+            achieved_line,achieved_total = self.get_sales_achieved_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
             component_data,target = self.get_sales_acc_mgr_component(commit_total,achieved_total)
             vals.update({'commit_gp_line':commit_line,'achieved_gp_line':achieved_line,'comp_line':component_data,'target':target})
             sample_id =self.env['audit.sample'].create(vals)
+            self.write({'commit_total':commit_total})
+        
+        if type == 'sm':
+            achieved_gp_line,team_line,comp_line = self.get_sm_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
+            vals.update({'achieved_gp_line':achieved_gp_line,'comp_line':comp_line,'team_line':team_line})
+            sample_id =self.env['audit.sample'].create(vals)
+        
+        
         
         if type == 'pm':
             
