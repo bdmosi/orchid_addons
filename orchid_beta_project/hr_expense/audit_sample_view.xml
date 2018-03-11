@@ -156,7 +156,7 @@
 								</field>
 							</page>
 						
-						      <page string="5 Day Processing Score" attrs="{'invisible':[('type','!=','pm')]}" >
+						      <page string="5 Day Processing Score" attrs="{'invisible':[('type','not in',('pm','pdm'))]}" >
 								<field name="dayscore_line">
 									<tree editable="bottom" create="false" delete="false">
 										<field name="analytic_id" readonly="1"/>
@@ -169,7 +169,24 @@
 								</field>
 							</page>
 							
-							<page string="Cost Control" attrs="{'invisible':[('type','!=','pm')]}" >
+							
+							
+							 <page string="5 Day Processing Score" attrs="{'invisible':[('type','!=','sde')]}" >
+								<field name="dayscore_line">
+									<tree editable="bottom" create="false" delete="false">
+										<field name="cost_sheet_id" readonly="1"/>
+										<button name="btn_open_cst" type="object" icon="STOCK_FIND" string="Open" />
+										<field name="score" readonly="1" />
+										<field name="sale_value" readonly="1" sum="Total"/>
+										<field name="sale_value_percent" readonly="1" />
+                                        <field name="weight" readonly="1" />
+									</tree>
+								</field>
+							</page>
+							
+							
+							
+							<page string="Cost Control" attrs="{'invisible':[('type','not in',('pm','pdm'))]}" >
 								<field name="cost_control_line">
 									<tree editable="bottom" create="false" delete="false">
 										<field name="analytic_id" readonly="1"/>
@@ -182,7 +199,7 @@
 								</field>
 							</page>
 							
-							<page string="Schedule Control" attrs="{'invisible':[('type','!=','pm')]}" >
+							<page string="Schedule Control" attrs="{'invisible':[('type','not in',('pm','pdm'))]}" >
 								<field name="pm_sch_line">
 									<tree editable="bottom" create="false" delete="false">
 										<field name="analytic_id" readonly="1"/>
@@ -195,7 +212,7 @@
 								</field>
 							</page>
 							
-							<page string="Invoice Schedule" attrs="{'invisible':[('type','!=','pm')]}" >
+							<page string="Invoice Schedule" attrs="{'invisible':[('type','not in',('pm','pdm'))]}" >
 								<field name="invoice_schedule_line">
 									<tree editable="bottom" create="false" delete="false">
 										<field name="analytic_id" readonly="1"/>
@@ -208,7 +225,7 @@
 								</field>
 							</page>
 							
-							 <page string="Compliance By PMO" attrs="{'invisible':[('type','!=','pm')]}" >
+							 <page string="Compliance By PMO" attrs="{'invisible':[('type','not in',('pm','pdm','sde'))]}" >
 								<field name="compliance_line">
 									<tree editable="bottom" create="false" delete="false">
 										<field name="analytic_id" readonly="1"/>
@@ -217,6 +234,16 @@
 										<field name="sale_value" readonly="1" sum="Total"/>
 										<field name="sale_value_percent" readonly="1" />
                                         <field name="weight" readonly="1" />
+									</tree>
+								</field>
+							</page>
+							<page string="Help Desk" attrs="{'invisible':[('type','!=','sde')]}" >
+								<field name="hd_line">
+									<tree editable="bottom" create="false" delete="false">
+										<field name="hd_id" readonly="1"/>
+										<button name="btn_open" type="object" icon="STOCK_FIND" string="Open" />
+										<field name="score" readonly="1" />
+									
 									</tree>
 								</field>
 							</page>
@@ -292,8 +319,30 @@
 							
 							
 							
-							<page string="Team Score" attrs="{'invisible':[('type','not in',('pre_sales_mgr','tc','sm'))]}" >
+							<page string="Team Score" attrs="{'invisible':[('type','not in',('pre_sales_mgr','tc','sm','pdm'))]}" >
 								<field name="team_line">
+									<tree editable="bottom" create="false" delete="false">
+										<field name="user_id" readonly="1"/>
+										<field name="score" readonly="1"/>
+
+									</tree>
+								</field>
+							</page>
+							
+							
+							<page string="Team 5 Day Processing" attrs="{'invisible':[('type','!=','sdm')]}" >
+								<field name="team_day_line">
+									<tree editable="bottom" create="false" delete="false">
+										<field name="user_id" readonly="1"/>
+										<field name="score" readonly="1"/>
+
+									</tree>
+								</field>
+							</page>
+							
+							
+							<page string="Team Help Desk Issue Management" attrs="{'invisible':[('type','!=','sdm')]}" >
+								<field name="team_hd_line">
 									<tree editable="bottom" create="false" delete="false">
 										<field name="user_id" readonly="1"/>
 										<field name="score" readonly="1"/>
@@ -334,6 +383,18 @@
 							</page>
 							<page string="Presales Component Summary" attrs="{'invisible':[('type','!=','tc')]}" >
 								<field name="tc_presale_comp_line">
+									<tree editable="bottom" create="false" delete="false">
+										<field name="name" readonly="1"/>
+										<field name="weight" readonly="1"/>
+										<field name="score" readonly="1"/>
+										<field name="final_score" readonly="1"/>
+									</tree>
+								</field>
+							</page>
+							
+							
+							<page string="My Component" attrs="{'invisible':[('type','!=','pdm')]}" >
+								<field name="my_comp_line">
 									<tree editable="bottom" create="false" delete="false">
 										<field name="name" readonly="1"/>
 										<field name="weight" readonly="1"/>

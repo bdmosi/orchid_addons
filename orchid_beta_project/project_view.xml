@@ -761,6 +761,16 @@
                      </table>
             
             </page>
+                 <page string="Preventive Maintenance Schedule">
+            	<field name="preventive_maint_line" readonly="1">
+            		<tree editable="bottom">
+            			<field name="date" />
+            			<field name="name" string="Description" />
+            			<field name="help_desk_id" readonly="1"/>
+            			
+            		</tree>
+            	</field>
+            </page>
             	
             	
             	

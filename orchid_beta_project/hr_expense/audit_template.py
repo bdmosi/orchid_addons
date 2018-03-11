@@ -8,9 +8,10 @@ class audit_template(models.Model):
                              ('pre_sales_mgr','Pre-Sales Manager'),('sales_acc_mgr','Sales Account Manager'),
                              ('sm','Sales Manager'),
                              ('bdm','BDM'), ('bdm_sec','BDM-SEC'),('bdm_net','BDM-NET-DC'),('ttl','Technical Team Leader'),
-                             ('pm','Project Manager'),('pmo','PMO Director'),
-                             ('tc','Technology Consultant'),
+                             ('pm','Project Manager'),('pmo','PMO Director'),('pdm','Project Department Manager'),
+                             ('tc','Technology Consultant'),('sde','Service Desk Engineer'),('sdm','Service Desk Manager'),
                              ],string="Type",required=True)
+    
     desc  = fields.Text(string="Description")
     calc = fields.Text(string="Calculation Method")
     data_model = fields.Char(string="Data Model")

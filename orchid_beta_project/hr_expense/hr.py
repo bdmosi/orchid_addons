@@ -546,7 +546,7 @@ class hr_employee(models.Model):
         user_id  = self.user_id and self.user_id.id
         employee_id = self.id
         team_ids = self.search([('coach_id','=',employee_id)]) 
-        user_ids = [emp.user_id.id for emp in team_ids if (emp.audit_temp_id and emp.audit_temp_id.type=='pre_sales') ] + [user_id]
+        user_ids = [emp.user_id.id for emp in team_ids if (emp.audit_temp_id and emp.audit_temp_id.type=='pre_sales')]
         result = []
         team_score =[]
         team_vals =[] 
@@ -557,7 +557,7 @@ class hr_employee(models.Model):
             result.extend(data)
             
         team_avg_score =  self.get_avg_score(team_score)  
-        comp_data =[(0,0,{'name':'Productivity','weight':100,'score':team_avg_score,'final_score':team_avg_score})]
+        comp_data =[(0,0,{'name':'Productivity','weight':100.0,'score':team_avg_score,'final_score':team_avg_score})]
         return result,team_vals,comp_data
     
     def get_presale_mgr_vals(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):
@@ -755,6 +755,57 @@ class hr_employee(models.Model):
         comp_line = [(0,0, {'name':'Average Team Performance','weight':wt*100.0,'score':score,'final_score':final_score})]
         return ach_data,team_comp_data,comp_line
         
+    
+    def get_sdm_component(self,avg_day_score,avg_hd_score):
+        comp_data = []
+        wt_day = .2 
+        wt_hd = .8
+        
+        print "average day score>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>avg hd_score",avg_day_score,avg_hd_score
+        score = avg_day_score
+        final_score = score * wt_day
+        comp_data.append((0,0,{'name':'Average Of Team Performance - 5 Day Processing','score':score,'weight':wt_day*100.0,'final_score':final_score}))
+       
+        score = avg_hd_score
+        final_score = score * wt_hd
+        comp_data.append((0,0,{'name':'Average Of Team Performance -Help Desk Issue Management','score':score,'weight':wt_hd*100.0,'final_score':final_score}))
+        return comp_data
+    
+          
+    
+    def get_sdm_data(self,sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id):
+        type = audit_temp_id.type
+        employee_id = self.id
+        team_ids = self.search([('parent_id','=',employee_id)]) 
+        user_ids = [emp.user_id.id for emp in team_ids if (emp.audit_temp_id and emp.audit_temp_id.type =='sde')]
+        print "user ids>>>>>>>>>>>>>>>>>>>>>>>>>>",user_ids
+        day_score_board = []
+        team_day_score_val = []
+        
+        team_hd_vals  =[]
+        team_hd_score_board =[]
+        for user in user_ids:
+            dum1,dum2,dum3,comp_line = self.get_sde_data(sample_id,user, aud_date_start, aud_date_end, audit_temp_id)
+            print "comp line>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",dum1,dum2
+            for _,_,val in comp_line:
+                print "valsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss sdm>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ",val
+                if val.get('name','') == '5 Day Processing Score':
+                    score =val.get('score',0.0)
+                    team_day_score_val.append((0,0,{'user_id':user,'score':score}))
+                    day_score_board.append(score)
+                    
+                if val.get('name','') == 'Help Desk Issue Management':
+                    score =val.get('score',0.0)
+                    team_hd_vals.append((0,0,{'user_id':user,'score':score}))
+                    team_hd_score_board.append(score)
+        print "day score vals>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",team_day_score_val,day_score_board
+        avg_day_score = self.get_avg_score(day_score_board)    
+        avg_hd_score = self.get_avg_score(team_hd_score_board) 
+        comp_line = self.get_sdm_component(avg_day_score,avg_hd_score)   
+        return team_day_score_val,team_hd_vals,comp_line
+    
+    
+    
     def check_date_in_audit(self,aud_date_start, aud_date_end,date):
         res = False
         if aud_date_start <= date <= aud_date_end:
@@ -884,14 +935,66 @@ class hr_employee(models.Model):
                    
         return comp_data
     
+    def get_sde_component(self,day_weight_scr,comp_weight_scr,hd_score,cert_score,day_flag,comp_flag,hd_flag,cert_flag):
+        comp_data =[]
+        day_wt  =.2
+        hd_wt = .6
+        cert_wt =.1
+        comp_wt =.1
+        
+        exclude_wt = 0.0
+        if not day_flag:
+            exclude_wt += day_wt
+            day_wt =0.0 
+        if not hd_flag:
+            exclude_wt += hd_wt
+            hd_wt =0.0
+        if not cert_flag:
+            exclude_wt += cert_wt
+            cert_wt =0.0
+        if not comp_flag:
+            exclude_wt += comp_wt 
+            comp_wt =0.0
+       
+        if exclude_wt == 1.0:
+            return comp_data
+        if exclude_wt:
+            day_wt =  day_wt + (day_wt*exclude_wt)/float(1.0-exclude_wt)
+            comp_wt =  comp_wt + (comp_wt*exclude_wt)/float(1.0-exclude_wt)
+            hd_wt = hd_wt + (hd_wt*exclude_wt)/float(1.0-exclude_wt)
+            cert_wt =  cert_wt + (cert_wt*exclude_wt)/float(1.0-exclude_wt)
+        if day_wt:
+            score = (day_weight_scr/10.0) *100.0
+            final_score = day_wt * score
+            comp_data.append((0,0,{'name':'5 Day Processing Score','weight':day_wt*100.0,'final_score':final_score,'score':score}))
+        
+        if comp_wt:
+            score = (comp_weight_scr/10.0) *100.0
+            final_score = comp_wt * score
+            comp_data.append((0,0,{'name':'Compliance Provided By PMO','weight':comp_wt*100.0,'final_score':final_score,'score':score}))
+         
+        if hd_wt:
+            score = hd_score 
+            final_score = hd_wt * score
+            comp_data.append((0,0,{'name':'Help Desk Issue Management','weight':hd_wt*100.0,'final_score':final_score,'score':score}))
+        
+        if cert_wt:
+            score = cert_score
+            final_score = cert_wt * score
+            comp_data.append((0,0,{'name':'Certificate','weight':cert_wt*100.0,'final_score':final_score,'score':score}))
+            
+                   
+        return comp_data
+        
+    
     def check_inv_sch_dates(self,inv_sch_dates,aud_date_start,aud_date_end):
         for date in inv_sch_dates:
             if date <=aud_date_end:
                 return True
         return False
     
-    def get_pm_data(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):
-        user_id  = self.user_id and self.user_id.id
+    def get_pm_data(self,sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id):
+        
         analytic_pool = self.env['account.analytic.account']
         analytic_ids = analytic_pool.search([('od_project_owner_id','=',user_id),('od_type_of_project','not in',('amc','o_m','credit')),('state','not in',('close','cancelled'))])
         project_closed_on_audit = analytic_pool.search([('od_project_owner_id','=',user_id),('od_type_of_project','not in',('amc','o_m','credit')),('state','=','close'),('date','>=',aud_date_start),('date','<=',aud_date_end)])
@@ -899,7 +1002,7 @@ class hr_employee(models.Model):
         
         day_score_vals  =[]
 #         total_sale_value = sum([a.od_project_sale for a in sample_project_ids])
-#         max_day_sore = 20 * len(sample_project_ids)
+#         max_day_sore =aud_date_endaud_date_endaud_date_end 20 * len(sample_project_ids)
         
         
         cost_control_vals = []
@@ -930,7 +1033,7 @@ class hr_employee(models.Model):
                 sale_val = proj.od_project_sale
                 tot_sale_day += sale_val
                 dayscore = proj.day_process_score
-                day_score_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':dayscore})
+                day_score_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':dayscore,'cost_sheet_id':proj.od_cost_sheet_id.id})
             #cost control score
             if proj.state == 'close':
                 gp_value = proj.od_amended_profit 
@@ -1054,6 +1157,124 @@ class hr_employee(models.Model):
     
     
     
+    def get_hd_data(self,sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id):
+        hd_pool = self.env['crm.helpdesk']
+        domain  = [('user_id','=',user_id),('categ_id','in',(16,17))]
+        domain.extend([('date_deadline','>=',aud_date_start),('date_deadline','<=',aud_date_end)])
+        hd_data = hd_pool.search(domain)
+        hd_vals =[]
+        score_board =[]
+        for hd in hd_data:
+            score =hd.od_hd_kpi
+            hd_vals.append((0,0,{'hd_id':hd.id,'score':score}))
+            score_board.append(score)
+        hd_score = self.get_avg_score(score_board)
+        print "hd score>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",hd_score
+        return hd_vals,hd_score
+            
+    
+    def get_sde_data(self,sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id):
+        analytic_pool = self.env['account.analytic.account']
+        analytic_ids = analytic_pool.search([('od_amc_owner_id','=',user_id),('od_type_of_project','=','amc'),('state','not in',('close','cancelled'))])
+        project_closed_on_audit = analytic_pool.search([('od_amc_owner_id','=',user_id),('od_type_of_project','=','amc'),('state','=','close'),('date','>=',aud_date_start),('date','<=',aud_date_end)])
+        sample_project_ids = analytic_ids + project_closed_on_audit
+        day_score_vals  =[]
+        day_weight =[]
+        tot_sale_day =0.0
+        day_score_main = []
+        compliance_vals =[]
+        comp_weight =[]
+        tot_sal_comp =0.0
+        compliance_vals_main =[]
+        
+        for proj in sample_project_ids:
+            processed_date = proj.od_cost_sheet_id and proj.od_cost_sheet_id.processed_date 
+            if processed_date and aud_date_start <= processed_date <= aud_date_end:
+                sale_val = proj.od_amc_sale
+                tot_sale_day += sale_val
+                dayscore = proj.day_process_score
+                day_score_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':dayscore,'cost_sheet_id':proj.od_cost_sheet_id.id})
+            
+            if proj.start_amc_comp:
+                compliance_score = proj.compliance_score
+                sale_val = proj.od_amc_sale
+                tot_sal_comp  += sale_val 
+                compliance_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':compliance_score})
+        
+        max_day_sore = 10.0 * len(day_score_vals)
+        for data in day_score_vals:
+            sal_val_percent =0.0
+            sale_value  = data.get('sale_value')
+            if tot_sale_day:
+                sal_val_percent = sale_value/float(tot_sale_day)
+            dayscore = data.get('score')
+            weight_day = max_day_sore * sal_val_percent * (dayscore/10.0)
+            data['sale_value_percent'] = sal_val_percent *100.0
+            data['weight'] = weight_day
+            day_weight.append(weight_day)
+            day_score_main.append((0,0,data))
+        
+        
+        max_comp_scr = 10 * len(compliance_vals)
+        for data in compliance_vals:
+            sal_val_percent =0.0
+            sale_value  = data.get('sale_value')
+            if tot_sal_comp:
+                sal_val_percent = sale_value/float(tot_sal_comp)
+            score = data.get('score')
+            weight_comp = max_comp_scr * sal_val_percent * (score/10.0)
+            data['sale_value_percent'] = sal_val_percent *100.0
+            data['weight'] = weight_comp
+            comp_weight.append(weight_comp)
+            compliance_vals_main.append((0,0,data))
+        
+        day_weight_scr = self.get_avg_score(day_weight)
+        comp_weight_scr = self.get_avg_score(comp_weight )
+        cert_score =0.0
+        day_flag = comp_flag =cert_flag=hd_flag=  False
+        if day_score_main:
+            day_flag =True 
+        if compliance_vals_main:
+            comp_flag = True
+        employee = self.search([('user_id','=',user_id)],limit=1)
+        cert = employee.get_certificate_status()
+        cert_ach = cert.get('achieved',False)
+        cert_req = cert.get('required',False)
+        
+        if cert_req:
+            cert_flag = True
+        if cert_ach:
+            cert_score =100.0
+        
+        hd_vals,hd_score = self.get_hd_data(sample_id, user_id, aud_date_start, aud_date_end, audit_temp_id)
+        if hd_vals:
+            hd_flag = True
+        
+        comp_line = self.get_sde_component(day_weight_scr,comp_weight_scr,hd_score,cert_score,day_flag,comp_flag,hd_flag,cert_flag)
+        
+        return day_score_main,hd_vals,compliance_vals_main,comp_line
+    
+    def get_pdm_data(self,sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id):
+        employee_id = self.id
+        team_ids = self.search([('parent_id','=',employee_id)]) 
+        user_ids = [emp.user_id.id for emp in team_ids if (emp.audit_temp_id and emp.audit_temp_id.type=='pm') ] + [user_id]
+        result = []
+        team_vals =[]
+        score_board =[] 
+        day_score_vals = cost_control_vals = invoice_schedule_vals = compliance_vals = schedule_control_vals = my_comp_data=[]
+        for uid in user_ids:
+            day_score_main,cost_control_val_main,invoice_schedule_main,compliance_vals_main,schedule_control_vals_main,team_comp_data = self.get_pm_data(sample_id,uid, aud_date_start, aud_date_end, audit_temp_id)
+            if uid == user_id:
+                day_score_vals, cost_control_vals,invoice_schedule_vals,compliance_vals, schedule_control_vals,my_comp_data = day_score_main,cost_control_val_main,invoice_schedule_main,compliance_vals_main,schedule_control_vals_main,team_comp_data
+            score = self.get_score_from_comp_data(team_comp_data)
+            team_vals.append((0,0,{'user_id':uid,'score':score}))
+            score_board.append(score)
+
+            
+        team_avg_score =  self.get_avg_score(score_board)  
+        comp_line =[(0,0,{'name':'Average Of Team Performance','weight':100,'score':team_avg_score,'final_score':team_avg_score})]
+        return day_score_vals,cost_control_vals,invoice_schedule_vals,compliance_vals, schedule_control_vals,team_vals,my_comp_data,comp_line
+        
         
     def get_bdm_component(self,total_gp):
         target = self.annual_target/12.0
@@ -1346,7 +1567,7 @@ class hr_employee(models.Model):
             sample_id.write({'achieved_gp_line':achieved_gp_line,'comp_line':comp_line,'team_line':team_line})
         if type == 'pm':
 
-            day_score_vals,cost_control_vals,invoice_schedule_vals,compliance_vals,pm_sch_line,comp_line = self.get_pm_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            day_score_vals,cost_control_vals,invoice_schedule_vals,compliance_vals,pm_sch_line,comp_line = self.get_pm_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
             sample_id.dayscore_line.unlink()
             sample_id.cost_control_line.unlink()
             sample_id.invoice_schedule_line.unlink()
@@ -1357,6 +1578,39 @@ class hr_employee(models.Model):
                              'invoice_schedule_line':invoice_schedule_vals,
                              'pm_sch_line':pm_sch_line,
                              'compliance_line':compliance_vals,'comp_line':comp_line})
+            
+        
+        if type == 'sde':
+            day_score_vals,hd_line,compliance_vals,comp_line = self.get_sde_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
+            sample_id.dayscore_line.unlink()
+            sample_id.hd_line.unlink()
+            sample_id.compliance_line.unlink()
+            sample_id.comp_line.unlink()
+            sample_id.write({'dayscore_line':day_score_vals,'hd_line':hd_line,
+                         'compliance_line':compliance_vals,'comp_line':comp_line})
+            
+        if type == 'sdm':
+            team_day_line,team_hd_line,comp_line = self.get_sdm_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
+            sample_id.comp_line.unlink()
+            sample_id.team_hd_line.unlink()
+            sample_id.team_day_line.unlink()
+            sample_id.write({'team_day_line':team_day_line,'comp_line':comp_line,'team_hd_line':team_hd_line})
+            
+        
+        if type == 'pdm':
+            day_score_vals,cost_control_vals,invoice_schedule_vals,compliance_vals,pm_sch_line,team_line,my_comp_line,comp_line = self.get_pdm_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
+            sample_id.dayscore_line.unlink()
+            sample_id.cost_control_line.unlink()
+            sample_id.invoice_schedule_line.unlink()
+            sample_id.compliance_line.unlink()
+            sample_id.pm_sch_line.unlink()
+            sample_id.my_comp_line.unlink()
+            sample_id.comp_line.unlink()
+            sample_id.team_line.unlink()
+            sample_id.write({'dayscore_line':day_score_vals,'cost_control_line':cost_control_vals,
+                             'invoice_schedule_line':invoice_schedule_vals,
+                             'pm_sch_line':pm_sch_line,
+                             'compliance_line':compliance_vals,'team_line':team_line,'my_comp_line':my_comp_line,'comp_line':comp_line})
         
         if type == 'bdm':
             bmd_costsheet_line,comp_line,target = self.get_bdm_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
@@ -1448,15 +1702,32 @@ class hr_employee(models.Model):
         
         if type == 'pm':
             
-            day_score_vals,cost_control_vals,invoice_schedule_vals,compliance_vals,pm_sch_line,comp_line = self.get_pm_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            day_score_vals,cost_control_vals,invoice_schedule_vals,compliance_vals,pm_sch_line,comp_line = self.get_pm_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
             vals.update({'dayscore_line':day_score_vals,'cost_control_line':cost_control_vals,'invoice_schedule_line':invoice_schedule_vals,
                          'compliance_line':compliance_vals,'pm_sch_line':pm_sch_line,'comp_line':comp_line})
+            sample_id =self.env['audit.sample'].create(vals)
+        
+        if type == 'sde':
+            day_score_vals,hd_line,compliance_vals,comp_line = self.get_sde_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
+            vals.update({'dayscore_line':day_score_vals,'hd_line':hd_line,
+                         'compliance_line':compliance_vals,'comp_line':comp_line})
+            sample_id =self.env['audit.sample'].create(vals)
+            
+        if type == 'sdm':
+            team_day_line,team_hd_line,comp_line = self.get_sdm_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
+            vals.update({'team_day_line':team_day_line,'comp_line':comp_line,'team_hd_line':team_hd_line})
             sample_id =self.env['audit.sample'].create(vals)
         
         
         if type == 'pmo':
             pmo_open_project_line,pmo_closed_project_line,comp_line = self.get_pmo_dir_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
             vals.update({'pmo_open_project_line':pmo_open_project_line,'pmo_closed_project_line':pmo_closed_project_line,'comp_line':comp_line})
+            sample_id =self.env['audit.sample'].create(vals)
+            
+        if type == 'pdm':
+            day_score_vals,cost_control_vals,invoice_schedule_vals,compliance_vals,pm_sch_line,team_line,my_comp_line,comp_line = self.get_pdm_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
+            vals.update({'dayscore_line':day_score_vals,'cost_control_line':cost_control_vals,'invoice_schedule_line':invoice_schedule_vals,
+                         'compliance_line':compliance_vals,'pm_sch_line':pm_sch_line,'team_line':team_line,'my_comp_line':my_comp_line,'comp_line':comp_line})
             sample_id =self.env['audit.sample'].create(vals)
             
         if type == 'bdm':
@@ -1477,6 +1748,9 @@ class hr_employee(models.Model):
             sample_id =self.env['audit.sample'].create(vals)
         
         return sample_id
+    
+    
+    
     
     
     

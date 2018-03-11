@@ -25,13 +25,15 @@ class audit_sample(models.Model):
     date_start = fields.Date(string="Date Start")
     date_end = fields.Date(string="Date End")
     aud_temp_id = fields.Many2one('audit.template',string="Audit Template")
+        
     type = fields.Selection([('post_sales','Post Sales'),('pre_sales','Pre-Sales Engineer'),
                              ('pre_sales_mgr','Pre-Sales Manager'),('sales_acc_mgr','Sales Account Manager'),
                              ('sm','Sales Manager'),
                              ('bdm','BDM'), ('bdm_sec','BDM-SEC'),('bdm_net','BDM-NET-DC'),('ttl','Technical Team Leader'),
-                             ('pm','Project Manager'),('pmo','PMO Director'),
-                             ('tc','Technology Consultant'),
+                             ('pm','Project Manager'),('pmo','PMO Director'),('pdm','Project Department Manager'),
+                             ('tc','Technology Consultant'),('sde','Service Desk Engineer'),('sdm','Service Desk Manager'),
                              ],string="Type",required=True)
+    
     employee_id = fields.Many2one('hr.employee',string="Employee")
     method = fields.Text(string="Method")
     avg_score = fields.Float(string="Monthly Avg Score",compute="_get_avg_score")
@@ -41,6 +43,8 @@ class audit_sample(models.Model):
     comp_line = fields.One2many('component.line','sample_id',string="Component Line")
     opp_sample_line = fields.One2many('presale.opp.sample','sample_id',string="Presales Opp Samples")
     team_line = fields.One2many('team.score.line','sample_id',string="Team Score")
+    team_day_line = fields.One2many('team.day.line','sample_id',string="Team Score")
+    team_hd_line = fields.One2many('team.hd.line','sample_id',string="Team Score")
     commit_gp_line = fields.One2many('commit.gp.sample.line','sample_id',string="Commit GP Samples")
     commit_gp_locked = fields.Boolean(string="Commit GP Sample Generation Locked")
     achieved_gp_line = fields.One2many('achieved.gp.sample.line','sample_id',string="Commit GP Samples")
@@ -67,10 +71,40 @@ class audit_sample(models.Model):
     pmo_closed_project_line = fields.One2many('pmo.closed.project.sample','sample_id',string="Details")
     tc_tech_comp_line =  fields.One2many('tc.tech.component.line','sample_id',string="Details")
     tc_presale_comp_line =  fields.One2many('tc.presale.comp.line','sample_id',string="Details")
+    my_comp_line = fields.One2many('my.component.line','sample_id',string="Details")
+    hd_line = fields.One2many('help.desk.sample.line','sample_id',string="Details")
+    
 
 
 
 
+class HelpDeskSample(models.Model):
+    _name ='help.desk.sample.line'
+    sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
+    hd_id = fields.Many2one('crm.helpdesk',string="Cost Sheet")
+    score = fields.Float(string="Score")
+     
+    @api.multi
+    def btn_open(self):
+       
+        return {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'crm.helpdesk',
+                'res_id':self.hd_id and self.hd_id.id or False,
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+
+            }
+
+
+class my_component_line(models.Model):
+    _name = 'my.component.line'
+    sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
+    name = fields.Char(string="Component")
+    weight = fields.Float(string="Weight")
+    score = fields.Float(string="Score")
+    final_score = fields.Float(string="Final Score")
 
 
 class tc_tech_component_line(models.Model):
@@ -359,6 +393,7 @@ class pm_dayscore(models.Model):
     _name ="pm.dayscore.line"
     sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
     analytic_id = fields.Many2one('account.analytic.account',string="Analytic/Project")
+    cost_sheet_id = fields.Many2one('od.cost.sheet',string="Cost Sheet")
     score = fields.Float("Score From Project")
     sale_value = fields.Float(string="Sale Value")
     sale_value_percent = fields.Float("%Sale Value")
@@ -376,7 +411,19 @@ class pm_dayscore(models.Model):
                 'target': 'new',
 
             }
+        
+    @api.multi
+    def btn_open_cst(self):
+       
+        return {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'od.cost.sheet',
+                'res_id':self.cost_sheet_id and self.cost_sheet_id.id or False,
+                'type': 'ir.actions.act_window',
+                'target': 'new',
 
+            }
 
 
 
@@ -387,7 +434,7 @@ class PlannedInvoices(models.Model):
     _name ='planned.analytic.invoice.line'
     sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
     analytic_id = fields.Many2one('account.analytic.account',string="Analytic/Project")
-   
+    
     amount = fields.Float(string="Planned Amount")
 
 class ActualInvoices(models.Model):
@@ -442,6 +489,21 @@ class TeamScore(models.Model):
     sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
     user_id = fields.Many2one('res.users',string="User")
     score = fields.Float(string="Score")
+    
+
+class TeamDayLine(models.Model):
+    _name ='team.day.line'
+    sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
+    user_id = fields.Many2one('res.users',string="User")
+    score = fields.Float(string="Score")
+
+class TeamHDLine(models.Model):
+    _name ='team.hd.line'
+    sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
+    user_id = fields.Many2one('res.users',string="User")
+    score = fields.Float(string="Score")
+
+
 class presale_opp_sample(models.Model):
     _name ='presale.opp.sample'
     sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")

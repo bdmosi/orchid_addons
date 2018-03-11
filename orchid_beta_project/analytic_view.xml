@@ -401,6 +401,11 @@
                        <td>Compliance Provided By PMO</td>
                        <td><field name="compliance_score"/></td>
                      </tr>
+                     
+                      <tr>
+                       <td>Schedule Control Score</td>
+                       <td><field name="schedule_control_score"/></td>
+                     </tr>
                     
                      <tr>
                        <td><strong>Total Score</strong></td>
@@ -410,6 +415,19 @@
                       </tbody>
                      </table>
             
+            </page>
+            
+            <page string="Preventive Maintenance Schedule">
+            	<field name="preventive_maint_line">
+            		<tree editable="bottom">
+            				<field name="date" />
+            			<field name="name" string="Description" />
+            			<field name="help_desk_id" readonly="1"/>
+            			
+            			
+            			
+            		</tree>
+            	</field>
             </page>
             
             <!-- 

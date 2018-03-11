@@ -62,6 +62,32 @@ class account_analytic_account(models.Model):
         return True
     
     
+    def create_crm_helpdesk(self):
+        
+        if len(self.preventive_maint_line) == 0:
+            raise Warning("At Lease One Preventive Maintenance Schedule Needed to Activate AMC")
+        help_desk = self.env['crm.helpdesk']
+        project = self.get_projet_id()
+        project_id = project.id
+        user_id = self.od_amc_owner_id and self.od_amc_owner_id.id
+        od_organization_id = self.partner_id and self.partner_id.id
+        categ_id =17
+        for line in self.preventive_maint_line:
+            if not line.help_desk_id:
+                vals = {
+                    'od_sch_id':line.id,
+                    'od_project_id':project_id,
+                    'user_id':user_id,
+                    'name':line.name,
+                    'od_organization_id':od_organization_id,
+                    'date_deadline':line.date,
+                    'categ_id':categ_id,
+                    'od_prev_create':True,
+                    }
+                hp_id =help_desk.create(vals)
+                line['help_desk_id'] = hp_id.id
+        
+    
     def update_bools(self):
         self.write({'use_timesheets':True,'use_tasks':True,'use_issues':True})
     
@@ -81,6 +107,7 @@ class account_analytic_account(models.Model):
         date_start = self.od_amc_start 
         date_end = self.od_amc_end
         self.create_milestone_tasks(task_vals, date_start, date_end)
+        self.create_crm_helpdesk()
         self.od_amc_status = 'active'
         
     @api.multi
@@ -703,18 +730,18 @@ class account_analytic_account(models.Model):
     
     od_project_start = fields.Date(string="Project Start")
     od_project_end = fields.Date(string="Project End")
-    od_project_status = fields.Selection([('active','Active'),('inactive','Inactive'),('close','Closed')],string="Project Status",default='inactive')
+    od_project_status = fields.Selection([('active','Active'),('inactive','Inactive'),('close','Closed')],string="Project Status",default='inactive',copy=False)
     od_project_owner_id = fields.Many2one('res.users',string="Project Owner")
-    od_project_closing = fields.Date(string="Project Closing Date")
+    od_project_closing = fields.Date(string="Project Closing Date",copy=False)
     od_project_cost = fields.Float(string="Project Cost",compute="_get_cost_from_jv")
     od_project_sale =  fields.Float(string="Project Sale",compute="_get_sale_value")
     od_project_profit = fields.Float(string="Project Profit",compute="_get_actual_profit")
     
     od_amc_start = fields.Date(string="AMC Start")
     od_amc_end = fields.Date(string="AMC End")
-    od_amc_status = fields.Selection([('active','Active'),('inactive','Inactive'),('close','Closed')],string="Project Status",default='inactive')
+    od_amc_status = fields.Selection([('active','Active'),('inactive','Inactive'),('close','Closed')],string="Project Status",default='inactive',copy=False)
     od_amc_owner_id = fields.Many2one('res.users',string="AMC Owner")
-    od_amc_closing = fields.Date(string="AMC Closing Date")
+    od_amc_closing = fields.Date(string="AMC Closing Date",copy=False)
     od_amc_cost = fields.Float(string="AMC Cost",compute="_get_cost_from_jv")
     od_amc_sale =  fields.Float(string="AMC Sale",compute="_get_sale_value")
     od_amc_profit = fields.Float(string="AMC Profit",compute="_get_actual_profit")
@@ -723,7 +750,7 @@ class account_analytic_account(models.Model):
     od_om_end = fields.Date(string="O&M End")
     od_om_status = fields.Selection([('active','Active'),('inactive','Inactive'),('close','Closed')],string="O&M Status",default='inactive')
     od_om_owner_id = fields.Many2one('res.users',string="OM Owner")
-    od_om_closing = fields.Date(string="O&M Closing Date")
+    od_om_closing = fields.Date(string="O&M Closing Date",copy=False)
     od_om_cost = fields.Float(string="O&M Cost")
     od_om_sale =  fields.Float(string="O&M Sale")
     od_om_profit = fields.Float(string="O&M Profit")
@@ -914,26 +941,47 @@ class account_analytic_account(models.Model):
         
         score = [x.score for x in self.od_comp_closing_line if x.add_score]
         score_board.extend(score)
+        if self.od_type_of_project == 'amc':
+            score_board =[]
+            score = [x.score for x in self.od_comp_handover_line if x.add_score]
+            score_board.extend(score)
+            
+            score = [x.score for x in self.od_comp_maint_line if x.add_score]
+            score_board.extend(score)
         result = self.get_avg_score_board(score_board)
         return result
+    
+    def get_schedule_control_score(self):
+        result =0.0
+        project_planned_end = self.od_project_end 
+        closed_date = self.od_project_closing 
+        if closed_date <= project_planned_end:
+            result =30.0
+        return result
+            
+        
+    
+    
     @api.one
     def _kpi_score(self):
-        day_process_score = .2 *self.get_day_procss_score()
+        day_process_score = .1 *self.get_day_procss_score()
         invoice_schedule_score =  .3 *self.get_invoice_schedule_score()
-        cost_control_score = .3 * self.get_cost_control_score()
-        compliance_score = .2 * self.get_compliance_score()
-        total_score = day_process_score + invoice_schedule_score + cost_control_score+ compliance_score
+        cost_control_score = .2 * self.get_cost_control_score()
+        compliance_score = .1 * self.get_compliance_score()
+        schedule_control_score = .3 * self.get_schedule_control_score()
+        total_score = day_process_score + invoice_schedule_score + cost_control_score+ compliance_score + schedule_control_score
         self.day_process_score = day_process_score 
         self.invoice_schedule_score = invoice_schedule_score 
         self.cost_control_score = cost_control_score 
         self.compliance_score = compliance_score 
+        self.schedule_control_score = schedule_control_score
         self.total_score = total_score
     day_process_score = fields.Float(string="Day Process Score",compute="_kpi_score")
     invoice_schedule_score = fields.Float(string="Invoice Schedule Score",compute="_kpi_score")
     cost_control_score = fields.Float(string="Cost Control Score",compute="_kpi_score")
     compliance_score = fields.Float(string="Compliance Score",compute="_kpi_score")
     total_score = fields.Float(string="Total Score",compute="_kpi_score")
-    
+    schedule_control_score = fields.Float(string="Compliance Score",compute="_kpi_score")
     
     
     
@@ -1018,7 +1066,7 @@ class account_analytic_account(models.Model):
     od_comp_closing_line  = fields.One2many('od.compliance.closing','analytic_id',string="Detail Line",default=get_closing_line)
     od_comp_handover_line  = fields.One2many('od.compliance.handover','analytic_id',string="Detail Line",default=get_handover_line)
     od_comp_maint_line  = fields.One2many('od.compliance.maint','analytic_id',string="Detail Line",default=get_maint_line)
-    
+    preventive_maint_line = fields.One2many('preventive.maint.schedule','analytic_id',string="Detail Line")
    
     
 
@@ -1083,3 +1131,11 @@ class od_om_invoice_schedule(models.Model):
     name = fields.Char(string="Name",required=True)
     date = fields.Date(string="Planned Date",required=True)
     amount = fields.Float(string="Amount",required=True)
+
+class preventive_maint_schedule(models.Model):
+    _name = "preventive.maint.schedule"
+    analytic_id  = fields.Many2one('account.analytic.account',string="Analytic Account")
+    name = fields.Char(string="Name",required=True)
+    date = fields.Date(string="Date",required=True)
+    help_desk_id = fields.Many2one('crm.helpdesk',string="Help Desk")
+    

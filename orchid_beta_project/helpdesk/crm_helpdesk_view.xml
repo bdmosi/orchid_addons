@@ -18,6 +18,7 @@
                  </xpath>
 
                 <field name="date_deadline" position="after">
+                      <field name="close_date" readonly="1"/>
                     <field name="od_number" readonly="1"/>
                 </field>
                 <field name="date_deadline" position="attributes">
@@ -73,6 +74,23 @@
                                 <field name="name" />
                             </tree>
                         </field>
+                    </page>
+                 
+                     <page string="KPI Audit" attrs="{'invisible':[('categ_id','not in',(16,17))]}">
+			            <table style="width:100%" class="table table-striped">
+			                   <thead>
+			                       <th>Components</th>
+			                       <th>Score</th>
+			                    </thead>
+			                    <tbody>
+			                    <tr>
+			                       <td>Help Desk Issue Management</td>
+			                       <td><field name="od_hd_kpi"/></td>
+		                     </tr>
+		                     </tbody>
+                     </table>
+                    
+                    
                     </page>
 
                 </page>

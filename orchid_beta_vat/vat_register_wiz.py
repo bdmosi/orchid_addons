@@ -28,6 +28,8 @@ from datetime import timedelta
 
 
 
+
+
 class OrchidVatRegister(models.TransientModel):
 	"""
 	Orchid Tax Register Output.
@@ -408,14 +410,59 @@ class OrchidVatRegister(models.TransientModel):
 
 
 
-# class OrchidVatRegisterOutputLine(models.TransientModel):
+class OrchidVatRegisterInputLine(models.TransientModel):
 
-# 	_name="orchid.vat.register.line"
-# 	_description="orchid.vat.register.line"
+	_name="orchid.vat.register.line"
+	_description="orchid.vat.register.line"
 
 
-# 	wizard_line_id=fields.Many2one("orchid.vat.register",string="accounts_line")
-# 	account_id=fields.Many2one('account.account',string="ACCOUNTS")
+	wizard_line_id=fields.Many2one("orchid.vat.register",string="accounts_line")
+	account_id=fields.Many2one('account.account',string="ACCOUNTS")
+
+
+
+
+ 
+class OrchidVatRegioutput(models.TransientModel):
+ 
+	_name="orchid.vat.register.output"
+	_description="orchid.vat.register.line"
+ 
+ 
+	wizard_line_id=fields.Many2one("orchid.vat.register",string="accounts_line")
+	account_id=fields.Many2one('account.account',string="ACCOUNTS")
+ 
+ 
+class OrchidVatReginput(models.TransientModel):
+ 
+	_name="orchid.vat.register.input"
+	_description="orchid.vat.register.line"
+ 
+ 
+	wizard_line_id=fields.Many2one("orchid.vat.register",string="accounts_line")
+	account_id=fields.Many2one('account.account',string="ACCOUNTS")
+ 
+ 
+class OrchidVatRegioutputLine(models.TransientModel):
+ 
+	_name="orchid.vat.register.output.line"
+	_description="orchid.vat.register.line"
+ 
+ 
+	wizard_line_id=fields.Many2one("orchid.vat.register",string="accounts_line")
+	account_id=fields.Many2one('account.account',string="ACCOUNTS")
+ 	
+ 	
+ 
+class OrchidVatRegiinine(models.TransientModel):
+ 
+	_name="orchid.vat.register.input.line"
+	_description="orchid.vat.register.line"
+ 
+ 
+	wizard_line_id=fields.Many2one("orchid.vat.register",string="accounts_line")
+	account_id=fields.Many2one('account.account',string="ACCOUNTS")
+
 
 
 
