@@ -208,6 +208,13 @@
         <field name="description">Business Manager</field>
     </record>
     
+     
+    <record id="group_see_branch_lead" model="res.groups">
+        <field name="name">See Branch Leads</field>
+    <field name="category_id" ref="orchid_beta.module_orchid_beta_sales"/>
+        <field name="description">See Branch Leads</field>
+    </record>
+    
     
 
 
