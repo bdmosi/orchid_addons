@@ -49,6 +49,7 @@
                  'change_management/change_view.xml',
                 'crm/crm_view.xml',
                 'crm/inquiry_type.xml',
+#                 'report/mat_report_view.xml',
         
             ],
     'css': [],

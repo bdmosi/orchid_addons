@@ -138,9 +138,12 @@
             		 -->
                     <field name="date_start" required="1" on_change="onchange_date_start_end(date_start,od_type,planned_hours)"/>
                     <!-- <field name="date_end" attrs="{'invisible': [('od_type','=','activities')],'required': [('od_type','!=','activities')]}" /> -->
-                    <field name="planned_hours" widget="float_time" on_change="onchange_date_start_end(date_start,od_type,planned_hours)" attrs="{'invisible': ['|',('od_type','!=','activities'),('od_material_request','!=',False)]}"/>
+                    <field name="planned_hours" widget="float_time" on_change="onchange_date_start_end(date_start,od_type,planned_hours)" attrs="{'invisible': ['|',('od_type','!=','activities'),('od_material_request','!=',False)]}" invisible="1"/>
                     
-                    <field name="date_end" required="1" on_change="onchange_date_end(date_end,od_type)"  />
+                    <field name="date_end" required="1" on_change="onchange_date_end(date_end,od_type)"  invisible="1" />
+                    
+                    <field name="b_plan_hr" widget="float_time" />
+                    <field name="b_date_end" />
                     <field name="od_access_method" attrs="{'invisible': [('od_type','!=','activities')],'required': [('od_type','=','activities')]}"/>
             	</xpath>
 

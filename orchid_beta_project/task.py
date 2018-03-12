@@ -15,6 +15,9 @@ class task(models.Model):
     _inherit = 'project.task'
     
     
+   
+    
+    
     def check_audit_period(self):
         today = date.today()
         year = today.year
@@ -29,6 +32,18 @@ class task(models.Model):
         if task_end_date > audit_end:
             return True
         return False
+    
+    @api.one 
+    @api.depends('date_start','od_implementation_id')
+    def x_get_end_date(self):
+        duration = self.od_implementation_id and self.od_implementation_id.expected_act_duration
+        self.b_plan_hr = duration 
+        date_start = self.date_start
+        if date_start:
+            date_start = datetime.strptime(date_start, DEFAULT_SERVER_DATETIME_FORMAT)
+            dt = date_start + timedelta(hours=duration or 0.0)
+            dt_s = dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+            self.b_date_end = dt_s
     @api.multi 
     def btn_cancel_by_tl(self):
         if self.check_audit_period():
@@ -676,6 +691,9 @@ class task(models.Model):
     #     print "project id>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",project_id,partner_id
     #     print "context>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",context
     #     return partner_id
+    
+    b_plan_hr = fields.Float(string="Planned Hours",compute="x_get_end_date")
+    b_date_end = fields.Datetime(string="Ending Date",compute="x_get_end_date")
     
     no_delete = fields.Boolean(string="Delete Blocked")
     od_duplicated = fields.Boolean(string="Duplicated")

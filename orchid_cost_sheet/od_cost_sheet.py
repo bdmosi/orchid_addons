@@ -725,7 +725,7 @@ class od_cost_sheet(models.Model):
     od_branch_id =fields.Many2one('od.cost.branch',string='Branch')
     od_division_id =fields.Many2one('od.cost.division',string='Division')
     sale_team_id = fields.Many2one('crm.case.section',string="Sale Team",related="lead_id.section_id",readonly=True)
-    op_stage_id = fields.Many2one('crm.case.stage',string="Opp Stage",related="lead_id.stage_id",readonly=True)    
+    op_stage_id = fields.Many2one('crm.case.stage',string="Opp Stage",related="lead_id.stage_id",readonly=True,store=True)    
     op_expected_booking = fields.Date(string="Opp Expected Booking",related="lead_id.date_action",readonly=True,store=True)    
    
     material_summary = fields.Html(string="Material Summary",default=default_material_summary)

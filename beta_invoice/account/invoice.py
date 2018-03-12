@@ -44,7 +44,7 @@ class account_invoice(models.Model):
     op_stage_id = fields.Many2one('crm.case.stage',string="Opp Stage",related="lead_id.stage_id",readonly=True)    
     op_expected_booking = fields.Date(string="Opp Expected Booking",related="lead_id.date_action",readonly=True)    
    
-    op_stage_id = fields.Many2one('crm.case.stage',string="Opp Stage",related="lead_id.stage_id",readonly=True)    
+      
     fin_approved_date = fields.Datetime(string="Finance Approved Date",related="od_cost_sheet_id.approved_date",readonly=True)
     od_closing_date = fields.Date(string="Closing Date")
     bt_enable = fields.Boolean(string="Enable Payment Percentage",readonly=True,states={'draft':[('readonly',False)]})

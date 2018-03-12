@@ -175,6 +175,9 @@ class task(osv.osv):
             domain = {'od_parent_id': [('od_type','!=','activities')]}
         return {'domain':domain}
 
+    
+    
+    
     def onchange_imp_id(self,cr,uid,ids,imp_id,context=None):
         res = {}
         imp_pool = self.pool.get('od.implementation')

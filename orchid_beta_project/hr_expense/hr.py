@@ -340,10 +340,11 @@ class hr_employee(models.Model):
             return {'weight_escalate':True,'score':resolved/float(total_count)}
         
         
-    def get_ttl_vals(self,sample_id,aud_date_start,aud_date_end,audit_temp_id):
+    def get_ttl_vals(self,sample_id,user_id,aud_date_start,aud_date_end,audit_temp_id):
         type = audit_temp_id.type
-        user_id  = self.user_id and self.user_id.id
-        employee_id = self.id
+#         user_id  = self.user_id and self.user_id.id
+        employee = self.search([('user_id','=',user_id)],limit=1)
+        employee_id = employee.id
         dt_start = aud_date_start
         result = []
         eng_ids = self.search([('coach_id','=',employee_id)]) 
@@ -356,8 +357,8 @@ class hr_employee(models.Model):
         engineer_task_count = 0
         utl_list = []
         fot_list =[]
-        for user_id in user_ids:
-            domain = [('od_type','=','activities'),('user_id','=',user_id),('od_stage','=','done')]
+        for user in user_ids:
+            domain = [('od_type','=','activities'),('user_id','=',user),('od_stage','=','done')]
             domain.extend([('date_start','>=',aud_date_start),('date_start','<=',aud_date_end)]) 
             data_ids =self.env[data_model].search(domain)
             spent_time = sum([dat.od_actual for dat in data_ids])
@@ -367,15 +368,15 @@ class hr_employee(models.Model):
 #             for data in data_ids:
 #                 spent_time += sum([work.hours for work in data.work_ids])
             utl = spent_time/float(avl_time)
-            result.append((0,0,{'user_id':user_id,'available_time':avl_time,'actual_time_spent':spent_time,'utl':(spent_time/avl_time)*100.0}))
-            fot_data.append((0,0,{'user_id':user_id,'fot':fot}))
+            result.append((0,0,{'user_id':user,'available_time':avl_time,'actual_time_spent':spent_time,'utl':(spent_time/avl_time)*100.0}))
+            fot_data.append((0,0,{'user_id':user,'fot':fot}))
             utl  = (utl/0.65)
             utl_list.append(utl)
             fot_list.append(fot)
             
         utl_score =  self.get_avg_score(utl_list)  
         fot_score  = self.get_avg_score(fot_list)   
-        cancelled_activities = self.get_cancelled_activities(self.user_id.id,aud_date_start,aud_date_end,engineer_task_count) 
+        cancelled_activities = self.get_cancelled_activities(user_id,aud_date_start,aud_date_end,engineer_task_count) 
         escalation_activities = self.get_escalation_activities(aud_date_start,aud_date_end,user_ids)
         weight_escalate = escalation_activities.get('weight_escalate',False)
         weight_task_cancel = cancelled_activities.get('weight_task',False)
@@ -413,7 +414,16 @@ class hr_employee(models.Model):
             comp_data.append((0,0,{'name':'Escalation From Activity Owner','weight':wt_esc,'score':esc_scr*100,'final_score':wt_esc * esc_scr})) 
         return result,fot_data,comp_data
     
-    
+    def get_hoo_data(self,sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id):
+        employee = self.search([('user_id','=',user_id)],limit=1)
+        employee_id = employee.id
+        team_ids = self.search([('parent_id','=',employee_id)]) 
+        tl_user_ids = [emp.user_id.id for emp in team_ids if (emp.audit_temp_id and emp.audit_temp_id.type =='ttl')]
+        utl_vals = fot_vals = tl_comp_line = []
+        for user in tl_user_ids:
+            utl_data,fot_data,ttl_comp = self.get_ttl_vals(sample_id, user_id, aud_date_start, aud_date_end, audit_temp_id)
+            utl_vals.extend(utl_data)
+            fot_vals.extend(fot_data)
     def get_tech_cons_ps_vals(self,sample_id,aud_date_start,aud_date_end,audit_temp_id):
         type = audit_temp_id.type
         usr_id  = self.user_id and self.user_id.id
@@ -1513,7 +1523,7 @@ class hr_employee(models.Model):
             sample_id.write({'post_sale_sample_line':result,'comp_line':comp_data,'utilization':utilization})
         
         if type =='ttl':
-            result,fot_data,comp_data = self.get_ttl_vals(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            result,fot_data,comp_data = self.get_ttl_vals(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
             sample_id.utl_sample_line.unlink()
             sample_id.ttl_fot_line.unlink()
             sample_id.comp_line.unlink()
@@ -1663,9 +1673,15 @@ class hr_employee(models.Model):
         
         
         if type =='ttl':
-            result,fot_data,comp_data = self.get_ttl_vals(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+            result,fot_data,comp_data = self.get_ttl_vals(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
             vals.update({'utl_sample_line':result,'ttl_fot_line':fot_data,'comp_line':comp_data}) 
             sample_id =self.env['audit.sample'].create(vals)
+        
+        if type == 'hoo':
+            utl_sample_line,ttl_fot_line,ttl_comp_line = self.get_hoo_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
+            vals.update({'utl_sample_line':utl_sample_line,'ttl_fot_line':ttl_fot_line}) 
+            sample_id =self.env['audit.sample'].create(vals)
+            
         if type == 'pre_sales':
             opp_sample_line,comp_data = self.get_presale_vals(sample_id, aud_date_start, aud_date_end, audit_temp_id)
             vals.update({'opp_sample_line':opp_sample_line,'comp_line':comp_data}) 

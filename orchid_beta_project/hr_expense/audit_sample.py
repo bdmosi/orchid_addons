@@ -32,6 +32,7 @@ class audit_sample(models.Model):
                              ('bdm','BDM'), ('bdm_sec','BDM-SEC'),('bdm_net','BDM-NET-DC'),('ttl','Technical Team Leader'),
                              ('pm','Project Manager'),('pmo','PMO Director'),('pdm','Project Department Manager'),
                              ('tc','Technology Consultant'),('sde','Service Desk Engineer'),('sdm','Service Desk Manager'),
+                             ('hoo','Head Of Operation'),
                              ],string="Type",required=True)
     
     employee_id = fields.Many2one('hr.employee',string="Employee")
