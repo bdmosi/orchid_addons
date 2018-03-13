@@ -421,7 +421,7 @@ class hr_employee(models.Model):
         tl_user_ids = [emp.user_id.id for emp in team_ids if (emp.audit_temp_id and emp.audit_temp_id.type =='ttl')]
         utl_vals = fot_vals = tl_comp_line = []
         for user in tl_user_ids:
-            utl_data,fot_data,ttl_comp = self.get_ttl_vals(sample_id, user_id, aud_date_start, aud_date_end, audit_temp_id)
+            utl_data,fot_data,ttl_comp = self.get_ttl_vals(sample_id, user, aud_date_start, aud_date_end, audit_temp_id)
             utl_vals.extend(utl_data)
             fot_vals.extend(fot_data)
             tl_comp_line.extend(ttl_comp)
