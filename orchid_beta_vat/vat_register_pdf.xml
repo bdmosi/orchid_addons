@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
    <data>
-      	<template id="report_vat_register_pdf">
+      	<template id="orchid_beta_vat.report_vat_register_pdf">
       		<t t-call="report.external_layout">
-				<t t-call="report.html_container">
-					<t t-foreach="docs" t-as="o">
+				<!-- <t t-call="report.html_container"> -->
+					<!-- <t t-foreach="get" t-as="o"> -->
 						<div class="page">
 							<div class="row">
 								<p>
 				                     Document:VAT Output<br/>
 				                   
-				       
-				                     <p>Report Date:<span t-esc="report_date"/><br/></p>
-				                     <p>VAT Period:<span t-esc="vat_period"/><br/></p>
+				       <t t-set="value" t-value="get_data(data)"/>
+				                     <p>Report Date:<span t-esc="get_data(data)['report_date']"/><br/></p>
+				                     <p>VAT Period:<span t-esc="get_data(data)['vat_period']"/><br/></p>
+				                     
 				   				</p>		
 
 								<table class="table table-condensed" style="width:100%;border:1px solid #000;border-collapse: collapse;">
@@ -41,7 +42,9 @@
 			                          </tr>
 				                    </thead>
 				                     <tbody>
-					                    	<t t-foreach="lines" t-as="data">
+				                     		<t t-set="total_credit" t-value="0"/>
+				                     		<t t-set="total_debit" t-value="0"/>
+					                    	<t t-foreach="get_data(data)['all_lines']" t-as="data">
 					                      	<tr  style="border:1px solid #000;border-collapse: collapse;">
 					                      		<td style="border:1px solid #000;border-collapse: collapse;">
 		                                 			<span t-esc="data['doc_num']"/>
@@ -59,10 +62,12 @@
 		                                 			<span t-esc="data['doc_date']"/>
 		                              			</td>
 		                              			<td style="border:1px solid #000;border-collapse: collapse;">
-		                                 			<span t-esc="data['debit']"/>
+		                                 			<span t-esc="data['debit']" />
+		                                 			<t t-set="total_debit" t-value="total_debit+data['debit']"/>
 		                              			</td>
 		                              			<td style="border:1px solid #000;border-collapse: collapse;">
-		                                 			<span t-esc="data['credit']"/>
+		                                 			<span t-esc="data['credit']" />
+		                                 			<t t-set="total_credit" t-value="total_credit+data['credit']"/>
 		                              			</td>
 		                              			<td style="border:1px solid #000;border-collapse: collapse;">
 		                                 			<span t-esc="data['currency']"/>
@@ -92,10 +97,12 @@
 		                                 			
 		                              			</td>
 		                              			<td style="border:1px solid #000;border-collapse: collapse;">
+
 		                                 			<span t-esc="total_debit"/> 
 		                              			</td>
 
 		                              			<td style="border:1px solid #000;border-collapse: collapse;">
+
 		                              				<span t-esc="total_credit"/> 
 		                              			</td>
 		                              			<td style="border:1px solid #000;border-collapse: collapse;">
@@ -110,12 +117,17 @@
 		                              	</tr>
 		                             </tbody>
 				                </table>
-				                <p>Local Purchase:<span t-esc="local_purchase"/><br/></p>
-				                <p>Foreign Purchase:<span t-esc="foreign_purchase"/><br/></p>
+				                <p>Local Purchase:<span t-esc="value['local_purchase']"/>
+				                	<!-- <span t-esc="get_data(data)['local_purchase']"/><br/> -->
+				                </p>
+				            	<br/><p>Foreign Purchase:<span t-esc="value['foreign_purchase']"/><br/>
+				            	</p>
+				                
 				            </div>
+				            
 				        </div>
-				    </t>
-				</t>
+				    <!-- </t> -->
+				<!-- </t> -->
 			</t>
 		</template>
 	</data>

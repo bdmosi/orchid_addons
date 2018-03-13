@@ -28,8 +28,6 @@ from datetime import timedelta
 
 
 
-
-
 class OrchidVatRegister(models.TransientModel):
 	"""
 	Orchid Tax Register Output.
@@ -39,127 +37,15 @@ class OrchidVatRegister(models.TransientModel):
 
 	from_date = fields.Date(string='From Date')
 	to_date = fields.Date(string='To Date')
-	# wizard_line=fields.One2many('orchid.vat.register.line','wizard_line_id',string='line_id_')
+
+	# wizard_line1=fields.One2many('orchid.vat.register.line','wizard_line_id',string='line_id_')
+
 	wizard_line=fields.Many2many('account.account',string='line_id')
 	excel_file = fields.Binary(string='Dowload Report Excel',readonly="1")
 	file_name = fields.Char(string='Excel File',readonly="1")
 
-	def print_pdf(self, cr, uid, ids, context=None):
-		data={}
-		pflag=0
 
-		if context is None:
-			context={}
-		
-		data = self.read(cr, uid, ids,['from_date','to_date','wizard_line'])[0]
-		from_date=data.get('from_date')
-		to_date=data.get('to_date')
-		wizard_line_account_id=data.get('wizard_line')
-		print 'list'
-		print 'list'
-		print 'list'
-		print 'list'
-		print 'list'
-		print 'list'
-		print 'list'
-		print 'list'
-		print 'list'
-		print 'list',wizard_line_account_id
-
-
-		print 'rrrrrrrrrrrrrrrrrrr'
-		# for acc_lines in self.browse(cr, uid, ids, context=context):
-		# 	for acc_line in acc_lines.wizard_line:
-		# 		wizard_line_account_id.append(acc_line.account_id.id)
-	
-		
-
-		if from_date>to_date:
-			raise Warning("From Date cannot be greater than To Date!!")
-
-		inv_obj = self.pool['account.move.line']
-		inv_datas  =inv_obj.search(cr,uid,[('account_id','in',wizard_line_account_id),('date','>=',from_date),('date','<=',to_date)])
-		# print"qqqqq",inv_datas
-
-		obj_ls=[]
-		for res in inv_obj.browse(cr, uid, inv_datas,context=context):
-			if res.journal_id and res.journal_id.type=='purchase':
-				pflag=1
-			if res.journal_id:# and res.journal_id.type=='sale':
-				# print 'ifffffffffffff',res
-				obj_ls.append(res)
-
-		# print 'listttttt',obj_ls
-		vat_period=datetime.strptime(data.get('from_date'), '%Y-%m-%d').strftime('%d/%m/%Y')+"\tto\t"+datetime.strptime(data.get('to_date'), '%Y-%m-%d').strftime('%d/%m/%Y')
-		print 'vat-periodddddd',vat_period
-		
-
-		report_date = date.today()
-		report_date=report_date.strftime("%d/%m/%Y")
-		print 'report_date',report_date
-		local_purchase=0
-		foreign_purchase=0
-		trans_d=0
-		trans_c=0
-		total_credit=0
-		total_debit=0
-		all_lines = []
-		for ls in obj_ls:
-			for record in ls:
-				data = {}
-				flag=0
-				data['doc_num']=record.move_id.name
-				data['description']=record.partner_id.name
-				data['doc_type']=record.journal_id.name
-				data['doc_date']=record.date
-				data['debit']=ls.debit
-				data['credit']=ls.credit
-				data['currency']=ls.company_id.currency_id.name
-				
-				data['trans_type']=ls.invoice.od_order_type_id.name
-				print 'ccccccc',data['trans_type']
-				data['tax_code']=record.account_id.name
-				# print 'aaaaaaaaa',data['tax_code']
-				# print 'recorddddddddd',data
-				if data['trans_type']=='Local Purchase':
-					trans_d=trans_d+data['debit']
-					trans_c=trans_c+data['credit']
-					local_purchase=trans_c-trans_d
-
-				if data['trans_type']=='Foreign Purchase':
-					trans_d=trans_d+data['debit']
-					trans_c=trans_c+data['credit']
-					foreign_purchase=trans_c-trans_d
-				if data['trans_type']==0:
-					flag=1
-
-
-				data['doc_date']=datetime.strptime(data['doc_date'], '%Y-%m-%d').strftime('%d/%m/%Y')
-
-				# print 'dateeeeeeeee',data['doc_date']
-				total_credit=total_credit+data['credit']
-				# print 'creeeeeeeeee',total_credit
-				total_debit=total_debit+data['debit']
-				all_lines.append(data)
-		move_lines = {'filter': {'from': from_date, 'to': to_date}, 'period': {'vat_period': vat_period}, 'total': {'total_credit': total_credit,'total_debit':total_debit},
-					'transaction_type': {'local_purchase': local_purchase,'foreign_purchase':foreign_purchase},'datas': {'values': all_lines}}	
-		print "all_linesssssssssssssssssssssssssssssssssss",all_lines
-		print "lineeeeeeeeeeeeeeeeeeeeeeeeeeeeeessssssssssssssssssssssssssssssssssssss",move_lines
-		return self.pool['report'].get_action(cr,uid,[], 'orchid_beta_vat.report_vat_register_pdf',context=context, data=move_lines)
-		
-		
 	def generate(self, cr, uid, ids, context=None):
-
-		print 'entered'
-		print 'entered'
-		print 'entered'
-		print 'entered'
-		print 'entered'
-		print 'entered'
-		print 'entered'
-		print 'entered'
-		print 'entered'
-		print 'entered'
 		data={}
 		pflag=0
 		if context is None:
@@ -170,19 +56,6 @@ class OrchidVatRegister(models.TransientModel):
 		to_date=data.get('to_date')
 
 		wizard_line_account_id=data.get('wizard_line')
-		print 'fffffffffffffffffffffffffffffff'
-		print 'fffffffffffffffffffffffffffffff'
-		print 'fffffffffffffffffffffffffffffff'
-		print 'fffffffffffffffffffffffffffffff'
-		print 'fffffffffffffffffffffffffffffff'
-		print 'fffffffffffffffffffffffffffffff'
-		print 'fffffffffffffffffffffffffffffff',wizard_line_account_id
-		# print 'iddddddd',wizard_line_account_id
-		# for acc_lines in self.browse(cr, uid, ids, context=context):
-		# 	for acc_line in acc_lines.wizard_line:
-		# 		wizard_line_account_id.append(acc_line.account_id.id)
-		# print wizard_line_account_id
-
 		if from_date>to_date:
 			raise Warning("From Date cannot be greater than To Date!!")
 
@@ -196,11 +69,10 @@ class OrchidVatRegister(models.TransientModel):
 			if res.journal_id and res.journal_id.type=='purchase':
 				pflag=1
 
-			if res.journal_id:# and res.journal_id.type=='sale':
-				# print 'ifffffffffffff',res
+			if res.journal_id:
+			
 				obj_ls.append(res)
 
-		# print 'listttttt',obj_ls
 		return self.generate_excel(cr,uid,ids,data,obj_ls,inv_datas,pflag,context=None)
 
 
@@ -261,7 +133,7 @@ class OrchidVatRegister(models.TransientModel):
 			sheet.write(row,col,header[i],style_coloured)
 			col=col+1
 		
-		# print 'dataaaaaaaaaaaaaaaaaaaa'
+		
 		local_purchase=0
 		foreign_purchase=0
 		trans_d=0
@@ -408,9 +280,51 @@ class OrchidVatRegister(models.TransientModel):
 			  'target': 'new'
 			  }
 
+	def build_filter(self, cr, uid, ids, context=None):
+		data = self.read(cr, uid, ids,['from_date','to_date','wizard_line'])[0]
+		return data
+		
+	def print_pdf(self, cr, uid, ids, context=None):
+		if context is None:
+			context = {}
+		data = self.build_filter(cr,uid,ids,context=context)
+		return self.pool['report'].get_action(cr,uid,[], 'orchid_beta_vat.report_vat_register_pdf',context=context, data=data)
+		
+		
+	
 
 
-class OrchidVatRegisterInputLine(models.TransientModel):
+# class Report_Vat_Register_pdf(models.AbstractModel):
+# 	_name = 'report.orchid_beta_vat.report_vat_register_pdf'
+
+# 	@api.multi
+# 	def render_html(self, data=None):
+# 		model = self.env.context.get('active_model')
+# 		docs = self.env[model].browse(self.env.context.get('active_id'))
+# 		report_date = date.today()
+# 		report_date=report_date.strftime("%d/%m/%Y")
+# 		# print "bbbbbbbbbbbbbbbbbbbbbbbbbbbbb",data['datas']['values']
+# 		print "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",data
+# 		report_obj = self.env['report']
+# 		report = report_obj._get_report_from_name('orchid_beta_vat.report_vat_register_pdf')
+# 		docargs = {
+# 			'doc_ids': self.ids,
+# 			'doc_model': model,
+# 			'docs': docs,
+# 			'lines': data['datas']['values'],
+# 			'report_date': report_date,
+# 			'local_purchase': data['transaction_type']['local_purchase'],
+# 			'foreign_purchase': data['transaction_type']['foreign_purchase'],
+# 			'vat_period': data['period']['vat_period'],
+# 			'total_credit' : data['total']['total_credit'],
+# 			'total_debit' : data['total']['total_debit'],
+# 			}
+# 		return report_obj.render('orchid_beta_vat.report_vat_register_pdf', docargs)
+
+
+
+
+class OrchidVatRegisterOutputLine(models.TransientModel):
 
 	_name="orchid.vat.register.line"
 	_description="orchid.vat.register.line"
@@ -419,16 +333,23 @@ class OrchidVatRegisterInputLine(models.TransientModel):
 	wizard_line_id=fields.Many2one("orchid.vat.register",string="accounts_line")
 	account_id=fields.Many2one('account.account',string="ACCOUNTS")
 
+class OrchidAccountRelation(models.TransientModel):
+
+	_name="account.relation"
+	_description="account.relation"
+
+
+	wizard_line_id=fields.Many2one("orchid.vat.register",string="accounts_line")
+	account_id=fields.Many2one('account.account',string="ACCOUNTS")
 
 
 
- 
 class OrchidVatRegioutput(models.TransientModel):
  
 	_name="orchid.vat.register.output"
 	_description="orchid.vat.register.line"
  
- 
+	 
 	wizard_line_id=fields.Many2one("orchid.vat.register",string="accounts_line")
 	account_id=fields.Many2one('account.account',string="ACCOUNTS")
  
@@ -437,58 +358,34 @@ class OrchidVatReginput(models.TransientModel):
  
 	_name="orchid.vat.register.input"
 	_description="orchid.vat.register.line"
- 
- 
+	 
+	 
 	wizard_line_id=fields.Many2one("orchid.vat.register",string="accounts_line")
 	account_id=fields.Many2one('account.account',string="ACCOUNTS")
- 
+	 
  
 class OrchidVatRegioutputLine(models.TransientModel):
  
 	_name="orchid.vat.register.output.line"
 	_description="orchid.vat.register.line"
- 
- 
+	 
+	 
 	wizard_line_id=fields.Many2one("orchid.vat.register",string="accounts_line")
 	account_id=fields.Many2one('account.account',string="ACCOUNTS")
- 	
- 	
+	  
+	  
  
 class OrchidVatRegiinine(models.TransientModel):
  
 	_name="orchid.vat.register.input.line"
 	_description="orchid.vat.register.line"
- 
- 
+	 
+	 
 	wizard_line_id=fields.Many2one("orchid.vat.register",string="accounts_line")
 	account_id=fields.Many2one('account.account',string="ACCOUNTS")
 
 
 
 
-class Report_Vat_Register_pdf(models.AbstractModel):
-	_name = 'report.orchid_beta_vat.report_vat_register_pdf'
-
-	@api.multi
-	def render_html(self, data=None):
-		model = self.env.context.get('active_model')
-		docs = self.env[model].browse(self.env.context.get('active_id'))
-		report_date = date.today()
-		report_date=report_date.strftime("%d/%m/%Y")
-		# print "bbbbbbbbbbbbbbbbbbbbbbbbbbbbb",data['datas']['values']
-		print "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",data
-		report_obj = self.env['report']
-		report = report_obj._get_report_from_name('orchid_beta_vat.report_vat_register_pdf')
-		docargs = {
-			'doc_ids': self.ids,
-			'doc_model': model,
-			'docs': docs,
-			'lines': data['datas']['values'],
-			'report_date': report_date,
-			'local_purchase': data['transaction_type']['local_purchase'],
-			'foreign_purchase': data['transaction_type']['foreign_purchase'],
-			'vat_period': data['period']['vat_period'],
-			'total_credit' : data['total']['total_credit'],
-			'total_debit' : data['total']['total_debit'],
-			}
-		return report_obj.render('orchid_beta_vat.report_vat_register_pdf', docargs)						
+	
+		

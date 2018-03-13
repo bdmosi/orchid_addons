@@ -448,11 +448,11 @@ class hr_employee(models.Model):
         utl_score_board = []
         c_board =[]
         for _,_,val in tl_comp_line:
-            if val.get('name','') == 'Finished On Time':
+            if val.get('name','') == 'Average of Team - Finished On Time':
                 score = val.get('score')
                 fot_score_board.append(score)
             
-            if val.get('name','') == 'Team Utilization':
+            if val.get('name','') == 'Average of Team Utilization':
                 score = val.get('score')
                 utl_score_board.append(score)
             

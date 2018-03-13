@@ -8,6 +8,6 @@
             report_type="qweb-pdf"
             file="orchid_beta_vat.report_vat_register_pdf" 
             name="orchid_beta_vat.report_vat_register_pdf"
-        />
+                    />
     </data>
 </openerp>
