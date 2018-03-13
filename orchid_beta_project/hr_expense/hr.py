@@ -204,7 +204,7 @@ class hr_employee(models.Model):
     
     
     def get_default_product_id(self):
-        company_id = self.company_id and self.company_id.id
+        company_id = self.env.user.company_id.id
         param ='uae_engineer_product'
         if company_id ==6:
             param ='ksa_engineer_product'
@@ -212,7 +212,7 @@ class hr_employee(models.Model):
         return product_id
     
     def get_default_timesheet_journal_id(self):
-        company_id = self.company_id and self.company_id.id
+        company_id = self.env.user.company_id.id
         param ='uae_engineer_timesheet'
         if company_id ==6:
             param ='ksa_engineer_timesheet'
@@ -483,7 +483,8 @@ class hr_employee(models.Model):
             fot_vals += fot_data 
             tl_comp_line += ttl_comp
         tech_comp_line = self.get_tech_comp_hoo(tl_comp_line)
-        return utl_vals,fot_vals,tech_comp_line
+        open_projects,closed_projects,comp_line = self.get_pmo_dir_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+        return utl_vals,fot_vals,open_projects,closed_projects,tech_comp_line
     def get_tech_cons_ps_vals(self,sample_id,aud_date_start,aud_date_end,audit_temp_id):
         type = audit_temp_id.type
         usr_id  = self.user_id and self.user_id.id
@@ -1738,8 +1739,11 @@ class hr_employee(models.Model):
             sample_id =self.env['audit.sample'].create(vals)
         
         if type == 'hoo':
-            utl_sample_line,ttl_fot_line,ttl_comp_line = self.get_hoo_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
-            vals.update({'utl_sample_line':utl_sample_line,'ttl_fot_line':ttl_fot_line,'comp_line':ttl_comp_line}) 
+            utl_sample_line,ttl_fot_line,pmo_open_project_line,pmo_closed_project_line,ttl_comp_line = self.get_hoo_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
+            vals.update({'utl_sample_line':utl_sample_line,'ttl_fot_line':ttl_fot_line,
+                         'pmo_open_project_line':pmo_open_project_line,'pmo_closed_project_line':pmo_closed_project_line,
+                         
+                         'comp_line':ttl_comp_line}) 
             sample_id =self.env['audit.sample'].create(vals)
             
         if type == 'pre_sales':

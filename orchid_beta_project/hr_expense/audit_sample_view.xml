@@ -42,7 +42,7 @@
 						<notebook>
 						       
 						     
-						     <page string="Open Projects" attrs="{'invisible':[('type','!=','pmo')]}" >
+						     <page string="Open Projects" attrs="{'invisible':[('type','not in',('pmo','hoo'))]}" >
 								<field name="pmo_open_project_line">
 									<tree editable="bottom" create="false" delete="false">
 										<field name="analytic_id" readonly="1"/>
@@ -55,7 +55,7 @@
 								</field>
 							</page>
 							
-							<page string="Closed Projects" attrs="{'invisible':[('type','!=','pmo')]}" >
+							<page string="Closed Projects" attrs="{'invisible':[('type','not in',('pmo','hoo'))]}" >
 								<field name="pmo_closed_project_line">
 									<tree editable="bottom" create="false" delete="false">
 										<field name="analytic_id" readonly="1"/>
