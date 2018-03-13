@@ -427,6 +427,9 @@ class hr_employee(models.Model):
             utl_vals.extend(utl_data)
             fot_vals.extend(fot_data)
             tl_comp_line.extend(ttl_comp)
+        from pprint import pprint 
+        pprint(utl_vals)
+        pprint(fot_vals)
         return utl_vals,fot_vals,tl_comp_line
     def get_tech_cons_ps_vals(self,sample_id,aud_date_start,aud_date_end,audit_temp_id):
         type = audit_temp_id.type
