@@ -319,7 +319,7 @@
 							
 							
 							
-							<page string="Team Score" attrs="{'invisible':[('type','not in',('pre_sales_mgr','tc','sm','pdm'))]}" >
+							<page string="Team Score" attrs="{'invisible':[('type','not in',('pre_sales_mgr','tc','sm','pdm','hoo'))]}" >
 								<field name="team_line">
 									<tree editable="bottom" create="false" delete="false">
 										<field name="user_id" readonly="1"/>
@@ -328,6 +328,8 @@
 									</tree>
 								</field>
 							</page>
+							
+							
 							
 							
 							<page string="Team 5 Day Processing" attrs="{'invisible':[('type','!=','sdm')]}" >

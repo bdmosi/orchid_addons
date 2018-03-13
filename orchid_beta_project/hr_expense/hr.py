@@ -431,16 +431,16 @@ class hr_employee(models.Model):
         if wt_fot:
             score = fot_score 
             final_score = wt_fot * score
-            comp_data.append((0,0,{'name':'Finished On Time','weight':wt_fot*100.0,'final_score':final_score,'score':score}))
+            comp_data.append((0,0,{'name':'Average of Team -Finished On Time','weight':wt_fot*100.0,'final_score':final_score,'score':score}))
         
         if wt_utl:
             score = utl_score 
             final_score = wt_utl * score
-            comp_data.append((0,0,{'name':'Team Utilization','weight':wt_utl*100.0,'final_score':final_score,'score':score}))
+            comp_data.append((0,0,{'name':'Average of Team Utilization','weight':wt_utl*100.0,'final_score':final_score,'score':score}))
         if wt_cancel:
             score = c_score 
             final_score = wt_cancel * score
-            comp_data.append((0,0,{'name':'Percentage Of Cancelled Activities','weight':wt_cancel*100.0,'final_score':final_score,'score':score}))
+            comp_data.append((0,0,{'name':'Average of Team Percentage Of Cancelled Activities','weight':wt_cancel*100.0,'final_score':final_score,'score':score}))
         return comp_data
     def get_tech_comp_hoo(self,tl_comp_line):
         res =[]
@@ -448,11 +448,11 @@ class hr_employee(models.Model):
         utl_score_board = []
         c_board =[]
         for _,_,val in tl_comp_line:
-            if val.get('name','') == 'Average of Team - Finished On Time':
+            if val.get('name','') == 'Finished On Time':
                 score = val.get('score')
                 fot_score_board.append(score)
             
-            if val.get('name','') == 'Average of Team Utilization':
+            if val.get('name','') == 'Team Utilization':
                 score = val.get('score')
                 utl_score_board.append(score)
             
@@ -478,22 +478,36 @@ class hr_employee(models.Model):
         employee_id = employee.id
         team_ids = self.search([('parent_id','=',employee_id)]) 
         tl_user_ids = [emp.user_id.id for emp in team_ids if (emp.audit_temp_id and emp.audit_temp_id.type =='ttl')]
-        print "tl user ids>>>>>>>>>>>>>>>>>>>>>>>>>",tl_user_ids
+        
+        
         utl_vals = []
         fot_vals = []
         tl_comp_line = []
         for user in tl_user_ids:
             utl_data,fot_data,ttl_comp = self.get_ttl_vals(sample_id, user, aud_date_start, aud_date_end, audit_temp_id)
-            print "user>>>>>>>>>>>>>>>>>>>>>>>",user,utl_data,fot_data
             utl_vals += utl_data
             fot_vals += fot_data 
             tl_comp_line += ttl_comp
+        
+        sd_user_ids = [emp.user_id.id for emp in team_ids if (emp.audit_temp_id and emp.audit_temp_id.type =='sde')]
+        team_score = []
+        team_vals =[]
+        for user in sd_user_ids:
+            dum1,dum2,dum3,comp_line = self.get_sde_data(sample_id,user, aud_date_start, aud_date_end, audit_temp_id)
+            
+            score = self.get_score_from_comp_data(comp_line)
+            team_score.append(score)
+            team_vals.append((0,0,{'user_id':user,'score':score}))
         tech_comp_line = self.get_tech_comp_hoo(tl_comp_line)
         open_projects,closed_projects,pmo_comp_line = self.get_pmo_dir_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
         pmo_score = self.get_pmo_score_from_comp(pmo_comp_line)
         pmo_comp_line = [(0,0,{'name':'Cash Flow Management','weight':50,'score':pmo_score,'final_score':pmo_score* 0.5})]
-        comp_line = tech_comp_line + pmo_comp_line
-        return utl_vals,fot_vals,open_projects,closed_projects,comp_line
+        team_avg_score = self.get_avg_score(team_score)
+        sde_comp_line = [(0,0,{'name':'Average Of Service Desk Engineer','weight':20,'score':team_avg_score,'final_score':team_avg_score* 0.2})]
+        comp_line = tech_comp_line + pmo_comp_line + sde_comp_line
+        
+        
+        return utl_vals,fot_vals,open_projects,closed_projects,team_vals,comp_line
     def get_tech_cons_ps_vals(self,sample_id,aud_date_start,aud_date_end,audit_temp_id):
         type = audit_temp_id.type
         usr_id  = self.user_id and self.user_id.id
@@ -1721,6 +1735,20 @@ class hr_employee(models.Model):
             sample_id.pmo_closed_project_line.unlink()
             sample_id.comp_line.unlink()
             sample_id.write({'pmo_open_project_line':pmo_open_project_line,'comp_line':comp_line,'pmo_closed_project_line':pmo_closed_project_line})
+        
+        if type == 'hoo':
+            utl_sample_line,ttl_fot_line,pmo_open_project_line,pmo_closed_project_line,team_line,ttl_comp_line = self.get_hoo_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
+            sample_id.pmo_open_project_line.unlink()
+            sample_id.pmo_closed_project_line.unlink()
+            sample_id.comp_line.unlink()
+            sample_id.team_line.unlink()
+            sample_id.utl_sample_line.unlink()
+            sample_id.ttl_fot_line.unlink()
+            sample_id.write({'utl_sample_line':utl_sample_line,'ttl_fot_line':ttl_fot_line,
+                         'pmo_open_project_line':pmo_open_project_line,'pmo_closed_project_line':pmo_closed_project_line,
+                         'team_line':team_line,
+                         'comp_line':ttl_comp_line}) 
+        
     
     def create_audit_sample(self,aud_date_start,aud_date_end,audit_temp_id):
         type = audit_temp_id.type
@@ -1748,10 +1776,10 @@ class hr_employee(models.Model):
             sample_id =self.env['audit.sample'].create(vals)
         
         if type == 'hoo':
-            utl_sample_line,ttl_fot_line,pmo_open_project_line,pmo_closed_project_line,ttl_comp_line = self.get_hoo_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
+            utl_sample_line,ttl_fot_line,pmo_open_project_line,pmo_closed_project_line,team_line,ttl_comp_line = self.get_hoo_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
             vals.update({'utl_sample_line':utl_sample_line,'ttl_fot_line':ttl_fot_line,
                          'pmo_open_project_line':pmo_open_project_line,'pmo_closed_project_line':pmo_closed_project_line,
-                         
+                         'team_line':team_line,
                          'comp_line':ttl_comp_line}) 
             sample_id =self.env['audit.sample'].create(vals)
             
