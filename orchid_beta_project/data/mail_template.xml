@@ -22,8 +22,7 @@
              <li> Project:${object.project_id.name}</li>
              <li> Phase:${object.od_state.name}</li>
              <li> Implementation Code:${object.od_implementation_id.name}</li>
-             <li> Activity Planned Start Date / Time:${object.date_start}</li>
-             <li> Activity Planned Duration/Time:${object.date_end}</li>
+             
              <li> Customer Name:${object.project_id.partner_id.name}</li>
              <li> Contact Person Details:${object.od_contact_person_details}</li>
              <li> City:${object.od_city.name}</li>

@@ -697,7 +697,7 @@ class task(models.Model):
     
     no_delete = fields.Boolean(string="Delete Blocked")
     od_duplicated = fields.Boolean(string="Duplicated")
-    date_start  = fields.Datetime('Starting Date',track_visibility='onchange')
+#     date_start  = fields.Datetime('Starting Date',track_visibility='onchange')
     od_help_desk_issue_id = fields.Many2one('crm.helpdesk',string="Help Desk Issue Sequence")
     od_meeting_id = fields.Many2one('calendar.event',string='Meeting')
     od_stage = fields.Selection([('draft','In Progress'),('done','Done'),('cancel_by_tl','Cancelled By TL')],string="Status",default='draft',track_visibility='onchange')
