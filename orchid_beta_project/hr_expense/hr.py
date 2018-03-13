@@ -425,8 +425,8 @@ class hr_employee(models.Model):
             exclude_wt += wt_cancel
             wt_cancel =0.0
         if exclude_wt:
-            wt_fot =  wt_fot + (wt_fot*exclude_wt)/float(1.0-exclude_wt)
-            wt_utl=wt_utl + (wt_utl*exclude_wt)/float(1.0-exclude_wt)
+            wt_fot =  wt_fot + .05
+            wt_utl=wt_utl + .05
          
         if wt_fot:
             score = fot_score 
