@@ -422,6 +422,7 @@ class hr_employee(models.Model):
         utl_vals = fot_vals = tl_comp_line = []
         for user in tl_user_ids:
             utl_data,fot_data,ttl_comp = self.get_ttl_vals(sample_id, user, aud_date_start, aud_date_end, audit_temp_id)
+            print "user>>>>>>>>>>>>>>>>>>>>>>>",utl_data,fot_data
             utl_vals.extend(utl_data)
             fot_vals.extend(fot_data)
             tl_comp_line.extend(ttl_comp)
