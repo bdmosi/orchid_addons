@@ -467,6 +467,12 @@ class hr_employee(models.Model):
             c_wt = True
         tech_comp_line= self.get_tech_hoo_comp_line(fot_score, utl_score, c_score, c_wt)
         return tech_comp_line
+    
+    def get_pmo_score_from_comp(self,pmo_comp_line):
+        final_score =0.0
+        for _,_,val in pmo_comp_line:
+            final_score += val.get('final_score')
+        return final_score
     def get_hoo_data(self,sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id):
         employee = self.search([('user_id','=',user_id)],limit=1)
         employee_id = employee.id
@@ -483,8 +489,11 @@ class hr_employee(models.Model):
             fot_vals += fot_data 
             tl_comp_line += ttl_comp
         tech_comp_line = self.get_tech_comp_hoo(tl_comp_line)
-        open_projects,closed_projects,comp_line = self.get_pmo_dir_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
-        return utl_vals,fot_vals,open_projects,closed_projects,tech_comp_line
+        open_projects,closed_projects,pmo_comp_line = self.get_pmo_dir_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
+        pmo_score = self.get_pmo_score_from_comp(pmo_comp_line)
+        pmo_comp_line = [(0,0,{'name':'Cash Flow Management','weight':50,'score':pmo_score,'final_score':pmo_score* 0.5})]
+        comp_line = tech_comp_line + pmo_comp_line
+        return utl_vals,fot_vals,open_projects,closed_projects,comp_line
     def get_tech_cons_ps_vals(self,sample_id,aud_date_start,aud_date_end,audit_temp_id):
         type = audit_temp_id.type
         usr_id  = self.user_id and self.user_id.id
