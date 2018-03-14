@@ -68,6 +68,9 @@
             <field name="categ_ids" position="after">
                     <field name="od_help_desk_issue_id" />
             </field>
+            <xpath expr="//field[@name='categ_ids']" position="attributes">
+					<attribute name="invisible">True</attribute>
+				</xpath>
 
 
         <xpath expr="/form/sheet/notebook/page[@string='Extra Info']/group/group[@string='Gantt View']" position="replace" />
@@ -99,7 +102,7 @@
         
 
               <xpath expr="//field[@name='progress']" position="attributes">
-                <attribute name="attrs">{'invisible': ['|',('od_type','!=','activities'),('od_material_request','!=',False)]}</attribute>
+               <attribute name="invisible">True</attribute>
               </xpath>
             	<xpath expr="/form/sheet/notebook/page[@string='Description']" position="attributes">
             	 <attribute name="attrs">{'invisible': ['|',('od_type','!=','activities'),('od_material_request','!=',False)]}</attribute>
@@ -113,7 +116,7 @@
             	<xpath expr="//field[@name='reviewer_id']" position="after">
             		<!-- <field name="od_total_planned" widget="float_time" attrs="{'invisible': [('od_type','=','activities')]}" /> -->
             		<!-- <field name="od_end_time" attrs="{'invisible':[('od_type','!=','activities')]}" /> -->
-                    <field name="partner_ids" widget="many2many_tags"/>
+                    <field name="partner_ids" widget="many2many_tags" invisible="1"/>
                     <field name="od_owner_id" />
                     <field name="od_actual" widget="float_time" attrs="{'invisible': [('od_type','!=','activities')]}"  />
             		<!-- <field name="od_total_time_spent" widget="float_time" attrs="{'invisible': ['|',('od_type','!=','activities'),('od_material_request','!=',False)]}"/> -->
@@ -140,10 +143,11 @@
                     <!-- <field name="date_end" attrs="{'invisible': [('od_type','=','activities')],'required': [('od_type','!=','activities')]}" /> -->
                     <field name="planned_hours" widget="float_time" on_change="onchange_date_start_end(date_start,od_type,planned_hours)" attrs="{'invisible': ['|',('od_type','!=','activities'),('od_material_request','!=',False)]}" invisible="1"/>
                     
-                    <field name="date_end" required="1" on_change="onchange_date_end(date_end,od_type)"  invisible="1" />
+                    
                     
                     <field name="b_plan_hr" widget="float_time" />
-                    <field name="b_date_end" />
+                    <field name="date_end" required="1" on_change="onchange_date_end(date_end,od_type)"  attrs="{'invisible': [('od_type','=','activities')]}" />
+                    <field name="b_date_end" attrs="{'invisible': [('od_type','!=','activities')]}"/>
                     <field name="od_access_method" attrs="{'invisible': [('od_type','!=','activities')],'required': [('od_type','=','activities')]}"/>
             	</xpath>
 
@@ -210,24 +214,27 @@
             	<xpath expr="/form/sheet/notebook/page[@string='Work']" position="before">
             	<page string="Prerequisites" attrs="{'invisible': [('od_type','!=','activities')]}">
                   <group>
-                    <field name="od_activity_technical_obj" />
-                    <field name="od_eqp_application" />
-                    <field name="od_prior_arrangement" />
-                  </group>
-                </page>
-                <page string="Customer">
-
-                    <group>
-                        <field name="od_common_partner_id" />
+                    <field name="od_activity_technical_obj" required="1" />
+                    <field name="od_eqp_application" required="1" />
+                    <field name="od_prior_arrangement" required="1" />
+                    
+                    	<field name="od_common_partner_id" />
                         <field name="od_contact_ids" domain="[('parent_id','=',od_common_partner_id)]" string="Contact Person"/>
                         <field name="od_city" attrs="{'invisible': [('od_type','!=','activities')]}" />
                         <field name="od_location" attrs="{'invisible': [('od_type','!=','activities')]}" />
                         <field name="od_contact_person_details" attrs="{'invisible':[('od_type','!=','activities')]}" />
+                    
+                  </group>
+                </page>
+               <!--  <page string="Customer">
+
+                    <group>
+                        
 
                     </group>
 
 
-                </page>
+                </page> -->
                 <page string="Checklist" attrs="{'invisible': ['|',('od_type','!=','activities'),('od_material_request','!=',False)]}">
             	<group colspan="4">
             		<field name="od_categ_id" attrs="{'invisible':  [('od_type','!=','activities')]}"/>
@@ -245,16 +252,21 @@
             	<xpath expr="/form/sheet/notebook/page[@string='Work']/group/group[@class='oe_subtotal_footer oe_right']" position="attributes">
             		<attribute name="invisible">True</attribute>
             	</xpath>
-            	<xpath expr="/form/sheet/notebook/page[@string='Work']" position="after">
-            	<page string="Activity Report" attrs="{'invisible': [('od_type','!=','activities')]}">
-            	<group>
-            		<field name="od_date_done" readonly="1"/>
-                    <field name="od_initial_description" />
-            		<field name="od_action_taken" />
-            		<field name="od_final_result" />
+            	
+            	 	<xpath expr="/form/sheet/notebook/page[@string='Work']" position="inside">
+            	 	   	<group string="Activity Report">
+	            		<field name="od_date_done" readonly="1"/>
+	                    <field name="od_initial_description" />
+	            		<field name="od_action_taken" />
+	            		<field name="od_final_result" />
 
             	</group>
-            	</page>
+            	 	  
+            	 	</xpath>
+            	
+            	<xpath expr="/form/sheet/notebook/page[@string='Work']" position="after">
+            <!-- 	<page string="Activity Report" attrs="{'invisible': [('od_type','!=','activities')]}">
+                       	</page> -->
             	<page string="Technical Evaluation" attrs="{'invisible': [('od_stage','!=','done')]}">
             		<group>
             			<field name="od_quality_of_implementation" />
