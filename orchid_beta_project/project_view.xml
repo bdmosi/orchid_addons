@@ -253,7 +253,7 @@
             		<attribute name="invisible">True</attribute>
             	</xpath>
             	
-            	 	<xpath expr="/form/sheet/notebook/page[@string='Work']" position="inside">
+            	 	<xpath expr="/form/sheet/notebook/page[@string='Work']/field[@name='work_ids']" position="before">
             	 	   	<group string="Activity Report">
 	            		<field name="od_date_done" readonly="1"/>
 	                    <field name="od_initial_description" />
