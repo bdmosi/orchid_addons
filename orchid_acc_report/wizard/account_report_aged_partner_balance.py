@@ -29,8 +29,8 @@ class account_aged_trial_balance(osv.osv_memory):
         dat = result.get('data',False)
         used_context = {}
         
-        
-        used_context = result['data']['form']['used_context'] or {}
+        if dat:
+            used_context = result['data']['form']['used_context'] or {}
         
         data_toadd = self.read(cr, uid, ids, ['od_partner_ids','od_sale_person_ids','od_account_ids','od_cost_centre_ids','od_branch_ids','od_division_ids'])[0]
 
@@ -41,13 +41,14 @@ class account_aged_trial_balance(osv.osv_memory):
             inv_data = self.pool['account.invoice'].read(cr, uid,inv_ids,['partner_id'])
             sales_person_ids = [x.get('partner_id')[0] for x in inv_data]
         
-        used_context['partner_ids'] = data_toadd['od_partner_ids'] + sales_person_ids
-        used_context['od_account_ids'] = data_toadd['od_account_ids']
-        used_context['od_cost_centre_ids'] = data_toadd['od_cost_centre_ids']
-        used_context['od_branch_ids'] = data_toadd['od_branch_ids']
-        used_context['od_division_ids'] = data_toadd['od_division_ids']
-            
-        result['data']['form']['used_context'] = used_context
+        if dat:
+            used_context['partner_ids'] = data_toadd['od_partner_ids'] + sales_person_ids
+            used_context['od_account_ids'] = data_toadd['od_account_ids']
+            used_context['od_cost_centre_ids'] = data_toadd['od_cost_centre_ids']
+            used_context['od_branch_ids'] = data_toadd['od_branch_ids']
+            used_context['od_division_ids'] = data_toadd['od_division_ids']
+                
+            result['data']['form']['used_context'] = used_context
         return result
 
 
