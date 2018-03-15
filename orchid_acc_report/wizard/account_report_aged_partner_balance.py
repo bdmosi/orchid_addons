@@ -47,10 +47,8 @@ class account_aged_trial_balance(osv.osv_memory):
             used_context['od_cost_centre_ids'] = data_toadd['od_cost_centre_ids']
             used_context['od_branch_ids'] = data_toadd['od_branch_ids']
             used_context['od_division_ids'] = data_toadd['od_division_ids']
-                
             result['data']['form']['used_context'] = used_context
-        if context.get('xls_export'):
-            result['partner_ids'] =   data_toadd['od_partner_ids'] + sales_person_ids
+        
         return result
 
 
@@ -95,13 +93,7 @@ class account_aged_trial_balance(osv.osv_memory):
         data['form'].update(res)
         if data.get('form',False):
             data['ids']=[data['form'].get('chart_account_id',False)]
-        if context.get('xls_export'):
-            data['form'].update({'data':{'used_context':{}}})
-            data = self.pre_print_report(cr, uid, ids, data, context=context)
-            
-            return {'type': 'ir.actions.report.xml',
-                    'report_name': 'account.account_report_aged_partner_balance_xls',
-                    'datas': data}
+        
         return self.pool['report'].get_action(cr, uid, [], 'account.report_agedpartnerbalance', data=data, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
