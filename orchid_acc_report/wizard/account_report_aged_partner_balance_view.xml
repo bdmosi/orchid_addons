@@ -20,6 +20,15 @@
                          <page string="Accounts">
                             <field name="od_account_ids" nolabel="1"/>
                         </page>
+                        <page string="Cost Centre">
+                            <field name="od_cost_centre_ids" nolabel="1"/>
+                        </page>
+                         <page string="Branch">
+                            <field name="od_branch_ids" nolabel="1"/>
+                        </page>
+                         <page string="Division">
+                            <field name="od_division_ids" nolabel="1"/>
+                        </page>
 
                     </notebook>
                 </field>

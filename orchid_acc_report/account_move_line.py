@@ -27,4 +27,26 @@ class account_move_line(osv.osv):
                 result += ' AND '+obj+'.account_id = '+str(context['od_account_ids'][0])+ ' '
             else:
                 result += ' AND '+obj+'.account_id IN '+str(account_id)+ ' '
+        
+        if context.get('od_cost_centre_ids'):
+            cost_centre_id = tuple(context['od_cost_centre_ids'])
+            if len(cost_centre_id) == 1:
+                result += ' AND '+obj+'.od_cost_centre_id = '+str(context['od_cost_centre_ids'][0])+ ' '
+            else:
+                result += ' AND '+obj+'.od_cost_centre_id IN '+str(cost_centre_id)+ ' '
+        
+        if context.get('od_branch_ids'):
+            od_branch_ids = tuple(context['od_branch_ids'])
+            if len(cost_centre_id) == 1:
+                result += ' AND '+obj+'.od_branch_id = '+str(context['od_branch_ids'][0])+ ' '
+            else:
+                result += ' AND '+obj+'.od_branch_id IN '+str(od_branch_ids)+ ' '
+                
+        if context.get('od_division_ids'):
+            od_division_ids = tuple(context['od_division_ids'])
+            if len(cost_centre_id) == 1:
+                result += ' AND '+obj+'.od_division_id = '+str(context['od_division_ids'][0])+ ' '
+            else:
+                result += ' AND '+obj+'.od_division_id IN '+str(od_division_ids)+ ' '
+        
         return result

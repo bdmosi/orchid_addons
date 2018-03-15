@@ -15,6 +15,9 @@ class account_aged_trial_balance(osv.osv_memory):
         'od_partner_ids': fields.many2many('res.partner', 'partner_report_aged_balance_rel' , string='Filter on partner',domain="['|',('customer','=',True),('supplier','=',True)]"),
         'od_sale_person_ids': fields.many2many('res.users', 'sales_person_aged_balance_report_rel' , string='Filter on Sales Person'),
         'od_account_ids':fields.many2many('account.account','wiz_id','account_id' ,'account_agingreport_aged_balance_report_rel' , string='Filter on Accounts'),
+        'od_cost_centre_ids': fields.many2many('od.cost.centre','account_agingreportcost_centre_reporcv_rel', 'wiz_id', 'cost_centre_id', string='Cost Centre'),
+        'od_branch_ids': fields.many2many('od.cost.branch','account_agingreport_bracnh_reporcv_rel', 'wiz_id', 'branch_id', string='Branch'),
+        'od_division_ids': fields.many2many('od.cost.division','account_agingreport_division_reporcv_rel', 'wiz_id', 'division_id', string='Division'),
 
     }
 
@@ -22,7 +25,7 @@ class account_aged_trial_balance(osv.osv_memory):
     def check_report(self, cr, uid, ids, context=None):
         result = super(account_aged_trial_balance, self).check_report(cr, uid, ids, context=context)
         used_context = result['data']['form']['used_context']
-        data_toadd = self.read(cr, uid, ids, ['od_partner_ids','od_sale_person_ids','od_account_ids'])[0]
+        data_toadd = self.read(cr, uid, ids, ['od_partner_ids','od_sale_person_ids','od_account_ids','od_cost_centre_ids','od_branch_ids','od_division_ids'])[0]
 
         inv_ids = self.pool['account.invoice'].search(cr,uid,[('user_id','in',data_toadd['od_sale_person_ids'])])
 
@@ -33,6 +36,10 @@ class account_aged_trial_balance(osv.osv_memory):
 
         used_context['partner_ids'] = data_toadd['od_partner_ids'] + sales_person_ids
         used_context['od_account_ids'] = data_toadd['od_account_ids']
+        used_context['od_cost_centre_ids'] = data_toadd['od_cost_centre_ids']
+        used_context['od_branch_ids'] = data_toadd['od_branch_ids']
+        used_context['od_division_ids'] = data_toadd['od_division_ids']
+        
         result['data']['form']['used_context'] = used_context
         return result
 
