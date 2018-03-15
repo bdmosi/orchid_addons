@@ -17,9 +17,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-from . import models
+import account
 from . import wizard
 from . import report
-from . import hooks
-from .hooks import pre_init_hook
+from . import account_move_line

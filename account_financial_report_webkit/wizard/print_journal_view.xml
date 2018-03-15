@@ -28,7 +28,6 @@
             <field name="name">Journals</field>
             <field name="model">print.journal.webkit</field>
             <field name="type">form</field>
-            <field name="priority">99</field>
             <field name="inherit_id" ref="account.account_common_report_view"/>
             <field name="arch" type="xml">
                 <data>
@@ -78,6 +77,7 @@
 
         <record model="ir.values" id="action_account_print_journal_values_webkit">
             <field name="model_id" ref="account.model_account_account"/>
+            <field name="object" eval="1"/>
             <field name="name">Journals</field>
             <field name="key2">client_print_multi</field>
             <field name="value"

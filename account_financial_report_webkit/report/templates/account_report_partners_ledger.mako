@@ -67,11 +67,11 @@
                 <div class="act_as_cell">${ initial_balance_text[initial_balance_mode] }</div>
             </div>
         </div>
-
+    
         %for account in objects:
-            %if ledger_lines[account.id] or init_balance[account.id]:
+            %if account.ledger_lines or account.init_balance:
                 <%
-                if not partners_order[account.id]:
+                if not account.partners_order:
                     continue
                 account_total_debit = 0.0
                 account_total_credit = 0.0
@@ -81,7 +81,7 @@
 
                 <div class="account_title bg" style="width: 1080px; margin-top: 20px; font-size: 12px;">${account.code} - ${account.name}</div>
 
-                %for partner_name, p_id, p_ref, p_name in partners_order[account.id]:
+                %for partner_name, p_id, p_ref, p_name in account.partners_order:
                 <%
                   total_debit = 0.0
                   total_credit = 0.0
@@ -102,15 +102,13 @@
                             ## period
                             <div class="act_as_cell" style="width: 70px;">${_('Period')}</div>
                             ## move
-                            <div class="act_as_cell" style="width: 100px;">${_('Entry')}</div>
+                            <div class="act_as_cell" style="width: 70px;">${_('Entry')}</div>
                             ## journal
                             <div class="act_as_cell" style="width: 70px;">${_('Journal')}</div>
                             ## partner
-                            <div class="act_as_cell" style="width: 100px;">${_('Partner')}</div>
-                            ## move reference
-                            <div class="act_as_cell" style="width: 60px;">${_('Reference')}</div>
+                            <div class="act_as_cell" style="width: 60px;">${_('Partner')}</div>
                             ## label
-                            <div class="act_as_cell" style="width: 280px;">${_('Label')}</div>
+                            <div class="act_as_cell" style="width: 310px;">${_('Label')}</div>
                             ## reconcile
                             <div class="act_as_cell" style="width: 80px;">${_('Rec.')}</div>
                             ## debit
@@ -129,14 +127,14 @@
                     </div>
                     <div class="act_as_tbody">
                         <%
-                        total_debit = init_balance[account.id].get(p_id, {}).get('debit') or 0.0
-                        total_credit =init_balance[account.id].get(p_id, {}).get('credit') or 0.0
+                        total_debit = account.init_balance.get(p_id, {}).get('debit') or 0.0
+                        total_credit = account.init_balance.get(p_id, {}).get('credit') or 0.0
                         %>
                           %if initial_balance_mode and (total_debit or total_credit):
                             <%
-                              part_cumul_balance = init_balance[account.id].get(p_id, {}).get('init_balance') or 0.0
-                              part_cumul_balance_curr = init_balance[account.id].get(p_id, {}).get('init_balance_currency') or 0.0
-                              balance_forward_currency = init_balance[account.id].get(p_id, {}).get('currency_name') or ''
+                              part_cumul_balance = account.init_balance.get(p_id, {}).get('init_balance') or 0.0
+                              part_cumul_balance_curr = account.init_balance.get(p_id, {}).get('init_balance_currency') or 0.0
+                              balance_forward_currency = account.init_balance.get(p_id, {}).get('currency_name') or ''
 
                               cumul_balance += part_cumul_balance
                               cumul_balance_curr += part_cumul_balance_curr
@@ -151,8 +149,6 @@
                               ## journal
                               <div class="act_as_cell"></div>
                               ## partner
-                              <div class="act_as_cell"></div>
-                              ## move reference
                               <div class="act_as_cell"></div>
                               ## label
                               <div class="act_as_cell" >${_('Initial Balance')}</div>
@@ -174,7 +170,7 @@
                           </div>
                           %endif
 
-                        %for line in ledger_lines[account.id].get(p_id, []):
+                        %for line in account.ledger_lines.get(p_id, []):
                           <%
                           total_debit += line.get('debit') or 0.0
                           total_credit += line.get('credit') or 0.0
@@ -195,8 +191,6 @@
                               <div class="act_as_cell">${line.get('jcode') or ''}</div>
                               ## partner
                               <div class="act_as_cell overflow_ellipsis">${line.get('partner_name') or ''}</div>
-                              ## move reference
-                              <div class="act_as_cell">${line.get('lref') or ''}</div>
                               ## label
                               <div class="act_as_cell">${label}</div>
                               ## reconcile
@@ -226,8 +220,6 @@
                           ## journal
                           <div class="act_as_cell"></div>
                           ## partner
-                          <div class="act_as_cell"></div>
-                          ## move reference
                           <div class="act_as_cell"></div>
                           ## label
                           <div class="act_as_cell">${_('Cumulated Balance on Partner')}</div>
@@ -262,9 +254,9 @@
 
                 <div class="act_as_table list_table" style="margin-top:5px;">
                     <div class="act_as_row labels" style="font-weight: bold; font-size: 12px;">
-                            <div class="act_as_cell first_column" style="width: 450px;">${account.code} - ${account.name}</div>
+                            <div class="act_as_cell first_column" style="width: 320px;">${account.code} - ${account.name}</div>
                             ## label
-                            <div class="act_as_cell" style="width: 360px;">${_("Cumulated Balance on Account")}</div>
+                            <div class="act_as_cell" style="width: 390px;">${_("Cumulated Balance on Account")}</div>
                             ## debit
                             <div class="act_as_cell amount" style="width: 80px;">${ formatLang(account_total_debit) | amount }</div>
                             ## credit

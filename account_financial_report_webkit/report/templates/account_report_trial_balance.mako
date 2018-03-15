@@ -161,10 +161,10 @@
                 %>
                 %for current_account in objects:
                     <%
-                    if not to_display_accounts[current_account.id]:
+                    if not current_account.to_display:
                         continue
 
-                    comparisons = comparisons_accounts[current_account.id]
+                    comparisons = current_account.comparisons
 
                     if current_account.id in last_child_consol_ids:
                         # current account is a consolidation child of the last account: use the level of last account
@@ -185,15 +185,15 @@
                         %if comparison_mode == 'no_comparison':
                             %if initial_balance_mode:
                                 ## opening balance
-                                <div class="act_as_cell amount">${formatLang(init_balance_accounts[current_account.id]) | amount}</div>
+                                <div class="act_as_cell amount">${formatLang(current_account.init_balance) | amount}</div>
                             %endif
                             ## debit
-                            <div class="act_as_cell amount">${formatLang(debit_accounts[current_account.id]) | amount}</div>
+                            <div class="act_as_cell amount">${formatLang(current_account.debit) | amount}</div>
                             ## credit
-                            <div class="act_as_cell amount">${formatLang(credit_accounts[current_account.id]) | amount}</div>
+                            <div class="act_as_cell amount">${formatLang(current_account.credit) | amount}</div>
                         %endif
                         ## balance
-                        <div class="act_as_cell amount">${formatLang(balance_accounts[current_account.id]) | amount}</div>
+                        <div class="act_as_cell amount">${formatLang(current_account.balance) | amount}</div>
 
                         %if comparison_mode in ('single', 'multiple'):
                             %for comp_account in comparisons:

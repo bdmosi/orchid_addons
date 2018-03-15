@@ -1,52 +1,58 @@
-# -*- coding: utf-8 -*-
-# Author: Guewen Baconnier, Leonardo Pistone
-# © 2011-2016 Camptocamp
+# -*- encoding: utf-8 -*-
+##############################################################################
+#
+#    Author: Guewen Baconnier
+#    Copyright Camptocamp SA 2011
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
 
-from openerp import fields, models, api
+from openerp.osv import fields, orm
 
 
-class AccountPartnerBalanceWizard(models.TransientModel):
-
+class AccountPartnerBalanceWizard(orm.TransientModel):
     """Will launch partner balance report and pass required args"""
 
-    # pylint: disable=consider-merging-classes-inherited
     _inherit = "account.common.balance.report"
     _name = "partner.balance.webkit"
     _description = "Partner Balance Report"
 
-    result_selection = fields.Selection(
-        [
-            ('customer', 'Receivable Accounts'),
-            ('supplier', 'Payable Accounts'),
-            ('customer_supplier', 'Receivable and Payable Accounts')
-        ],
-        "Partner's", required=True, default='customer_supplier')
-    partner_ids = fields.Many2many(
-        'res.partner', string='Filter on partner',
-        help="Only selected partners will be printed. "
-        "Leave empty to print all partners.")
+    _columns = {
+        'result_selection': fields.selection([('customer', 'Receivable Accounts'),
+                                              ('supplier', 'Payable Accounts'),
+                                              ('customer_supplier', 'Receivable and Payable Accounts')],
+                                              "Partner's", required=True),
+        'partner_ids': fields.many2many('res.partner', string='Filter on partner',
+                                         help="Only selected partners will be printed. Leave empty to print all partners."),
+    }
 
-    # same field in the module account
-    display_partner = fields.Selection(
-        [
-            ('non-zero_balance', 'With non-zero balance'),
-            ('all', 'All Partners')
-        ], 'Display Partners', default='all')
+    _defaults = {
+        'result_selection': 'customer_supplier',
+    }
 
-    @api.multi
-    def pre_print_report(self, data):
-        self.ensure_one()
-
-        data = super(AccountPartnerBalanceWizard, self).pre_print_report(data)
-        vals = self.read(['result_selection', 'partner_ids',
-                          'display_partner'])[0]
+    def pre_print_report(self, cr, uid, ids, data, context=None):
+        data = super(AccountPartnerBalanceWizard, self).pre_print_report(cr, uid, ids, data, context)
+        vals = self.read(cr, uid, ids,
+                         ['result_selection', 'partner_ids'],
+                         context=context)[0]
         data['form'].update(vals)
         return data
 
-    @api.multi
-    def _print_report(self, data):
+    def _print_report(self, cursor, uid, ids, data, context=None):
         # we update form with display account value
-        data = self.pre_print_report(data)
+        data = self.pre_print_report(cursor, uid, ids, data, context=context)
 
         return {'type': 'ir.actions.report.xml',
                 'report_name': 'account.account_report_partner_balance_webkit',

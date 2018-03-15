@@ -27,15 +27,21 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-from openerp import models, fields
+
+from openerp.osv import fields, orm
 
 
-class AccountAccount(models.Model):
+class AccountAccount(orm.Model):
     _inherit = 'account.account'
 
-    centralized = fields.Boolean(
-        'Centralized', default=False,
-        help="If flagged, no details will be displayed in "
-        "the General Ledger report (the webkit one only), "
-        "only centralized amounts per period."
-    )
+    _columns = {
+        'centralized': fields.boolean(
+            'Centralized',
+            help="If flagged, no details will be displayed in "
+                 "the General Ledger report (the webkit one only), "
+                 "only centralized amounts per period.")
+    }
+
+    _defaults = {
+        'centralized': False,
+    }

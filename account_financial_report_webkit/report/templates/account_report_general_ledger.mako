@@ -23,11 +23,7 @@
         initial_balance_text = {'initial_balance': _('Computed'), 'opening_balance': _('Opening Entries'), False: _('No')}
         %>
 
-        %if amount_currency(data):
-        <div class="act_as_table data_table" style="width: 1205px;">
-        %else:
-        <div class="act_as_table data_table" style="width: 1100px;">
-        %endif
+        <div class="act_as_table data_table">
             <div class="act_as_row labels">
                 <div class="act_as_cell">${_('Chart of Account')}</div>
                 <div class="act_as_cell">${_('Fiscal Year')}</div>
@@ -75,8 +71,8 @@
         <!-- we use div with css instead of table for tabular data because div do not cut rows at half at page breaks -->
         %for account in objects:
         <%
-          display_initial_balance = init_balance[account.id] and (init_balance[account.id].get('debit') != 0.0 or init_balance[account.id].get('credit', 0.0) != 0.0)
-          display_ledger_lines = ledger_lines[account.id]
+          display_initial_balance = account.init_balance and (account.init_balance.get('debit', 0.0) != 0.0 or account.init_balance.get('credit', 0.0) != 0.0)
+          display_ledger_lines = account.ledger_lines
         %>
           %if display_account_raw(data) == 'all' or (display_ledger_lines or display_initial_balance):
               <%
@@ -86,7 +82,7 @@
               cumul_balance_curr = 0.0
               %>
             <div class="act_as_table list_table" style="margin-top: 10px;">
-
+                
                 <div class="act_as_caption account_title">
                     ${account.code} - ${account.name}
                 </div>
@@ -97,17 +93,15 @@
                         ## period
                         <div class="act_as_cell" style="width: 50px;">${_('Period')}</div>
                         ## move
-                        <div class="act_as_cell" style="width: 100px;">${_('Entry')}</div>
+                        <div class="act_as_cell" style="width: 60px;">${_('Entry')}</div>
                         ## journal
                         <div class="act_as_cell" style="width: 70px;">${_('Journal')}</div>
                         ## account code
                         <div class="act_as_cell" style="width: 65px;">${_('Account')}</div>
                         ## partner
-                        <div class="act_as_cell" style="width: 140px;">${_('Partner')}</div>
-                        ## move reference
-                        <div class="act_as_cell" style="width: 140px;">${_('Reference')}</div>
+                        <div class="act_as_cell" style="width: 120px;">${_('Partner')}</div>
                         ## label
-                        <div class="act_as_cell" style="width: 160px;">${_('Label')}</div>
+                        <div class="act_as_cell" style="width: 200px;">${_('Label')}</div>
                         ## counterpart
                         <div class="act_as_cell" style="width: 100px;">${_('Counter part')}</div>
                         ## debit
@@ -128,10 +122,10 @@
                 <div class="act_as_tbody">
                       %if display_initial_balance:
                         <%
-                        cumul_debit = init_balance[account.id].get('debit') or 0.0
-                        cumul_credit = init_balance[account.id].get('credit') or 0.0
-                        cumul_balance = init_balance[account.id].get('init_balance') or 0.0
-                        cumul_balance_curr = init_balance[account.id].get('init_balance_currency') or 0.0
+                        cumul_debit = account.init_balance.get('debit') or 0.0
+                        cumul_credit = account.init_balance.get('credit') or 0.0
+                        cumul_balance = account.init_balance.get('init_balance') or 0.0
+                        cumul_balance_curr = account.init_balance.get('init_balance_currency') or 0.0
                         %>
                         <div class="act_as_row initial_balance">
                           ## date
@@ -146,16 +140,14 @@
                           <div class="act_as_cell"></div>
                           ## partner
                           <div class="act_as_cell"></div>
-                          ## move reference
-                          <div class="act_as_cell"></div>
                           ## label
                           <div class="act_as_cell">${_('Initial Balance')}</div>
                           ## counterpart
                           <div class="act_as_cell"></div>
                           ## debit
-                          <div class="act_as_cell amount">${formatLang(init_balance[account.id].get('debit')) | amount}</div>
+                          <div class="act_as_cell amount">${formatLang(account.init_balance.get('debit')) | amount}</div>
                           ## credit
-                          <div class="act_as_cell amount">${formatLang(init_balance[account.id].get('credit')) | amount}</div>
+                          <div class="act_as_cell amount">${formatLang(account.init_balance.get('credit')) | amount}</div>
                           ## balance cumulated
                           <div class="act_as_cell amount" style="padding-right: 1px;">${formatLang(cumul_balance) | amount }</div>
                          %if amount_currency(data):
@@ -167,7 +159,7 @@
 
                         </div>
                       %endif
-                      %for line in ledger_lines[account.id]:
+                      %for line in account.ledger_lines:
                         <%
                         cumul_debit += line.get('debit') or 0.0
                         cumul_credit += line.get('credit') or 0.0
@@ -192,10 +184,8 @@
                           <div class="act_as_cell">${account.code}</div>
                           ## partner
                           <div class="act_as_cell overflow_ellipsis">${line.get('partner_name') or ''}</div>
-                          ## move reference
-                          <div class="act_as_cell">${line.get('lref') or ''}</div>
                           ## label
-                          <div class="act_as_cell">${label | h}</div>
+                          <div class="act_as_cell">${label}</div>
                           ## counterpart
                           <div class="act_as_cell">${line.get('counterparts') or ''}</div>
                           ## debit
@@ -216,8 +206,8 @@
                 <div class="act_as_table list_table">
                     <div class="act_as_row labels" style="font-weight: bold;">
                         ## date
-                        <div class="act_as_cell first_column" style="width: 615px;">${account.code} - ${account.name}</div>
-                        <div class="act_as_cell" style="width: 260px;">${_("Cumulated Balance on Account")}</div>
+                        <div class="act_as_cell first_column" style="width: 350px;">${account.code} - ${account.name}</div>
+                        <div class="act_as_cell" style="width: 365px;">${_("Cumulated Balance on Account")}</div>
                         ## debit
                         <div class="act_as_cell amount" style="width: 75px;">${ formatLang(cumul_debit) | amount }</div>
                         ## credit

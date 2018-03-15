@@ -5,7 +5,6 @@
         <record id="account_partner_ledger_view_webkit" model="ir.ui.view">
             <field name="name">Partner Ledger</field>
             <field name="model">partners.ledger.webkit</field>
-            <field name="priority">99</field>
             <field name="inherit_id" ref="account.account_common_report_view"/>
             <field name="arch" type="xml">
                 <data>
@@ -13,6 +12,11 @@
                         <separator string="Partner Ledger" colspan="4"/>
                         <label nolabel="1" colspan="4" string="This report allows you to print or generate a pdf of your partner ledger with details of all your payable/receivable account"/>
                     </xpath>
+                    
+                    <xpath expr="//button[@name='check_report']" position="attributes">
+             		<attribute name="invisible">True</attribute>
+            		 </xpath>
+            		 
                     <field name="chart_account_id" position='attributes'>
                         <attribute name="colspan">4</attribute>
                     </field>
@@ -57,8 +61,9 @@
             <field name="target">new</field>
         </record>
 
-        <record model="ir.values" id="action_account_partners_ledger_values_webkit">
+       <!--  <record model="ir.values" id="action_account_partners_ledger_values_webkit">
             <field name="model_id" ref="account.model_account_account"/>
+            <field name="object" eval="1"/>
             <field name="name">Partner Ledger</field>
             <field name="key2">client_print_multi</field>
             <field name="value"
@@ -66,6 +71,6 @@
             <field name="key">action</field>
             <field name="model">account.account</field>
         </record>
-
+ -->
     </data>
 </openerp>

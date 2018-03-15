@@ -9,7 +9,6 @@
         <record id="account_trial_balance_view_webkit" model="ir.ui.view">
             <field name="name">Trial Balance</field>
             <field name="model">trial.balance.webkit</field>
-            <field name="priority">99</field>
             <field name="inherit_id" ref="account.account_common_report_view"/>
             <field name="arch" type="xml">
                 <data>
@@ -23,9 +22,6 @@
                     <page name="filters" position="after">
                         <page string="Accounts Filters" name="accounts">
                             <separator string="Print only" colspan="4"/>
-                            <group>
-                                <field name="account_level"/>
-                            </group>
                             <field name="account_ids" colspan="4" nolabel="1" domain="[('type', '=', 'view')]">
                                 <tree>
                                     <field name="code"/>
@@ -68,6 +64,7 @@
 
         <record model="ir.values" id="action_account_trial_balance_values_webkit">
             <field name="model_id" ref="account.model_account_account"/>
+            <field name="object" eval="1"/>
             <field name="name">Trial Balance</field>
             <field name="key2">client_print_multi</field>
             <field name="value"
