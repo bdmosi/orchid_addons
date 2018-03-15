@@ -31,6 +31,8 @@ class account_aged_trial_balance(osv.osv_memory):
         print "dat>>>>>>>>>>>>>>>>",dat
         if dat:
             used_context = result['data']['form']['used_context'] or {}
+        else:
+            result['data'] ={'form':{}}
         data_toadd = self.read(cr, uid, ids, ['od_partner_ids','od_sale_person_ids','od_account_ids','od_cost_centre_ids','od_branch_ids','od_division_ids'])[0]
 
         inv_ids = self.pool['account.invoice'].search(cr,uid,[('user_id','in',data_toadd['od_sale_person_ids'])])
