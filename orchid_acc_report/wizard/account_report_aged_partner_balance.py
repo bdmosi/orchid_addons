@@ -50,7 +50,7 @@ class account_aged_trial_balance(osv.osv_memory):
                 
             result['data']['form']['used_context'] = used_context
         if context.get('xls_export'):
-            result['form']['partner_ids'] = data_toadd['od_partner_ids'] 
+            result['data'] = {'form':{'partner_ids':data_toadd['od_partner_ids'] + sales_person_ids}}
         return result
 
 
