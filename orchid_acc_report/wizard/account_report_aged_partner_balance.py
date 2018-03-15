@@ -28,9 +28,9 @@ class account_aged_trial_balance(osv.osv_memory):
         result = super(account_aged_trial_balance, self).check_report(cr, uid, ids, context=context)
         dat = result.get('data',False)
         used_context = {}
-        print "dat>>>>>>>>>>>>>>>>",dat
-        if dat:
-            used_context = result['data']['form']['used_context'] or {}
+        
+        
+        used_context = result['data']['form']['used_context'] or {}
         
         data_toadd = self.read(cr, uid, ids, ['od_partner_ids','od_sale_person_ids','od_account_ids','od_cost_centre_ids','od_branch_ids','od_division_ids'])[0]
 
@@ -40,14 +40,14 @@ class account_aged_trial_balance(osv.osv_memory):
         if inv_ids:
             inv_data = self.pool['account.invoice'].read(cr, uid,inv_ids,['partner_id'])
             sales_person_ids = [x.get('partner_id')[0] for x in inv_data]
-        if dat:
-            used_context['partner_ids'] = data_toadd['od_partner_ids'] + sales_person_ids
-            used_context['od_account_ids'] = data_toadd['od_account_ids']
-            used_context['od_cost_centre_ids'] = data_toadd['od_cost_centre_ids']
-            used_context['od_branch_ids'] = data_toadd['od_branch_ids']
-            used_context['od_division_ids'] = data_toadd['od_division_ids']
+        
+        used_context['partner_ids'] = data_toadd['od_partner_ids'] + sales_person_ids
+        used_context['od_account_ids'] = data_toadd['od_account_ids']
+        used_context['od_cost_centre_ids'] = data_toadd['od_cost_centre_ids']
+        used_context['od_branch_ids'] = data_toadd['od_branch_ids']
+        used_context['od_division_ids'] = data_toadd['od_division_ids']
             
-            result['data']['form']['used_context'] = used_context
+        result['data']['form']['used_context'] = used_context
         return result
 
 
@@ -59,13 +59,10 @@ class account_aged_trial_balance(osv.osv_memory):
     def _print_report(self, cr, uid, ids, data, context=None):
         res = {}
         context = context or {}
-        if context.get('xls_export'):
-            data = self.pre_print_report(cr, uid, ids, data, context=context)
-            return {'type': 'ir.actions.report.xml',
-                    'report_name': 'account.account_report_aged_partner_balance_xls',
-                    'datas': data}
+       
         data = self.pre_print_report(cr, uid, ids, data, context=context)
-        data['form'].update(self.read(cr, uid, ids, ['period_length', 'direction_selection','od_partner_ids','od_sale_person_ids','od_account_ids'])[0])
+        
+        data['form'].update(self.read(cr, uid, ids, ['period_length', 'direction_selection','od_partner_ids','od_sale_person_ids','od_account_ids','od_cost_centre_ids','od_branch_ids','od_division_ids'])[0])
         period_length = data['form']['period_length']
         if period_length<=0:
             raise osv.except_osv(_('User Error!'), _('You must set a period length greater than 0.'))
@@ -95,6 +92,9 @@ class account_aged_trial_balance(osv.osv_memory):
         data['form'].update(res)
         if data.get('form',False):
             data['ids']=[data['form'].get('chart_account_id',False)]
+        from pprint import pprint 
+        print "data>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+        pprint(data)
         return self.pool['report'].get_action(cr, uid, [], 'account.report_agedpartnerbalance', data=data, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
