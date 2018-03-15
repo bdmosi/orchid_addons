@@ -21,7 +21,9 @@ class account_aged_trial_balance(osv.osv_memory):
 
     }
 
-
+    
+    def xls_export(self, cr, uid, ids, context=None):
+        return self.check_report(cr, uid, ids, context=context)
     def check_report(self, cr, uid, ids, context=None):
         result = super(account_aged_trial_balance, self).check_report(cr, uid, ids, context=context)
         used_context = result['data']['form']['used_context']
@@ -51,8 +53,12 @@ class account_aged_trial_balance(osv.osv_memory):
 
     def _print_report(self, cr, uid, ids, data, context=None):
         res = {}
-        if context is None:
-            context = {}
+        context = context or {}
+        if context.get('xls_export'):
+            data = self.pre_print_report(cr, uid, ids, data, context=context)
+            return {'type': 'ir.actions.report.xml',
+                    'report_name': 'account.account_report_aged_partner_balance_xls',
+                    'datas': data}
         data = self.pre_print_report(cr, uid, ids, data, context=context)
         data['form'].update(self.read(cr, uid, ids, ['period_length', 'direction_selection','od_partner_ids','od_sale_person_ids','od_account_ids'])[0])
         period_length = data['form']['period_length']
