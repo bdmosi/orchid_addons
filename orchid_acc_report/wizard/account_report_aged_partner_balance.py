@@ -49,6 +49,8 @@ class account_aged_trial_balance(osv.osv_memory):
             used_context['od_division_ids'] = data_toadd['od_division_ids']
                 
             result['data']['form']['used_context'] = used_context
+        if context.get('xls_export'):
+            result['data']['partner_ids'] = data_toadd['od_partner_ids'] + sales_person_ids
         return result
 
 
@@ -63,7 +65,7 @@ class account_aged_trial_balance(osv.osv_memory):
        
         data = self.pre_print_report(cr, uid, ids, data, context=context)
         
-        data['form'].update(self.read(cr, uid, ids, ['period_length', 'direction_selection','od_partner_ids','od_sale_person_ids','od_account_ids','od_cost_centre_ids','od_branch_ids','od_division_ids'])[0])
+        data['form'].update(self.read(cr, uid, ids, ['period_length', 'direction_selection',' 00','od_sale_person_ids','od_account_ids','od_cost_centre_ids','od_branch_ids','od_division_ids'])[0])
         period_length = data['form']['period_length']
         if period_length<=0:
             raise osv.except_osv(_('User Error!'), _('You must set a period length greater than 0.'))
