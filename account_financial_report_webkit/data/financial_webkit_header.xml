@@ -73,6 +73,7 @@ body, table, td, span, div {
 }
 .act_as_row  {
     display: table-row;
+    page-break-inside: avoid;
 }
 .act_as_cell {
     display: table-cell;
@@ -252,6 +253,7 @@ body, table, td, span, div {
 }
 .act_as_row  {
     display: table-row;
+    page-break-inside: avoid;
 }
 .act_as_cell {
     display: table-cell;
@@ -392,7 +394,7 @@ act_as_colgroup {
 
 .account_level_consol {
     font-weight: normal;
-	font-style: italic;
+    font-style: italic;
 }
 
 .overflow_ellipsis {

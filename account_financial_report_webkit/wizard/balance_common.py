@@ -32,8 +32,10 @@ import time
 
 from lxml import etree
 from datetime import datetime
-from openerp.osv import fields, orm
+from openerp import fields, models
 from openerp.tools.translate import _
+# pylint: disable=deprecated-module
+from openerp.osv.orm import setup_modifiers
 
 
 def previous_year_date(date, nb_prev=1):
@@ -46,9 +48,11 @@ def previous_year_date(date, nb_prev=1):
     return previous_date
 
 
-class AccountBalanceCommonWizard(orm.TransientModel):
+class AccountBalanceCommonWizard(models.TransientModel):
+
     """Will launch trial balance report and pass required args"""
 
+    # pylint: disable=consider-merging-classes-inherited
     _inherit = "account.common.account.report"
     _name = "account.common.balance.report"
     _description = "Common Balance Report"
@@ -66,55 +70,76 @@ class AccountBalanceCommonWizard(orm.TransientModel):
     M2O_DYNAMIC_FIELDS = [f % index for f in ["comp%s_fiscalyear_id",
                                               "comp%s_period_from",
                                               "comp%s_period_to"]
-                      for index in range(COMPARISON_LEVEL)]
+                          for index in range(COMPARISON_LEVEL)]
     SIMPLE_DYNAMIC_FIELDS = [f % index for f in ["comp%s_filter",
                                                  "comp%s_date_from",
                                                  "comp%s_date_to"]
-                      for index in range(COMPARISON_LEVEL)]
+                             for index in range(COMPARISON_LEVEL)]
     DYNAMIC_FIELDS = M2O_DYNAMIC_FIELDS + SIMPLE_DYNAMIC_FIELDS
 
+    # pylint: disable=old-api7-method-defined
     def _get_account_ids(self, cr, uid, context=None):
         res = False
-        if context.get('active_model', False) == 'account.account' and context.get('active_ids', False):
+        if context.get('active_model', False) == 'account.account' \
+                and context.get('active_ids', False):
             res = context['active_ids']
         return res
 
-    _columns = {
-        'account_ids': fields.many2many('account.account', string='Filter on accounts',
-                                         help="Only selected accounts will be printed. Leave empty to print all accounts."),
-        'filter': fields.selection([('filter_no', 'No Filters'),
-                                    ('filter_date', 'Date'),
-                                    ('filter_period', 'Periods'),
-                                    ('filter_opening', 'Opening Only')],
-                                    "Filter by",
-                                    required=True,
-                                    help='Filter by date: no opening balance will be displayed. '
-                                         '(opening balance can only be computed based on period to be correct).'),
-    }
+    account_ids = fields.Many2many(
+        'account.account', string='Filter on accounts',
+        help="Only selected accounts will be printed. Leave empty to \
+        print all accounts.", default=lambda self: self._get_account_ids(),
+    )
+    filter = fields.Selection(
+        [('filter_no', 'No Filters'),
+         ('filter_date', 'Date'),
+         ('filter_period', 'Periods'),
+         ('filter_opening', 'Opening Only')],
+        "Filter by", required=True,
+        help='Filter by date: no opening balance will be displayed. '
+        '(opening balance can only be computed based on period to be \
+        correct).'
+    )
+    # Set statically because of the impossibility of changing the selection
+    # field when changing chart_account_id
+    account_level = fields.Selection(
+        [('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'),
+         ('6', '6')], string="Account level"
+    )
 
+    # pylint: disable=attribute-deprecated
+    _columns = {}
     for index in range(COMPARISON_LEVEL):
         _columns.update(
-            {"comp%s_filter" % index: fields.selection(COMPARE_SELECTION, string='Compare By', required=True),
-             "comp%s_fiscalyear_id" % index: fields.many2one('account.fiscalyear', 'Fiscal Year'),
-             "comp%s_period_from" % index: fields.many2one('account.period', 'Start Period'),
-             "comp%s_period_to" % index: fields.many2one('account.period', 'End Period'),
-             "comp%s_date_from" % index: fields.date("Start Date"),
-             "comp%s_date_to" % index: fields.date("End Date")})
+            {"comp%s_filter" % index:
+                fields.fields.selection(
+                    COMPARE_SELECTION, string='Compare By', required=True),
+             "comp%s_fiscalyear_id" % index:
+                fields.fields.many2one('account.fiscalyear', 'Fiscal Year'),
+             "comp%s_period_from" % index:
+                fields.fields.many2one('account.period', 'Start Period'),
+             "comp%s_period_to" % index:
+                fields.fields.many2one('account.period', 'End Period'),
+             "comp%s_date_from" % index:
+                fields.fields.date("Start Date"),
+             "comp%s_date_to" % index:
+                fields.fields.date("End Date")})
 
-    _defaults = {
-        'account_ids': _get_account_ids,
-    }
-
+    # pylint: disable=old-api7-method-defined
     def _check_fiscalyear(self, cr, uid, ids, context=None):
-        obj = self.read(cr, uid, ids[0], ['fiscalyear_id', 'filter'], context=context)
+        obj = self.read(
+            cr, uid, ids[0], ['fiscalyear_id', 'filter'], context=context)
         if not obj['fiscalyear_id'] and obj['filter'] == 'filter_no':
             return False
         return True
 
     _constraints = [
-        (_check_fiscalyear, 'When no Fiscal year is selected, you must choose to filter by periods or by date.', ['filter']),
+        (_check_fiscalyear,
+         'When no Fiscal year is selected, you must choose to filter by \
+         periods or by date.', ['filter']),
     ]
 
+    # pylint: disable=old-api7-method-defined
     def default_get(self, cr, uid, fields, context=None):
         """
              To get default values for the object.
@@ -128,15 +153,20 @@ class AccountBalanceCommonWizard(orm.TransientModel):
              @return: A dictionary which of fields with values.
 
         """
-        res = super(AccountBalanceCommonWizard, self).default_get(cr, uid, fields, context=context)
+        res = super(AccountBalanceCommonWizard, self).default_get(
+            cr, uid, fields, context=context)
         for index in range(self.COMPARISON_LEVEL):
             field = "comp%s_filter" % (index,)
             if not res.get(field, False):
                 res[field] = 'filter_no'
         return res
 
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        res = super(AccountBalanceCommonWizard, self).fields_view_get(cr, uid, view_id, view_type, context=context, toolbar=toolbar, submenu=submenu)
+    # pylint: disable=old-api7-method-defined
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form',
+                        context=None, toolbar=False, submenu=False):
+        res = super(AccountBalanceCommonWizard, self).fields_view_get(
+            cr, uid, view_id, view_type, context=context, toolbar=toolbar,
+            submenu=submenu)
 
         res['fields'].update(self.fields_get(cr, uid,
                              allfields=self.DYNAMIC_FIELDS,
@@ -155,22 +185,29 @@ class AccountBalanceCommonWizard(orm.TransientModel):
                 page.append(group)
 
                 def modifiers_and_append(elem):
-                    orm.setup_modifiers(elem)
+                    setup_modifiers(elem)
                     group.append(elem)
 
                 modifiers_and_append(etree.Element(
                     'field',
                     {'name': "comp%s_filter" % index,
-                     'on_change': "onchange_comp_filter(%(index)s, filter, comp%(index)s_filter, fiscalyear_id, date_from, date_to)" % {'index': index}}))
+                     'on_change': "onchange_comp_filter(%(index)s, filter,\
+                     comp%(index)s_filter, fiscalyear_id, date_from, date_to)"
+                     % {'index': index}}))
                 modifiers_and_append(etree.Element(
                     'field',
                     {'name': "comp%s_fiscalyear_id" % index,
                      'attrs':
-                     "{'required': [('comp%(index)s_filter','in',('filter_year','filter_opening'))]," \
-                     " 'invisible': [('comp%(index)s_filter','not in',('filter_year','filter_opening'))]}" % {'index': index}}))
+                     "{'required': [('comp%(index)s_filter','in',\
+                     ('filter_year','filter_opening'))],"
+                     " 'invisible': [('comp%(index)s_filter','not in',\
+                     ('filter_year','filter_opening'))]}" % {'index': index}}))
 
-                dates_attrs = "{'required': [('comp%(index)s_filter','=','filter_date')], " \
-                              " 'invisible': [('comp%(index)s_filter','!=','filter_date')]}" % {'index': index}
+                dates_attrs = "{'required': [('comp%(index)s_filter','=',\
+                                                        'filter_date')], " \
+                              " 'invisible': [('comp%(index)s_filter','!=',\
+                                                        'filter_date')]}" % {
+                    'index': index}
                 modifiers_and_append(etree.Element(
                     'separator',
                     {'string': _('Dates'),
@@ -185,8 +222,11 @@ class AccountBalanceCommonWizard(orm.TransientModel):
                     {'name': "comp%s_date_to" % index,
                      'attrs': dates_attrs}))
 
-                periods_attrs = "{'required': [('comp%(index)s_filter','=','filter_period')]," \
-                                " 'invisible': [('comp%(index)s_filter','!=','filter_period')]}" % {'index': index}
+                periods_attrs = "{'required': [('comp%(index)s_filter','=',\
+                                                        'filter_period')]," \
+                                " 'invisible': [('comp%(index)s_filter','!=',\
+                                                        'filter_period')]}" % {
+                    'index': index}
                 periods_domain = "[('special', '=', False)]"
                 modifiers_and_append(etree.Element(
                     'separator',
@@ -209,24 +249,35 @@ class AccountBalanceCommonWizard(orm.TransientModel):
         res['arch'] = etree.tostring(eview)
         return res
 
-    def onchange_filter(self, cr, uid, ids, filter='filter_no', fiscalyear_id=False, context=None):
+    # pylint: disable=old-api7-method-defined
+    def onchange_filter(self, cr, uid, ids, filter='filter_no',
+                        fiscalyear_id=False, context=None):
         res = {}
         if filter == 'filter_no':
-            res['value'] = {'period_from': False, 'period_to': False, 'date_from': False, 'date_to': False}
+            res['value'] = {'period_from': False,
+                            'period_to': False,
+                            'date_from': False,
+                            'date_to': False}
         if filter == 'filter_date':
             if fiscalyear_id:
-                fyear = self.pool.get('account.fiscalyear').browse(cr, uid, fiscalyear_id, context=context)
+                fyear = self.pool.get('account.fiscalyear').browse(
+                    cr, uid, fiscalyear_id, context=context)
                 date_from = fyear.date_start
-                date_to = fyear.date_stop > time.strftime('%Y-%m-%d') and time.strftime('%Y-%m-%d') or fyear.date_stop
+                date_to = fyear.date_stop > time.strftime(
+                    '%Y-%m-%d') and time.strftime('%Y-%m-%d') \
+                    or fyear.date_stop
             else:
-                date_from, date_to = time.strftime('%Y-01-01'), time.strftime('%Y-%m-%d')
-            res['value'] = {'period_from': False, 'period_to': False, 'date_from': date_from, 'date_to': date_to}
+                date_from, date_to = time.strftime(
+                    '%Y-01-01'), time.strftime('%Y-%m-%d')
+            res['value'] = {'period_from': False, 'period_to':
+                            False, 'date_from': date_from, 'date_to': date_to}
         if filter == 'filter_period' and fiscalyear_id:
             start_period = end_period = False
             cr.execute('''
                 SELECT * FROM (SELECT p.id
                                FROM account_period p
-                               LEFT JOIN account_fiscalyear f ON (p.fiscalyear_id = f.id)
+                               LEFT JOIN account_fiscalyear f
+                                   ON (p.fiscalyear_id = f.id)
                                WHERE f.id = %s
                                AND COALESCE(p.special, FALSE) = FALSE
                                ORDER BY p.date_start ASC
@@ -234,31 +285,42 @@ class AccountBalanceCommonWizard(orm.TransientModel):
                 UNION ALL
                 SELECT * FROM (SELECT p.id
                                FROM account_period p
-                               LEFT JOIN account_fiscalyear f ON (p.fiscalyear_id = f.id)
+                               LEFT JOIN account_fiscalyear f
+                                   ON (p.fiscalyear_id = f.id)
                                WHERE f.id = %s
                                AND p.date_start < NOW()
                                AND COALESCE(p.special, FALSE) = FALSE
                                ORDER BY p.date_stop DESC
-                               LIMIT 1) AS period_stop''', (fiscalyear_id, fiscalyear_id))
+                               LIMIT 1) AS period_stop''',
+                       (fiscalyear_id, fiscalyear_id))
             periods = [i[0] for i in cr.fetchall()]
             if periods:
                 start_period = end_period = periods[0]
                 if len(periods) > 1:
                     end_period = periods[1]
-            res['value'] = {'period_from': start_period, 'period_to': end_period, 'date_from': False, 'date_to': False}
+            res['value'] = {'period_from': start_period, 'period_to':
+                            end_period, 'date_from': False, 'date_to': False}
         return res
 
-    def onchange_comp_filter(self, cr, uid, ids, index, main_filter='filter_no', comp_filter='filter_no', fiscalyear_id=False, start_date=False, stop_date=False, context=None):
+    # pylint: disable=old-api7-method-defined
+    def onchange_comp_filter(self, cr, uid, ids, index,
+                             main_filter='filter_no', comp_filter='filter_no',
+                             fiscalyear_id=False, start_date=False,
+                             stop_date=False, context=None):
         res = {}
         fy_obj = self.pool.get('account.fiscalyear')
         last_fiscalyear_id = False
         if fiscalyear_id:
             fiscalyear = fy_obj.browse(cr, uid, fiscalyear_id, context=context)
-            last_fiscalyear_ids = fy_obj.search(cr, uid, [('date_stop', '<', fiscalyear.date_start)],
-                                                limit=self.COMPARISON_LEVEL, order='date_start desc', context=context)
+            last_fiscalyear_ids = fy_obj.search(
+                cr, uid, [('date_stop', '<', fiscalyear.date_start)],
+                limit=self.COMPARISON_LEVEL, order='date_start desc',
+                context=context)
             if last_fiscalyear_ids:
                 if len(last_fiscalyear_ids) > index:
-                    last_fiscalyear_id = last_fiscalyear_ids[index]  # first element for the comparison 1, second element for the comparison 2
+                    # first element for the comparison 1, second element for
+                    # the comparison 2
+                    last_fiscalyear_id = last_fiscalyear_ids[index]
 
         fy_id_field = "comp%s_fiscalyear_id" % (index,)
         period_from_field = "comp%s_period_from" % (index,)
@@ -268,37 +330,46 @@ class AccountBalanceCommonWizard(orm.TransientModel):
 
         if comp_filter == 'filter_no':
             res['value'] = {
-                    fy_id_field: False,
-                    period_from_field: False,
-                    period_to_field: False,
-                    date_from_field: False,
-                    date_to_field: False
-                }
+                fy_id_field: False,
+                period_from_field: False,
+                period_to_field: False,
+                date_from_field: False,
+                date_to_field: False
+            }
         if comp_filter in ('filter_year', 'filter_opening'):
             res['value'] = {
-                    fy_id_field: last_fiscalyear_id,
-                    period_from_field: False,
-                    period_to_field: False,
-                    date_from_field: False,
-                    date_to_field: False
-                }
+                fy_id_field: last_fiscalyear_id,
+                period_from_field: False,
+                period_to_field: False,
+                date_from_field: False,
+                date_to_field: False
+            }
         if comp_filter == 'filter_date':
             dates = {}
             if main_filter == 'filter_date':
                 dates = {
-                    'date_start': previous_year_date(start_date, index + 1).strftime('%Y-%m-%d'),
-                    'date_stop': previous_year_date(stop_date, index + 1).strftime('%Y-%m-%d'),
-                    }
+                    'date_start': previous_year_date(start_date, index + 1).
+                    strftime('%Y-%m-%d'),
+                    'date_stop': previous_year_date(stop_date, index + 1).
+                    strftime('%Y-%m-%d'),
+                }
             elif last_fiscalyear_id:
-                dates = fy_obj.read(cr, uid, last_fiscalyear_id, ['date_start', 'date_stop'], context=context)
+                dates = fy_obj.read(
+                    cr, uid, last_fiscalyear_id, ['date_start', 'date_stop'],
+                    context=context)
 
-            res['value'] = {fy_id_field: False, period_from_field: False, period_to_field: False, date_from_field: dates.get('date_start', False), date_to_field: dates.get('date_stop', False)}
+            res['value'] = {fy_id_field: False,
+                            period_from_field: False,
+                            period_to_field: False,
+                            date_from_field: dates.get('date_start', False),
+                            date_to_field: dates.get('date_stop', False)}
         if comp_filter == 'filter_period' and last_fiscalyear_id:
             start_period = end_period = False
             cr.execute('''
                 SELECT * FROM (SELECT p.id
                                FROM account_period p
-                               LEFT JOIN account_fiscalyear f ON (p.fiscalyear_id = f.id)
+                               LEFT JOIN account_fiscalyear f
+                                   ON (p.fiscalyear_id = f.id)
                                WHERE f.id = %(fiscalyear)s
                                AND COALESCE(p.special, FALSE) = FALSE
                                ORDER BY p.date_start ASC
@@ -306,12 +377,14 @@ class AccountBalanceCommonWizard(orm.TransientModel):
                 UNION ALL
                 SELECT * FROM (SELECT p.id
                                FROM account_period p
-                               LEFT JOIN account_fiscalyear f ON (p.fiscalyear_id = f.id)
+                               LEFT JOIN account_fiscalyear f
+                                   ON (p.fiscalyear_id = f.id)
                                WHERE f.id = %(fiscalyear)s
                                AND p.date_start < NOW()
                                AND COALESCE(p.special, FALSE) = FALSE
                                ORDER BY p.date_stop DESC
-                               LIMIT 1) AS period_stop''', {'fiscalyear': last_fiscalyear_id})
+                               LIMIT 1) AS period_stop''',
+                       {'fiscalyear': last_fiscalyear_id})
             periods = [i[0] for i in cr.fetchall()]
             if periods and len(periods) > 1:
                 start_period = end_period = periods[0]
@@ -324,16 +397,17 @@ class AccountBalanceCommonWizard(orm.TransientModel):
                             date_to_field: False}
         return res
 
+    # pylint: disable=old-api7-method-defined
     def pre_print_report(self, cr, uid, ids, data, context=None):
         data = super(AccountBalanceCommonWizard, self).pre_print_report(
-            cr, uid, ids, data, context)
+            cr, uid, ids, data, context=context)
         if context is None:
             context = {}
 
         # will be used to attach the report on the main account
         data['ids'] = [data['form']['chart_account_id']]
 
-        fields_to_read = ['account_ids', ]
+        fields_to_read = ['account_ids', 'account_level']
         fields_to_read += self.DYNAMIC_FIELDS
         vals = self.read(cr, uid, ids, fields_to_read, context=context)[0]
 
