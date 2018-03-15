@@ -37,14 +37,14 @@ class account_move_line(osv.osv):
         
         if context.get('od_branch_ids'):
             od_branch_ids = tuple(context['od_branch_ids'])
-            if len(cost_centre_id) == 1:
+            if len(od_branch_ids) == 1:
                 result += ' AND '+obj+'.od_branch_id = '+str(context['od_branch_ids'][0])+ ' '
             else:
                 result += ' AND '+obj+'.od_branch_id IN '+str(od_branch_ids)+ ' '
                 
         if context.get('od_division_ids'):
             od_division_ids = tuple(context['od_division_ids'])
-            if len(cost_centre_id) == 1:
+            if len(od_division_ids) == 1:
                 result += ' AND '+obj+'.od_division_id = '+str(context['od_division_ids'][0])+ ' '
             else:
                 result += ' AND '+obj+'.od_division_id IN '+str(od_division_ids)+ ' '
