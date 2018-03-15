@@ -26,7 +26,11 @@ class account_aged_trial_balance(osv.osv_memory):
         return self.check_report(cr, uid, ids, context=context)
     def check_report(self, cr, uid, ids, context=None):
         result = super(account_aged_trial_balance, self).check_report(cr, uid, ids, context=context)
-        used_context = result['data']['form']['used_context']
+        dat = result.get('data',False)
+        used_context = {}
+        print "dat>>>>>>>>>>>>>>>>",dat
+        if dat:
+            used_context = result['data']['form']['used_context'] or {}
         data_toadd = self.read(cr, uid, ids, ['od_partner_ids','od_sale_person_ids','od_account_ids','od_cost_centre_ids','od_branch_ids','od_division_ids'])[0]
 
         inv_ids = self.pool['account.invoice'].search(cr,uid,[('user_id','in',data_toadd['od_sale_person_ids'])])
