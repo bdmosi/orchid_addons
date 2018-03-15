@@ -94,6 +94,7 @@ class account_aged_trial_balance(osv.osv_memory):
             data['ids']=[data['form'].get('chart_account_id',False)]
         if context.get('xls_export'):
             data = self.pre_print_report(cr, uid, ids, data, context=context)
+            data['form'].update({'data':{'used_context':{}}})
             return {'type': 'ir.actions.report.xml',
                     'report_name': 'account.account_report_aged_partner_balance_xls',
                     'datas': data}
