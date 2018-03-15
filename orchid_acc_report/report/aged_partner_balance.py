@@ -131,7 +131,7 @@ class AccountAgedTrialBalanceWebkit(PartnersOpenInvoicesWebkit):
                   call to set_context
 
         """
-
+        print "Data>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",data
         res = super(AccountAgedTrialBalanceWebkit, self).set_context(
             objects,
             data,
