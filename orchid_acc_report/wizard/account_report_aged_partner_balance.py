@@ -92,9 +92,11 @@ class account_aged_trial_balance(osv.osv_memory):
         data['form'].update(res)
         if data.get('form',False):
             data['ids']=[data['form'].get('chart_account_id',False)]
-        from pprint import pprint 
-        print "data>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-        pprint(data)
+        if context.get('xls_export'):
+            data = self.pre_print_report(cr, uid, ids, data, context=context)
+            return {'type': 'ir.actions.report.xml',
+                    'report_name': 'account.account_report_aged_partner_balance_xls',
+                    'datas': data}
         return self.pool['report'].get_action(cr, uid, [], 'account.report_agedpartnerbalance', data=data, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
