@@ -31,7 +31,9 @@ class aged_partner_balance_xls(report_xls):
     column_sizes = [17, 17, 17, 17, 17, 17, 17, 17, 17, 17]
 
     def generate_xls_report(self, _p, _xs, data, objects, wb):
-
+        print "data on generate xls report>>>>>>>>>>>>>>>>>>>>>>>>>>>",data 
+        from pprint import pprint 
+        pprint(data)
         ws = wb.add_sheet(_p.report_name[:31])
         ws.panes_frozen = True
         ws.remove_splits = True
