@@ -28,6 +28,7 @@
 			'wizard/wiz_assign_user_view.xml',
 			'data/data.xml',
             'analytic_view.xml',
+            'invoice_view.xml',
             'views/pack_op_lot.xml',
             'timesheet/hr_contract_view.xml',
             'timesheet/timesheet_view.xml',
