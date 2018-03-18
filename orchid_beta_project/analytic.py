@@ -1159,6 +1159,7 @@ class od_project_invoice_schedule(models.Model):
                 inv_line_vals.append((0,0,vals))
             inv_vals['invoice_line'] = inv_line_vals
             inv =self.env['account.invoice'].create(inv_vals)
+            inv.button_compute()
             self.invoice_id = inv.id
 class od_amc_invoice_schedule(models.Model):
     _name = "od.amc.invoice.schedule"
