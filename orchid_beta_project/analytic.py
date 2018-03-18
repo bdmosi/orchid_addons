@@ -1135,7 +1135,7 @@ class od_project_invoice_schedule(models.Model):
         values = {
             'name': line.name,
             'account_id': account_id,
-            'account_analytic_id': line.analytic_account_id.id,
+            'account_analytic_id': self.analytic_id and self.analytic_id.id ,
             'price_unit': line.price_unit or 0.0,
             'quantity': line.quantity,
             'uos_id': line.uom_id.id or False,
