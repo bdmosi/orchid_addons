@@ -54,7 +54,7 @@
                          <field name="od_cost_sheet_id" />
                          <field name="od_cost_centre_id" attrs="{'invisible':[('od_manual','=',True)]}" />
                         <field name="od_branch_id" attrs="{'invisible':[('od_manual','=',True)]}"/>
-                          <field name="division_id" attrs="{'invisible':[('od_manual','=',True)]}"/>
+                          <field name="od_division_id" attrs="{'invisible':[('od_manual','=',True)]}"/>
                         <field name="od_manual" />
                         
                          <field name="cost_centre_id" attrs="{'invisible':[('od_manual','=',False)]}" />
