@@ -1126,7 +1126,7 @@ class od_project_invoice_schedule(models.Model):
         analytic_id = self.analytic_id and self.analytic_id.id or False
         if analytic_id:
             so_id = self.env['sale.order'].search([('project_id','=',analytic_id),('state','!=','cancel')],limit=1)
-            inv_id =  so_id._make_invoice()
+            inv_id =  so_id._make_invoice([])
             self.invoice_id = inv_id
     
 class od_amc_invoice_schedule(models.Model):
