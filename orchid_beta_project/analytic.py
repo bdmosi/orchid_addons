@@ -1130,7 +1130,7 @@ class od_project_invoice_schedule(models.Model):
             account_id = res.categ_id.property_account_income_categ.id
         account_id = fpos_obj.map_account(cr, uid, fiscal_position, account_id)
 
-        taxes = res.tax_id or False
+        taxes = line.tax_id or False
         tax_id = fpos_obj.map_tax(cr, uid, fiscal_position, taxes, context=context)
         values = {
             'name': line.name,
