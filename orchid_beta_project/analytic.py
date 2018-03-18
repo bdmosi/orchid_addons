@@ -5,6 +5,11 @@ from datetime import datetime,date as dt
 from od_default_milestone import od_project_vals,od_om_vals,od_amc_vals
 from openerp.exceptions import Warning
 from lib2to3.fixes.fix_operator import invocation
+
+class account_invoice(models.Model):
+    _inherit = 'account.invoice'
+    cust_date = fields.Date(string="Customer Accepted Date")
+
 class account_move_line(models.Model):
     _inherit = "account.move.line"
     od_state = fields.Selection([('draft','Unposted'),('posted','Posted')],string="Parent Status",related="move_id.state")
@@ -1133,8 +1138,11 @@ class od_project_invoice_schedule(models.Model):
     name = fields.Char(string="Name",required=True)
     date = fields.Date(string="Planned Date",required=True)
     invoice_id = fields.Many2one('account.invoice',string="Invoice")
-    amount = fields.Float(string="Amount",required=True)
-    
+    amount = fields.Float(string="Planned Amount",required=True)
+    invoice_amount = fields.Float(string="Invoice Amount",related="invoice_id.amount_untaxed",readonly=True)
+    date_invoice = fields.Float(string="Invoice Date",related="invoice_id.date_invoice",string="Invoice Date",readonly=True)
+    invoice_status = fields.Selection([('draft','Draft'),('open','Open'),('paid','Paid'),('cancel','Cancelled'),('accept','Accepted By Customer')],related="invoice_id.state",raeadonly=True)
+    cust_date = fields.Float(string="Customer Accepted Date",related="invoice_id.cust_date",readonly=True)
     def _prepare_invoice_line(self, cr, uid, line,analytic_id, fiscal_position=False, context=None):
         fpos_obj = self.pool.get('account.fiscal.position')
         res = line.product_id
@@ -1163,10 +1171,10 @@ class od_project_invoice_schedule(models.Model):
         cr = self.env.cr
         uid = self.env.uid
         inv_line_vals =[]
-        if analytic_id:
+        if analytic_id and not self.invoice_id:
             so_id = self.env['sale.order'].search([('project_id','=',analytic_id),('state','!=','cancel')],limit=1)
             inv_vals =  self.pool.get('sale.order')._prepare_invoice(cr,uid,so_id,[])
-            inv_vals['date_invoice'] = self.date
+            inv_vals['date_invoice'] =str(dt.today())
             for line in so_id.order_line:
                 vals = self._prepare_invoice_line(line,analytic_id) 
                 print "valssssssssssss>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",vals
