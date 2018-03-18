@@ -1180,7 +1180,7 @@ class od_project_invoice_schedule(models.Model):
         od_cost_sheet_id = self.analytic_id and self.analytic_id.od_cost_sheet_id and self.analytic_id.od_cost_sheet_id.id or False 
         od_branch_id  = self.analytic_id and self.analytic_id.od_branch_id and self.analytic_id.od_branch_id.id or False 
         od_cost_centre_id = self.analytic_id and self.analytic_id.od_cost_centre_id and self.analytic_id.od_cost_centre_id.id or False 
-        od_division_id = elf.analytic_id and self.analytic_id.od_division_id and self.analytic_id.od_division_id.id or False 
+        od_division_id = self.analytic_id and self.analytic_id.od_division_id and self.analytic_id.od_division_id.id or False 
         if analytic_id and not self.invoice_id:
             so_id = self.env['sale.order'].search([('project_id','=',analytic_id),('state','!=','cancel')],limit=1)
             inv_vals =  self.pool.get('sale.order')._prepare_invoice(cr,uid,so_id,[])
