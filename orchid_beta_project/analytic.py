@@ -387,7 +387,7 @@ class account_analytic_account(models.Model):
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.invoice',
-            'views': [(form_view and form_view[1] or False, 'form'), (tree_view and tree_view[1] or False, 'tree')],
+            'views': [(tree_view and tree_view[1] or False, 'tree'),(form_view and form_view[1] or False, 'form'), ],
             'type': 'ir.actions.act_window',
         }
 
@@ -823,7 +823,7 @@ class account_analytic_account(models.Model):
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.invoice',
-            'views': [(form_view and form_view[1] or False, 'form'), (tree_view and tree_view[1] or False, 'tree')],
+            'views': [ (tree_view and tree_view[1] or False, 'tree'),(form_view and form_view[1] or False, 'form'),],
             'type': 'ir.actions.act_window',
         }
     
