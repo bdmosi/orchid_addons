@@ -1122,7 +1122,7 @@ class od_project_invoice_schedule(models.Model):
     invoice_id = fields.Many2one('account.invoice',string="Invoice")
     amount = fields.Float(string="Amount",required=True)
     
-    def _prepare_invoice_line(self, cr, uid, line, fiscal_position=False, context=None):
+    def _prepare_invoice_line(self, cr, uid, line,analytic_id, fiscal_position=False, context=None):
         fpos_obj = self.pool.get('account.fiscal.position')
         res = line.product_id
         account_id = res.property_account_income.id
@@ -1135,7 +1135,7 @@ class od_project_invoice_schedule(models.Model):
         values = {
             'name': line.name,
             'account_id': account_id,
-            'account_analytic_id': self.analytic_id and self.analytic_id.id ,
+            'account_analytic_id': analytic_id ,
             'price_unit': line.price_unit or 0.0,
             'quantity': line.quantity,
             'uos_id': line.uom_id.id or False,
@@ -1152,9 +1152,9 @@ class od_project_invoice_schedule(models.Model):
         inv_line_vals =[]
         if analytic_id:
             so_id = self.env['sale.order'].search([('project_id','=',analytic_id),('state','!=','cancel')],limit=1)
-            inv_vals =  self.pool.get('sale.order')._make_invoice(cr,uid,so_id,[])
+            inv_vals =  self.pool.get('sale.order')._prepare_invoice(cr,uid,so_id,[])
             for line in so_id.order_line:
-                vals = self._prepare_invoice_line(line) 
+                vals = self._prepare_invoice_line(line,analytic_id) 
                 print "valssssssssssss>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",vals
                 inv_line_vals.append((0,0,vals))
             inv_vals['invoice_line'] = inv_line_vals
