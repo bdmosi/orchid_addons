@@ -282,6 +282,7 @@
                		<field name="date" />
                		<button name="create_invoice" string="Create Invoice" type="object" icon="STOCK_EXECUTE" />
                		<field name="invoice_id" />
+               		<field name="amount" />
                	</tree>
                </field>
                
