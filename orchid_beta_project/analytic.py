@@ -372,7 +372,7 @@ class account_analytic_account(models.Model):
     def od_btn_open_customer_invoice(self):
         analytic_id = self.id
         invoice_pool = self.env['account.invoice']
-        domain = [('od_analytic_account','=',analytic_id),('type','=','out_invoice'),('state','not in',('draft','cancel'))]
+        domain = [('od_analytic_account','=',analytic_id),('type','=','out_invoice'),('state','!=','cancel')]
         inv_ids = invoice_pool.search(domain)
         inv_li_ids = [inv.id for inv in inv_ids]
         dom = [('id','in',inv_li_ids)]
