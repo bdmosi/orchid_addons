@@ -1138,7 +1138,7 @@ class od_project_invoice_schedule(models.Model):
             'account_analytic_id': analytic_id ,
             'price_unit': line.price_unit or 0.0,
             'quantity': line.product_uom_qty,
-            'uos_id': line.uom_id.id or False,
+            'uos_id': line.product_uom.id or False,
             'product_id': line.product_id.id or False,
             'invoice_line_tax_id': [(6, 0, tax_id)],
         }
