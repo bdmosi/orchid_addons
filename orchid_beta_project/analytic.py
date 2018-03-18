@@ -1146,7 +1146,7 @@ class od_project_invoice_schedule(models.Model):
     amount = fields.Float(string="Planned Amount",required=True)
     invoice_amount = fields.Float(string="Invoice Amount",related="invoice_id.amount_untaxed",readonly=True)
     date_invoice = fields.Date(string="Invoice Date",related="invoice_id.date_invoice",readonly=True)
-    invoice_status = fields.Selection([('draft','Draft'),('proforma','Pro-forma'),('proforma2','Pro-forma'),('open','Open'),('accept','Accepted By Customer')('paid','Paid'),('cancel','Cancelled')],related="invoice_id.state",raeadonly=True,string="Invoice Status")
+    invoice_status = fields.Selection([('draft','Draft'),('proforma','Pro-forma'),('proforma2','Pro-forma'),('open','Open'),('accept','Accepted By Customer'),('paid','Paid'),('cancel','Cancelled')],related="invoice_id.state",raeadonly=True,string="Invoice Status")
     cust_date = fields.Date(string="Customer Accepted Date",related="invoice_id.cust_date",readonly=True)
     def _prepare_invoice_line(self, cr, uid, line,analytic_id, fiscal_position=False, context=None):
         fpos_obj = self.pool.get('account.fiscal.position')
