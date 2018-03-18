@@ -1128,7 +1128,7 @@ class od_project_invoice_schedule(models.Model):
         uid = self.env.uid
         if analytic_id:
             so_id = self.env['sale.order'].search([('project_id','=',analytic_id),('state','!=','cancel')],limit=1)
-            inv_id =  self.pool.get('sale.order')._make_invoice(cr,uid,so_id,[])
+            inv_id =  self.pool.get('sale.order')._make_invoice(cr,uid,so_id,so_id.order_line)
             self.invoice_id = inv_id
     
 class od_amc_invoice_schedule(models.Model):
