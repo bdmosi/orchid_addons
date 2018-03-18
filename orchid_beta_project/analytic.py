@@ -10,6 +10,7 @@ class account_invoice(models.Model):
     _inherit = 'account.invoice'
     cust_date = fields.Date(string="Customer Accepted Date")
     state = fields.Selection([('draft','Draft'),('proforma','Pro-forma'),('proforma2','Pro-forma'),('open','Open'),('accept','Accepted By Customer'),('paid','Paid'),('cancel','Cancelled')],string="Invoice Status")
+    @api.multi
     def od_accept(self):
         dt_today = str(dt.today())
         self.cust_date  = dt_today
