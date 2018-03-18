@@ -1174,6 +1174,19 @@ class od_project_invoice_schedule(models.Model):
             inv =self.env['account.invoice'].create(inv_vals)
             inv.button_compute()
             self.invoice_id = inv.id
+            model_data = self.env['ir.model.data']
+            tree_view = model_data.get_object_reference('account', 'invoice_tree')
+            form_view = model_data.get_object_reference('account', 'invoice_form')
+            return {
+                'res_id':inv.id,
+                'view_type': 'form',
+                'view_mode': 'tree,form',
+                'res_model': 'account.invoice',
+                'views': [(form_view and form_view[1] or False, 'form'),(tree_view and tree_view[1] or False, 'tree')], 
+                'type': 'ir.actions.act_window',
+            }
+        return True
+
 class od_amc_invoice_schedule(models.Model):
     _name = "od.amc.invoice.schedule"
     analytic_id  = fields.Many2one('account.analytic.account',string="Analytic Account")
