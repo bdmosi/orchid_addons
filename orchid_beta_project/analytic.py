@@ -1166,6 +1166,7 @@ class od_project_invoice_schedule(models.Model):
         if analytic_id:
             so_id = self.env['sale.order'].search([('project_id','=',analytic_id),('state','!=','cancel')],limit=1)
             inv_vals =  self.pool.get('sale.order')._prepare_invoice(cr,uid,so_id,[])
+            inv_vals['date_invoice'] = self.date
             for line in so_id.order_line:
                 vals = self._prepare_invoice_line(line,analytic_id) 
                 print "valssssssssssss>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",vals
