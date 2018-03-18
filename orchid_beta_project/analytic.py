@@ -4,6 +4,7 @@ from pprint import pprint
 from datetime import datetime,date as dt
 from od_default_milestone import od_project_vals,od_om_vals,od_amc_vals
 from openerp.exceptions import Warning
+from lib2to3.fixes.fix_operator import invocation
 class account_move_line(models.Model):
     _inherit = "account.move.line"
     od_state = fields.Selection([('draft','Unposted'),('posted','Posted')],string="Parent Status",related="move_id.state")
@@ -1121,16 +1122,44 @@ class od_project_invoice_schedule(models.Model):
     invoice_id = fields.Many2one('account.invoice',string="Invoice")
     amount = fields.Float(string="Amount",required=True)
     
+    def _prepare_invoice_line(self, cr, uid, line, fiscal_position=False, context=None):
+        fpos_obj = self.pool.get('account.fiscal.position')
+        res = line.product_id
+        account_id = res.property_account_income.id
+        if not account_id:
+            account_id = res.categ_id.property_account_income_categ.id
+        account_id = fpos_obj.map_account(cr, uid, fiscal_position, account_id)
+
+        taxes = res.taxes_id or False
+        tax_id = fpos_obj.map_tax(cr, uid, fiscal_position, taxes, context=context)
+        values = {
+            'name': line.name,
+            'account_id': account_id,
+            'account_analytic_id': line.analytic_account_id.id,
+            'price_unit': line.price_unit or 0.0,
+            'quantity': line.quantity,
+            'uos_id': line.uom_id.id or False,
+            'product_id': line.product_id.id or False,
+            'invoice_line_tax_id': [(6, 0, tax_id)],
+        }
+        return values
+    
     @api.multi 
     def create_invoice(self):
         analytic_id = self.analytic_id and self.analytic_id.id or False
         cr = self.env.cr
         uid = self.env.uid
+        inv_line_vals =[]
         if analytic_id:
             so_id = self.env['sale.order'].search([('project_id','=',analytic_id),('state','!=','cancel')],limit=1)
-            inv_id =  self.pool.get('sale.order')._make_invoice(cr,uid,so_id,so_id.order_line)
-            self.invoice_id = inv_id
-    
+            inv_vals =  self.pool.get('sale.order')._make_invoice(cr,uid,so_id,[])
+            for line in so_id.order_line:
+                vals = self._prepare_invoice_line(line) 
+                print "valssssssssssss>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",vals
+                inv_line_vals.append((0,0,vals))
+            inv_vals['invoice_line'] = inv_line_vals
+            inv =self.env['account.invoice'].crate(inv_vals)
+            self.invoice_id = inv.id
 class od_amc_invoice_schedule(models.Model):
     _name = "od.amc.invoice.schedule"
     analytic_id  = fields.Many2one('account.analytic.account',string="Analytic Account")
