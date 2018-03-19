@@ -547,8 +547,9 @@ class hr_employee(models.Model):
                 result.append((0,0,{'user_id':user_id,'available_time':avl_time,'actual_time_spent':spent_time,'utl':(spent_time/avl_time)*100.0}))
                 utl  = (utl/0.65)
                 utl_list.append(utl)
-            fot_data.append((0,0,{'user_id':user_id,'fot':fot}))
-            fot_list.append(fot)
+            if data_ids:
+                fot_data.append((0,0,{'user_id':user_id,'fot':fot}))
+                fot_list.append(fot)
             
         utl_score =  self.get_avg_score(utl_list)  
         fot_score  = self.get_avg_score(fot_list)   
