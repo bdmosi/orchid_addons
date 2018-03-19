@@ -1562,8 +1562,8 @@ class hr_employee(models.Model):
         closed_projects =[]
         analytic_pool = self.env['account.analytic.account']
         company_id = self.company_id and self.company_id.id
-        open_project_ids = analytic_pool.search([('company_id','=',company_id),('od_type_of_project','not in',('amc','o_m','credit')),('state','not in',('close','cancelled'))])
-        closed_project_ids = analytic_pool.search([('company_id','=',company_id),('od_type_of_project','not in',('amc','o_m','credit')),('state','=','close')])
+        open_project_ids = analytic_pool.search([('company_id','=',company_id),('od_type_of_project','not in',('amc','o_m','credit','comp_gen')),('state','not in',('close','cancelled'))])
+        closed_project_ids = analytic_pool.search([('company_id','=',company_id),('od_type_of_project','not in',('amc','o_m','credit','comp_gen')),('state','=','close')])
         sale_pool = self.env['sale.order']
         invoice_pool = self.env['account.invoice']
         total_collected =0.0
