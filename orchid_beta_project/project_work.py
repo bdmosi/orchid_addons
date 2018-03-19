@@ -237,6 +237,89 @@ class project_project(models.Model):
             amount = sum([po.bt_amount_total for po in pos])
             self.od_amnt_purchased = amount
 
+    
+    
+     
+    @api.multi
+    def od_btn_open_sup_refund(self):
+        analytic_id = self.analytic_account_id and self.analytic_account_id.id or False
+        invoice_pool = self.env['account.invoice']
+        domain = [('od_analytic_account','=',analytic_id),('type','=','in_refund')]
+        inv_ids = invoice_pool.search(domain)
+        inv_li_ids = [inv.id for inv in inv_ids]
+        dom = [('id','in',inv_li_ids)]
+        return {
+            'domain':dom,
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'account.invoice',
+            'type': 'ir.actions.act_window',
+        }
+    
+    
+    @api.multi
+    def od_btn_open_sup_invoice(self):
+        analytic_id = self.analytic_account_id and self.analytic_account_id.id or False
+        invoice_pool = self.env['account.invoice']
+        domain = [('od_analytic_account','=',analytic_id),('type','=','in_invoice')]
+        inv_ids = invoice_pool.search(domain)
+        inv_li_ids = [inv.id for inv in inv_ids]
+        dom = [('id','in',inv_li_ids)]
+        return {
+            'domain':dom,
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'account.invoice',
+            'type': 'ir.actions.act_window',
+        }
+    
+    
+    @api.multi
+    def od_btn_open_customer_refund(self):
+        analytic_id = self.analytic_account_id and self.analytic_account_id.id or False
+        invoice_pool = self.env['account.invoice']
+        domain = [('od_analytic_account','=',analytic_id),('type','=','out_refund')]
+        inv_ids = invoice_pool.search(domain)
+        inv_li_ids = [inv.id for inv in inv_ids]
+        dom = [('id','in',inv_li_ids)]
+        
+        model_data = self.env['ir.model.data']
+        tree_view = model_data.get_object_reference('account', 'invoice_tree')
+        form_view = model_data.get_object_reference('account', 'invoice_form')
+        
+        return {
+            'domain':dom,
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'account.invoice',
+            'views': [ (tree_view and tree_view[1] or False, 'tree'),(form_view and form_view[1] or False, 'form'),],
+            'type': 'ir.actions.act_window',
+        }
+    
+    @api.multi
+    def od_btn_open_customer_invoice(self):
+        analytic_id = self.analytic_account_id and self.analytic_account_id.id or False
+        invoice_pool = self.env['account.invoice']
+        domain = [('od_analytic_account','=',analytic_id),('type','=','out_invoice')]
+        inv_ids = invoice_pool.search(domain)
+        inv_li_ids = [inv.id for inv in inv_ids]
+        dom = [('id','in',inv_li_ids)]
+        
+        model_data = self.env['ir.model.data']
+        tree_view = model_data.get_object_reference('account', 'invoice_tree')
+        form_view = model_data.get_object_reference('account', 'invoice_form')
+
+        
+        return {
+            'domain':dom,
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'account.invoice',
+            'views': [(tree_view and tree_view[1] or False, 'tree'),(form_view and form_view[1] or False, 'form'), ],
+            'type': 'ir.actions.act_window',
+        }
+
+    
     @api.multi
     def od_btn_open_cost_revenue(self):
         analytic_id = self.analytic_account_id and self.analytic_account_id.id or False
