@@ -214,9 +214,9 @@
             	<xpath expr="/form/sheet/notebook/page[@string='Work']" position="before">
             	<page string="Prerequisites" attrs="{'invisible': [('od_type','!=','activities')]}">
                   <group>
-                    <field name="od_activity_technical_obj" required="1" />
-                    <field name="od_eqp_application" required="1" />
-                    <field name="od_prior_arrangement" required="1" />
+                    <field name="od_activity_technical_obj" attrs="{'required': [('od_type','=','activities')]}" />
+                    <field name="od_eqp_application" attrs="{'required': [('od_type','=','activities')]}" />
+                    <field name="od_prior_arrangement" attrs="{'required': [('od_type','=','activities')]}" />
                     
                     	<field name="od_common_partner_id" />
                         <field name="od_contact_ids" domain="[('parent_id','=',od_common_partner_id)]" string="Contact Person"/>

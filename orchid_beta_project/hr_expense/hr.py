@@ -292,6 +292,14 @@ class hr_employee(models.Model):
     
     
     
+    
+    def get_x_days(self,date_start,date_end):
+        fromdate = datetime.strptime(date_start, DEFAULT_SERVER_DATE_FORMAT)
+        todate = datetime.strptime(date_end, DEFAULT_SERVER_DATE_FORMAT)
+        daygenerator = (fromdate + timedelta(x + 1) for x in xrange((todate - fromdate).days))
+        days =sum(1 for day in daygenerator)
+        days = days+1
+        return days  
     def get_available_time(self,aud_date_start,aud_date_end):
        
         fromdate = datetime.strptime(aud_date_start, DEFAULT_SERVER_DATE_FORMAT)
@@ -1086,6 +1094,30 @@ class hr_employee(models.Model):
             if date <=aud_date_end:
                 return True
         return False
+    def get_inv_sch_score(self,proj,aud_date_start,aud_date_end):
+        project_start_date = proj.od_project_start 
+        score_board = []
+        check = False
+        for line in proj.od_project_invoice_schedule_line:
+            planned_date = line.date
+            pl_dt = self.get_x_days(project_start_date, planned_date)
+            today = str(dt.today())
+            td_dt =self.get_x_days(project_start_date, today)
+            if td_dt>=pl_dt:
+                invoice = line.invoice_id 
+                if invoice and invoice.state in ('open','paid','accept'):
+                    cust_date = invoice.cust_date 
+                    if aud_date_start<=cust_date <= aud_date_end:
+                        check = True
+                        score = 0.0
+                        if cust_date <= planned_date:
+                            score = 30.0
+                        score_board.append(score)
+        avg_score = self.get_avg_score(score_board)
+        return check,avg_score
+                        
+                
+        
     
     def get_pm_data(self,sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id):
         
@@ -1135,10 +1167,11 @@ class hr_employee(models.Model):
                 cost_control_score = proj.cost_control_score 
                 cost_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':cost_control_score})
             #invoice Schedule Score
-            inv_sch_dates = [a.date for a in proj.od_project_invoice_schedule_line]
-            check = self.check_inv_sch_dates(inv_sch_dates,aud_date_start,aud_date_end)
-            if check:
-                invoice_sc_score = proj.invoice_schedule_score 
+#             inv_sch_dates = [a.date for a in proj.od_project_invoice_schedule_line]
+#             check = self.check_inv_sch_dates(inv_sch_dates,aud_date_start,aud_date_end)
+            check2,inv_score = self.get_inv_sch_score(proj,aud_date_start,aud_date_end)
+            if check2:
+                invoice_sc_score = inv_score
                 sale_val = proj.od_project_sale
                 tot_sal_inv  += sale_val
                 invoice_schedule_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':invoice_sc_score})
