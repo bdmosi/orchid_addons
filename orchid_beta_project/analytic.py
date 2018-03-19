@@ -936,7 +936,6 @@ class account_analytic_account(models.Model):
     def get_invoice_schedule_score(self):
         result =0.0
         type = self.od_type_of_project
-        project_start_date = self.od_project_start 
         planned_amount = 0.0
         today = str(dt.today())
         score_board =[]
