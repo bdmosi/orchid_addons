@@ -79,8 +79,8 @@ class od_wip_report(osv.osv):
                                                        ('imp','Implementation'),
                                                        ('sup_imp','Supply & Implementation'),
                                                        ('amc','A M C'),
-                                                       ('o_m','O & M')
-                                                       ('comp_gen','Company General - POC,Training,Trips,etc.')
+                                                       ('o_m','O & M'),
+                                                       ('comp_gen','Company General -(POC,Training,Trips,etc.)')
                                                        ],
                                                       'Type',readonly=True),
                 # 'gp':fields.function(_get_perecent,type="float",string="GP")
