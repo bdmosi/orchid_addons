@@ -948,7 +948,7 @@ class account_analytic_account(models.Model):
                         cust_date = invoice.cust_date 
                         score = 0.0
                         if cust_date <= date:
-                            score = 30.0
+                            score = 100.0
                         score_board.append(score)
         avg_score = self.get_avg_score(score_board)
         return avg_score
