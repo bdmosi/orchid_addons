@@ -190,12 +190,15 @@ class invoice_alternate_line(models.Model):
     
     
     @api.one 
-    @api.depends('unit_price','quantity','tax_rate','bt_pay_perc')
+    @api.depends('unit_price','quantity','tax_rate','bt_pay_perc','discount')
     def _compute_calc(self):
         total_bf_tax = self.unit_price * self.quantity
         bt_pay_perc = self.bt_pay_perc
+        discount = self.discount
         if bt_pay_perc:
             total_bf_tax = total_bf_tax * (bt_pay_perc/100.0)
+        if discount:
+            total_bf_tax = total_bf_tax * (1 - (discount or 0.0) / 100.0)
         tax_rate = self.tax_rate /100.0
         tax_amount = total_bf_tax * tax_rate
         total_amount = total_bf_tax + tax_amount
@@ -215,6 +218,6 @@ class invoice_alternate_line(models.Model):
     total_amount= fields.Float(string="Total Amount",compute="_compute_calc",digits=dp.get_precision('Account'))
     bt_enable = fields.Boolean(string="Enable Pay %")
     bt_pay_perc = fields.Float(string="Payment %")
-    
+    discount = fields.Float(string="Discount %",digits=dp.get_precision('Account'))
     
     

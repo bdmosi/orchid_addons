@@ -164,8 +164,8 @@ class project_work(models.Model):
     ot_line_id = fields.Many2one('od.hr.over.time.line',string='Overtime Line')
 class project_project(models.Model):
     _inherit ='project.project'
-    _od_project_types = [('sup','Supply'),('imp','Implementation'),('sup_imp','Supply & Implementation'),('amc','AMC'),('o_m','O&M')]
-
+    _od_project_types =[('credit','Credit'),('sup','Supply'),('imp','Implementation'),('sup_imp','Supply & Implementation'),('amc','AMC'),('o_m','O&M'), ('comp_gen','Company General -(POC,Training,Trips,etc.)')]
+   
 
 
     def od_create_default_tasks(self,project):
