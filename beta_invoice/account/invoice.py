@@ -190,9 +190,12 @@ class invoice_alternate_line(models.Model):
     
     
     @api.one 
-    @api.depends('unit_price','quantity','tax_rate')
+    @api.depends('unit_price','quantity','tax_rate','bt_pay_perc')
     def _compute_calc(self):
         total_bf_tax = self.unit_price * self.quantity
+        bt_pay_perc = self.bt_pay_perc
+        if bt_pay_perc:
+            total_bf_tax = total_bf_tax * (bt_pay_perc/100.0)
         tax_rate = self.tax_rate /100.0
         tax_amount = total_bf_tax * tax_rate
         total_amount = total_bf_tax + tax_amount
@@ -202,14 +205,16 @@ class invoice_alternate_line(models.Model):
     
     
     invoice_id = fields.Many2one('account.invoice',string="Invoice",ondelete='cascade')
-    name = fields.Char(string="Description")
+    name = fields.Text(string="Description Arabic")
+    name2 = fields.Text(string="Description English")
     quantity = fields.Float(string="Quantity")
-    unit_price = fields.Float(string="Unit Price")
-    total_bf_tax=fields.Float(string="Total Before Tax",compute="_compute_calc")
+    unit_price = fields.Float(string="Unit Price",digits=dp.get_precision('Account'))
+    total_bf_tax = fields.Float(string="Total Before Tax",compute="_compute_calc",digits=dp.get_precision('Account'))
     tax_rate =fields.Float(string="Tax Rate(%)")
-    tax_amount =fields.Float(string="Tax Amount",compute="_compute_calc")
-    total_amount= fields.Float(string="Total Amount",compute="_compute_calc")
-    
+    tax_amount =fields.Float(string="Tax Amount",compute="_compute_calc",digits=dp.get_precision('Account'))
+    total_amount= fields.Float(string="Total Amount",compute="_compute_calc",digits=dp.get_precision('Account'))
+    bt_enable = fields.Boolean(string="Enable Pay %")
+    bt_pay_perc = fields.Float(string="Payment %")
     
     
     
