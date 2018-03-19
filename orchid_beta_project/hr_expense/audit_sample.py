@@ -307,6 +307,7 @@ class compliance_line(models.Model):
     sale_value = fields.Float(string="Sale Value")
     sale_value_percent = fields.Float("%Sale Value")
     weight = fields.Float(string="Weight")
+    form_wt = fields.Float(string="Form Weight")
     @api.multi
     def btn_open(self):
        
@@ -329,6 +330,7 @@ class invoice_schedule_line(models.Model):
     sale_value = fields.Float(string="Sale Value")
     sale_value_percent = fields.Float("%Sale Value")
     weight = fields.Float(string="Weight")
+    form_wt = fields.Float(string="Form Weight")
     
     @api.multi
     def btn_open(self):
@@ -353,7 +355,7 @@ class cost_control_line(models.Model):
     gp_value = fields.Float(string="GP Value")
     gp_value_percent = fields.Float("%GP Value")
     weight = fields.Float(string="Weight")
-    
+    form_wt = fields.Float(string="Form Weight")
     @api.multi
     def btn_open(self):
        
@@ -375,7 +377,7 @@ class PmScheduleControl(models.Model):
     gp_value = fields.Float(string="GP Value")
     gp_value_percent = fields.Float("%GP Value")
     weight = fields.Float(string="Weight")
-    
+    form_wt = fields.Float(string="Form Weight")
     @api.multi
     def btn_open(self):
        
@@ -399,7 +401,7 @@ class pm_dayscore(models.Model):
     sale_value = fields.Float(string="Sale Value")
     sale_value_percent = fields.Float("%Sale Value")
     weight = fields.Float(string="Weight")
-    
+    form_wt = fields.Float(string="Form Weight")
     @api.multi
     def btn_open(self):
        

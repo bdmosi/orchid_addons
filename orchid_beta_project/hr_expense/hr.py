@@ -1167,13 +1167,13 @@ class hr_employee(models.Model):
                 sale_val = proj.od_project_sale
                 tot_sale_day += sale_val
                 dayscore = proj.day_process_score
-                day_score_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':dayscore,'cost_sheet_id':proj.od_cost_sheet_id.id})
+                day_score_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':dayscore,'cost_sheet_id':proj.od_cost_sheet_id.id,'form_wt':10.0})
             #cost control score
             if proj.state == 'close':
                 gp_value = proj.od_amended_profit 
                 tot_gp += gp_value
                 cost_control_score = proj.cost_control_score 
-                cost_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':cost_control_score})
+                cost_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':cost_control_score,'form_wt':20.0})
             #invoice Schedule Score
 #             inv_sch_dates = [a.date for a in proj.od_project_invoice_schedule_line]
 #             check = self.check_inv_sch_dates(inv_sch_dates,aud_date_start,aud_date_end)
@@ -1182,12 +1182,12 @@ class hr_employee(models.Model):
                 invoice_sc_score = inv_score
                 sale_val = proj.od_project_sale
                 tot_sal_inv  += sale_val
-                invoice_schedule_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':invoice_sc_score})
+                invoice_schedule_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':invoice_sc_score,'form_wt':30.0})
             if proj.start_project_comp:
                 compliance_score = proj.compliance_score
                 sale_val = proj.od_project_sale
                 tot_sal_comp  += sale_val 
-                compliance_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':compliance_score})
+                compliance_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':compliance_score,'form_wt':10.0})
             if proj.od_project_status == 'close':
                 project_planned_end = proj.od_project_end 
                 closed_date = proj.od_project_closing 
@@ -1195,12 +1195,12 @@ class hr_employee(models.Model):
                     sc_scr =30.0
                     gp_value = proj.od_amended_profit 
                     sch_gp += gp_value
-                    schedule_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':sc_scr})
+                    schedule_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':sc_scr,'form_wt':30.0})
                 else:
                     sc_scr =0.0
                     gp_value = proj.od_amended_profit 
                     sch_gp += gp_value
-                    schedule_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':sc_scr})
+                    schedule_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':sc_scr,'form_wt':30.0})
                     
         max_day_sore = 10 * len(day_score_vals)
         for data in day_score_vals:
@@ -1330,13 +1330,13 @@ class hr_employee(models.Model):
                     sale_val = proj.od_amc_sale
                     tot_sale_day += sale_val
                     dayscore = proj.day_process_score
-                    day_score_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':dayscore,'cost_sheet_id':proj.od_cost_sheet_id.id})
+                    day_score_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':dayscore,'cost_sheet_id':proj.od_cost_sheet_id.id,'form_wt':20.0})
             
             if proj.start_amc_comp:
                 compliance_score = proj.compliance_score
                 sale_val = proj.od_amc_sale
                 tot_sal_comp  += sale_val 
-                compliance_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':compliance_score})
+                compliance_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':compliance_score,'form_wt':10.0})
         
         max_day_sore = 10.0 * len(day_score_vals)
         for data in day_score_vals:

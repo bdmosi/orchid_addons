@@ -162,6 +162,7 @@
 										<field name="analytic_id" readonly="1"/>
 										<button name="btn_open" type="object" icon="STOCK_FIND" string="Open" />
 										<field name="score" readonly="1" />
+										<field name="form_wt" readonly="1" />
 										<field name="sale_value" readonly="1" sum="Total"/>
 										<field name="sale_value_percent" readonly="1" />
                                         <field name="weight" readonly="1" />
@@ -177,6 +178,7 @@
 										<field name="cost_sheet_id" readonly="1"/>
 										<button name="btn_open_cst" type="object" icon="STOCK_FIND" string="Open" />
 										<field name="score" readonly="1" />
+										<field name="form_wt" readonly="1" />
 										<field name="sale_value" readonly="1" sum="Total"/>
 										<field name="sale_value_percent" readonly="1" />
                                         <field name="weight" readonly="1" />
@@ -192,6 +194,7 @@
 										<field name="analytic_id" readonly="1"/>
 										<button name="btn_open" type="object" icon="STOCK_FIND" string="Open" />
 										<field name="score" readonly="1" />
+										<field name="form_wt" readonly="1" />
 										<field name="gp_value" readonly="1" sum="Total"/>
 										<field name="gp_value_percent" readonly="1" />
                                         <field name="weight" readonly="1" />
@@ -205,6 +208,7 @@
 										<field name="analytic_id" readonly="1"/>
 										<button name="btn_open" type="object" icon="STOCK_FIND" string="Open" />
 										<field name="score" readonly="1" />
+										<field name="form_wt" readonly="1" />
 										<field name="gp_value" readonly="1" sum="Total"/>
 										<field name="gp_value_percent" readonly="1" />
                                         <field name="weight" readonly="1" />
@@ -218,6 +222,7 @@
 										<field name="analytic_id" readonly="1"/>
 										<button name="btn_open" type="object" icon="STOCK_FIND" string="Open" />
 										<field name="score" readonly="1" />
+										<field name="form_wt" readonly="1" />
 										<field name="sale_value" readonly="1" sum="Total"/>
 										<field name="sale_value_percent" readonly="1" />
                                         <field name="weight" readonly="1" />
@@ -231,6 +236,7 @@
 										<field name="analytic_id" readonly="1"/>
 										<button name="btn_open" type="object" icon="STOCK_FIND" string="Open" />
 										<field name="score" readonly="1" />
+										<field name="form_wt" readonly="1" />
 										<field name="sale_value" readonly="1" sum="Total"/>
 										<field name="sale_value_percent" readonly="1" />
                                         <field name="weight" readonly="1" />
