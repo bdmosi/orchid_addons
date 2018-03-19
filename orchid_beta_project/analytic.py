@@ -944,6 +944,12 @@ class account_analytic_account(models.Model):
                 date =line.date 
                 if date <= today:
                     invoice = line.invoice_id 
+                    planned_amount = line.amount 
+                    invoice_amount = line.invoice_amount 
+                    if planned_amount <invoice_amount:
+                        score =0.0
+                        score_board.append(score)
+                        continue
                     if invoice and invoice.state in ('open','paid','accept'):
                         cust_date = invoice.cust_date 
                         score = 0.0

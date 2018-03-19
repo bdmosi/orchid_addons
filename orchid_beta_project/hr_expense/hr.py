@@ -1104,7 +1104,14 @@ class hr_employee(models.Model):
             today = str(dt.today())
             td_dt =self.get_x_days(project_start_date, today)
             if td_dt>=pl_dt:
-                invoice = line.invoice_id 
+                invoice = line.invoice_id
+                planned_amount = line.amount
+                invoice_amount = line.invoice_amount
+                if planned_amount < invoice_amount:
+                    score =0.0
+                    check = True 
+                    score_board.append(score)
+                    continue
                 if invoice and invoice.state in ('open','paid','accept'):
                     cust_date = invoice.cust_date 
                     if aud_date_start<=cust_date <= aud_date_end:
@@ -1315,12 +1322,14 @@ class hr_employee(models.Model):
         compliance_vals_main =[]
         
         for proj in sample_project_ids:
-            processed_date = proj.od_cost_sheet_id and proj.od_cost_sheet_id.processed_date 
-            if processed_date and aud_date_start <= processed_date <= aud_date_end:
-                sale_val = proj.od_amc_sale
-                tot_sale_day += sale_val
-                dayscore = proj.day_process_score
-                day_score_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':dayscore,'cost_sheet_id':proj.od_cost_sheet_id.id})
+            processed_date = proj.od_cost_sheet_id and proj.od_cost_sheet_id.processed_date
+            owner_id = proj.od_cost_sheet_id and proj.od_cost_sheet_id.reviewed_id and  proj.od_cost_sheet_id.reviewed_id.id or False 
+            if user_id == owner_id:
+                if processed_date and aud_date_start <= processed_date <= aud_date_end:
+                    sale_val = proj.od_amc_sale
+                    tot_sale_day += sale_val
+                    dayscore = proj.day_process_score
+                    day_score_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':dayscore,'cost_sheet_id':proj.od_cost_sheet_id.id})
             
             if proj.start_amc_comp:
                 compliance_score = proj.compliance_score
