@@ -919,21 +919,40 @@ class account_analytic_account(models.Model):
             inv_amount+=inv.amount_total
         return inv_amount
     
+    def get_x_days(self,date_start,date_end):
+        fromdate = datetime.strptime(date_start, DEFAULT_SERVER_DATE_FORMAT)
+        todate = datetime.strptime(date_end, DEFAULT_SERVER_DATE_FORMAT)
+        daygenerator = (fromdate + timedelta(x + 1) for x in xrange((todate - fromdate).days))
+        days =sum(1 for day in daygenerator)
+        days = days+1
+        return days  
+    
+    
+    def get_avg_score(self,score_board):
+        avg_score =0.0
+        if score_board:
+            avg_score =sum(score_board)/float(len(score_board))
+        return avg_score
     def get_invoice_schedule_score(self):
         result =0.0
         type = self.od_type_of_project
+        project_start_date = self.od_project_start 
         planned_amount = 0.0
         today = str(dt.today())
+        score_board =[]
         if type not in ('credit','amc','o_m'):
-            
             for line in self.od_project_invoice_schedule_line:
                 date =line.date 
                 if date <= today:
-                    planned_amount += line.amount
-            inv_amount = self.get_invoice_amounts()
-            if planned_amount:
-                result = (inv_amount/float(planned_amount))*100  
-        return result
+                    invoice = line.invoice_id 
+                    if invoice and invoice.state in ('open','paid','accept'):
+                        cust_date = invoice.cust_date 
+                        score = 0.0
+                        if cust_date <= date:
+                            score = 30.0
+                        score_board.append(score)
+        avg_score = self.get_avg_score(score_board)
+        return avg_score
     def get_cost_control_score(self):
         result =0.0
         actual_profit = self.od_project_profit
