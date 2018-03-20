@@ -1274,6 +1274,7 @@ class hr_employee(models.Model):
         comp_weight_scr = self.get_avg_score(comp_weight )
         sc_weight_scr = self.get_avg_score(sc_weight)
         day_flag = cost_flag = inv_flag= comp_flag= sc_flag=False 
+        print "day score main>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",day_score_main
         if day_score_main:
             day_flag =True 
         if cost_control_val_main:
