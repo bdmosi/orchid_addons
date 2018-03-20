@@ -10,6 +10,9 @@ import openerp.addons.decimal_precision as dp
 from openerp.tools import amount_to_text_en
 from . import amount_to_ar
 from pprint import pprint
+from openerp import tools
+
+
 class account_invoice(models.Model):
     _inherit = "account.invoice"
     @api.multi    
@@ -22,6 +25,20 @@ class account_invoice(models.Model):
     def amount_to_text_ar(self, amount, currency):
         convert_amount_in_words = amount_to_ar.amount_to_text_ar(amount, currency='')        
         return convert_amount_in_words
+    
+    
+    
+    
+    
+    @api.constrains('gov_alternate_line')
+    def _check_gov_alternate_line(self):
+        """ Ensure the Amount"""
+        if self.gov_alternate_line:
+            invoice_amount = self.amount_total
+            alt_amount = sum([line.total_amount for line in self.gov_alternate_line])
+            diff = invoice_amount - alt_amount 
+            if abs(diff) >5.0:
+                raise Warning("Please Make Sure Government Alternate Line Total and Invoice Total Difference Cannot be Greater than 5.0")
     
     
     
