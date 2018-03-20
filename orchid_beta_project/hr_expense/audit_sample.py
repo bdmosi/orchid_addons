@@ -56,6 +56,7 @@ class audit_sample(models.Model):
     planned_invoice_line = fields.One2many('planned.analytic.invoice.line','sample_id',string="Planned Invoices")
     actual_invoice_line = fields.One2many('actual.analytic.invoice.line','sample_id',string="Actual Invoices")
     dayscore_line = fields.One2many('pm.dayscore.line','sample_id',string="Details")
+    sde_day_score_line = fields.One2many('sde.dayscore.line','sample_id',string="Details")
     cost_control_line = fields.One2many('pm.cost.control.line','sample_id',string="Details")
     invoice_schedule_line = fields.One2many('pm.invoice.schedule.line','sample_id',string="Details")
     pm_sch_line = fields.One2many('pm.sch.control.line','sample_id',string="Details")
@@ -394,6 +395,43 @@ class PmScheduleControl(models.Model):
 
 class pm_dayscore(models.Model):
     _name ="pm.dayscore.line"
+    sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
+    analytic_id = fields.Many2one('account.analytic.account',string="Analytic/Project")
+    cost_sheet_id = fields.Many2one('od.cost.sheet',string="Cost Sheet")
+    score = fields.Float("Score From Project")
+    sale_value = fields.Float(string="Sale Value")
+    sale_value_percent = fields.Float("%Sale Value")
+    weight = fields.Float(string="Weight")
+    form_wt = fields.Float(string="Form Weight")
+    @api.multi
+    def btn_open(self):
+       
+        return {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'account.analytic.account',
+                'res_id':self.analytic_id and self.analytic_id.id or False,
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+
+            }
+        
+    @api.multi
+    def btn_open_cst(self):
+       
+        return {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'od.cost.sheet',
+                'res_id':self.cost_sheet_id and self.cost_sheet_id.id or False,
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+
+            }
+
+
+class sde_dayscore(models.Model):
+    _name ="sde.dayscore.line"
     sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
     analytic_id = fields.Many2one('account.analytic.account',string="Analytic/Project")
     cost_sheet_id = fields.Many2one('od.cost.sheet',string="Cost Sheet")

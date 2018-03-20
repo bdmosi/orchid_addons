@@ -174,7 +174,7 @@
 							
 							
 							 <page string="5 Day Processing Score" attrs="{'invisible':[('type','!=','sde')]}" >
-								<field name="dayscore_line">
+								<field name="sde_day_score_line">
 									<tree editable="bottom" create="false" delete="false">
 										<field name="cost_sheet_id" readonly="1"/>
 										<button name="btn_open_cst" type="object" icon="STOCK_FIND" string="Open" />

@@ -1720,11 +1720,11 @@ class hr_employee(models.Model):
         
         if type == 'sde':
             day_score_vals,hd_line,compliance_vals,comp_line = self.get_sde_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
-            sample_id.dayscore_line.unlink()
+            sample_id.sde_dayscore_line.unlink()
             sample_id.hd_line.unlink()
             sample_id.compliance_line.unlink()
             sample_id.comp_line.unlink()
-            sample_id.write({'dayscore_line':day_score_vals,'hd_line':hd_line,
+            sample_id.write({'sde_dayscore_line':day_score_vals,'hd_line':hd_line,
                          'compliance_line':compliance_vals,'comp_line':comp_line})
             
         if type == 'sdm':
@@ -1870,7 +1870,7 @@ class hr_employee(models.Model):
         
         if type == 'sde':
             day_score_vals,hd_line,compliance_vals,comp_line = self.get_sde_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
-            vals.update({'dayscore_line':day_score_vals,'hd_line':hd_line,
+            vals.update({'sde_dayscore_line':day_score_vals,'hd_line':hd_line,
                          'compliance_line':compliance_vals,'comp_line':comp_line})
             sample_id =self.env['audit.sample'].create(vals)
             
