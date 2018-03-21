@@ -29,19 +29,19 @@ class account_invoice(models.Model):
     
     
     
+#     
+#     @api.constrains('gov_alternate_line')
+#     def _check_gov_alternate_line(self):
+#         """ Ensure the Amount"""
+#         if self.gov_alternate_line:
+#             invoice_amount = self.amount_total
+#             alt_amount = sum([line.total_amount for line in self.gov_alternate_line])
+#             diff = invoice_amount - alt_amount 
+#             if abs(diff) >5.0:
+#                 raise Warning("Please Make Sure Government Alternate Line Total and Invoice Total Difference Cannot be Greater than 5.0")
+#     
     
-    @api.constrains('gov_alternate_line')
-    def _check_gov_alternate_line(self):
-        """ Ensure the Amount"""
-        if self.gov_alternate_line:
-            invoice_amount = self.amount_total
-            alt_amount = sum([line.total_amount for line in self.gov_alternate_line])
-            diff = invoice_amount - alt_amount 
-            if abs(diff) >5.0:
-                raise Warning("Please Make Sure Government Alternate Line Total and Invoice Total Difference Cannot be Greater than 5.0")
-    
-    
-    
+    state = fields.Selection([('draft','Draft'),('proforma','Pro-forma'),('proforma2','Pro-forma'),('open','Open'),('accept','Accepted By Customer'),('paid','Paid'),('cancel','Cancelled'),('asset_done','Asset Done')],string="Invoice Status")
     od_analytic_account = fields.Many2one('account.analytic.account',string='Analytic Account') 
     reason_for_credit_note = fields.Char(string="Reason For Credit Note")
     reason_for_debit_note = fields.Char(string="Reason For Debit Note")

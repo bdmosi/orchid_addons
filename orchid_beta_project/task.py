@@ -344,8 +344,8 @@ class task(models.Model):
     def write(self, vals):
         ctx = self.env.context
         print "my cccctx>>>>>>>>>>>>>>>>>>>>>>888888xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx>>>>",ctx
-        if not self.od_duplicated:
-            self.edit_block(vals)
+#         if not self.od_duplicated:
+#             self.edit_block(vals)
         tech_check = self.od_technical_eval_change(vals)
         owner_check = self.od_owner_eval_change(vals)
         uid =self._uid
