@@ -36,7 +36,8 @@ class task(models.Model):
     @api.one 
     @api.depends('date_start','od_implementation_id')
     def x_get_end_date(self):
-        duration = self.od_implementation_id and self.od_implementation_id.expected_act_duration
+#         duration = self.od_implementation_id and self.od_implementation_id.expected_act_duration
+        duration = self.planned_hours
         self.b_plan_hr = duration 
         date_start = self.date_start
         if date_start:
