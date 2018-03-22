@@ -593,7 +593,7 @@ class project_project(models.Model):
     od_hr_claim_amount_draft = fields.Float(string="Hr Exp Claim Amount Draft",compute="od_get_hr_exp_claim_amount_draft")
     od_timesheet_amount = fields.Float(string="Timesheet Amount",compute="od_get_timesheet_amount")
     od_meeting_count = fields.Integer(string="Meeting Count",compute="_od_meeting_count")
-    od_amnt_invoiced = fields.Float(string="Customer Invoice Amount",compute="od_get_total_invoice")
+#     od_amnt_invoiced = fields.Float(string="Customer Invoice Amount",compute="od_get_total_invoice")
     od_amnt_purchased = fields.Float(string="Supplier Purchase Amount",compute="od_get_total_purchase")
     od_material_budget_line = fields.One2many('od.project.material.budget','project_id',string="Material Budget Line")
     material_pulled = fields.Boolean("Material Pulled")
