@@ -714,7 +714,7 @@ class account_analytic_account(models.Model):
             cost_of_sale_account_ids = self.get_cost_of_sale_account()
             domain = [('analytic_account_id','=',analytic_id),('account_id','in',cost_of_sale_account_ids)]
             actual_cost = sum([mvl.debit for mvl in move_line_ids if mvl.od_state =='posted'])
-            
+            print "actual cost in>>>>>>>>>>>>>>>>>>>>>from cost of cost salesssssssssssss",actual_cost
         
         self.od_actual_cost = actual_cost
         self.od_project_cost = project_cost 
