@@ -680,6 +680,14 @@ class account_analytic_account(models.Model):
         return result
     
     
+    def get_cost_of_sale_account(self):
+        company_id = self.company_id and self.company_id.id 
+        account_ids = []
+        if company_id ==6:
+            account_ids = [5417]
+        if company_id ==1:
+            account_ids =[3488,3489]
+        return account_ids
     @api.one
     def _get_cost_from_jv(self):
         analytic_id = self.id
@@ -687,19 +695,27 @@ class account_analytic_account(models.Model):
         exclude_journal_ids = self.get_exclude_journal_ids()
         domain = [('analytic_account_id','=',analytic_id),('journal_id','not in',exclude_journal_ids)]
         move_line_ids = move_line_pool.search(domain)
-        actual_cost = sum([(mvl.debit- mvl.credit) for mvl in move_line_ids if mvl.od_state =='posted'])
+        actual_cost = sum([mvl.debit for mvl in move_line_ids if mvl.od_state =='posted'])
+        
+            
         project_cost =0.0
         amc_cost =0.0
         if self.od_project_closing:
             closing_date = self.od_project_closing 
-            project_cost = sum([(mvl.debit-mvl.credit) for mvl in move_line_ids if mvl.date <= closing_date and mvl.od_state =='posted'])
+            project_cost = sum([mvl.debit for mvl in move_line_ids if mvl.date <= closing_date and mvl.od_state =='posted'])
         if self.od_amc_closing:
             if self.od_project_closing:
                 closing_date = self.od_project_closing 
                 amc_cost = sum([mvl.debit for mvl in move_line_ids if mvl.date > closing_date and mvl.od_state =='posted'])
             else:
                 amc_cost = sum([mvl.debit for mvl in move_line_ids if mvl.od_state =='posted'])
-        print "actual cost>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",actual_cost,project_cost
+        
+        if self.state == 'close':
+            cost_of_sale_account_ids = self.get_cost_of_sale_account()
+            domain = [('analytic_account_id','=',analytic_id),('account_id','in',cost_of_sale_account_ids)]
+            actual_cost = sum([mvl.debit for mvl in move_line_ids if mvl.od_state =='posted'])
+            
+        
         self.od_actual_cost = actual_cost
         self.od_project_cost = project_cost 
         self.od_amc_cost = amc_cost
