@@ -687,12 +687,12 @@ class account_analytic_account(models.Model):
         exclude_journal_ids = self.get_exclude_journal_ids()
         domain = [('analytic_account_id','=',analytic_id),('journal_id','not in',exclude_journal_ids)]
         move_line_ids = move_line_pool.search(domain)
-        actual_cost = sum([mvl.debit for mvl in move_line_ids if mvl.od_state =='posted'])
+        actual_cost = sum([(mvl.debit- mvl.credit) for mvl in move_line_ids if mvl.od_state =='posted'])
         project_cost =0.0
         amc_cost =0.0
         if self.od_project_closing:
             closing_date = self.od_project_closing 
-            project_cost = sum([mvl.debit for mvl in move_line_ids if mvl.date <= closing_date and mvl.od_state =='posted'])
+            project_cost = sum([(mvl.debit-mvl.credit) for mvl in move_line_ids if mvl.date <= closing_date and mvl.od_state =='posted'])
         if self.od_amc_closing:
             if self.od_project_closing:
                 closing_date = self.od_project_closing 
