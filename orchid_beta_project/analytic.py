@@ -598,6 +598,9 @@ class account_analytic_account(models.Model):
         analytic_id = self.id
         exclude_journal_ids = self.get_exclude_journal_ids()
         domain = [('analytic_account_id','=',analytic_id),('journal_id','not in',exclude_journal_ids),('od_state','=','posted')]
+        if self.state == 'close':
+            cost_of_account_ids = self.get_cost_of_sale_account()
+            domain = [('analytic_account_id','=',analytic_id),('account_id','in',cost_of_account_ids),('od_state','=','posted')]
         journal_lines = account_move_line.search(domain)
         amount = sum([mvl.debit for mvl in journal_lines])
         self.od_journal_amount = amount
@@ -712,8 +715,11 @@ class account_analytic_account(models.Model):
         
         if self.state == 'close':
             cost_of_sale_account_ids = self.get_cost_of_sale_account()
+            print "cost of sale account ids>>>>>>>>>>>>>>",cost_of_sale_account_ids
             domain = [('analytic_account_id','=',analytic_id),('account_id','in',cost_of_sale_account_ids)]
+            move_line_ids = move_line_pool.search(domain)
             actual_cost = sum([mvl.debit for mvl in move_line_ids if mvl.od_state =='posted'])
+            project_cost = actual_cost
             print "actual cost in>>>>>>>>>>>>>>>>>>>>>from cost of cost salesssssssssssss",actual_cost
         
         self.od_actual_cost = actual_cost
