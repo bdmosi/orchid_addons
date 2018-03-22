@@ -699,7 +699,7 @@ class account_analytic_account(models.Model):
                 amc_cost = sum([mvl.debit for mvl in move_line_ids if mvl.date > closing_date and mvl.od_state =='posted'])
             else:
                 amc_cost = sum([mvl.debit for mvl in move_line_ids if mvl.od_state =='posted'])
-        
+        print "actual cost>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",actual_cost,project_cost
         self.od_actual_cost = actual_cost
         self.od_project_cost = project_cost 
         self.od_amc_cost = amc_cost
