@@ -8,7 +8,7 @@ from openerp.exceptions import Warning
 class account_invoice(models.Model):
     _inherit = 'account.invoice'
     cust_date = fields.Date(string="Customer Accepted Date")
-    state = fields.Selection([('draft','Draft'),('proforma','Pro-forma'),('proforma2','Pro-forma'),('open','Open'),('accept','Accepted By Customer'),('paid','Paid'),('cancel','Cancelled'),('asset_done','Asset Done')],string="Invoice Status")
+    state = fields.Selection([('draft','Draft'),('proforma','Pro-forma'),('proforma2','Pro-forma'),('open','Open'),('accept','Accepted By Customer'),('paid','Paid'),('cancel','Cancelled'),('asset_done','Asset Done'),('manual','Manually Settled')],string="Invoice Status")
     @api.multi
     def od_accept(self):
         dt_today = str(dt.today())

@@ -1607,7 +1607,7 @@ class hr_employee(models.Model):
             collected = collected - customer_refund_amount
             paid = paid - supplier_refund_amount
             
-            if collected == customer_inv_amount and supplier_inv_amount== paid:
+            if collected >= customer_inv_amount:
                 continue
             total_paid += project_value
             total_paid += manpower_cost
