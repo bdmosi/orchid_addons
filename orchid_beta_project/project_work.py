@@ -588,7 +588,7 @@ class project_project(models.Model):
     od_po_status = fields.Selection([('waiting_po','Waiting P.O'),('special_approval','Special Approval From GM'),('available','Available')],'Customer PO Status',compute="od_get_po_status")
     od_type_of_project = fields.Selection(DOMAIN,string="Type Of Project")
     od_journal_amount_draft = fields.Float(string="Journal Amount Draft",compute="od_get_analytic_journal_amount_draft")
-    od_journal_amount = fields.Float(string="Journal Amount",compute="od_get_analytic_journal_amount")
+#     od_journal_amount = fields.Float(string="Journal Amount",compute="od_get_analytic_journal_amount")
     od_hr_claim_amount = fields.Float(string="Hr Exp Claim Amount",compute="od_get_hr_exp_claim_amount")
     od_hr_claim_amount_draft = fields.Float(string="Hr Exp Claim Amount Draft",compute="od_get_hr_exp_claim_amount_draft")
     od_timesheet_amount = fields.Float(string="Timesheet Amount",compute="od_get_timesheet_amount")
