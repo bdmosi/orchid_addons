@@ -4,7 +4,6 @@ from pprint import pprint
 from datetime import datetime,date as dt
 from od_default_milestone import od_project_vals,od_om_vals,od_amc_vals
 from openerp.exceptions import Warning
-from lib2to3.fixes.fix_operator import invocation
 
 class account_invoice(models.Model):
     _inherit = 'account.invoice'
