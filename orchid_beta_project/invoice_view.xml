@@ -12,7 +12,7 @@
            	 	<button name="od_accept" string="Accept" type="object" class="oe_highlight" states="open"/>
            </button>
            <field name="date_invoice" position="after">
-           	<field name="cust_date" readonly="1" />
+           	<field name="cust_date" readonly="0" />
            </field>
            </field>
            </record>
