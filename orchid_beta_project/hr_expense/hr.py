@@ -1606,9 +1606,13 @@ class hr_employee(models.Model):
             paid = self.get_supplier_paid(supplier_invoice)
             collected = collected - customer_refund_amount
             paid = paid - supplier_refund_amount
-            
-            if collected >= customer_inv_amount or collected>=project_value:
-                continue
+            if company_id ==1:
+                if collected >= customer_inv_amount or collected>=project_value:
+                    continue
+            if company_id ==6:
+                if collected >= customer_inv_amount:
+                    continue
+                
             total_paid += project_value
             total_paid += manpower_cost
             total_collected += collected
