@@ -1117,7 +1117,6 @@ class hr_employee(models.Model):
                         check =True
                     else:
                         score =30.0
-                        check =False
                         score_board.append(score)
                         continue
                 if invoice and invoice.state in ('open','paid','accept'):
@@ -2012,7 +2011,7 @@ class hr_employee(models.Model):
         month_number = today.month
        
         day = today.day 
-        if day >27:
+        if day >26:
             month_number +=1
         if number:
             month_number = number
