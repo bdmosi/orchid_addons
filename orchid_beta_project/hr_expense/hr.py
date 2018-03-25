@@ -1117,7 +1117,7 @@ class hr_employee(models.Model):
                         check =True
                     else:
                         score =30.0
-                        check =True
+                        check =False
                         score_board.append(score)
                         continue
                 if invoice and invoice.state in ('open','paid','accept'):
