@@ -667,7 +667,7 @@ class hr_employee(models.Model):
         user_id  = self.user_id and self.user_id.id
         employee_id = self.id
         team_ids = self.search([('coach_id','=',employee_id)]) 
-        user_ids = [emp.user_id.id for emp in team_ids] + [user_id]
+        user_ids = [emp.user_id.id for emp in team_ids if (emp.audit_temp_id and emp.audit_temp_id.type=='pre_sales')] + [user_id]
         result = []
         team_score =[]
         team_vals =[] 
