@@ -1580,7 +1580,7 @@ class hr_employee(models.Model):
             sale = sale_pool.search([('project_id','=',project.id),('state','!=','cancel')],limit=1)
             amount_total = sale.amount_total or 0.0
             discount = abs(sale.od_discount) or 0.0
-            project_value = amount_total - discount
+            project_value = amount_total 
             customer_invoice = invoice_pool.search([('od_analytic_account','=',project.id),('type','=','out_invoice'),('state','not in',('draft','cancel'))])
             supplier_invoice = invoice_pool.search([('od_analytic_account','=',project.id),('type','=','in_invoice'),('state','not in',('draft','cancel'))])
             collected = sum([inv.amount_total - inv.residual for inv in customer_invoice])
@@ -1596,7 +1596,7 @@ class hr_employee(models.Model):
             sale = sale_pool.search([('project_id','=',project.id),('state','!=','cancel')],limit=1)
             amount_total = sale.amount_total or 0.0
             discount = abs(sale.od_discount) or 0.0
-            project_value = amount_total - discount
+            project_value = amount_total 
             customer_invoice = invoice_pool.search([('od_analytic_account','=',project.id),('type','=','out_invoice'),('state','not in',('draft','cancel'))])
             customer_refund = invoice_pool.search([('od_analytic_account','=',project.id),('type','=','out_refund'),('state','not in',('draft','cancel'))])
             supplier_invoice = invoice_pool.search([('od_analytic_account','=',project.id),('type','=','in_invoice'),('state','not in',('draft','cancel'))])
