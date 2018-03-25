@@ -13,6 +13,12 @@ from pprint import pprint
 from openerp import tools
 
 
+
+
+
+
+
+
 class account_invoice(models.Model):
     _inherit = "account.invoice"
     @api.multi    
@@ -27,21 +33,58 @@ class account_invoice(models.Model):
         return convert_amount_in_words
     
     
+    @api.one
+    @api.depends(
+        'state', 'currency_id', 'invoice_line.price_subtotal',
+        'move_id.line_id.account_id.type',
+        'move_id.line_id.amount_residual',
+        # Fixes the fact that move_id.line_id.amount_residual, being not stored and old API, doesn't trigger recomputation
+        'move_id.line_id.reconcile_id',
+        'move_id.line_id.amount_residual_currency',
+        'move_id.line_id.currency_id',
+        'move_id.line_id.reconcile_partial_id.line_partial_ids.invoice.type',
+    )
+    # An invoice's residual amount is the sum of its unreconciled move lines and,
+    # for partially reconciled move lines, their residual amount divided by the
+    # number of times this reconciliation is used in an invoice (so we split
+    # the residual amount between all invoice)
+    def _compute_residual(self):
+        self.residual = 0.0
+        # Each partial reconciliation is considered only once for each invoice it appears into,
+        # and its residual amount is divided by this number of invoices
+        partial_reconciliations_done = []
+        for line in self.sudo().move_id.line_id:
+            if line.account_id.type not in ('receivable', 'payable'):
+                continue
+            if line.reconcile_partial_id and line.reconcile_partial_id.id in partial_reconciliations_done:
+                continue
+            # Get the correct line residual amount
+            if line.currency_id == self.currency_id:
+                line_amount = line.amount_residual_currency if line.currency_id else line.amount_residual
+            else:
+                from_currency = line.company_id.currency_id.with_context(date=line.date)
+                line_amount = from_currency.compute(line.amount_residual, self.currency_id)
+            # For partially reconciled lines, split the residual amount
+            if line.reconcile_partial_id:
+                partial_reconciliation_invoices = set()
+                for pline in line.reconcile_partial_id.line_partial_ids:
+                    if pline.invoice and self.type == pline.invoice.type:
+                        partial_reconciliation_invoices.update([pline.invoice.id])
+                line_amount = self.currency_id.round(line_amount / len(partial_reconciliation_invoices))
+                partial_reconciliations_done.append(line.reconcile_partial_id.id)
+            self.residual += line_amount
+        if self.state =='manual':
+            self.residual =0.0
+        self.residual = max(self.residual, 0.0)
+  
+    
+    state = fields.Selection([('draft','Draft'),('proforma','Pro-forma'),('proforma2','Pro-forma'),('open','Open'),('accept','Accepted By Customer'),('paid','Paid'),('cancel','Cancelled'),('asset_done','Asset Done'),('manual','Manually Settled')],string="Invoice Status")
+    residual = fields.Float(string='Balance', digits=dp.get_precision('Account'),
+        compute='_compute_residual', store=True,
+        help="Remaining amount due.")
     
     
-#     
-#     @api.constrains('gov_alternate_line')
-#     def _check_gov_alternate_line(self):
-#         """ Ensure the Amount"""
-#         if self.gov_alternate_line:
-#             invoice_amount = self.amount_total
-#             alt_amount = sum([line.total_amount for line in self.gov_alternate_line])
-#             diff = invoice_amount - alt_amount 
-#             if abs(diff) >5.0:
-#                 raise Warning("Please Make Sure Government Alternate Line Total and Invoice Total Difference Cannot be Greater than 5.0")
-#     
     
-    state = fields.Selection([('draft','Draft'),('proforma','Pro-forma'),('proforma2','Pro-forma'),('open','Open'),('accept','Accepted By Customer'),('paid','Paid'),('cancel','Cancelled'),('asset_done','Asset Done')],string="Invoice Status")
     od_analytic_account = fields.Many2one('account.analytic.account',string='Analytic Account') 
     reason_for_credit_note = fields.Char(string="Reason For Credit Note")
     reason_for_debit_note = fields.Char(string="Reason For Debit Note")
