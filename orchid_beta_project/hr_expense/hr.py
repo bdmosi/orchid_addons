@@ -1609,8 +1609,6 @@ class hr_employee(models.Model):
             
             if collected >= customer_inv_amount or collected>=project_value:
                 continue
-            
-                
             total_paid += project_value
             total_paid += manpower_cost
             total_collected += collected
