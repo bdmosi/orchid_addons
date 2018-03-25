@@ -1607,7 +1607,7 @@ class hr_employee(models.Model):
             collected = collected - customer_refund_amount
             paid = paid - supplier_refund_amount
             
-            if collected >= customer_inv_amount:
+            if collected >= customer_inv_amount or collected>=project_value:
                 continue
             total_paid += project_value
             total_paid += manpower_cost
@@ -1689,14 +1689,16 @@ class hr_employee(models.Model):
         
         
         if type == 'sales_acc_mgr':
-            
-            achieved_line,achieved_total = self.get_sales_achieved_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
-            commit_total = sample_id.commit_total
-            component_data,target = self.get_sales_acc_mgr_component(commit_total,achieved_total)
-            sample_id.comp_line.unlink()
-            sample_id.achieved_gp_line.unlink()
-            sample_id.write({'achieved_gp_line':achieved_line,'comp_line':component_data,'target':target})
-            self.write({'commit_total':commit_total})
+            today = dt.today()
+            day = today.day
+            if day <=26: 
+                achieved_line,achieved_total = self.get_sales_achieved_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
+                commit_total = sample_id.commit_total
+                component_data,target = self.get_sales_acc_mgr_component(commit_total,achieved_total)
+                sample_id.comp_line.unlink()
+                sample_id.achieved_gp_line.unlink()
+                sample_id.write({'achieved_gp_line':achieved_line,'comp_line':component_data,'target':target})
+                self.write({'commit_total':commit_total})
         
         if type == 'sm':
             achieved_gp_line,team_line,comp_line = self.get_sm_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
@@ -1848,12 +1850,15 @@ class hr_employee(models.Model):
                              'team_line':team_line})
             sample_id =self.env['audit.sample'].create(vals)
         if type == 'sales_acc_mgr':
-            commit_line,commit_total = self.get_sales_commit_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
-            achieved_line,achieved_total = self.get_sales_achieved_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
-            component_data,target = self.get_sales_acc_mgr_component(commit_total,achieved_total)
-            vals.update({'commit_gp_line':commit_line,'achieved_gp_line':achieved_line,'comp_line':component_data,'target':target})
-            sample_id =self.env['audit.sample'].create(vals)
-            self.write({'commit_total':commit_total})
+            today = dt.today()
+            day = today.day
+            if day <=26: 
+                commit_line,commit_total = self.get_sales_commit_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
+                achieved_line,achieved_total = self.get_sales_achieved_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
+                component_data,target = self.get_sales_acc_mgr_component(commit_total,achieved_total)
+                vals.update({'commit_gp_line':commit_line,'achieved_gp_line':achieved_line,'comp_line':component_data,'target':target})
+                sample_id =self.env['audit.sample'].create(vals)
+                self.write({'commit_total':commit_total})
         
         if type == 'sm':
             achieved_gp_line,team_line,comp_line = self.get_sm_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
