@@ -1110,8 +1110,13 @@ class hr_employee(models.Model):
                     check =True
                     planned_amount = line.amount
                     invoice_amount = line.invoice_amount
-                    if planned_amount < invoice_amount:
+                    diff = planned_amount - invoice_amount
+                    
+                    if diff <0.0:
                         score =0.0
+                        check =True
+                    else:
+                        score =30.0
                         check =True
                         score_board.append(score)
                         continue
