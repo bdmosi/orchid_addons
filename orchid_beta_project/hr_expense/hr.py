@@ -1106,13 +1106,15 @@ class hr_employee(models.Model):
             td_dt =self.get_x_days(project_start_date, today)
             if td_dt>=pl_dt:
                 invoice = line.invoice_id
-                planned_amount = line.amount
-                invoice_amount = line.invoice_amount
-                if planned_amount < invoice_amount:
-                    score =0.0
+                if aud_date_start<=planned_date <= aud_date_end:
                     check =True
-                    score_board.append(score)
-                    continue
+                    planned_amount = line.amount
+                    invoice_amount = line.invoice_amount
+                    if planned_amount < invoice_amount:
+                        score =0.0
+                        check =True
+                        score_board.append(score)
+                        continue
                 if invoice and invoice.state in ('open','paid','accept'):
                     cust_date = invoice.cust_date 
                     if aud_date_start<=cust_date <= aud_date_end:
