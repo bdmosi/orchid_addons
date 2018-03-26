@@ -16,11 +16,9 @@
                     <field name="aud_temp_id"/>
                     <field name="type"/>
                    <group expand="1" string="Group By">
-                       
+                       <filter string="Comapny" domain="[]" context="{'group_by':'company_id'}"/>
                         <filter string="Date" domain="[]" context="{'group_by':'date_end'}"/>
-                        <filter string="Type" domain="[]" context="{'group_by':'type'}"/>
                         <filter string="Audit Template" domain="[]" context="{'group_by':'aud_temp_id'}"/>
-                        <filter string="Comapny" domain="[]" context="{'group_by':'company_id'}"/>
                         <filter string="Employee" domain="[]" context="{'group_by':'employee_id'}" />
                     </group>
                 </search>
