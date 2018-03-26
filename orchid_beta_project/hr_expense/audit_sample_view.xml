@@ -2,6 +2,34 @@
 <openerp>
 	<data>
 
+		
+		<record id="view_audit_sample_search" model="ir.ui.view">
+            <field name="name">audit.sample.search</field>
+            <field name="model">audit.sample</field>
+            <field name="arch" type="xml">
+                <search string="Audit Sample">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Name"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                    <field name="employee_id" />
+                    <field name="company_id"/>
+                    <field name="aud_temp_id"/>
+                    <field name="type"/>
+                   <group expand="1" string="Group By">
+                        <filter string="Date Start" domain="[]" context="{'group_by':'date_start'}"/>
+                        <filter string="Date End" domain="[]" context="{'group_by':'date_end'}"/>
+                        <filter string="Type" domain="[]" context="{'group_by':'type'}"/>
+                        <filter string="aud_temp_id" domain="[]" context="{'group_by':'aud_temp_id'}"/>
+                        <filter string="Comapny" domain="[]" context="{'group_by':'company_id'}"/>
+                        <filter string="employee_id" domain="[]" context="{'group_by':'employee_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+		
+		
+		
+		
 		<record model="ir.ui.view" id="audit_sample_form">
 			<field name="name">Audit Sample form view</field>
 			<field name="model">audit.sample</field>
@@ -32,6 +60,7 @@
 							</group>
 							<group>
 								<field name="employee_id" readonly="1" />
+								<field name="company_id" readonly="1" />
 								<field name="method" readonly="1"  />
 							</group>
 							<group>

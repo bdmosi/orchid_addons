@@ -36,6 +36,7 @@ class audit_sample(models.Model):
                              ],string="Type",required=True)
     
     employee_id = fields.Many2one('hr.employee',string="Employee")
+    company_id = fields.Many2one('res.company',string="Company",related='employee_id.company_id',store=True)
     method = fields.Text(string="Method")
     avg_score = fields.Float(string="Monthly Avg Score",compute="_get_avg_score")
     post_sale_sample_line = fields.One2many('post.sales.comp.sample','sample_id',string="Post Sales Samples")
