@@ -303,7 +303,7 @@ class hr_employee(models.Model):
         return days  
     
     def get_no_of_leave(self,employee_id,aud_date_start,aud_date_end):
-        holi = self.env['hr.holidays'].search
+        holi = self.env['hr.holidays']
         holi_ids =holi.search([('date_from','>=',aud_date_start),('date_from','<=',aud_date_end),('state','not in',('draft','cancel','refuse','confirm')),('holiday_status_id','!=',5)])
         days =sum([a.no_of_days_temp for a in holi_ids])
         short_leave_ids = holi.search([('date_from','>=',aud_date_start),('date_from','<=',aud_date_end),('state','not in',('draft','cancel','refuse','confirm')),('holiday_status_id','=',5)])
