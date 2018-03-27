@@ -1496,11 +1496,13 @@ class hr_employee(models.Model):
         
        
         domain = [('status','=','active')]
-        domain.extend([('submit_to_customer_date','>=',aud_date_start),('submit_to_customer_date','<=',aud_date_end)])
+#         domain.extend([('submit_to_customer_date','>=',aud_date_start),('submit_to_customer_date','<=',aud_date_end)])
+        company_id = self.company_id and self.company_id.id
+        domain.extend([('company_id','=',company_id)])
         domain1 = domain + [('state','in',('submitted','handover','processed'))]
         sheet_ids =self.env['od.cost.sheet'].search(domain1)
         for sheet in sheet_ids:
-            sheet.update_cost_sheet()
+#             sheet.update_cost_sheet()
             for line in sheet.summary_weight_line:
                 if line.pdt_grp_id.id ==2:
                     gp = line.total_gp
@@ -1555,11 +1557,14 @@ class hr_employee(models.Model):
         
         user_id  = self.user_id and self.user_id.id
         domain = [('status','=','active')]
-        domain.extend([('submit_to_customer_date','>=',aud_date_start),('submit_to_customer_date','<=',aud_date_end)])
+#         domain.extend([('submit_to_customer_date','>=',aud_date_start),('submit_to_customer_date','<=',aud_date_end)])
+        
+        company_id = self.company_id and self.company_id.id
+        domain.extend([('company_id','=',company_id)])
         domain1 = domain + [('state','in',('submitted','handover','processed'))]
         sheet_ids =self.env['od.cost.sheet'].search(domain1)
         for sheet in sheet_ids:
-            sheet.update_cost_sheet()
+#             sheet.update_cost_sheet()
             for line in sheet.summary_weight_line:
                 if line.pdt_grp_id.id in (1,3):
                     gp = line.total_gp
