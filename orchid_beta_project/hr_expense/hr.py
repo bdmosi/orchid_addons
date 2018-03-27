@@ -1514,13 +1514,14 @@ class hr_employee(models.Model):
     def get_bdm_sec_data(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):
         result =[]
         total_gp =0.0
+        aud_date_end = aud_date_end + ' 23:59:59'
         user_id  = self.user_id and self.user_id.id
         domain = [('lead_created_by','=',user_id),('status','=','active')]
         domain.extend([('submit_to_customer_date','>=',aud_date_start),('submit_to_customer_date','<=',aud_date_end)])
         domain1 = domain + [('state','not in',('draft','design_ready','cancelled'))]
         sheet_ids =self.env['od.cost.sheet'].search(domain1)
         for sheet in sheet_ids:
-            sheet.update_cost_sheet()
+#             sheet.update_cost_sheet()
             for line in sheet.summary_weight_line:
                 if line.pdt_grp_id.id ==2:
                     gp = line.total_gp
@@ -1539,7 +1540,7 @@ class hr_employee(models.Model):
         domain1 = domain + [('state','not in',('draft','design_ready','cancelled'))]
         sheet_ids =self.env['od.cost.sheet'].search(domain1)
         for sheet in sheet_ids:
-            sheet.update_cost_sheet()
+#             sheet.update_cost_sheet()
             for line in sheet.summary_weight_line:
                 if line.pdt_grp_id.id in (1,3):
                     gp = line.total_gp
