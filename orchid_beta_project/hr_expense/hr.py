@@ -1506,6 +1506,8 @@ class hr_employee(models.Model):
             for line in sheet.summary_weight_line:
                 if line.pdt_grp_id.id ==2:
                     gp = line.total_gp
+                    if not gp:
+                        sheet.update_cost_sheet()
                     result.append((0,0,{'cost_sheet_id':sheet.id,'gp':line.total_gp,'sales':line.total_sale,
                                         'sales_aftr_disc':line.sale_aftr_disc,'cost':line.total_cost,'profit':line.profit,'profit_percent':line.profit_percent,'manpower_cost':line.manpower_cost,'product_group_id':line.pdt_grp_id.id}))
                    
@@ -1568,6 +1570,8 @@ class hr_employee(models.Model):
             for line in sheet.summary_weight_line:
                 if line.pdt_grp_id.id in (1,3):
                     gp = line.total_gp
+                    if not gp:
+                        sheet.update_cost_sheet()
                     result.append((0,0,{'cost_sheet_id':sheet.id,'gp':line.total_gp,'sales':line.total_sale,'sales_aftr_disc':line.sale_aftr_disc,'cost':line.total_cost,
                                         'profit':line.profit,'profit_percent':line.profit_percent,'manpower_cost':line.manpower_cost,'product_group_id':line.pdt_grp_id.id}))
                   
