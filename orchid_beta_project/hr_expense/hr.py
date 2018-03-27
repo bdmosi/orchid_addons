@@ -257,7 +257,8 @@ class hr_employee(models.Model):
     def get_post_sales_vals(self,sample_id,aud_date_start,aud_date_end):
         user_id  = self.user_id and self.user_id.id
         result = []
-        avl_time = self.get_available_time(aud_date_start,aud_date_end) or 1
+        employee_id = self.id
+        avl_time = self.get_available_time(employee_id,aud_date_start,aud_date_end) or 1
         data_model = 'project.task'
         domain = [('od_type','=','activities'),('user_id','=',user_id),('od_stage','=','done')]
         aud_date_start = aud_date_start +' 04:00:00'
@@ -300,7 +301,15 @@ class hr_employee(models.Model):
         days =sum(1 for day in daygenerator)
         days = days+1
         return days  
-    def get_available_time(self,aud_date_start,aud_date_end):
+    
+    def get_no_of_leave(self,employee_id,aud_date_start,aud_date_end):
+        holi = self.env['hr.holidays'].search
+        holi_ids =holi.search([('date_from','>=',aud_date_start),('date_from','<=',aud_date_end),('state','not in',('draft','cancel','refuse','confirm')),('holiday_status_id','!=',5)])
+        days =sum([a.no_of_days_temp for a in holi_ids])
+        short_leave_ids = holi.search([('date_from','>=',aud_date_start),('date_from','<=',aud_date_end),('state','not in',('draft','cancel','refuse','confirm')),('holiday_status_id','=',5)])
+        hours = sum([a.od_hour for a in holi_ids])
+        return days,hours
+    def get_available_time(self,employee_id,aud_date_start,aud_date_end):
        
         fromdate = datetime.strptime(aud_date_start, DEFAULT_SERVER_DATE_FORMAT)
         todate = datetime.today()
@@ -310,7 +319,11 @@ class hr_employee(models.Model):
         daygenerator = (fromdate + timedelta(x + 1) for x in xrange((todate - fromdate).days))
         days =sum(1 for day in daygenerator if day.weekday() not in (4,5)) 
         days = days+1
-        return days*9
+        lv_days,hours = self.get_no_of_leave(employee_id,aud_date_start,aud_date_end)
+        result = days -lv_days 
+        result = result *9 
+        result = result - hours
+        return result
     
     def get_cancelled_activities(self,user_id,aud_date_start,aud_date_end,engineer_task_count):
         task = self.env['project.task']
@@ -347,7 +360,10 @@ class hr_employee(models.Model):
         else:   
             return {'weight_escalate':True,'score':resolved/float(total_count)}
         
-        
+    
+    def get_employee_from_user(self,user):
+        emp = self.search([('user_id','=',user)],limit=1)
+        return emp and emp.id
     def get_ttl_vals(self,sample_id,user_id,aud_date_start,aud_date_end,audit_temp_id):
         type = audit_temp_id.type
 #         user_id  = self.user_id and self.user_id.id
@@ -358,7 +374,7 @@ class hr_employee(models.Model):
         eng_ids = self.search([('coach_id','=',employee_id)]) 
         user_ids = [emp.user_id.id for emp in eng_ids] 
         data_model = 'project.task'
-        avl_time = self.get_available_time(dt_start,aud_date_end) or 1
+#         avl_time = self.get_available_time(dt_start,aud_date_end) or 1
         aud_date_start = aud_date_start +' 04:00:00'
         aud_date_end = aud_date_end + ' 23:58:58'
         fot_data = []
@@ -375,6 +391,8 @@ class hr_employee(models.Model):
             engineer_task_count += len(data_ids)
 #             for data in data_ids:
 #                 spent_time += sum([work.hours for work in data.work_ids])
+            emp_id = self.get_employee_from_user(user)
+            avl_time = self.get_available_time(emp_id,dt_start,aud_date_end) or 1
             utl = spent_time/float(avl_time)
             result.append((0,0,{'user_id':user,'available_time':avl_time,'actual_time_spent':spent_time,'utl':(spent_time/avl_time)*100.0}))
             fot_data.append((0,0,{'user_id':user,'fot':fot}))
@@ -525,7 +543,7 @@ class hr_employee(models.Model):
         eng_ids = self.search([('coach_id','=',employee_id)]) 
         user_ids = [emp.user_id.id for emp in eng_ids if (emp.audit_temp_id and emp.audit_temp_id.type =='post_sales')] + [usr_id]
         data_model = 'project.task'
-        avl_time = self.get_available_time(dt_start,aud_date_end) or 1
+#         avl_time = self.get_available_time(dt_start,aud_date_end) or 1
         aud_date_start = aud_date_start +' 04:00:00'
         aud_date_end = aud_date_end + ' 23:58:58'
         fot_data = []
@@ -542,6 +560,8 @@ class hr_employee(models.Model):
             engineer_task_count += len(data_ids)
 #             for data in data_ids:
 #                 spent_time += sum([work.hours for work in data.work_ids])
+            emp_id = self.get_employee_from_user(user_id)
+            avl_time = self.get_available_time(emp_id,dt_start,aud_date_end) or 1
             utl = spent_time/float(avl_time)
             if user_id !=usr_id:
                 result.append((0,0,{'user_id':user_id,'available_time':avl_time,'actual_time_spent':spent_time,'utl':(spent_time/avl_time)*100.0}))

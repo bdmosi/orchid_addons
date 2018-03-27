@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'license': "Other proprietary",
+    
     'name': "Document Viewer PDF",
     'summary': "View PDF format documents",
     'description': """
@@ -10,7 +10,7 @@
     'support': 'i@renjie.me',
     'category': 'Document Management',
     'version': '1.0',
-    'price': 19.98,
+    
     'currency': 'EUR',
     'depends': ['document'],
     'data': [

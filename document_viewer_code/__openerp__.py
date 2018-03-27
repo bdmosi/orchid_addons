@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'license': 'LGPL-3',
+   
     'name': "Document Viewer Code",
     'summary': "View common code documents",
     'description': """
