@@ -2575,7 +2575,7 @@ class od_cost_sheet(models.Model):
     sum_total_sale =fields.Float(string="Total Sale Final",compute="_get_total_summary",store=True,digits=dp.get_precision('Account'))
     sum_total_with_vat =  fields.Float(string="Total Sale With VAT",compute="_get_total_summary",store=True,digits=dp.get_precision('Account'))
     sum_vat = fields.Float(string="Total VAT",compute="_get_total_summary",store=True,digits=dp.get_precision('Account'))
-    sp_disc_percentage = fields.Float(string="Special Discount",digits=(12,6),compute="_get_total_summary",store=True,digits=dp.get_precision('Account'))
+    sp_disc_percentage = fields.Float(string="Special Discount",compute="_get_total_summary",store=True,digits=dp.get_precision('Account'))
     @api.onchange('bim_log_select')
     def onchange_bim_log_select(self):
         if self.bim_log_select:
