@@ -4722,6 +4722,7 @@ class od_cost_costgroup_material_line(models.Model):
     profit = fields.Float(string='Profit(%)',digits=dp.get_precision('Account'))
     supplier_discount = fields.Float(string='Supplier Discount(%)',digits=dp.get_precision('Account'))
     supplier_currency_id = fields.Many2one('res.currency',string='Supplier Currency',default=od_supplier_currency)
+    currency_exchange_factor = fields.Float(string='Currency Exchange Factor',digits=dp.get_precision('Account'))
     currency_fluctation_provision = fields.Float(string='Currency Fluctuation Provision',digits=dp.get_precision('Account'))
     currency_fluct_value = fields.Float(string='Currency Fluct.Value',readonly=True,digits=dp.get_precision('Account'))
     shipping = fields.Float(string='Shipping(%)',default=get_shipping_value,digits=dp.get_precision('Account'))
