@@ -4,7 +4,7 @@ from openerp.exceptions import Warning
 import re
 from datetime import date as dt
 from datetime import timedelta,datetime
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT,DEFAULT_SERVER_DATETIME_FORMAT
 class hr_employee(models.Model):
     _inherit ="hr.employee"
     
@@ -310,10 +310,10 @@ class hr_employee(models.Model):
         hours = sum([a.od_hour for a in holi_ids])
         return days,hours
     def get_available_time(self,employee_id,aud_date_start,aud_date_end):
-       
-        fromdate = datetime.strptime(aud_date_start, DEFAULT_SERVER_DATE_FORMAT)
+    
+        fromdate = datetime.strptime(aud_date_start, DEFAULT_SERVER_DATETIME_FORMAT)
         todate = datetime.today()
-        date_end = datetime.strptime(aud_date_end, DEFAULT_SERVER_DATE_FORMAT)
+        date_end = datetime.strptime(aud_date_end, DEFAULT_SERVER_DATETIME_FORMAT)
         if todate > date_end:
             todate = date_end
         daygenerator = (fromdate + timedelta(x + 1) for x in xrange((todate - fromdate).days))
