@@ -310,10 +310,11 @@ class hr_employee(models.Model):
         hours = sum([a.od_hour for a in holi_ids])
         return days,hours
     def get_available_time(self,employee_id,aud_date_start,aud_date_end):
-    
-        fromdate = datetime.strptime(aud_date_start, DEFAULT_SERVER_DATETIME_FORMAT)
+        aud_date_start = aud_date_start[:10]
+        aud_date_end = aud_date_end[:10]
+        fromdate = datetime.strptime(aud_date_start, DEFAULT_SERVER_DATE_FORMAT)
         todate = datetime.today()
-        date_end = datetime.strptime(aud_date_end, DEFAULT_SERVER_DATETIME_FORMAT)
+        date_end = datetime.strptime(aud_date_end, DEFAULT_SERVER_DATE_FORMAT)
         if todate > date_end:
             todate = date_end
         daygenerator = (fromdate + timedelta(x + 1) for x in xrange((todate - fromdate).days))
