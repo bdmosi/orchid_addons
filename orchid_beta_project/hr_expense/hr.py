@@ -304,10 +304,10 @@ class hr_employee(models.Model):
     
     def get_no_of_leave(self,employee_id,aud_date_start,aud_date_end):
         holi = self.env['hr.holidays']
-        holi_ids =holi.search([('date_from','>=',aud_date_start),('date_from','<=',aud_date_end),('state','not in',('draft','cancel','refuse','confirm')),('holiday_status_id','!=',5)])
+        holi_ids =holi.search([('employee_id','=',employee_id),('date_from','>=',aud_date_start),('date_from','<=',aud_date_end),('state','not in',('draft','cancel','refuse','confirm')),('holiday_status_id','!=',5)])
         days =sum([a.number_of_days_temp for a in holi_ids])
-        short_leave_ids = holi.search([('date_from','>=',aud_date_start),('date_from','<=',aud_date_end),('state','not in',('draft','cancel','refuse','confirm')),('holiday_status_id','=',5)])
-        hours = sum([a.od_hour for a in holi_ids])
+        short_leave_ids = holi.search([('employee_id','=',employee_id),('date_from','>=',aud_date_start),('date_from','<=',aud_date_end),('state','not in',('draft','cancel','refuse','confirm')),('holiday_status_id','=',5)])
+        hours = sum([a.od_hour for a in short_leave_ids])
         return days,hours
     def get_available_time(self,employee_id,aud_date_start,aud_date_end):
         aud_date_start = aud_date_start[:10]
@@ -321,6 +321,7 @@ class hr_employee(models.Model):
         days =sum(1 for day in daygenerator if day.weekday() not in (4,5)) 
         days = days+1
         lv_days,hours = self.get_no_of_leave(employee_id,aud_date_start,aud_date_end)
+        print "leave>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", lv_days,hours
         result = days -lv_days 
         result = result *9 
         result = result - hours
