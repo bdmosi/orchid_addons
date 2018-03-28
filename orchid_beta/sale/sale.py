@@ -2,10 +2,11 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from datetime import datetime
 from openerp.exceptions import Warning
+import openerp.addons.decimal_precision as dp
 class sale_order(osv.osv):
     _inherit ='sale.order'
     _columns ={
-               'od_discount':fields.float('Discount'),
+               'od_discount':fields.float('Discount',digits_compute=dp.get_precision('Account'),readonly=True),
                'state': fields.selection([
                    ('draft', 'Draft Quotation'),
                    ('sent', 'Quotation Sent'),

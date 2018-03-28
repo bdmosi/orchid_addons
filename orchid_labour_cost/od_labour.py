@@ -3,6 +3,7 @@ from openerp import models, fields, api, _
 from openerp.osv import osv
 from openerp.tools.translate import _
 from openerp.exceptions import Warning
+import openerp.addons.decimal_precision as dp
 def simply(l):
     result = []
     for item in l :
@@ -214,9 +215,9 @@ class od_labour_line(models.Model):
     project_id = fields.Many2one('account.analytic.account','Project/Contract')
     user_id = fields.Many2one('res.users','User')
     partner_id = fields.Many2one('res.partner','Partner')
-    duration = fields.Float(string='Duration')
-    amount = fields.Float(string="Overhead")
-    actual_amount = fields.Float(string='Actual Amount')
+    duration = fields.Float(string='Duration',digits=dp.get_precision('Account'))
+    amount = fields.Float(string="Overhead",digits=dp.get_precision('Account'))
+    actual_amount = fields.Float(string='Actual Amount',digits=dp.get_precision('Account'))
     move_id = fields.Many2one('account.move','Journal Voucher',readonly=True)
     state = fields.Selection([('draft','Draft'),('done','Done')],default='draft',string='State')
     @api.one

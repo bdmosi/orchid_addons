@@ -2,6 +2,7 @@ from openerp import models, fields, api, _
 from openerp.osv import osv
 from openerp.tools.translate import _
 from openerp.exceptions import Warning
+import openerp.addons.decimal_precision as dp
 class od_wip(models.Model):
     _name = 'od.wip'
     def od_get_company_id(self):
@@ -10,21 +11,21 @@ class od_wip(models.Model):
     name = fields.Char(string='Title', required=True,readonly=True, states={'draft': [('readonly', False)]})
     date = fields.Date(required=True,readonly=True, states={'draft': [('readonly', False)]})
     project_id = fields.Many2one('account.analytic.account','Project/Contract',required=True,readonly=True, states={'draft': [('readonly', False)]})
-    wip_account_balance = fields.Float(string='WIP Balance',required=True,readonly=True, states={'draft': [('readonly', False)]})
+    wip_account_balance = fields.Float(string='WIP Balance',required=True,readonly=True, states={'draft': [('readonly', False)]},digits=dp.get_precision('Account'))
     wip_account_id = fields.Many2one('account.account','WIP Account',required=True,readonly=True, states={'draft': [('readonly', False)]})
-    invoice_amount = fields.Float(string="Invoice Amount",readonly=True,states={'draft': [('readonly', False)]},copy=False)
+    invoice_amount = fields.Float(string="Invoice Amount",readonly=True,states={'draft': [('readonly', False)]},copy=False,digits=dp.get_precision('Account'))
     provision_account_id = fields.Many2one('account.account','Provision Account',readonly=True, states={'draft': [('readonly', False)]})
     journal_id = fields.Many2one('account.journal','Journal',required=True,readonly=True,states={'draft': [('readonly', False)]})
     expense_account_id = fields.Many2one('account.account','Expense Account',required=True,readonly=True,states={'draft': [('readonly', False)]})
-    provision_percentage = fields.Float('Provision %',readonly=True, states={'draft': [('readonly', False)]},copy=False)
-    provision_amount = fields.Float(string='Provision Amount',readonly=True, states={'draft': [('readonly', False)]},copy=False)
-    project_cost = fields.Float(string="Project Cost",readonly=True,states={'draft': [('readonly', False)]},copy=False)
+    provision_percentage = fields.Float('Provision %',readonly=True, states={'draft': [('readonly', False)]},copy=False,digits=dp.get_precision('Account'))
+    provision_amount = fields.Float(string='Provision Amount',readonly=True, states={'draft': [('readonly', False)]},copy=False,digits=dp.get_precision('Account'))
+    project_cost = fields.Float(string="Project Cost",readonly=True,states={'draft': [('readonly', False)]},copy=False,digits=dp.get_precision('Account'))
     invoice_account_id  = fields.Many2one('account.account','Invoice Account',required=True,readonly=True,states={'draft': [('readonly', False)]})
     income_account_id = fields.Many2one('account.account','Income Account',required=True,readonly=True,states={'draft': [('readonly', False)]})
     move = fields.Many2one('account.move','Journal Entry',readonly=True,copy=False)
     state = fields.Selection([('draft','Draft'),('done','Done')],default='draft',string='State')
     provision = fields.Boolean('Provision',readonly=True,states={'draft': [('readonly', False)]},copy=False)
-    profit = fields.Float(string='Profit',compute='get_profit',store=True)
+    profit = fields.Float(string='Profit',compute='get_profit',store=True,digits=dp.get_precision('Account'))
     
     
     
