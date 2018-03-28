@@ -3,6 +3,7 @@ from openerp import models, fields, api, _
 from lxml import etree
 from pprint import pprint
 from openerp.exceptions import Warning
+import openerp.addons.decimal_precision as dp
 class sale_order(models.Model):
     _inherit = 'sale.order'
     
@@ -89,14 +90,14 @@ class sale_order(models.Model):
     bdm_user_id  = fields.Many2one('res.users',string='BDM',readonly=True)
     presale_user_id = fields.Many2one('res.users',string='Presales',readonly=True)
     od_cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet',readonly=True)
-    od_original_total_price = fields.Float(string='Original Total Price',compute="compute_values")
-    od_original_total_cost = fields.Float(string='Original Total Price',compute="compute_values")
-    od_original_profit = fields.Float(string="Original Profit",compute="compute_values")
-    od_original_profit_percent = fields.Float(string="Original Profit Percentage",compute="compute_values")
-    od_amd_total_price = fields.Float(string="Amendement Total Price",compute="compute_values")
-    od_amd_total_cost = fields.Float(string="Amendement Total Cost",compute="compute_values")
-    od_amd_total_profit = fields.Float(string="Amendement Total Profit",compute="compute_values")
-    od_amd_total_profit_percent = fields.Float(string="Total Amendement Profit Percentage",compute="compute_values")
+    od_original_total_price = fields.Float(string='Original Total Price',compute="compute_values",digits=dp.get_precision('Account'))
+    od_original_total_cost = fields.Float(string='Original Total Price',compute="compute_values",digits=dp.get_precision('Account'))
+    od_original_profit = fields.Float(string="Original Profit",compute="compute_values",digits=dp.get_precision('Account'))
+    od_original_profit_percent = fields.Float(string="Original Profit Percentage",compute="compute_values",digits=dp.get_precision('Account'))
+    od_amd_total_price = fields.Float(string="Amendement Total Price",compute="compute_values",digits=dp.get_precision('Account'))
+    od_amd_total_cost = fields.Float(string="Amendement Total Cost",compute="compute_values",digits=dp.get_precision('Account'))
+    od_amd_total_profit = fields.Float(string="Amendement Total Profit",compute="compute_values",digits=dp.get_precision('Account'))
+    od_amd_total_profit_percent = fields.Float(string="Total Amendement Profit Percentage",compute="compute_values",digits=dp.get_precision('Account'))
     od_approved_date = fields.Date(string="Approved Date",readonly=True)
     
     
@@ -254,20 +255,20 @@ class sale_order_line(models.Model):
         self.od_issued_qty = final_qty or 0.0
 
     od_tab_type = fields.Selection(_tab_type_sel,string="Tab Type")
-    od_original_qty = fields.Float(string='Original Qty',readonly=True)
+    od_original_qty = fields.Float(string='Original Qty',readonly=True,digits=dp.get_precision('Account'))
     od_inactive = fields.Boolean(string="Inactive",readonly=True,copy=True)
-    od_original_price = fields.Float(string="Original Price",readonly=True)
-    od_original_line_price = fields.Float(string="Original Line Price",compute="_compute_line_price")
-    od_original_unit_cost = fields.Float(string="Original Unit Cost",readonly=True)
-    od_original_line_cost = fields.Float(string="Original Line Cost",compute="_compute_line_price")
-    od_sup_unit_cost= fields.Float(string="Disc.Unit Cost Supplier Currency",readonly=True)
-    od_sup_line_cost= fields.Float(string="Disc.Total Cost Supplier Currency",readonly=True)
+    od_original_price = fields.Float(string="Original Price",readonly=True,digits=dp.get_precision('Account'))
+    od_original_line_price = fields.Float(string="Original Line Price",compute="_compute_line_price",digits=dp.get_precision('Account'))
+    od_original_unit_cost = fields.Float(string="Original Unit Cost",readonly=True,digits=dp.get_precision('Account'))
+    od_original_line_cost = fields.Float(string="Original Line Cost",compute="_compute_line_price",digits=dp.get_precision('Account'))
+    od_sup_unit_cost= fields.Float(string="Disc.Unit Cost Supplier Currency",readonly=True,digits=dp.get_precision('Account'))
+    od_sup_line_cost= fields.Float(string="Disc.Total Cost Supplier Currency",readonly=True,digits=dp.get_precision('Account'))
     od_manufacture_id = fields.Many2one('od.product.brand',string="Manufacture")
-    od_amended_line_cost = fields.Float(string="Amended Line Cost",compute="_compute_line_price")
-    od_po_request_qty = fields.Float(string="PO Request Qty",compute="get_po_request_qty")
-    od_po_qty = fields.Float(string="PO Qty",compute="get_po_qty")
-    od_issue_req_qty = fields.Float(string="Issue Request Qty",compute="get_issue_req_qty")
-    od_issued_qty = fields.Float(string="Issued Qty",compute="get_issued_qty")
+    od_amended_line_cost = fields.Float(string="Amended Line Cost",compute="_compute_line_price",digits=dp.get_precision('Account'))
+    od_po_request_qty = fields.Float(string="PO Request Qty",compute="get_po_request_qty",digits=dp.get_precision('Account'))
+    od_po_qty = fields.Float(string="PO Qty",compute="get_po_qty",digits=dp.get_precision('Account'))
+    od_issue_req_qty = fields.Float(string="Issue Request Qty",compute="get_issue_req_qty",digits=dp.get_precision('Account'))
+    od_issued_qty = fields.Float(string="Issued Qty",compute="get_issued_qty",digits=dp.get_precision('Account'))
     od_analytic_acc_id = fields.Many2one('account.analytic.account',string="Analytic Account")
     od_cost_sheet_id = fields.Many2one('od.cost.sheet',string="Cost Sheet")
     def get_line_price(self,qty,amount):
