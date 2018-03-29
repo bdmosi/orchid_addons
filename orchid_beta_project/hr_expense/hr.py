@@ -322,9 +322,14 @@ class hr_employee(models.Model):
         days = days+1
         lv_days,hours = self.get_no_of_leave(employee_id,aud_date_start,aud_date_end)
         print "leave>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", lv_days,hours
-        result = days -lv_days 
-        result = result *9 
-        result = result - hours
+        result = days 
+        result = result *9
+        if (days -lv_days)> lv_days:
+            result = days -lv_days 
+            result = result *9 
+            result = result - hours
+        if not result:
+            result =1.0
         return result
     
     def get_cancelled_activities(self,user_id,aud_date_start,aud_date_end,engineer_task_count):
