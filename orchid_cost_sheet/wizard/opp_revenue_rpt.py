@@ -15,7 +15,7 @@ class opp_rev_rpt_wiz(models.TransientModel):
     division_id = fields.Many2one('od.cost.division',string="Technology Unit")
     date_start = fields.Date(string="Date Start")
     date_end =fields.Date(string="Date End")
-    
+    wiz_line = fields.One2many('wiz.rev.rpt.data','wiz_id',string="Wiz Line")
     @api.multi 
     def export_rpt(self):
         product_group_id = self.product_group_id and self.product_group_id.id or False
@@ -54,7 +54,7 @@ class opp_rev_rpt_wiz(models.TransientModel):
                 
                 if product_group_id:
                     if line.pdt_grp_id.id == product_group_id:
-                        result.append((0,{
+                        result.append((0,0,{
                             'wiz_id':wiz_id,
                             'cost_sheet_id':sheet_id, 
                             'opp_id':opp_id ,
@@ -70,7 +70,7 @@ class opp_rev_rpt_wiz(models.TransientModel):
                             'total_gp':line.total_gp
                             }))
                 else:
-                    result.append((0,{
+                    result.append((0,0,{
                             'wiz_id':wiz_id,
                             'cost_sheet_id':sheet_id, 
                             'opp_id':opp_id ,
@@ -86,8 +86,7 @@ class opp_rev_rpt_wiz(models.TransientModel):
                             'total_gp':line.total_gp
                             }))        
         
-        if result:
-            self.env['wiz.rev.rpt.data'].create(result)
+        self.write({'wiz_line':result})
         return {
             'domain': [('wiz_id','=',wiz_id)],
             'name': 'Revenue Report',
@@ -103,7 +102,7 @@ class opp_rev_rpt_wiz(models.TransientModel):
 
 class wiz_rev_rpt(models.TransientModel):
     _name = 'wiz.rev.rpt.data'
-    wiz_id = fields.Integer(string="Wizard")
+    wiz_id = fields.Many2one('opp.rev.rpt.wiz',string="Wizard")
     cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet')
     opp_id = fields.Many2one('crm.lead',string='Opportunity')
     expected_booking = fields.Date(string="Opp Expected Booking")
