@@ -115,3 +115,28 @@ class wiz_rev_rpt(models.TransientModel):
     profit = fields.Float(string="Profit",digits=dp.get_precision('Account'))
     manpower_cost = fields.Float(string="Manpower Cost",digits=dp.get_precision('Account'))
     total_gp = fields.Float(string="Total GP",digits=dp.get_precision('Account'))
+    
+    @api.multi
+    def btn_open_opp(self):
+       
+        return {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'crm.lead',
+                'res_id':self.opp_id and self.opp_id.id or False,
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+
+            }
+    @api.multi
+    def btn_open_cost(self):
+       
+        return {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'crm.lead',
+                'res_id':self.cost_sheet_id and self.cost_sheet_id.id or False,
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+
+            }

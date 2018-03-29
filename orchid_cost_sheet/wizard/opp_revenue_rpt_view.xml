@@ -61,8 +61,10 @@
 			<tree string="Revenue Report">
 				<field name="expected_booking" />
 				<field name="opp_id" />
+				<button name="btn_open_opp" type="object" icon="STOCK_FIND" string="Open" />
 				<field name="stage_id" />
 				<field name="cost_sheet_id" />
+				<button name="btn_open_cost" type="object" icon="STOCK_FIND" string="Open" />
 				<field name="pdt_grp_id" />
 				<field name="total_sale" sum="Total" />
 				<field name="sale_aftr_disc" sum="Total" />
