@@ -53,5 +53,39 @@
 			sequence="12"
 			action="action_opp_rev_rpt_act" />
 
+
+	<record model="ir.ui.view" id="od_rev_opp_tree_view">
+		<field name="name">wiz.rev.rpt.data</field>
+		<field name="model">wiz.rev.rpt.data</field>
+		<field name="arch" type="xml">
+			<tree string="Revenue Report">
+				<field name="expected_booking" />
+				<field name="opp_id" />
+				<field name="stage_id" />
+				<field name="cost_sheet_id" />
+				<field name="pdt_grp_id" />
+				<field name="total_sale" sum="Total" />
+				<field name="sale_aftr_disc" sum="Total" />
+				<field name="total_cost" sum="Total" />
+				<field name="profit" sum="Total" />
+				<field name="profit_percent" />
+				<field name="manpower_cost" sum="Total" />
+				<field name="total_gp" sum="Total" />
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="ood_rev_opp_search_view">
+		<field name="name">wiz.rev.rpt.data.search</field>
+		<field name="model">wiz.rev.rpt.data</field>
+		<field name="arch" type="xml">
+			<search>
+			<field name="expected_booking" />
+			<field name="opp_id" />
+			<field name="stage_id" />
+			<field name="cost_sheet_id" />
+			</search>
+		</field>
+	</record>
     </data>
 </openerp>
