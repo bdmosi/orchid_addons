@@ -83,7 +83,16 @@
 			<field name="opp_id" />
 			<field name="stage_id" />
 			<field name="cost_sheet_id" />
+			<group expand="1" string="Group By">
+                        <filter string="Opportunity" domain="[]" context="{'group_by':'opp_id'}"/>
+                        <filter string="Cost Sheet" domain="[]" context="{'group_by':'cost_sheet_id'}"/>
+                        <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
+                       
+                    </group>
+			
 			</search>
+			
+			
 		</field>
 	</record>
     </data>
