@@ -11,6 +11,7 @@
                         <group>
 	                        <field name="date_start" />
 	                        <field name="date_end" />
+	                        <field name="company_id" />
                         </group>
                         <group>
                         		<field name="bdm_id" />
@@ -91,6 +92,7 @@
                         <filter string="Cost Sheet" domain="[]" context="{'group_by':'cost_sheet_id'}"/>
                         <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="BDM" domain="[]" context="{'group_by':'bdm_user_id'}"/>
+                        
                        
                     </group>
 			
