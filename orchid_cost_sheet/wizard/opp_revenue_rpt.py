@@ -87,7 +87,7 @@ class opp_rev_rpt_wiz(models.TransientModel):
                             })
         
         print "result>>>>>>>>>>>>>",result
-        self.env['wiz.rev.rpt.data'].search().unlink()
+        self.env['wiz.rev.rpt.data'].search([]).unlink()
         if result:
             self.env['wiz.rev.rpt.data'].create(result)
         return {
