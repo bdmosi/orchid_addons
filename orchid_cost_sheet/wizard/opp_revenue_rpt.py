@@ -87,6 +87,7 @@ class opp_rev_rpt_wiz(models.TransientModel):
                             })
         
         print "result>>>>>>>>>>>>>",result
+        self.env['wiz.rev.rpt.data'].search().unlink()
         if result:
             self.env['wiz.rev.rpt.data'].create(result)
         return {
@@ -102,7 +103,7 @@ class opp_rev_rpt_wiz(models.TransientModel):
         
         
 
-class wiz_rev_rpt(models.TransientModel):
+class wiz_rev_rpt(models.Model):
     _name = 'wiz.rev.rpt.data'
     wiz_id = fields.Many2one('opp.rev.rpt.wiz',string="Wizard")
     cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet')
