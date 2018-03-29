@@ -27,7 +27,7 @@ class opp_rev_rpt_wiz(models.TransientModel):
         date_start = self.date_start
         date_end =self.date_end 
         wiz_id = self.id
-        domain = []
+        domain = [('status','=','active')]
         if bdm_id:
             domain += [('business_development','=',bdm_id)]
         if stage_id:
@@ -50,6 +50,7 @@ class opp_rev_rpt_wiz(models.TransientModel):
             opp_id = sheet.lead_id and sheet.lead_id.id 
             expected_booking = sheet.op_expected_booking 
             stage_id = sheet.op_stage_id and sheet.op_stage_id.id
+            bdm_user_id = sheet.business_development and sheet.business_development.id
             for line in sheet.summary_weight_line:
                 
                 if product_group_id:
@@ -58,6 +59,7 @@ class opp_rev_rpt_wiz(models.TransientModel):
                             'wiz_id':wiz_id,
                             'cost_sheet_id':sheet_id, 
                             'opp_id':opp_id ,
+                            'bdm_user_id':bdm_user_id,
                             'expected_booking':expected_booking,
                             'stage_id':stage_id,
                             'pdt_grp_id':line.pdt_grp_id and line.pdt_grp_id.id,
@@ -74,6 +76,7 @@ class opp_rev_rpt_wiz(models.TransientModel):
                             'wiz_id':wiz_id,
                             'cost_sheet_id':sheet_id, 
                             'opp_id':opp_id ,
+                            'bdm_user_id':bdm_user_id,
                             'expected_booking':expected_booking,
                             'stage_id':stage_id,
                             'pdt_grp_id':line.pdt_grp_id and line.pdt_grp_id.id,
@@ -105,6 +108,7 @@ class wiz_rev_rpt(models.TransientModel):
     wiz_id = fields.Many2one('opp.rev.rpt.wiz',string="Wizard")
     cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet')
     opp_id = fields.Many2one('crm.lead',string='Opportunity')
+    bdm_user_id = fields.Many2one('res.users',string="BDM")
     expected_booking = fields.Date(string="Opp Expected Booking")
     stage_id = fields.Many2one('crm.case.stage',string="Opp Stage")
     pdt_grp_id = fields.Many2one('od.product.group',string='Product Group')
