@@ -59,7 +59,7 @@
 		<field name="name">wiz.rev.rpt.data</field>
 		<field name="model">wiz.rev.rpt.data</field>
 		<field name="arch" type="xml">
-			<tree string="Revenue Report">
+			<tree string="Technology Report">
 				<field name="expected_booking" />
 				<field name="opp_id" />
 				<button name="btn_open_opp" type="object" icon="STOCK_FIND" string="Open" />
