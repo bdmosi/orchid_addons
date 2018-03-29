@@ -134,7 +134,7 @@ class wiz_rev_rpt(models.TransientModel):
         return {
                 'view_type': 'form',
                 'view_mode': 'form',
-                'res_model': 'crm.lead',
+                'res_model': 'od.cost.sheet',
                 'res_id':self.cost_sheet_id and self.cost_sheet_id.id or False,
                 'type': 'ir.actions.act_window',
                 'target': 'new',
