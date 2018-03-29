@@ -4,6 +4,7 @@ from pprint import pprint
 from datetime import datetime
 import openerp.addons.decimal_precision as dp
 from operator import div
+from pip._vendor.html5lib.treebuilders import dom
 class opp_rev_rpt_wiz(models.TransientModel):
     _name = 'opp.rev.rpt.wiz'
     
@@ -16,6 +17,9 @@ class opp_rev_rpt_wiz(models.TransientModel):
     date_start = fields.Date(string="Date Start")
     date_end =fields.Date(string="Date End")
     wiz_line = fields.One2many('wiz.rev.rpt.data','wiz_id',string="Wiz Line")
+    def od_get_company_id(self):
+        return self.env.user.company_id
+    company_id = fields.Many2one('res.company', string='Company',default=od_get_company_id)
     @api.multi 
     def export_rpt(self):
         product_group_id = self.product_group_id and self.product_group_id.id or False
@@ -27,7 +31,10 @@ class opp_rev_rpt_wiz(models.TransientModel):
         date_start = self.date_start
         date_end =self.date_end 
         wiz_id = self.id
+        company_id = self.company_id and self.company_id.id 
         domain = [('status','=','active')]
+        if company_id:
+            domain += [('company_id','=',company_id)]
         if bdm_id:
             domain += [('business_development','=',bdm_id)]
         if stage_id:
