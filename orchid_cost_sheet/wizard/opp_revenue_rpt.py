@@ -54,7 +54,7 @@ class opp_rev_rpt_wiz(models.TransientModel):
                 
                 if product_group_id:
                     if line.pdt_grp_id.id == product_group_id:
-                        result.append({
+                        result.append((0,{
                             'wiz_id':wiz_id,
                             'cost_sheet_id':sheet_id, 
                             'opp_id':opp_id ,
@@ -68,9 +68,9 @@ class opp_rev_rpt_wiz(models.TransientModel):
                             'profit':line.profit,
                             'manpower_cost':line.manpower_cost,
                             'total_gp':line.total_gp
-                            })
+                            }))
                 else:
-                    result.append({
+                    result.append((0,{
                             'wiz_id':wiz_id,
                             'cost_sheet_id':sheet_id, 
                             'opp_id':opp_id ,
@@ -84,8 +84,7 @@ class opp_rev_rpt_wiz(models.TransientModel):
                             'profit':line.profit,
                             'manpower_cost':line.manpower_cost,
                             'total_gp':line.total_gp
-                            })
-        
+                            }))        
         
         if result:
             self.env['wiz.rev.rpt.data'].create(result)
