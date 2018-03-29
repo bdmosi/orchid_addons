@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="view_opp_rev_rpt_wizard" model="ir.ui.view">
+            <field name="name">Opp Revenue</field>
+            <field name="model">opp.rev.rpt.wiz</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Report">
+                    <group >
+                        <group>
+	                        <field name="date_start" />
+	                        <field name="date_end" />
+                        </group>
+                        <group>
+                        		<field name="bdm_id" />
+                        		<field name="stage_id" />
+                        		<field name="product_group_id" />
+                        </group>
+                        
+                        <group>
+	                        <field name="branch_id" />
+	                        <field name="cost_centre_id" />
+	                        <field name="division_id" />
+                        </group>
+                       
+                      </group>
+
+                      
+                       <footer>
+                       <button name="export_rpt" string="Export" type="object" />
+                       or
+                        <button string="Cancel" special="cancel" />
+                       
+                       </footer>
+                        
+                </form>
+            </field>
+        </record>
+
+       
+
+        <record id="action_opp_rev_rpt_act" model="ir.actions.act_window">
+            <field name="name">Opp Revenue Report</field>
+            <field name="res_model">opp.rev.rpt.wiz</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+         <menuitem
+			id="menu_opp_rev_rpt"
+			name="Opp Revenue Report"
+			parent="base.next_id_64"
+			sequence="12"
+			action="action_opp_rev_rpt_act" />
+
+    </data>
+</openerp>
