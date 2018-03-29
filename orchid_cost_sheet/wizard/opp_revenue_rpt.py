@@ -85,7 +85,10 @@ class opp_rev_rpt_wiz(models.TransientModel):
                             'manpower_cost':line.manpower_cost,
                             'total_gp':line.total_gp
                             })
-        self.env['wiz.rev.rpt.data'].create(result)
+        
+        print "result>>>>>>>>>>>>>",result
+        if result:
+            self.env['wiz.rev.rpt.data'].create(result)
         return {
             'domain': [('wiz_id','=',wiz_id)],
             'name': 'Revenue Report',
