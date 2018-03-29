@@ -92,7 +92,7 @@
                         <filter string="Cost Sheet" domain="[]" context="{'group_by':'cost_sheet_id'}"/>
                         <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="BDM" domain="[]" context="{'group_by':'bdm_user_id'}"/>
-                        
+                        <filter string="Product Group" domain="[]" context="{'group_by':'pdt_grp_id'}"/>
                        
                     </group>
 			
