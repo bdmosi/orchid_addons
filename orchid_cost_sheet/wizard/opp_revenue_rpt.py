@@ -86,8 +86,7 @@ class opp_rev_rpt_wiz(models.TransientModel):
                             'total_gp':line.total_gp
                             })
         
-        print "result>>>>>>>>>>>>>",result
-        self.env['wiz.rev.rpt.data'].search([]).unlink()
+        
         if result:
             self.env['wiz.rev.rpt.data'].create(result)
         return {
@@ -103,9 +102,9 @@ class opp_rev_rpt_wiz(models.TransientModel):
         
         
 
-class wiz_rev_rpt(models.Model):
+class wiz_rev_rpt(models.TransientModel):
     _name = 'wiz.rev.rpt.data'
-    wiz_id = fields.Many2one('opp.rev.rpt.wiz',string="Wizard")
+    wiz_id = fields.Integer(string="Wizard")
     cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet')
     opp_id = fields.Many2one('crm.lead',string='Opportunity')
     expected_booking = fields.Date(string="Opp Expected Booking")
