@@ -271,13 +271,13 @@ class invoice_alternate_line(models.Model):
     name = fields.Text(string="Description Arabic")
     name2 = fields.Text(string="Description English")
     quantity = fields.Float(string="Quantity")
-    unit_price = fields.Float(string="Unit Price",digits=dp.get_precision('Account'))
-    total_bf_tax = fields.Float(string="Total Before Tax",compute="_compute_calc",digits=dp.get_precision('Account'))
+    unit_price = fields.Float(string="Unit Price",digits=dp.get_precision('Gov'))
+    total_bf_tax = fields.Float(string="Total Before Tax",compute="_compute_calc",digits=dp.get_precision('Gov'))
     tax_rate =fields.Float(string="Tax Rate(%)")
-    tax_amount =fields.Float(string="Tax Amount",compute="_compute_calc",digits=dp.get_precision('Account'))
-    total_amount= fields.Float(string="Total Amount",compute="_compute_calc",digits=dp.get_precision('Account'))
+    tax_amount =fields.Float(string="Tax Amount",compute="_compute_calc",digits=dp.get_precision('Gov'))
+    total_amount= fields.Float(string="Total Amount",compute="_compute_calc",digits=dp.get_precision('Gov'))
     bt_enable = fields.Boolean(string="Enable Pay %")
     bt_pay_perc = fields.Float(string="Payment %")
-    discount = fields.Float(string="Discount %",digits=dp.get_precision('Account'))
+    discount = fields.Float(string="Discount %",digits=dp.get_precision('Gov'))
     
     
