@@ -170,6 +170,8 @@ class task(models.Model):
             raise Warning("This Project Either Cancelled or Closed,You Cant Create a task for this Project")
         meeting_id =self.od_create_calendar_event(vals)
         vals['od_meeting_id'] = meeting_id
+        if not vals.get('od_duplicate',False):
+            vals['od_block_start'] = True
         if vals.get('od_type') not in ('milestone','workpackage'):
             work_ids =self.sudo().create_task_line(vals)
             vals['work_ids'] = work_ids
@@ -375,7 +377,11 @@ class task(models.Model):
         date_start = self.date_start
         if not vals.get('date_start',False):
             vals['date_start'] = date_start
+        vals['od_block_start'] = True
+        if vals.get('od_duplicated',False):
+            vals['od_block_start'] = False
         vals['od_duplicated'] = False
+        
         return super(task, self).write(vals)
 #     @api.constrains('user_id','date_start','date_end')
 #     def check_task_conflict(self):
@@ -698,6 +704,7 @@ class task(models.Model):
     
     no_delete = fields.Boolean(string="Delete Blocked")
     od_duplicated = fields.Boolean(string="Duplicated")
+    od_block_start = fields.Boolean(string="Block Starting Date Edit")
 #     date_start  = fields.Datetime('Starting Date',track_visibility='onchange')
     od_help_desk_issue_id = fields.Many2one('crm.helpdesk',string="Help Desk Issue Sequence")
     od_meeting_id = fields.Many2one('calendar.event',string='Meeting')
