@@ -1791,7 +1791,7 @@ class od_cost_sheet(models.Model):
     
     @api.one
     def btn_price_fix(self):
-        raise Warning("Working Progress.........")
+        
         price_fixed = self.price_fixed 
         if price_fixed:
             self.price_unfix_line(self.mat_main_pro_line)
