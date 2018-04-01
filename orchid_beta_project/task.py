@@ -146,7 +146,7 @@ class task(models.Model):
         
         #add your code here
         default.update({'od_duplicated':True,'date_start':False,'date_end':False})
-        
+        print "default>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",default
         return super(task, self).copy(default)
     
     def create_task_line(self,vals):
@@ -374,9 +374,9 @@ class task(models.Model):
             meeting_id = self.od_meeting_id
             if meeting_id:
                 meeting_id.write(cal_val)
-        date_start = self.date_start
-        if not vals.get('date_start',False):
-            vals['date_start'] = date_start
+#         date_start = self.date_start
+#         if not vals.get('date_start',False):
+#             vals['date_start'] = date_start
 #         vals['od_block_start'] = True
         if vals.get('od_duplicated',False):
             vals['od_block_start'] = False
