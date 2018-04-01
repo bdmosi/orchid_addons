@@ -145,7 +145,7 @@ class task(models.Model):
     def copy(self, default):
         
         #add your code here
-        default.update({'od_duplicated':True})
+        default.update({'od_duplicated':True,'od_write_count':0})
         print "default>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",default
         return super(task, self).copy(default)
     
@@ -378,9 +378,10 @@ class task(models.Model):
 #         if not vals.get('date_start',False):
 #             vals['date_start'] = date_start
 #         vals['od_block_start'] = True
-        if vals.get('od_duplicated',False):
-            vals['od_block_start'] = False
+        
 #         vals['od_duplicated'] = False
+        write_count = self.od_write_count +1
+        vals['od_write_count'] =write_count
         
         return super(task, self).write(vals)
 #     @api.constrains('user_id','date_start','date_end')
@@ -705,6 +706,7 @@ class task(models.Model):
     no_delete = fields.Boolean(string="Delete Blocked")
     od_duplicated = fields.Boolean(string="Duplicated")
     od_block_start = fields.Boolean(string="Block Starting Date Edit")
+    od_write_count = fields.Integer(string="Write Count")
 #     date_start  = fields.Datetime('Starting Date',track_visibility='onchange')
     od_help_desk_issue_id = fields.Many2one('crm.helpdesk',string="Help Desk Issue Sequence")
     od_meeting_id = fields.Many2one('calendar.event',string='Meeting')

@@ -77,6 +77,7 @@
 				<xpath expr="//field[@name='date_deadline']" position="before">
 					<field name="od_block_start" invisible="1" />
 					<field name="od_duplicated" invisible="1" />
+					<field name="od_write_count" invisible="0" />
 					<field name="od_state" attrs="{'required': [('od_type','=','milestone')]}" options="{'no_create':True}"/>
 					<field name="od_implementation_id" domain="[('project_phase','=',od_state)]" attrs="{'invisible': [('od_type','!=','activities')],'required': [('od_type','=','activities')],'readonly':[('od_type','=','activities'),('od_block_start','!=',False),('od_duplicated','=',False)]}" on_change="onchange_imp_id(od_implementation_id)"/>
 				</xpath>
