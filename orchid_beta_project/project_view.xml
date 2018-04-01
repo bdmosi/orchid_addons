@@ -76,6 +76,7 @@
         <xpath expr="/form/sheet/notebook/page[@string='Extra Info']/group/group[@string='Gantt View']" position="replace" />
 				<xpath expr="//field[@name='date_deadline']" position="before">
 					<field name="od_block_start" invisible="1" />
+					<field name="od_duplicate" invisible="1" />
 					<field name="od_state" attrs="{'required': [('od_type','=','milestone')]}" options="{'no_create':True}"/>
 					<field name="od_implementation_id" domain="[('project_phase','=',od_state)]" attrs="{'invisible': [('od_type','!=','activities')],'required': [('od_type','=','activities')],'readonly':[('od_type','=','activities'),('date_end','!=',False),('od_duplicate','=',False)]}" on_change="onchange_imp_id(od_implementation_id)"/>
 				</xpath>
