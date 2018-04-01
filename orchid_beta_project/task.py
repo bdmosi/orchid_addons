@@ -377,10 +377,10 @@ class task(models.Model):
         date_start = self.date_start
         if not vals.get('date_start',False):
             vals['date_start'] = date_start
-        vals['od_block_start'] = True
-        if vals.get('od_duplicated',False):
-            vals['od_block_start'] = False
-        vals['od_duplicated'] = False
+#         vals['od_block_start'] = True
+#         if vals.get('od_duplicated',False):
+#             vals['od_block_start'] = False
+#         vals['od_duplicated'] = False
         
         return super(task, self).write(vals)
 #     @api.constrains('user_id','date_start','date_end')
