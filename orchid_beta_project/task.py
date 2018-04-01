@@ -145,7 +145,7 @@ class task(models.Model):
     def copy(self, default):
         
         #add your code here
-        default.update({'od_duplicated':True})
+        default.update({'od_duplicated':True,'date_start':False,'date_end':False})
         
         return super(task, self).copy(default)
     
