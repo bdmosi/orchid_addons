@@ -380,9 +380,10 @@ class task(models.Model):
 #         vals['od_block_start'] = True
         
 #         vals['od_duplicated'] = False
-        write_count = self.od_write_count +1
+        write_count = self.od_write_count + 1
         vals['od_write_count'] =write_count
-        
+        if write_count >=3:
+            vals['od_duplicated'] =False
         return super(task, self).write(vals)
 #     @api.constrains('user_id','date_start','date_end')
 #     def check_task_conflict(self):
