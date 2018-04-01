@@ -721,9 +721,11 @@ class hr_employee(models.Model):
         sheet_ids =self.env['od.cost.sheet'].search(domain1)
         
         for sheet in sheet_ids:
-            gp =sheet.total_gp
-            result.append((0,0,{'cost_sheet_id':sheet.id,'gp':gp}))
-            total_gp += gp
+            stage_id = sheet.op_stage_id and sheet.op_stage_id.id 
+            if stage_id !=8:
+                gp =sheet.total_gp
+                result.append((0,0,{'cost_sheet_id':sheet.id,'gp':gp}))
+                total_gp += gp
         sheet_ids =self.env['od.cost.sheet'].search(domain2)
         for sheet in sheet_ids:
             stage_id = sheet.op_stage_id and sheet.op_stage_id.id 

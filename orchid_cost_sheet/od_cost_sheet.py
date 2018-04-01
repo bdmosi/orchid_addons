@@ -2405,9 +2405,11 @@ class od_cost_sheet(models.Model):
         total_weight = self.mat_weight + self.trn_weight + self.bim_weight + self.oim_weight + self.bmn_weight + self.omn_weight + self.o_m_weight
         self.sum_tot_sale = total_sale
         self.sum_total_sale = sum_total_sale
-        special_discount = self.special_discount 
-        special_discount_vat = special_discount *.05
-        self.special_discount_vat = special_discount_vat
+        special_discount_vat =0.0
+        if not self.ignore_vat:
+            special_discount = self.special_discount 
+            special_discount_vat = special_discount *.05
+            self.special_discount_vat = special_discount_vat
         total_vat = self.mat_vat + self.trn_vat + self.bim_vat + self.oim_vat + self.bmn_vat + self.omn_vat + self.o_m_vat + special_discount_vat
         self.sum_vat = total_vat
         self.sum_total_with_vat = sum_total_sale + total_vat
@@ -5483,7 +5485,7 @@ class od_cost_mat_extra_expense_line(models.Model):
         fixed = self.fixed
         if fixed:
             self.line_price = self.qty * self.new_unit_price 
-        else:
+        if not fixed:
             self.line_price = self.qty * self.unit_price
 
     @api.one
@@ -5711,8 +5713,11 @@ class od_cost_bim_beta_manpower_manual_line(models.Model):
             self.unit_price = unit_price
         if self.qty or self.unit_cost:
             self.line_cost = self.qty * self.unit_cost
-        if self.qty or self.unit_price:
+        fixed = self.fixed
+        if not fixed:
             self.line_price = self.qty * self.unit_price
+        else:
+            self.line_price = self.qty * self.new_unit_price
     
     @api.one 
     @api.depends('tax_id','line_price','qty')
@@ -5730,6 +5735,11 @@ class od_cost_bim_beta_manpower_manual_line(models.Model):
     name = fields.Char(string='Description')
     qty = fields.Float(string='Qty',default=1)
     unit_price = fields.Float(string='Unit Price',compute='compute_calc',digits=dp.get_precision('Account'))
+    temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
+    new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
+    fixed = fields.Boolean(string="Price Fix",)
+    
+    
     line_price = fields.Float(string='Line Price',compute='compute_calc',digits=dp.get_precision('Account'))
     unit_cost = fields.Float(string='Unit Cost',digits=dp.get_precision('Account'))
     line_cost = fields.Float(string='Line Cost',compute='compute_calc',digits=dp.get_precision('Account'))
@@ -5811,9 +5821,13 @@ class od_cost_bim_beta_implementation_code(models.Model):
             self.unit_cost = self.code_hours * self.cost_hour
         if self.unit_cost and self.qty:
             self.line_cost = self.unit_cost * self.qty
-        if self.unit_price and self.qty:
+        
+        fixed = self.fixed
+        if fixed:
+            self.line_price = self.new_unit_price * self.qty
+        if not fixed:
             self.line_price = self.unit_price * self.qty
-    
+            
     
     @api.one 
     @api.depends('tax_id','line_price','qty')
@@ -5829,6 +5843,11 @@ class od_cost_bim_beta_implementation_code(models.Model):
     imp_code = fields.Many2one('od.implementation',string='Implementation Code')
     qty = fields.Float('Qty',default=1)
     unit_price = fields.Float('Unit Sale',compute='compute_calc',digits=dp.get_precision('Account'))
+    
+    temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
+    new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
+    fixed = fields.Boolean(string="Price Fix",)
+    
     line_price = fields.Float('Total Sale',compute='compute_calc',digits=dp.get_precision('Account'))
     unit_cost = fields.Float('Unit Cost',compute='compute_calc',digits=dp.get_precision('Account'))
     line_cost = fields.Float('Total Cost',compute='compute_calc',digits=dp.get_precision('Account'))
@@ -5919,6 +5938,11 @@ class od_cost_oim_implimentation_price_line(models.Model):
     name = fields.Char(string='Description')
     qty = fields.Float(string='Qty',default=1,digits=dp.get_precision('Account'))
     unit_price = fields.Float(string='Unit Sale',compute='compute_calc',digits=dp.get_precision('Account'))
+    
+    temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
+    new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
+    fixed = fields.Boolean(string="Price Fix",)
+    
     line_price = fields.Float(string='Total Sale',compute='compute_calc',digits=dp.get_precision('Account'))
     unit_cost = fields.Float(string='Unit Cost',digits=dp.get_precision('Account'))
     line_cost = fields.Float(string='Line Cost',compute='compute_calc',digits=dp.get_precision('Account'))
@@ -6028,8 +6052,11 @@ class od_cost_om_residenteng_line(models.Model):
             unit_price = (unit_cost / (1-profit))
             unit_price = unit_price * (1-discount)
             self.unit_price = unit_price
-        if self.unit_price and self.qty:
+        fixed = self.fixed
+        if not fixed:
             self.line_price = self.qty * self.unit_price
+        else:
+            self.line_price = self.qty * self.new_unit_price
         if self.unit_cost and self.qty:
             self.line_cost = self.qty * self.unit_cost
         if self.line_price :
@@ -6052,6 +6079,10 @@ class od_cost_om_residenteng_line(models.Model):
     name = fields.Char(string='Description')
     qty = fields.Float(string='Qty',default=1,digits=dp.get_precision('Account'))
     unit_price = fields.Float(string='Unit Price',compute='compute_calc',digits=dp.get_precision('Account'))
+    temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
+    new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
+    fixed = fields.Boolean(string="Price Fix",)
+    
     line_price = fields.Float(string='Line Price',compute='compute_calc',digits=dp.get_precision('Account'))
     unit_cost = fields.Float(string='Unit Cost',digits=dp.get_precision('Account'))
     line_cost = fields.Float(string='Line Cost',compute='compute_calc',digits=dp.get_precision('Account'))
@@ -6147,8 +6178,11 @@ class od_cost_omn_out_preventive_maintenance_line(models.Model):
             unit_price = (unit_cost / (1-profit))
             unit_price = unit_price * (1-discount)
             self.unit_price = unit_price
-        if self.unit_price and self.qty:
+        fixed = self.fixed
+        if not fixed:
             self.line_price = self.qty * self.unit_price
+        else:
+            self.line_price = self.qty * self.new_unit_price
         if self.unit_cost and self.qty:
             self.line_cost = self.qty * self.unit_cost
         if self.line_price :
@@ -6173,6 +6207,13 @@ class od_cost_omn_out_preventive_maintenance_line(models.Model):
     name = fields.Char(string='Description')
     qty = fields.Float(string='Qty',default=1,digits=dp.get_precision('Account'))
     unit_price = fields.Float(string='Unit Price',compute='compute_calc',digits=dp.get_precision('Account'))
+    
+    
+    temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
+    new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
+    fixed = fields.Boolean(string="Price Fix",)
+    
+    
     line_price = fields.Float(string='Line Price',compute='compute_calc',digits=dp.get_precision('Account'))
     unit_cost = fields.Float(string='Unit Cost',digits=dp.get_precision('Account'))
     line_cost = fields.Float(string='Line Cost',compute='compute_calc',digits=dp.get_precision('Account'))
@@ -6250,8 +6291,11 @@ class od_cost_omn_out_remedial_maintenance_line(models.Model):
             unit_price = (unit_cost / (1-profit))
             unit_price = unit_price * (1-discount)
             self.unit_price = unit_price
-        if self.unit_price and self.qty:
+        fixed = self.fixed
+        if not fixed:
             self.line_price = self.qty * self.unit_price
+        else:
+            self.line_price = self.qty * self.new_unit_price
         if self.unit_cost and self.qty:
             self.line_cost = self.qty * self.unit_cost
         if self.line_price :
@@ -6276,6 +6320,12 @@ class od_cost_omn_out_remedial_maintenance_line(models.Model):
     name = fields.Char(string='Description')
     qty = fields.Float(string='Qty',default=1,digits=dp.get_precision('Account'))
     unit_price = fields.Float(string='Unit Price',compute='compute_calc',digits=dp.get_precision('Account'))
+    
+    
+    temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
+    new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
+    fixed = fields.Boolean(string="Price Fix",)
+    
     line_price = fields.Float(string='Line Price',compute='compute_calc',digits=dp.get_precision('Account'))
     unit_cost = fields.Float(string='Unit Cost',digits=dp.get_precision('Account'))
     line_cost = fields.Float(string='Line Cost',compute='compute_calc',digits=dp.get_precision('Account'))
@@ -6384,8 +6434,11 @@ class od_cost_bmn_it_preventive_line(models.Model):
             unit_price = (unit_cost / (1-profit))
             unit_price = unit_price * (1-discount)
             self.unit_price = unit_price
-        if self.unit_price and self.qty:
+        fixed = self.fixed
+        if not fixed:
             self.line_price = self.qty * self.unit_price
+        else:
+            self.line_price = self.qty * self.new_unit_price
         if self.unit_cost and self.qty:
             self.line_cost = self.qty * self.unit_cost
         if self.line_price:
@@ -6413,6 +6466,12 @@ class od_cost_bmn_it_preventive_line(models.Model):
     description = fields.Char(string="Description")
     qty = fields.Float(string='Qty',default=1,digits=dp.get_precision('Account'))
     unit_price = fields.Float(string='Unit Price',compute='compute_calc',digits=dp.get_precision('Account'))
+    
+    temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
+    new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
+    fixed = fields.Boolean(string="Price Fix",)
+    
+    
     line_price = fields.Float(string='Line Price',compute='compute_calc',digits=dp.get_precision('Account'))
     unit_cost = fields.Float(string='Unit Cost',digits=dp.get_precision('Account'))
     line_cost = fields.Float(string='Line Cost',compute='compute_calc',digits=dp.get_precision('Account'))
@@ -6488,8 +6547,12 @@ class od_cost_bmn_it_remedial_line(models.Model):
             unit_price = (unit_cost / (1-profit))
             unit_price = unit_price * (1-discount)
             self.unit_price = unit_price
-        if self.unit_price and self.qty:
+        fixed = self.fixed
+        if not fixed:
             self.line_price = self.qty * self.unit_price
+        else:
+            self.line_price = self.qty * self.new_unit_price
+        
         if self.unit_cost and self.qty:
             self.line_cost = self.qty * self.unit_cost
         if self.line_price :
@@ -6511,6 +6574,12 @@ class od_cost_bmn_it_remedial_line(models.Model):
     name = fields.Char(string='Description')
     qty = fields.Float(string='Qty',default=1,digits=dp.get_precision('Account'))
     unit_price = fields.Float(string='Unit Price',compute='compute_calc',digits=dp.get_precision('Account'))
+    
+    temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
+    new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
+    fixed = fields.Boolean(string="Price Fix",)
+    
+    
     line_price = fields.Float(string='Line Price',compute='compute_calc',digits=dp.get_precision('Account'))
     unit_cost = fields.Float(string='Unit Cost',digits=dp.get_precision('Account'))
     line_cost = fields.Float(string='Line Cost',compute='compute_calc',digits=dp.get_precision('Account'))

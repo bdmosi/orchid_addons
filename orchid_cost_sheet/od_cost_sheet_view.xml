@@ -133,7 +133,7 @@
 							/> -->
 						
 						<button name="update_vat" string="Link VAT" type="object" class="oe_highlight" states="draft,design_ready,submitted,returned_by_pmo" />
-						<button name="btn_price_fix" string="Fix/Reset Selling" type="object" class="oe_highlight" states="draft,design_ready,submitted,returned_by_pmo" />
+						<button name="btn_price_fix" string="Fix/Reset Selling" type="object" class="oe_highlight"  />
 						<button name="btn_design_ready" string="Design Ready" type="object" class="oe_highlight" states="draft" groups="orchid_beta.group_beta_presales_engineer,orchid_beta.group_beta_presales_manager,orchid_beta.group_executive_management_beta_1"/>
 						<button name="btn_submit" string="Submit To Customer" type="object" class="oe_highlight" states="design_ready" groups="orchid_beta.group_beta_sale_account_mananger,orchid_beta.group_beta_sale_coordinator_1,orchid_beta.group_beta_presales_engineer,orchid_beta.group_beta_presales_manager,orchid_beta.group_executive_management_beta_1"/>
 					
@@ -952,7 +952,9 @@
 									<field name="uom_id"/>
 									<field name="qty"/>
 									<field name="sales_currency_id"/>
-									<field name="unit_price"/>
+									<field name="fixed" invisible="1"/>
+									<field name="unit_price" attrs="{'invisible':[('fixed','=',True)]}"/>
+									<field name="new_unit_price" attrs="{'invisible':[('fixed','=',False)]}"/>
 
 									<field name="line_price" sum="Total"/>
 									<field name="tax_id"/>
@@ -1225,7 +1227,9 @@
 									<field name="uom_id"/>
 									<field name="qty"/>
 									<field name="sales_currency_id"/>
-									<field name="unit_price"/>
+									<field name="fixed" invisible="1"/>
+									<field name="unit_price" attrs="{'invisible':[('fixed','=',True)]}"/>
+									<field name="new_unit_price" attrs="{'invisible':[('fixed','=',False)]}"/>
 									<field name="line_price" sum="Total"/>
 									<field name="tax_id"/>
 									<field name="vat"/>
@@ -1292,7 +1296,9 @@
 									<!-- <field name="od_product_id" /> -->
 									<field name="name"/>
 									<field name="qty" sum="qty"/>
-									<field name="unit_price2" />
+									<field name="fixed" invisible="1"/>
+									<field name="unit_price2" attrs="{'invisible':[('fixed','=',True)]}"/>
+									<field name="new_unit_price" attrs="{'invisible':[('fixed','=',False)]}"/>
 									<field name="line_price2" sum="line_price2"/>
 									<field name="tax_id"/>
 									<field name="vat"/>
@@ -1454,7 +1460,9 @@
 									<field name="item" invisible="0"/>
 									<field name="name"/>
 									<field name="qty" sum="qty"/>
-									<field name="unit_price" />
+									<field name="fixed" invisible="1"/>
+									<field name="unit_price" attrs="{'invisible':[('fixed','=',True)]}"/>
+									<field name="new_unit_price" attrs="{'invisible':[('fixed','=',False)]}"/>
 									<field name="line_price" sum="line_price"/>
 									<field name="tax_id"/>
 									<field name="vat"/>
@@ -1474,7 +1482,9 @@
 									<field name="item"/>
 									<field name="name"/>
 									<field name="qty" sum="qty"/>
-									<field name="unit_price" />
+									<field name="fixed" invisible="1"/>
+									<field name="unit_price" attrs="{'invisible':[('fixed','=',True)]}"/>
+									<field name="new_unit_price" attrs="{'invisible':[('fixed','=',False)]}"/>
 									<field name="line_price" sum="line_price"/>
 									<field name="tax_id"/>
 									<field name="vat"/>
@@ -1498,7 +1508,9 @@
 									<field name="item"/>
 									<field name="imp_code" options="{'no_create':True}"/>
 									<field name="qty"/>
-									<field name="unit_price"/>
+									<field name="fixed" invisible="1"/>
+									<field name="unit_price" attrs="{'invisible':[('fixed','=',True)]}"/>
+									<field name="new_unit_price" attrs="{'invisible':[('fixed','=',False)]}"/>
 									<field name="line_price" sum="line_price"/>
 									<field name="unit_cost"/>
 									<field name="line_cost" sum="line_cost"/>
@@ -1522,7 +1534,9 @@
 									<field name="partner_id" invisible="0"/>
 									<field name="name"/>
 									<field name="qty" sum="qty"/>
-									<field name="unit_price" />
+									<field name="fixed" invisible="1"/>
+									<field name="unit_price" attrs="{'invisible':[('fixed','=',True)]}"/>
+									<field name="new_unit_price" attrs="{'invisible':[('fixed','=',False)]}"/>
 									<field name="line_price" sum="line_price"/>
 								    <field name="tax_id"/>
 								    <field name="vat"/>
@@ -1703,7 +1717,9 @@
 									<field name="item" invisible="0"/>
 									<field name="description"/>
 									<field name="qty" sum="qty"/>
-									<field name="unit_price" />
+									<field name="fixed" invisible="1"/>
+									<field name="unit_price" attrs="{'invisible':[('fixed','=',True)]}"/>
+									<field name="new_unit_price" attrs="{'invisible':[('fixed','=',False)]}"/>
 									<field name="line_price" sum="line_price"/>
 									<field name="tax_id"/>
 									<field name="vat"/>
@@ -1723,7 +1739,9 @@
 									<field name="item"/>
 									<field name="name"/>
 									<field name="qty" sum="qty"/>
-									<field name="unit_price" />
+									<field name="fixed" invisible="1"/>
+									<field name="unit_price" attrs="{'invisible':[('fixed','=',True)]}"/>
+									<field name="new_unit_price" attrs="{'invisible':[('fixed','=',False)]}"/>
 									<field name="line_price" sum="line_price"/>
 									<field name="tax_id"/>
 									<field name="vat"/>
@@ -1754,7 +1772,9 @@
 									<field name="uom_id"/>
 									<field name="qty"/>
 									<field name="sales_currency_id"/>
-									<field name="unit_price"/>
+									<field name="fixed" invisible="1"/>
+									<field name="unit_price" attrs="{'invisible':[('fixed','=',True)]}"/>
+									<field name="new_unit_price" attrs="{'invisible':[('fixed','=',False)]}"/>
 									<field name="line_price" sum="Total"/>
 									<field name="tax_id"/>
 									<field name="vat"/>
@@ -1785,7 +1805,9 @@
 									<field name="item"/>
 									<field name="name"/>
 									<field name="qty"/>
-									<field name="unit_price" />
+									<field name="fixed" invisible="1"/>
+									<field name="unit_price" attrs="{'invisible':[('fixed','=',True)]}"/>
+									<field name="new_unit_price" attrs="{'invisible':[('fixed','=',False)]}"/>
 									<field name="line_price" sum="line_price"/>
 									<field name="tax_id"/>
 									<field name="vat"/>
@@ -1826,7 +1848,9 @@
 									<field name="item" invisible="0"/>
 									<field name="name"/>
 									<field name="qty" sum="qty"/>
-									<field name="unit_price" />
+									<field name="fixed" invisible="1"/>
+									<field name="unit_price" attrs="{'invisible':[('fixed','=',True)]}"/>
+									<field name="new_unit_price" attrs="{'invisible':[('fixed','=',False)]}"/>
 									<field name="line_price" sum="line_price"/>
 								    <field name="tax_id"/>
 								    <field name="vat"/>
@@ -1852,7 +1876,9 @@
 									<field name="item"/>
 									<field name="name"/>
 									<field name="qty"/>
-									<field name="unit_price"/>
+									<field name="fixed" invisible="1"/>
+									<field name="unit_price" attrs="{'invisible':[('fixed','=',True)]}"/>
+									<field name="new_unit_price" attrs="{'invisible':[('fixed','=',False)]}"/>
 									<field name="line_price" sum="Total"/>
 									<field name="tax_id"/>
 									<field name="vat"/>
@@ -1886,7 +1912,9 @@
 									<field name="uom_id"/>
 									<field name="qty"/>
 									<field name="sales_currency_id"/>
-									<field name="unit_price"/>
+									<field name="fixed" invisible="1"/>
+									<field name="unit_price" attrs="{'invisible':[('fixed','=',True)]}"/>
+									<field name="new_unit_price" attrs="{'invisible':[('fixed','=',False)]}"/>
 									<field name="line_price" sum="Total"/>
 									<field name="tax_id"/>
 									<field name="vat"/>
@@ -1916,7 +1944,9 @@
 									<field name="item"/>
 									<field name="name"/>
 									<field name="qty"/>
-									<field name="unit_price" />
+									<field name="fixed" invisible="1"/>
+									<field name="unit_price" attrs="{'invisible':[('fixed','=',True)]}"/>
+									<field name="new_unit_price" attrs="{'invisible':[('fixed','=',False)]}"/>
 									<field name="line_price" sum="line_price"/>
 									<field name="tax_id"/>
 									<field name="vat"/>
@@ -2106,7 +2136,9 @@
 									<field name="name"/>
 									<field name="qty"/>
 
-									<field name="unit_price"/>
+								   <field name="fixed" invisible="1"/>
+									<field name="unit_price" attrs="{'invisible':[('fixed','=',True)]}"/>
+									<field name="new_unit_price" attrs="{'invisible':[('fixed','=',False)]}"/>
 									<field name="line_price" sum="Total"/>
 									<field name="tax_id"/>
 									<field name="vat"/>
@@ -2146,7 +2178,9 @@
 									<field name="uom_id"/>
 									<field name="qty"/>
 									<field name="sales_currency_id"/>
-									<field name="unit_price"/>
+									<field name="fixed" invisible="1"/>
+									<field name="unit_price" attrs="{'invisible':[('fixed','=',True)]}"/>
+									<field name="new_unit_price" attrs="{'invisible':[('fixed','=',False)]}"/>
 
 									<field name="line_price" sum="Total"/>
 									<field name="tax_id"/>
@@ -2206,7 +2240,9 @@
 									<!-- <field name="od_product_id" /> -->
 									<field name="name"/>
 									<field name="qty"/>
-									<field name="unit_price" />
+									<field name="fixed" invisible="1"/>
+									<field name="unit_price" attrs="{'invisible':[('fixed','=',True)]}"/>
+									<field name="new_unit_price" attrs="{'invisible':[('fixed','=',False)]}"/>
 									<field name="line_price" sum="line_price"/>
 									<field name="tax_id"/>
 									<field name="vat"/>
