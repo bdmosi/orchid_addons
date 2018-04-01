@@ -3,8 +3,7 @@ from openerp import models, fields, api
 from pprint import pprint
 from datetime import datetime
 import openerp.addons.decimal_precision as dp
-from operator import div
-from pip._vendor.html5lib.treebuilders import dom
+
 class opp_rev_rpt_wiz(models.TransientModel):
     _name = 'opp.rev.rpt.wiz'
     

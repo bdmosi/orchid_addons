@@ -320,7 +320,8 @@ class hr_employee(models.Model):
         daygenerator = (fromdate + timedelta(x + 1) for x in xrange((todate - fromdate).days))
         days =sum(1 for day in daygenerator if day.weekday() not in (4,5)) 
         days = days+1
-        lv_days,hours = self.get_no_of_leave(employee_id,aud_date_start,aud_date_end)
+        todate_str = datetime.strftime(todate,DEFAULT_SERVER_DATE_FORMAT)
+        lv_days,hours = self.get_no_of_leave(employee_id,aud_date_start,todate_str)
         print "leave>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", lv_days,hours
         result = days 
         result = result *9
