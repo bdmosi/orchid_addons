@@ -711,21 +711,31 @@ class hr_employee(models.Model):
     def get_sales_commit_data(self,sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id):
         
         total_gp = 0.0
-        
+        month_start = aud_date_end[:8]+'01'
+        print "aud date end>>>>>>>>>>>>>>>>>>>>>>>",aud_date_end,month_start
         result =[]
         domain = [('sales_acc_manager','=',user_id),('status','=','active')]
         domain.extend([('op_expected_booking','>=',aud_date_start),('op_expected_booking','<=',aud_date_end)])
         domain1 = domain + [('state','not in',('approved','done','cancel','modify','change','analytic_change','draft','design_ready','submitted'))]
         domain2 = domain + [('state','in',('draft','design_ready','submitted'))]
-        
+        domain3 = domain + [('state','in',('approved','done','modify','change','analytic_change')),('op_expected_booking','>=',aud_date_start),('op_expected_booking','<=',month_start)]
         sheet_ids =self.env['od.cost.sheet'].search(domain1)
         
         for sheet in sheet_ids:
             stage_id = sheet.op_stage_id and sheet.op_stage_id.id 
-            if stage_id !=8:
+            if stage_id in (1,5,6):
                 gp =sheet.total_gp
                 result.append((0,0,{'cost_sheet_id':sheet.id,'gp':gp}))
                 total_gp += gp
+        
+        sheet_ids = self.env['od.cost.sheet'].search(domain3)
+        for sheet in sheet_ids:
+            stage_id = sheet.op_stage_id and sheet.op_stage_id.id 
+            if stage_id in (1,5,6):
+                gp =sheet.total_gp
+                result.append((0,0,{'cost_sheet_id':sheet.id,'gp':gp}))
+                total_gp += gp
+        
         sheet_ids =self.env['od.cost.sheet'].search(domain2)
         for sheet in sheet_ids:
             stage_id = sheet.op_stage_id and sheet.op_stage_id.id 
