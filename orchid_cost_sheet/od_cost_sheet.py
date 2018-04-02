@@ -239,7 +239,8 @@ class od_cost_sheet(models.Model):
     def get_pdtgrp_vals(self):
         res = []
         all_group_cost = 0.0
-        disc =abs(self.sp_disc_percentage)
+        disc = 0.0
+#         disc =abs(self.sp_disc_percentage)
         for line in self.mat_main_pro_line:
             res.append({'pdt_grp_id':line.part_no and line.part_no.od_pdt_group_id and line.part_no.od_pdt_group_id.id,
                 'total_sale':line.line_price,
