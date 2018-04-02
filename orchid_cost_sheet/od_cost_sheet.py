@@ -317,7 +317,8 @@ class od_cost_sheet(models.Model):
         res = []
         vals = self.get_pdtgrp_vals()
         imp_vals = self.get_imp_vals()
-        disc =  abs(self.sp_disc_percentage)
+#         disc =  abs(self.sp_disc_percentage)
+        disc =0.0
         for imp_val in imp_vals:
             tab = imp_val.get('tab')
             sale = imp_val.get('sale')
@@ -346,7 +347,8 @@ class od_cost_sheet(models.Model):
         res = []
         vals = self.get_pdtgrp_vals()
         imp_vals = self.get_amc_vals()
-        disc = abs(self.sp_disc_percentage)
+#         disc = abs(self.sp_disc_percentage)
+        disc =0.0
         for imp_val in imp_vals:
             tab = imp_val.get('tab')
             sale = imp_val.get('sale')
@@ -374,7 +376,8 @@ class od_cost_sheet(models.Model):
         res = []
         vals = self.get_pdtgrp_vals()
         imp_vals = self.get_om_vals()
-        disc = abs(self.sp_disc_percentage)
+        disc =0.0
+#         disc = abs(self.sp_disc_percentage)
         for imp_val in imp_vals:
             tab = imp_val.get('tab')
             sale = imp_val.get('sale')
@@ -403,7 +406,8 @@ class od_cost_sheet(models.Model):
         res = []
         vals = self.get_pdtgrp_vals()
         imp_vals = self.get_extra_vals()
-        disc = abs(self.sp_disc_percentage)
+        disc =0.0
+#         disc = abs(self.sp_disc_percentage)
         for imp_val in imp_vals:
             tab = imp_val.get('tab')
             sale = imp_val.get('sale')
@@ -1753,10 +1757,11 @@ class od_cost_sheet(models.Model):
         result = self.get_weight_summary()
         data = []
         total_cost =0.0
+        disc  = self.special_discount
         for key,val in result.iteritems():
             pdt_grp_id = key 
             sale = val.get('sale')
-            sale_aftr_disc = val.get('sale_aftr_disc')
+            sale_aftr_disc = sale * (1-(disc/100.0))
             cost = val.get('cost')
             total_cost += cost
             profit = sale_aftr_disc- cost
@@ -1860,6 +1865,7 @@ class od_cost_sheet(models.Model):
         
         price_fixed = self.price_fixed 
         if price_fixed:
+            self.bim_log_price_fixed =0.0
             self.price_unfix_line(self.mat_main_pro_line)
             self.price_unfix_line(self.mat_extra_expense_line)
             self.price_unfix_line(self.mat_optional_item_line )
