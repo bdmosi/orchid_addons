@@ -1757,7 +1757,7 @@ class od_cost_sheet(models.Model):
         result = self.get_weight_summary()
         data = []
         total_cost =0.0
-        disc  = self.special_discount
+        disc  = abs(self.special_discount)
         for key,val in result.iteritems():
             pdt_grp_id = key 
             sale = val.get('sale')
