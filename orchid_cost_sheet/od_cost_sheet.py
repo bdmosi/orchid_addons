@@ -1773,7 +1773,7 @@ class od_cost_sheet(models.Model):
             for val in data:
                 sale = val.get('total_sale')
                 discount = disc *(sale/total_sale)
-                sale_aftr_disc = sale * (1-(discount/100.0))
+                sale_aftr_disc = sale - discount
                 cost = val.get('total_cost')
                 profit = sale_aftr_disc- cost
                 val['sale_aftr_disc'] = sale_aftr_disc
