@@ -2444,6 +2444,7 @@ class od_cost_sheet(models.Model):
         self.sum_tot_sale = total_sale
         self.sum_total_sale = sum_total_sale
         special_discount_vat =0.0
+        special_discount = self.special_discount 
         if not self.ignore_vat:
             special_discount = self.special_discount 
             special_discount_vat = special_discount *.05
