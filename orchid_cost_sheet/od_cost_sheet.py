@@ -1795,8 +1795,12 @@ class od_cost_sheet(models.Model):
                 profit = val.get('profit')
                 total_gp = profit + manpower_cost 
                 val['total_gp'] = total_gp
-            
-                
+        if not data:
+            total_manpower_cost = self.get_imp_cost() + self.get_bmn_cost()
+            if total_manpower_cost:
+                data.append({
+                    'total_gp':total_manpower_cost,
+                    })
         
         self.summary_weight_line.unlink()
         self.summary_weight_line = data
