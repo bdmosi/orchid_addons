@@ -1799,6 +1799,7 @@ class od_cost_sheet(models.Model):
             total_manpower_cost = self.get_imp_cost() + self.get_bmn_cost()
             if total_manpower_cost:
                 data.append({
+                    'manpower_cost':total_manpower_cost,
                     'total_gp':total_manpower_cost,
                     })
         
