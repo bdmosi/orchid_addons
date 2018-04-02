@@ -994,7 +994,8 @@ class od_cost_sheet(models.Model):
             unit_price = (unit_cost / (1-profit))
             unit_price = unit_price * (1-discount)
             self.bim_log_price = unit_price
-
+        if self.price_fixed:
+            self.bim_log_price = self.bim_log_price_fixed
 
 
     def set_trn_cost_group(self,res):
@@ -1826,7 +1827,36 @@ class od_cost_sheet(models.Model):
             
     
     @api.one
-    def btn_price_fix(self):
+    def btn_freez_price(self):
+        price_fixed = self.price_fixed 
+        if not price_fixed:
+            self.bim_log_price_fixed = self.bim_log_price
+            self.price_fix_line(self.mat_main_pro_line)
+            self.price_fix_line(self.mat_extra_expense_line,2)
+            self.price_fix_line(self.mat_optional_item_line )
+            self.price_fix_line(self.trn_customer_training_line)
+            self.price_fix_line(self.trn_customer_training_extra_expense_line, 2)
+            self.price_fix_line(self.implimentation_extra_expense_line)
+            self.price_fix_line(self.manpower_manual_line)
+            self.price_fix_line(self.bim_implementation_code_line)
+            self.price_fix_line(self.oim_implimentation_price_line)
+            self.price_fix_line(self.oim_extra_expenses_line)
+            self.price_fix_line(self.bmn_it_preventive_line)
+            self.price_fix_line(self.bmn_it_remedial_line)
+            self.price_fix_line(self.bmn_spareparts_beta_it_maintenance_line)
+            self.price_fix_line(self.bmn_beta_it_maintenance_extra_expense_line)
+            self.price_fix_line(self.omn_out_preventive_maintenance_line)
+            self.price_fix_line(self.omn_out_remedial_maintenance_line)
+            self.price_fix_line(self.omn_spare_parts_line)
+            self.price_fix_line(self.omn_maintenance_extra_expense_line)
+            self.price_fix_line(self.om_residenteng_line)
+            self.price_fix_line(self.om_eqpmentreq_line)
+            self.price_fix_line(self.om_extra_line)
+            self.write({'price_fixed':True})
+            
+    
+    @api.one
+    def btn_unfreez_price(self):
         
         price_fixed = self.price_fixed 
         if price_fixed:
@@ -1852,29 +1882,8 @@ class od_cost_sheet(models.Model):
             self.price_unfix_line(self.om_eqpmentreq_line)
             self.price_unfix_line(self.om_extra_line)
             self.write({'price_fixed':False})
-        else:
-            self.price_fix_line(self.mat_main_pro_line)
-            self.price_fix_line(self.mat_extra_expense_line,2)
-            self.price_fix_line(self.mat_optional_item_line )
-            self.price_fix_line(self.trn_customer_training_line)
-            self.price_fix_line(self.trn_customer_training_extra_expense_line, 2)
-            self.price_fix_line(self.implimentation_extra_expense_line)
-            self.price_fix_line(self.manpower_manual_line)
-            self.price_fix_line(self.bim_implementation_code_line)
-            self.price_fix_line(self.oim_implimentation_price_line)
-            self.price_fix_line(self.oim_extra_expenses_line)
-            self.price_fix_line(self.bmn_it_preventive_line)
-            self.price_fix_line(self.bmn_it_remedial_line)
-            self.price_fix_line(self.bmn_spareparts_beta_it_maintenance_line)
-            self.price_fix_line(self.bmn_beta_it_maintenance_extra_expense_line)
-            self.price_fix_line(self.omn_out_preventive_maintenance_line)
-            self.price_fix_line(self.omn_out_remedial_maintenance_line)
-            self.price_fix_line(self.omn_spare_parts_line)
-            self.price_fix_line(self.omn_maintenance_extra_expense_line)
-            self.price_fix_line(self.om_residenteng_line)
-            self.price_fix_line(self.om_eqpmentreq_line)
-            self.price_fix_line(self.om_extra_line)
-            self.write({'price_fixed':True})
+       
+            
     
     
     
@@ -3094,6 +3103,8 @@ class od_cost_sheet(models.Model):
 
     #Bim Log function Cost Fields
     bim_log_price = fields.Float('Price',compute='compute_bim_log_price',digits=dp.get_precision('Account'))
+    bim_log_price_fixed = fields.Float('Price Fixed',digits=dp.get_precision('Account'))
+    
     bim_log_cost = fields.Float('Cost',readonly=True,digits=dp.get_precision('Account'))
     bim_log_group = fields.Many2one('od.cost.costgroup.it.service.line',string='Group',copy=True,digits=dp.get_precision('Account'))
     bim_tax_id  = fields.Many2one('account.tax',string="Tax",digits=dp.get_precision('Account'))
