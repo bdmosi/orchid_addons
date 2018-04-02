@@ -1757,17 +1757,29 @@ class od_cost_sheet(models.Model):
         result = self.get_weight_summary()
         data = []
         total_cost =0.0
+        total_sale =0.0
         disc  = abs(self.special_discount)
         for key,val in result.iteritems():
             pdt_grp_id = key 
             sale = val.get('sale')
-            sale_aftr_disc = sale * (1-(disc/100.0))
+            total_sale += sale
+            sale_aftr_disc = sale 
             cost = val.get('cost')
             total_cost += cost
             profit = sale_aftr_disc- cost
             data.append({'pdt_grp_id':pdt_grp_id,'total_sale':sale,'total_cost':cost,'sale_aftr_disc':sale_aftr_disc,'profit':profit,'total_gp':profit})
         
-        
+        if total_sale:
+            for val in data:
+                sale = val.get('sale')
+                discount = disc *(sale/total_sale)
+                sale_aftr_disc = sale * (1-(discount/100.0))
+                cost = val.get('cost')
+                profit = sale_aftr_disc- cost
+                val['sale_aftr_disc'] = sale_aftr_disc
+                val['profit'] = profit
+                val['total_gp'] = profit
+                
         if total_cost:
             total_manpower_cost = self.get_imp_cost() + self.get_bmn_cost()
             for val in data:
