@@ -453,16 +453,16 @@ class od_cost_sheet(models.Model):
         ]
         return line
 
-    @api.one
-    def btn_freeze(self):
-        self.update_cost_sheet()
-        self.freeze = True
-
-    @api.one
-    def btn_unfreeze(self):
-
-        self.freeze = False
-        self.update_cost_sheet()
+#     @api.one
+#     def btn_freeze(self):
+#         self.update_cost_sheet()
+#         self.freeze = True
+# 
+#     @api.one
+#     def btn_unfreeze(self):
+# 
+#         self.freeze = False
+#         self.update_cost_sheet()
 
     @api.one
     def copy_from_mat(self):
