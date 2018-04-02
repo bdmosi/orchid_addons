@@ -241,19 +241,21 @@ class od_cost_sheet(models.Model):
         all_group_cost = 0.0
         disc = 0.0
 #         disc =abs(self.sp_disc_percentage)
-        for line in self.mat_main_pro_line:
-            res.append({'pdt_grp_id':line.part_no and line.part_no.od_pdt_group_id and line.part_no.od_pdt_group_id.id,
-                'total_sale':line.line_price,
-              
-                'total_cost': line.line_cost_local_currency,
-                })
-            all_group_cost += line.line_cost_local_currency
-        for line in self.trn_customer_training_line:
-            res.append({'pdt_grp_id':line.part_no and line.part_no.od_pdt_group_id and line.part_no.od_pdt_group_id.id,
-                'total_sale':line.line_price,
-                'total_cost': line.line_cost_local_currency,
-                })
-            all_group_cost += line.line_cost_local_currency
+        if self.included_in_quotation:
+            for line in self.mat_main_pro_line:
+                res.append({'pdt_grp_id':line.part_no and line.part_no.od_pdt_group_id and line.part_no.od_pdt_group_id.id,
+                    'total_sale':line.line_price,
+                  
+                    'total_cost': line.line_cost_local_currency,
+                    })
+                all_group_cost += line.line_cost_local_currency
+        if self.included_trn_in_quotation:
+            for line in self.trn_customer_training_line:
+                res.append({'pdt_grp_id':line.part_no and line.part_no.od_pdt_group_id and line.part_no.od_pdt_group_id.id,
+                    'total_sale':line.line_price,
+                    'total_cost': line.line_cost_local_currency,
+                    })
+                all_group_cost += line.line_cost_local_currency
             
         result = self.grouped_prdgrp_weight(res,all_group_cost)
         for val in result:
@@ -297,107 +299,110 @@ class od_cost_sheet(models.Model):
     def get_extra_vals(self):
         result = []
         sale = cost = 0.0
-        for line in self.mat_extra_expense_line:
-            sale += line.line_price2
-            cost += line.line_cost_local
-        
-        
-        if sale or cost:
-            result.append({'sale':sale,'cost':cost,'profit':sale-cost,'tab':'mat' })
+        if self.included_in_quotation:
+            for line in self.mat_extra_expense_line:
+                sale += line.line_price2
+                cost += line.line_cost_local
+            
+            
+            if sale or cost:
+                result.append({'sale':sale,'cost':cost,'profit':sale-cost,'tab':'mat' })
         sale = cost = 0.0
-        for line in self.trn_customer_training_extra_expense_line:
-            sale += line.line_price2
-            cost += line.line_cost_local
-        if sale or cost:
-            result.append({'sale':sale,'cost':cost,'profit':sale-cost,'tab':'trn' })
-        
-        
+        if self.included_trn_in_quotation:
+            for line in self.trn_customer_training_extra_expense_line:
+                sale += line.line_price2
+                cost += line.line_cost_local
+            if sale or cost:
+                result.append({'sale':sale,'cost':cost,'profit':sale-cost,'tab':'trn' })
         return result
 
     def generate_impl_weight(self):
         res = []
-        vals = self.get_pdtgrp_vals()
-        imp_vals = self.get_imp_vals()
-#         disc =  abs(self.sp_disc_percentage)
-        disc =0.0
-        for imp_val in imp_vals:
-            tab = imp_val.get('tab')
-            sale = imp_val.get('sale')
-            cost = imp_val.get('cost')
-            profit = imp_val.get('profit')
-            for val in vals:
-                weight = val.get('total_cost')/(val.get('all_group_cost',1.0) or 1.0)
-                pdt_grp_id = val.get('pdt_grp_id')
-                total_sale = sale * weight 
-                total_cost =  cost * weight 
-                
-                sale_aftr_disc = total_sale * (1-(disc/100.0))
-                total_profit = (sale_aftr_disc - total_cost) 
-                res.append({'pdt_grp_id':pdt_grp_id,
-                            'tab':tab,
-                            'total_sale':total_sale,
-                            'disc':disc,
-                            'sale_aftr_disc': sale_aftr_disc,
-                            'total_cost':total_cost,
-                            'profit':total_profit})
+        if self.included_bim_in_quotation:
+            vals = self.get_pdtgrp_vals()
+            imp_vals = self.get_imp_vals()
+    #         disc =  abs(self.sp_disc_percentage)
+            disc =0.0
+            for imp_val in imp_vals:
+                tab = imp_val.get('tab')
+                sale = imp_val.get('sale')
+                cost = imp_val.get('cost')
+                profit = imp_val.get('profit')
+                for val in vals:
+                    weight = val.get('total_cost')/(val.get('all_group_cost',1.0) or 1.0)
+                    pdt_grp_id = val.get('pdt_grp_id')
+                    total_sale = sale * weight 
+                    total_cost =  cost * weight 
+                    
+                    sale_aftr_disc = total_sale * (1-(disc/100.0))
+                    total_profit = (sale_aftr_disc - total_cost) 
+                    res.append({'pdt_grp_id':pdt_grp_id,
+                                'tab':tab,
+                                'total_sale':total_sale,
+                                'disc':disc,
+                                'sale_aftr_disc': sale_aftr_disc,
+                                'total_cost':total_cost,
+                                'profit':total_profit})
             
         self.imp_weight_line.unlink()
         self.imp_weight_line = res
     
     def generate_amc_weight(self):
         res = []
-        vals = self.get_pdtgrp_vals()
-        imp_vals = self.get_amc_vals()
-#         disc = abs(self.sp_disc_percentage)
-        disc =0.0
-        for imp_val in imp_vals:
-            tab = imp_val.get('tab')
-            sale = imp_val.get('sale')
-            cost = imp_val.get('cost')
-            profit = imp_val.get('profit')
-            for val in vals:
-                weight = val.get('total_cost')/(val.get('all_group_cost',1.0) or 1.0)
-                pdt_grp_id = val.get('pdt_grp_id')
-                total_sale = sale * weight 
-                total_cost =  cost * weight 
-                sale_aftr_disc = total_sale * (1-(disc/100.0))
-                total_profit = (sale_aftr_disc - total_cost) 
-                res.append({'pdt_grp_id':pdt_grp_id,
-                            'tab':tab,
-                            'total_sale':total_sale,
-                            'disc':disc,
-                            'sale_aftr_disc': sale_aftr_disc,
-                            'total_cost':total_cost,
-                            'profit':total_profit})
+        if self.included_bmn_in_quotation:
+            vals = self.get_pdtgrp_vals()
+            imp_vals = self.get_amc_vals()
+    #         disc = abs(self.sp_disc_percentage)
+            disc =0.0
+            for imp_val in imp_vals:
+                tab = imp_val.get('tab')
+                sale = imp_val.get('sale')
+                cost = imp_val.get('cost')
+                profit = imp_val.get('profit')
+                for val in vals:
+                    weight = val.get('total_cost')/(val.get('all_group_cost',1.0) or 1.0)
+                    pdt_grp_id = val.get('pdt_grp_id')
+                    total_sale = sale * weight 
+                    total_cost =  cost * weight 
+                    sale_aftr_disc = total_sale * (1-(disc/100.0))
+                    total_profit = (sale_aftr_disc - total_cost) 
+                    res.append({'pdt_grp_id':pdt_grp_id,
+                                'tab':tab,
+                                'total_sale':total_sale,
+                                'disc':disc,
+                                'sale_aftr_disc': sale_aftr_disc,
+                                'total_cost':total_cost,
+                                'profit':total_profit})
             
         self.amc_weight_line.unlink()
         self.amc_weight_line = res
     
     def generate_om_weight(self):
         res = []
-        vals = self.get_pdtgrp_vals()
-        imp_vals = self.get_om_vals()
-        disc =0.0
-#         disc = abs(self.sp_disc_percentage)
-        for imp_val in imp_vals:
-            tab = imp_val.get('tab')
-            sale = imp_val.get('sale')
-            cost = imp_val.get('cost')
-            profit = imp_val.get('profit')
-            for val in vals:
-                weight = val.get('total_cost')/(val.get('all_group_cost',1.0) or 1.0)
-                pdt_grp_id = val.get('pdt_grp_id')
-                total_sale = sale * weight 
-                total_cost =  cost * weight 
-                sale_aftr_disc = total_sale * (1-(disc/100.0))
-                total_profit = (sale_aftr_disc - total_cost) 
-                res.append({'pdt_grp_id':pdt_grp_id,
-                            'tab':tab,
-                            'total_sale':total_sale,
-                            'disc':disc,
-                            'sale_aftr_disc': sale_aftr_disc,
-                            'total_cost':total_cost,
-                            'profit':total_profit})
+        if self.included_om_in_quotation:
+            vals = self.get_pdtgrp_vals()
+            imp_vals = self.get_om_vals()
+            disc =0.0
+    #         disc = abs(self.sp_disc_percentage)
+            for imp_val in imp_vals:
+                tab = imp_val.get('tab')
+                sale = imp_val.get('sale')
+                cost = imp_val.get('cost')
+                profit = imp_val.get('profit')
+                for val in vals:
+                    weight = val.get('total_cost')/(val.get('all_group_cost',1.0) or 1.0)
+                    pdt_grp_id = val.get('pdt_grp_id')
+                    total_sale = sale * weight 
+                    total_cost =  cost * weight 
+                    sale_aftr_disc = total_sale * (1-(disc/100.0))
+                    total_profit = (sale_aftr_disc - total_cost) 
+                    res.append({'pdt_grp_id':pdt_grp_id,
+                                'tab':tab,
+                                'total_sale':total_sale,
+                                'disc':disc,
+                                'sale_aftr_disc': sale_aftr_disc,
+                                'total_cost':total_cost,
+                                'profit':total_profit})
             
         self.om_weight_line.unlink()
         self.om_weight_line = res
