@@ -80,7 +80,6 @@
 					<field name="od_write_count" invisible="1" />
 					<field name="od_state" attrs="{'required': [('od_type','=','milestone')]}" options="{'no_create':True}"/>
 					<field name="od_implementation_id" domain="[('project_phase','=',od_state)]" attrs="{'invisible': [('od_type','!=','activities')],'required': [('od_type','=','activities')],'readonly':[('od_type','=','activities'),('od_block_start','!=',False),('od_duplicated','=',False)]}" on_change="onchange_imp_id(od_implementation_id)"/>
-					<field name="b_imp_id" attrs="{'invisible':[('od_type','!=','activities'),('od_block_start','=',False),('od_duplicated','!=',False)]}" />
 				</xpath>
 				<xpath expr="//field[@name='project_id']" position="before">
 					<!-- <field name="id" invisible="1"/> -->
@@ -143,9 +142,7 @@
             	<xpath expr="//field[@name='date_deadline']" position="after">
             		<!-- <field name="date_start" attrs="{'invisible': [('od_type','=','activities')],'required': [('od_type','!=','activities')]}"/>
             		 -->
-                    <field name="date_start" required="1" on_change="onchange_date_start_end(date_start,od_type,planned_hours)" attrs="{'invisible':[('od_type','=','activities'),('od_block_start','!=',False),('od_duplicated','=',False)]}"/>
-                     <field name="b_date_start" attrs="{'invisible':[('od_type','!=','activities'),('od_block_start','=',False),('od_duplicated','!=',False)]}"/>
-                    
+                    <field name="date_start" required="1" on_change="onchange_date_start_end(date_start,od_type,planned_hours)" attrs="{'readonly':[('od_type','=','activities'),('od_block_start','!=',False),('od_duplicated','=',False)]}"/>
                     <!-- <field name="date_end" attrs="{'invisible': [('od_type','=','activities')],'required': [('od_type','!=','activities')]}" /> -->
                     <field name="planned_hours" widget="float_time" on_change="onchange_date_start_end(date_start,od_type,planned_hours)" attrs="{'invisible': ['|',('od_type','!=','activities'),('od_material_request','!=',False)]}" invisible="1"/>
                     
