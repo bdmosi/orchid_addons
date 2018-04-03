@@ -91,7 +91,7 @@ class report_generalledger_od2(osv.AbstractModel):
 class report_generalledger_od3(osv.AbstractModel):
     _name = 'report.account.report_generalledger_od3'
     _inherit = 'report.abstract_report'
-    _template = 'account.report_generalledger_od3'
+    _template = 'orchid_acc_report.report_generalledger_od3'
     _wrapped_report_class = general_ledger
 
 class report_generalledger_od4(osv.AbstractModel):
