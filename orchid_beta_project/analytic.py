@@ -1265,7 +1265,77 @@ class od_amc_invoice_schedule(models.Model):
     analytic_id  = fields.Many2one('account.analytic.account',string="Analytic Account")
     name = fields.Char(string="Name",required=True)
     date = fields.Date(string="Planned Date",required=True)
-    amount = fields.Float(string="Amount",required=True)
+    amount = fields.Float(string="Planned Amount",required=True)
+    invoice_id = fields.Many2one('account.invoice',string="Invoice")
+    invoice_amount = fields.Float(string="Invoice Amount",related="invoice_id.amount_total",readonly=True)
+    date_invoice = fields.Date(string="Invoice Date",related="invoice_id.date_invoice",readonly=True)
+    invoice_status = fields.Selection([('draft','Draft'),('proforma','Pro-forma'),('proforma2','Pro-forma'),('open','Open'),('accept','Accepted By Customer'),('paid','Paid'),('cancel','Cancelled')],related="invoice_id.state",raeadonly=True,string="Invoice Status")
+    cust_date = fields.Date(string="Customer Accepted Date",related="invoice_id.cust_date",readonly=True)
+    def _prepare_invoice_line(self, cr, uid, line,analytic_id, fiscal_position=False, context=None):
+        fpos_obj = self.pool.get('account.fiscal.position')
+        res = line.product_id
+        account_id = res.property_account_income.id
+        if not account_id:
+            account_id = res.categ_id.property_account_income_categ.id
+        account_id = fpos_obj.map_account(cr, uid, fiscal_position, account_id)
+
+        taxes = line.tax_id or False
+        tax_id = fpos_obj.map_tax(cr, uid, fiscal_position, taxes, context=context)
+        values = {
+            'name': line.name,
+            'account_id': account_id,
+            'account_analytic_id': analytic_id ,
+            'price_unit': line.price_unit or 0.0,
+            'quantity': line.product_uom_qty,
+            'uos_id': line.product_uom.id or False,
+            'product_id': line.product_id.id or False,
+            'invoice_line_tax_id': [(6, 0, tax_id)],
+        }
+        return values
+    
+    @api.multi 
+    def create_invoice(self):
+        analytic_id = self.analytic_id and self.analytic_id.id or False
+        cr = self.env.cr
+        uid = self.env.uid
+        inv_line_vals =[]
+        od_cost_sheet_id = self.analytic_id and self.analytic_id.od_cost_sheet_id and self.analytic_id.od_cost_sheet_id.id or False 
+        od_branch_id  = self.analytic_id and self.analytic_id.od_branch_id and self.analytic_id.od_branch_id.id or False 
+        od_cost_centre_id = self.analytic_id and self.analytic_id.od_cost_centre_id and self.analytic_id.od_cost_centre_id.id or False 
+        od_division_id = self.analytic_id and self.analytic_id.od_division_id and self.analytic_id.od_division_id.id or False 
+        if analytic_id and not self.invoice_id:
+            so_id = self.env['sale.order'].search([('project_id','=',analytic_id),('state','!=','cancel')],limit=1)
+            inv_vals =  self.pool.get('sale.order')._prepare_invoice(cr,uid,so_id,[])
+            inv_vals['date_invoice'] =str(dt.today())
+            inv_vals.update({
+                'od_cost_sheet_id':od_cost_sheet_id,
+                'od_branch_id':od_branch_id,
+                'od_cost_centre_id':od_cost_centre_id,
+                'od_division_id':od_division_id,
+                'od_costing':False,
+                'od_inter_inc_acc_id':so_id.od_order_type_id and so_id.od_order_type_id.income_acc_id and so_id.od_order_type_id.income_acc_id.id,
+                'od_inter_exp_acc_id':so_id.od_order_type_id and so_id.od_order_type_id.expense_acc_id and so_id.od_order_type_id.expense_acc_id.id,
+                })
+            for line in so_id.order_line:
+                vals = self._prepare_invoice_line(line,analytic_id) 
+                print "valssssssssssss>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",vals
+                inv_line_vals.append((0,0,vals))
+            inv_vals['invoice_line'] = inv_line_vals
+            inv =self.env['account.invoice'].create(inv_vals)
+            inv.button_compute()
+            self.invoice_id = inv.id
+            model_data = self.env['ir.model.data']
+            tree_view = model_data.get_object_reference('account', 'invoice_tree')
+            form_view = model_data.get_object_reference('account', 'invoice_form')
+            return {
+                'res_id':inv.id,
+                'view_type': 'form',
+                'view_mode': 'tree,form',
+                'res_model': 'account.invoice',
+                'views': [(form_view and form_view[1] or False, 'form'),(tree_view and tree_view[1] or False, 'tree')], 
+                'type': 'ir.actions.act_window',
+            }
+        return True
 class od_om_invoice_schedule(models.Model):
     _name = "od.om.invoice.schedule"
     analytic_id  = fields.Many2one('account.analytic.account',string="Analytic Account")
