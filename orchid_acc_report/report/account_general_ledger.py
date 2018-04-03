@@ -17,7 +17,9 @@ class general_ledger(general_ledger):
     def partner_grouped_lines(self,account):
         res = self.lines(account)
         partner_dict = self.od_partner_dict(res)
-        data = self.od_deduplicate_partner(partner_dict) 
+        data = self.od_deduplicate_partner(partner_dict)
+        print "data>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",data
+        new_data = sorted(data, key=lambda k: k['partner'])  
         return data
    
    
