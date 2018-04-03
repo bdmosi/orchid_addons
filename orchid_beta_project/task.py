@@ -349,8 +349,8 @@ class task(models.Model):
         print "my cccctx>>>>>>>>>>>>>>>>>>>>>>888888xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx>>>>",ctx
 #         if not self.od_duplicated:
 #             self.edit_block(vals)
-        if vals.get('user_id'):
-            self.check_task_user_overlap(vals)
+#         if vals.get('user_id'):
+#             self.check_task_user_overlap(vals)
         
         tech_check = self.od_technical_eval_change(vals)
         owner_check = self.od_owner_eval_change(vals)
