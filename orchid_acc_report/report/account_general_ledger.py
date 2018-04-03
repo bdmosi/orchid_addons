@@ -20,7 +20,7 @@ class general_ledger(general_ledger):
         data = self.od_deduplicate_partner(partner_dict)
         print "data>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",data
         new_data = sorted(data, key=lambda k: k['partner'])  
-        return data
+        return new_data
    
    
     def date_grouped_lines(self,account):
