@@ -701,9 +701,27 @@ class task(models.Model):
     #     print "context>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",context
     #     return partner_id
     
+    
+    @api.one 
+    @api.depends('date_start')
+    def x_get_start_date(self):
+
+        date_start = self.date_start
+        self.b_date_start = date_start
+    
+    @api.one 
+    @api.depends('od_implementation_id')
+    def get_imp_code(self):
+        imp_cod = self.od_implementation_id and self.od_implementation_id.id
+        self.b_imp_id = imp_cod
+       
+    
+    
+    
     b_plan_hr = fields.Float(string="Planned Hours",compute="x_get_end_date")
     b_date_end = fields.Datetime(string="Ending Date",compute="x_get_end_date")
-    
+    b_date_start = fields.Datetime(string="Starting Date",compute="x_get_start_date")
+    b_imp_id = fields.Many2one('od.implementation',string="Implementation Code",compute="get_imp_code")
     no_delete = fields.Boolean(string="Delete Blocked")
     od_duplicated = fields.Boolean(string="Duplicated")
     od_block_start = fields.Boolean(string="Block Starting Date Edit")
