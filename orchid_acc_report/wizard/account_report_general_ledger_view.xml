@@ -24,6 +24,12 @@
                         <page string="Analytic Accounts" >
                             <field name="od_analytic_account_ids"/>
                         </page>
+                        <page string="Branch" >
+                            <field name="od_branch_ids"/>
+                        </page>
+                         <page string="Division" >
+                            <field name="od_division_ids"/>
+                        </page>
 
                         <page string="Accounts" >
                             <field name="od_account_ids" required="1"/>

@@ -31,8 +31,9 @@ class account_report_general_ledger(osv.osv_memory):
         'od_employe_ids': fields.many2many('res.partner','res_partner_report_employee_general_ledger_rel','ledger_id','partner_id', string='Filter on Employe',help="Only selected partners will be printed.Leave empty to print all partners.",domain="[('employee','=',True)]"),
 
         'od_analytic_account_ids': fields.many2many('account.analytic.account','analytic_report_general_ledger_rel', 'ledger', 'analytic_id', string='Analytic'),
-        'od_account_ids' : fields.many2many('account.account','od_account_report_general_ledger_rel','report_wiz_id','account_id',string="Accounts")
-
+        'od_account_ids' : fields.many2many('account.account','od_account_report_general_ledger_rel','report_wiz_id','account_id',string="Accounts"),
+        'od_branch_ids': fields.many2many('od.cost.branch','account_gen_ledg_bracnh_reporcv_rel', 'wiz_id', 'branch_id', string='Branch'),
+        'od_division_ids': fields.many2many('od.cost.division','account_gen_ledg_division_reporcv_rel', 'wiz_id', 'division_id', string='Division'),
 
     }
 
@@ -44,6 +45,8 @@ class account_report_general_ledger(osv.osv_memory):
         result['partner_ids'] = partners + employees
         result['analytic_account_ids'] = 'od_analytic_account_ids' in data['form'] and data['form']['od_analytic_account_ids'] or False
         result['od_account_ids'] = 'od_account_ids' in data['form'] and data['form']['od_account_ids'] or False
+        result['od_branch_ids'] = 'od_branch_ids' in data['form'] and data['form']['od_branch_ids'] or False
+        result['od_division_ids'] = 'od_division_ids' in data['form'] and data['form']['od_division_ids'] or False
         return result
 
 
@@ -53,7 +56,7 @@ class account_report_general_ledger(osv.osv_memory):
         data = {}
         data['ids'] = context.get('active_ids', [])
         data['model'] = context.get('active_model', 'ir.ui.menu')
-        data['form'] = self.read(cr, uid, ids, ['date_from',  'date_to',  'fiscalyear_id', 'journal_ids', 'od_partner_ids','od_employe_ids','od_analytic_account_ids','od_account_ids','period_from', 'period_to',  'filter',  'chart_account_id', 'target_move'], context=context)[0]
+        data['form'] = self.read(cr, uid, ids, ['date_from',  'date_to',  'fiscalyear_id', 'journal_ids', 'od_partner_ids','od_employe_ids','od_analytic_account_ids','od_branch_ids','od_division_ids','od_account_ids','period_from', 'period_to',  'filter',  'chart_account_id', 'target_move'], context=context)[0]
         for field in ['fiscalyear_id', 'chart_account_id', 'period_from', 'period_to']:
             if isinstance(data['form'][field], tuple):
                 data['form'][field] = data['form'][field][0]
@@ -68,7 +71,7 @@ class account_report_general_ledger(osv.osv_memory):
         if context is None:
             context = {}
         data = self.pre_print_report(cr, uid, ids, data, context=context)
-        data['form'].update(self.read(cr, uid, ids, ['landscape',  'initial_balance', 'od_print_template','od_partner_ids','od_employe_ids','od_analytic_account_ids','od_account_ids','amount_currency', 'sortby'])[0])
+        data['form'].update(self.read(cr, uid, ids, ['landscape',  'initial_balance', 'od_print_template','od_partner_ids','od_employe_ids','od_analytic_account_ids','od_branch_ids','od_division_ids','od_account_ids','amount_currency', 'sortby'])[0])
         if not data['form']['fiscalyear_id']:# GTK client problem onchange does not consider in save record
             data['form'].update({'initial_balance': False})
  
