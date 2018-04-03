@@ -1235,6 +1235,9 @@ class od_project_invoice_schedule(models.Model):
                 'od_branch_id':od_branch_id,
                 'od_cost_centre_id':od_cost_centre_id,
                 'od_division_id':od_division_id,
+                'od_costing':False,
+                'od_inter_inc_acc_id':so_id.od_order_type_id and so_id.od_order_type_id.income_acc_id and so_id.od_order_type_id.income_acc_id.id,
+                'od_inter_exp_acc_id':so_id.od_order_type_id and so_id.od_order_type_id.expense_acc_id and so_id.od_order_type_id.expense_acc_id.id,
                 })
             for line in so_id.order_line:
                 vals = self._prepare_invoice_line(line,analytic_id) 
