@@ -41,7 +41,7 @@ class account_report_general_ledger(osv.osv_memory):
         data = {}
         data['ids'] = context.get('active_ids', [])
         data['model'] = context.get('active_model', 'ir.ui.menu')
-        data['form'] = self.read(cr, uid, ids, ['date_from',  'date_to',  'fiscalyear_id', 'journal_ids', 'od_partner_ids','od_employe_ids','od_analytic_account_ids','od_account_ids','od_cost_centre_ids','period_from', 'period_to',  'filter',  'chart_account_id', 'target_move'], context=context)[0]
+        data['form'] = self.read(cr, uid, ids, ['date_from',  'date_to',  'fiscalyear_id', 'journal_ids', 'od_partner_ids','od_employe_ids','od_analytic_account_ids','od_branch_ids','od_division_ids','od_account_ids','od_cost_centre_ids','period_from', 'period_to',  'filter',  'chart_account_id', 'target_move'], context=context)[0]
         for field in ['fiscalyear_id', 'chart_account_id', 'period_from', 'period_to']:
             if isinstance(data['form'][field], tuple):
                 data['form'][field] = data['form'][field][0]
@@ -56,7 +56,7 @@ class account_report_general_ledger(osv.osv_memory):
         if context is None:
             context = {}
         data = self.pre_print_report(cr, uid, ids, data, context=context)
-        data['form'].update(self.read(cr, uid, ids, ['landscape',  'initial_balance', 'od_print_template','od_partner_ids','od_employe_ids','od_analytic_account_ids','od_cost_centre_ids','od_account_ids','amount_currency', 'sortby'])[0])
+        data['form'].update(self.read(cr, uid, ids, ['landscape',  'initial_balance', 'od_print_template','od_partner_ids','od_employe_ids','od_analytic_account_ids','od_branch_ids','od_division_ids','od_cost_centre_ids','od_account_ids','amount_currency', 'sortby'])[0])
         if not data['form']['fiscalyear_id']:# GTK client problem onchange does not consider in save record
             data['form'].update({'initial_balance': False})
  
