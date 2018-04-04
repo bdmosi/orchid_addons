@@ -145,7 +145,17 @@ class task(models.Model):
     def copy(self, default):
         
         #add your code here
-        default.update({'od_duplicated':True,'od_write_count':0})
+        default.update({'od_duplicated':True,'od_write_count':0,
+                        'od_stage':'draft','od_date_done':False,
+                        'od_quality_of_implementation':False,
+                        'od_quality_of_documentation':False,
+                        'od_complexiety':False,'od_overnight':False,
+                        'od_outstation':False,'od_owner_esc_time':False,
+                        'od_owner_res_time':False,
+                        'od_owner_esc_status':False,
+                        'od_own_esc':False
+                        
+                        })
         print "default>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",default
         return super(task, self).copy(default)
     
