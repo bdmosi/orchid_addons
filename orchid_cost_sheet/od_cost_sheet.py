@@ -12,7 +12,7 @@ from pprint import pprint
 from openerp.osv import expression
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 import logging
-
+import time
 _logger = logging.getLogger(__name__)
 class od_beta_closing_conditions(models.Model):
     _name ="od.beta.closing.conditions"
@@ -1409,6 +1409,7 @@ class od_cost_sheet(models.Model):
         
         self.update_submited()
         self.update_opp_stage_submitted()
+        time.sleep(10)
         return self.print_cost_sheet()
 
     
