@@ -1407,7 +1407,11 @@ class od_cost_sheet(models.Model):
         self.update_cost_sheet()
         self.double_check_vat()
 #         self.check_payment_term(cr,uid,ids,context=context)
-        return self.pool['report'].get_action('report.Beta_IT_Proposal')
+        cr = self.env.cr 
+        uid = self.env.uid 
+        ids = self.id
+        ctx = self.env.context
+        return self.pool['report'].get_action(cr, uid, ids, 'report.Beta_IT_Proposal', ctx)
 
     
     
