@@ -1404,14 +1404,7 @@ class od_cost_sheet(models.Model):
         self.submit_to_customer_date = date_now
         self.date_log_history_line = [{'name':'Submit To Customer','date':date_now}]
         self.update_opp_stage_submitted()
-        self.update_cost_sheet()
-        self.double_check_vat()
-#         self.check_payment_term(cr,uid,ids,context=context)
-        cr = self.env.cr 
-        uid = self.env.uid 
-        ids = [self.id]
-        ctx = self.env.context
-        return self.pool['report'].get_action(cr, uid, ids, 'report.Beta_IT_Proposal', ctx)
+        return self.print_cost_sheet()
 
     
     
