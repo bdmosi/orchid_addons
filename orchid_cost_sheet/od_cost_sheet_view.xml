@@ -124,7 +124,7 @@
 							<!-- <button name="cron_od_cost_sheet" string="send email" type='object' 
 							class='oe_highlight' /> -->
 						<button name="update_cost_sheet" string="Update" context="{'update_btn':1}" type="object" class="oe_highlight" attrs="{'invisible':[('state','in',('done','waiting_po'))]}" />
-						<button name="print_cost_sheet" string="Print" type="object" class="oe_highlight"/>
+						<button name="print_cost_sheet" string="Print" type="object" class="oe_highlight" attrs="{'invisible':[('state','in',('draft','design_ready'))]}"/>
 
 
 						<!-- <button name="btn_freeze" string="Freeze" type='object' class='oe_highlight' 
