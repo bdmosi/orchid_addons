@@ -1409,7 +1409,7 @@ class od_cost_sheet(models.Model):
         
         self.update_submited()
         self.update_opp_stage_submitted()
-        time.sleep(10)
+        self.refresh()
         return self.print_cost_sheet()
 
     
