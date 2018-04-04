@@ -18,8 +18,9 @@ class general_ledger(general_ledger):
         res = self.lines(account)
         partner_dict = self.od_partner_dict(res)
         data = self.od_deduplicate_partner(partner_dict)
-        print "data>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",data
-        new_data = sorted(data, key=lambda k: k['partner'])  
+        print "data>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",data
+        new_data = sorted(data, key=lambda k: k['partner'])
+        print "new data>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",new_data  
         return new_data
    
    
@@ -73,6 +74,7 @@ class general_ledger(general_ledger):
         res = []
         for val in data:
             res.append({'partner':val.get('partner'),'lines':[val]})
+        print "partner dict>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",res
         return res
 
 
