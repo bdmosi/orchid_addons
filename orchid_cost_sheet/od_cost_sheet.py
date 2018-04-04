@@ -1406,7 +1406,8 @@ class od_cost_sheet(models.Model):
     @api.multi
     def btn_submit(self):
         
-        
+        if self.state == 'submitted':
+            return { 'type': 'ir.actions.client', 'tag': 'reload'}
         self.update_submited()
         self.update_opp_stage_submitted()
         self.refresh()
