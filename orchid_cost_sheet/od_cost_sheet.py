@@ -1397,13 +1397,17 @@ class od_cost_sheet(models.Model):
         
     
     
-    @api.one
+    @api.multi
     def btn_submit(self):
         self.state ='submitted'
         date_now =str(datetime.now())
         self.submit_to_customer_date = date_now
         self.date_log_history_line = [{'name':'Submit To Customer','date':date_now}]
         self.update_opp_stage_submitted()
+        self.update_cost_sheet()
+        self.double_check_vat()
+#         self.check_payment_term(cr,uid,ids,context=context)
+        return self.pool['report'].get_action('report.Beta_IT_Proposal')
 
     
     
