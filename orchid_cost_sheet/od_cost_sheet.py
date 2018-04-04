@@ -1396,15 +1396,19 @@ class od_cost_sheet(models.Model):
 
         
     
+    def update_submited(self):
+        date_now =str(datetime.now())
+        self.submit_to_customer_date = date_now
+        self.date_log_history_line = [{'name':'Submit To Customer','date':date_now}]
+        self.write({'state':'submitted'})
+    
     
     @api.multi
     def btn_submit(self):
         
-        date_now =str(datetime.now())
-        self.submit_to_customer_date = date_now
-        self.date_log_history_line = [{'name':'Submit To Customer','date':date_now}]
+        
+        self.update_submited()
         self.update_opp_stage_submitted()
-        self.write({'state':'submitted'})
         return self.print_cost_sheet()
 
     
