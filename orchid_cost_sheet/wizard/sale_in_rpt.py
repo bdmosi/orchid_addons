@@ -106,7 +106,7 @@ class opp_rev_sale_in_wiz(models.TransientModel):
         self.write({'wiz_line':result})
         return {
             'domain': [('wiz_id','=',wiz_id)],
-            'name': 'Revenue Report',
+            'name': 'Sale In Report',
             'view_type': 'form',
             'view_mode': 'tree',
             'res_model': 'wiz.sale.in.data',

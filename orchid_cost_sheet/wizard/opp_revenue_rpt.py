@@ -120,7 +120,7 @@ class opp_rev_rpt_wiz(models.TransientModel):
         self.write({'wiz_line':result})
         return {
             'domain': [('wiz_id','=',wiz_id)],
-            'name': 'Revenue Report',
+            'name': 'Pipeline Report',
             'view_type': 'form',
             'view_mode': 'tree',
             'res_model': 'wiz.rev.rpt.data',
