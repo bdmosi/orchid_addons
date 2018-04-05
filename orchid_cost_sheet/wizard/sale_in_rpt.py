@@ -119,7 +119,7 @@ class opp_rev_sale_in_wiz(models.TransientModel):
 
 class wiz_sale_in_rpt(models.TransientModel):
     _name = 'wiz.sale.in.data'
-    wiz_id = fields.Many2one('opp.rev.rpt.wiz',string="Wizard")
+    wiz_id = fields.Many2one('opp.sale.in.rpt.wiz',string="Wizard")
     cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet')
     opp_id = fields.Many2one('crm.lead',string='Opportunity')
     bdm_user_id = fields.Many2one('res.users',string="Lead/Opp Created By")

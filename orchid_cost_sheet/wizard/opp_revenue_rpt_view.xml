@@ -53,6 +53,7 @@
          	
 			id="menu_opp_rev_rpt"
 			parent="technology_rpt_gne"
+			sequence="1" 
 			action="action_opp_rev_rpt_act" />
 
 

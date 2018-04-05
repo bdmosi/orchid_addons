@@ -52,6 +52,7 @@
          	
 			id="menu_sale_in_rev_rpt"
 			parent="technology_rpt_gne"
+			 sequence="2" 
 			action="action_sale_in_rev_rpt_act" />
 
 
