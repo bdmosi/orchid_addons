@@ -76,7 +76,7 @@ class opp_rev_rpt_wiz(models.TransientModel):
             bdm_user_id = sheet.lead_created_by and sheet.lead_created_by.id
             for line in sheet.summary_weight_line:
                 
-                if product_group_id:
+                if product_group_ids:
                     if line.pdt_grp_id.id in product_group_ids:
                         result.append((0,0,{
                             'wiz_id':wiz_id,

@@ -14,15 +14,15 @@
 	                        <field name="company_id" />
                         </group>
                         <group>
-                        		<field name="created_by_ids" />
-                        		<field name="stage_ids" />
-                        		<field name="product_group_ids" />
+                        		<field name="created_by_ids" widget="many2many_tags"/>
+                        		<field name="stage_ids" widget="many2many_tags"/>
+                        		<field name="product_group_ids" widget="many2many_tags"/>
                         </group>
                         
                         <group>
-	                        <field name="branch_ids" />
-	                        <field name="cost_centre_ids" />
-	                        <field name="division_ids" />
+	                        <field name="branch_ids" widget="many2many_tags"/>
+	                        <field name="cost_centre_ids" widget="many2many_tags"/>
+	                        <field name="division_ids" widget="many2many_tags"/>
                         </group>
                        
                       </group>
