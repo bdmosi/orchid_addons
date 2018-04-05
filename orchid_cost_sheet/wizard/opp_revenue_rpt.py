@@ -7,12 +7,20 @@ import openerp.addons.decimal_precision as dp
 class opp_rev_rpt_wiz(models.TransientModel):
     _name = 'opp.rev.rpt.wiz'
     
-    product_group_id = fields.Many2one('od.product.group',string="Product Group")
     bdm_id = fields.Many2one('res.users',string="BDM")
+    product_group_id = fields.Many2one('od.product.group',string="Product Group")
     stage_id = fields.Many2one('crm.case.stage',string="Opp Stage")
     branch_id = fields.Many2one('od.cost.branch',string="Branch")
     cost_centre_id = fields.Many2one('od.cost.centre',string="Cost Center")
     division_id = fields.Many2one('od.cost.division',string="Technology Unit")
+    
+    created_by_ids = fields.Many2many('res.users',string="Created By")
+    product_group_ids = fields.Many2many('od.product.group',string="Product Group")
+    stage_ids = fields.Many2many('crm.case.stage',string="Opp Stage")
+    branch_ids= fields.Many2many('od.cost.branch',string="Branch")
+    cost_centre_ids = fields.Many2many('od.cost.centre',string="Cost Center")
+    division_ids = fields.Many2many('od.cost.division',string="Technology Unit")
+    
     date_start = fields.Date(string="Date Start")
     date_end =fields.Date(string="Date End")
     wiz_line = fields.One2many('wiz.rev.rpt.data','wiz_id',string="Wiz Line")
@@ -27,6 +35,15 @@ class opp_rev_rpt_wiz(models.TransientModel):
         branch_id = self.branch_id and self.branch_id.id or False
         cost_centre_id = self.cost_centre_id and self.cost_centre_id.id or False
         division_id = self.division_id and self.division_id.id or False
+        
+        product_group_ids = [pr.id for pr in self.product_group_ids]
+        created_by_ids = [pr.id for pr in self.created_by_ids]
+        stage_ids = [pr.id for pr in self.stage_ids]
+        branch_ids = [pr.id for pr in self.branch_ids]
+        cost_centre_ids = [pr.id for pr in self.cost_centre_ids]
+        division_ids = [pr.id for pr in self.division_ids]
+        
+        
         date_start = self.date_start
         date_end =self.date_end 
         wiz_id = self.id
@@ -34,16 +51,16 @@ class opp_rev_rpt_wiz(models.TransientModel):
         domain = [('status','=','active')]
         if company_id:
             domain += [('company_id','=',company_id)]
-        if bdm_id:
-            domain += [('business_development','=',bdm_id)]
-        if stage_id:
-            domain += [('op_stage_id','=',stage_id)]
-        if branch_id:
-            domain += [('od_branch_id','=',branch_id)]
-        if cost_centre_id:
-            domain += [('od_cost_centre_id','=',cost_centre_id)]
-        if division_id:
-            domain += [('od_division_id','=',division_id)]
+        if created_by_ids:
+            domain += [('lead_created_by','in',created_by_ids)]
+        if stage_ids:
+            domain += [('op_stage_id','in',stage_ids)]
+        if branch_ids:
+            domain += [('od_branch_id','in',branch_ids)]
+        if cost_centre_ids:
+            domain += [('od_cost_centre_id','in',cost_centre_ids)]
+        if division_ids:
+            domain += [('od_division_id','in',division_ids)]
         if date_start:
             domain += [('op_expected_booking','>=',date_start)]
         if date_end:
@@ -56,16 +73,16 @@ class opp_rev_rpt_wiz(models.TransientModel):
             opp_id = sheet.lead_id and sheet.lead_id.id 
             expected_booking = sheet.op_expected_booking 
             stage_id = sheet.op_stage_id and sheet.op_stage_id.id
-            bdm_user_id = sheet.business_development and sheet.business_development.id
+            bdm_user_id = sheet.lead_created_by and sheet.lead_created_by.id
             for line in sheet.summary_weight_line:
                 
                 if product_group_id:
-                    if line.pdt_grp_id.id == product_group_id:
+                    if line.pdt_grp_id.id in product_group_ids:
                         result.append((0,0,{
                             'wiz_id':wiz_id,
                             'cost_sheet_id':sheet_id, 
                             'opp_id':opp_id ,
-                            'bdm_user_id':bdm_user_id,
+                            'bdm_user_id':bdm_user_id ,
                             'expected_booking':expected_booking,
                             'stage_id':stage_id,
                             'pdt_grp_id':line.pdt_grp_id and line.pdt_grp_id.id,
@@ -114,7 +131,7 @@ class wiz_rev_rpt(models.TransientModel):
     wiz_id = fields.Many2one('opp.rev.rpt.wiz',string="Wizard")
     cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet')
     opp_id = fields.Many2one('crm.lead',string='Opportunity')
-    bdm_user_id = fields.Many2one('res.users',string="BDM")
+    bdm_user_id = fields.Many2one('res.users',string="Lead/Opp Created By")
     expected_booking = fields.Date(string="Opp Expected Booking")
     stage_id = fields.Many2one('crm.case.stage',string="Opp Stage")
     pdt_grp_id = fields.Many2one('od.product.group',string='Product Group')

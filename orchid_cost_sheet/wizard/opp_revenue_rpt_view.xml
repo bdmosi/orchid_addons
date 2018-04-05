@@ -14,15 +14,15 @@
 	                        <field name="company_id" />
                         </group>
                         <group>
-                        		<field name="bdm_id" />
-                        		<field name="stage_id" />
-                        		<field name="product_group_id" />
+                        		<field name="created_by_ids" />
+                        		<field name="stage_ids" />
+                        		<field name="product_group_ids" />
                         </group>
                         
                         <group>
-	                        <field name="branch_id" />
-	                        <field name="cost_centre_id" />
-	                        <field name="division_id" />
+	                        <field name="branch_ids" />
+	                        <field name="cost_centre_ids" />
+	                        <field name="division_ids" />
                         </group>
                        
                       </group>
