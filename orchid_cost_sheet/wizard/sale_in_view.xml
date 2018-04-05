@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <record id="view_opp_rev_rpt_wizard" model="ir.ui.view">
-            <field name="name">Opp Revenue</field>
-            <field name="model">opp.rev.rpt.wiz</field>
+        <record id="view_sale_in_rev_rpt_wizard" model="ir.ui.view">
+            <field name="name">Sale IN</field>
+            <field name="model">opp.sale.in.rpt.wiz</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Report">
@@ -15,7 +15,6 @@
                         </group>
                         <group>
                         		<field name="created_by_ids" widget="many2many_tags"/>
-                        		<field name="stage_ids" widget="many2many_tags"/>
                         		<field name="product_group_ids" widget="many2many_tags"/>
                         </group>
                         
@@ -41,27 +40,27 @@
 
        
 
-        <record id="action_opp_rev_rpt_act" model="ir.actions.act_window">
-            <field name="name">Pipeline/Technology</field>
-            <field name="res_model">opp.rev.rpt.wiz</field>
+        <record id="action_sale_in_rev_rpt_act" model="ir.actions.act_window">
+            <field name="name">Sale In/Technology</field>
+            <field name="res_model">opp.sale.in.rpt.wiz</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
          
-         <menuitem id="technology_rpt_gne" name="Technology Report" parent="base.menu_base_partner" sequence="2" />
+         
          <menuitem
          	
-			id="menu_opp_rev_rpt"
+			id="menu_sale_in_rev_rpt"
 			parent="technology_rpt_gne"
-			action="action_opp_rev_rpt_act" />
+			action="action_sale_in_rev_rpt_act" />
 
 
-	<record model="ir.ui.view" id="od_rev_opp_tree_view">
-		<field name="name">wiz.rev.rpt.data</field>
-		<field name="model">wiz.rev.rpt.data</field>
+	<record model="ir.ui.view" id="od_rev_sale_in_tree_view">
+		<field name="name">wiz.sale.in.data</field>
+		<field name="model">wiz.sale.in.data</field>
 		<field name="arch" type="xml">
-			<tree string="Technology Report">
-				<field name="expected_booking" />
+			<tree string="Sale In">
+				<field name="date" />
 				<field name="opp_id" />
 				<button name="btn_open_opp" type="object" icon="STOCK_FIND" string="Open" />
 				<field name="stage_id" />
@@ -79,12 +78,12 @@
 		</field>
 	</record>
 
-	<record model="ir.ui.view" id="ood_rev_opp_search_view">
-		<field name="name">wiz.rev.rpt.data.search</field>
-		<field name="model">wiz.rev.rpt.data</field>
+	<record model="ir.ui.view" id="ood_rev_sale_in_search_view">
+		<field name="name">wiz.sale.in.data.search</field>
+		<field name="model">wiz.sale.in.data</field>
 		<field name="arch" type="xml">
 			<search>
-			<field name="expected_booking" />
+			<field name="date" />
 			<field name="opp_id" />
 			<field name="stage_id" />
 			<field name="cost_sheet_id" />
