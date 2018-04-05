@@ -720,10 +720,10 @@ class hr_employee(models.Model):
         result =[]
         domain = [('sales_acc_manager','=',user_id),('status','=','active')]
         domain.extend([('op_expected_booking','>=',aud_date_start),('op_expected_booking','<=',aud_date_end)])
-        domain1 = domain + [('state','not in',('approved','done','cancel','modify','change','analytic_change','draft','design_ready','submitted'))]
+        domain1 = domain + [('state','not in',('approved','done','cancel','modify','change','analytic_change','change_processed','redistribution_processed','draft','design_ready','submitted'))]
         domain2 = domain + [('state','in',('draft','design_ready','submitted'))]
         
-        domain3 = domain + [('state','in',('approved','done','modify','change','analytic_change')),('op_expected_booking','>=',aud_date_start),('op_expected_booking','<=',month_start)]
+#         domain3 = domain + [('state','in',('approved','done','modify','change','analytic_change')),('op_expected_booking','>=',aud_date_start),('op_expected_booking','<=',month_start)]
         
         sheet_ids =self.env['od.cost.sheet'].search(domain1)
         
@@ -734,13 +734,13 @@ class hr_employee(models.Model):
                 result.append((0,0,{'cost_sheet_id':sheet.id,'gp':gp}))
                 total_gp += gp
         
-        sheet_ids = self.env['od.cost.sheet'].search(domain3)
-        for sheet in sheet_ids:
-            stage_id = sheet.op_stage_id and sheet.op_stage_id.id 
-            if stage_id not in (7,8):
-                gp =sheet.total_gp
-                result.append((0,0,{'cost_sheet_id':sheet.id,'gp':gp}))
-                total_gp += gp
+#         sheet_ids = self.env['od.cost.sheet'].search(domain3)
+#         for sheet in sheet_ids:
+#             stage_id = sheet.op_stage_id and sheet.op_stage_id.id 
+#             if stage_id not in (7,8):
+#                 gp =sheet.total_gp
+#                 result.append((0,0,{'cost_sheet_id':sheet.id,'gp':gp}))
+#                 total_gp += gp
         
         sheet_ids =self.env['od.cost.sheet'].search(domain2)
         for sheet in sheet_ids:

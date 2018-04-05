@@ -16,13 +16,16 @@ class opp_rev_rpt_wiz(models.TransientModel):
     
     created_by_ids = fields.Many2many('res.users',string="Created By")
     product_group_ids = fields.Many2many('od.product.group',string="Product Group")
-    stage_ids = fields.Many2many('crm.case.stage',string="Opp Stage")
+    stage_ids = fields.Many2many('crm.case.stage',string="Opp Stage",domain=[('id','!=',6)])
+#     stage = fields.Selection([(1,'Approved'),(4,'Design Ready'),(12,'Pipeline'),(5,'Commit'),(6,'Lost'),(8,'Cancelled')],string="Opp Stage")
+    
     branch_ids= fields.Many2many('od.cost.branch',string="Branch")
     cost_centre_ids = fields.Many2many('od.cost.centre',string="Cost Center")
     division_ids = fields.Many2many('od.cost.division',string="Technology Unit")
     
-    date_start = fields.Date(string="Date Start")
-    date_end =fields.Date(string="Date End")
+    date_start = fields.Date(string="Expected Booking Date Start")
+    date_end =fields.Date(string="Expected Booking Date End")
+    
     wiz_line = fields.One2many('wiz.rev.rpt.data','wiz_id',string="Wiz Line")
     def od_get_company_id(self):
         return self.env.user.company_id

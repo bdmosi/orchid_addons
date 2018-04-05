@@ -42,16 +42,17 @@
        
 
         <record id="action_opp_rev_rpt_act" model="ir.actions.act_window">
-            <field name="name">Technology Report</field>
+            <field name="name">Pipeline/Technology</field>
             <field name="res_model">opp.rev.rpt.wiz</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
+         
+         <menuitem id="technology_rpt_gne" parent="base.menu_base_partner" sequence="2" />
          <menuitem
+         	name="Technology Report"
 			id="menu_opp_rev_rpt"
-			name="Technolgoy Report"
-			parent="base.next_id_64"
-			sequence="12"
+			parent="technology_rpt_gne"
 			action="action_opp_rev_rpt_act" />
 
 
