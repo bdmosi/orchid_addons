@@ -143,13 +143,17 @@
 
 						<button name="btn_waiting_po" string="Waiting PO" type="object" class="oe_highlight" attrs="{'invisible':['|',('po_status','!=','waiting_po'),('state','!=','handover')]}" groups="orchid_beta.group_od_project_manager,orchid_beta.group_od_project_user,orchid_beta.group_executive_management_beta_1"/>
 						<button name="btn_waiting_to_handover" string="Reset To Sales" type="object" class="oe_highlight" states="waiting_po" groups="orchid_beta.group_od_project_manager,orchid_beta.group_od_project_user,orchid_beta.group_executive_management_beta_1"/>
-						<button name="btn_process" string="Process" type="object" class="oe_highlight" attrs="{'invisible':['|',('po_status','=','waiting_po'),('state','not in',('handover','returned_by_fin','waiting_po','change','analytic_change'))]}" groups="orchid_beta.group_od_project_manager,orchid_beta.group_od_project_user,orchid_beta.group_executive_management_beta_1"/>
-
+						<button name="btn_process" string="Process" type="object" class="oe_highlight" attrs="{'invisible':['|',('po_status','=','waiting_po'),('state','not in',('handover','returned_by_fin'))]}" groups="orchid_beta.group_od_project_manager,orchid_beta.group_od_project_user,orchid_beta.group_executive_management_beta_1"/>
+						<button name="btn_process_change" string="Change Process" type="object" class="oe_highlight" states="change" groups="orchid_beta.group_od_project_manager,orchid_beta.group_od_project_user,orchid_beta.group_executive_management_beta_1"/>
+						<button name="btn_process_waiting_po" string="Waiting PO Process" type="object" class="oe_highlight" states="waiting_po" groups="orchid_beta.group_od_project_manager,orchid_beta.group_od_project_user,orchid_beta.group_executive_management_beta_1"/>
+						<button name="btn_process_redistribution" string="Redistribution Process" type="object" class="oe_highlight" states="analytic_change" groups="orchid_beta.group_od_project_manager,orchid_beta.group_od_project_user,orchid_beta.group_executive_management_beta_1"/>
+						
+						
 						<!-- <button name="btn_reset_submit" string="Return" type='object' 
 							class='oe_highlight' states="handover" groups="orchid_beta.group_od_project_manager,orchid_beta.group_od_project_user"/> -->
 						<button name="1224" context="{'action':'btn_reset_submit'}" string="Return" type="action" class="oe_highlight" states="handover,returned_by_fin" groups="orchid_beta.group_od_project_manager,orchid_beta.group_od_project_user,orchid_beta.group_executive_management_beta_1"/>
 						
-						<button name="btn_approved" string="Approve" type="object" class="oe_highlight" states="processed,modify" groups="orchid_beta.group_beta_finance_manger_acc,account.group_account_user,account.group_account_manager,orchid_beta.group_executive_management_beta_1"/>
+						<button name="btn_approved" string="Approve" type="object" class="oe_highlight" states="processed,modify,change_processed,waiting_po_processed,redistribution_processed" groups="orchid_beta.group_beta_finance_manger_acc,account.group_account_user,account.group_account_manager,orchid_beta.group_executive_management_beta_1"/>
 						<button name="btn_allow_change" string="Allow Change" type="object" class="oe_highlight" states="done" invisible="1" groups="orchid_beta.group_beta_finance_manger_acc,account.group_account_user,account.group_account_manager,orchid_beta.group_executive_management_beta_1"/>
 						<button name="btn_redistribute_analytic" string="Redistribute Analytic" type="object" class="oe_highlight" states="done" invisible="1" groups="orchid_beta.group_beta_finance_manger_acc,account.group_account_user,account.group_account_manager,orchid_beta.group_executive_management_beta_1"/>
 						<button name="btn_modify" string="Modify" type="object" class="oe_highlight" states="done" groups="orchid_beta.group_beta_finance_manger_acc,account.group_account_user,account.group_account_manager,orchid_beta.group_executive_management_beta_1"/>

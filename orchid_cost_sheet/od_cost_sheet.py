@@ -1530,6 +1530,29 @@ class od_cost_sheet(models.Model):
         self.date_log_history_line = [{'name':'Processed Date','date':str(datetime.now())}]
         self.state = 'processed'
     @api.one
+    def btn_process_change(self):
+        self.check_rev_exist()
+        self.check_process_min_docs()
+        self.od_send_mail('cst_sheet_process_mail')
+        self.date_log_history_line = [{'name':'Change Processed Date','date':str(datetime.now())}]
+        self.state = 'change_processed'
+    @api.one
+    def btn_process_waiting_po(self):
+        self.check_rev_exist()
+        self.check_process_min_docs()
+        self.od_send_mail('cst_sheet_process_mail')
+        self.date_log_history_line = [{'name':'Waiting PO Processed Date','date':str(datetime.now())}]
+        self.state = 'waiting_po_processed'
+    
+    @api.one
+    def btn_process_redistribution(self):
+        self.check_rev_exist()
+        self.check_process_min_docs()
+        self.od_send_mail('cst_sheet_process_mail')
+        self.date_log_history_line = [{'name':'Redistribution Processed Date','date':str(datetime.now())}]
+        self.state = 'redistribution_processed'
+    
+    @api.one
     def btn_reset_handover(self):
         self.od_send_mail('cst_sheet_reset_handover_mail')
         self.date_log_history_line = [{'name':'Return By Finance','date':str(datetime.now())}]
@@ -2999,7 +3022,9 @@ class od_cost_sheet(models.Model):
     #     return line
 
     state = fields.Selection([('draft','Draft'),('design_ready','Design Ready'),('submitted','Submit To Customer'),('returned_by_pmo','Returned By PMO'),
-                              ('handover','Hand-Over'),('waiting_po','Waiting PO'),('returned_by_fin','Returned By Finance'),('change','Change'),('analytic_change','Redistribute Analytic'),('processed','Processed'),
+                              ('handover','Hand-Over'),('waiting_po','Waiting PO'),('returned_by_fin','Returned By Finance'),
+                              ('change','Change'),('analytic_change','Redistribute Analytic'),('processed','Processed'),
+                              ('change_processed','Change Processed'),('waiting_po_processed','Waiting PO Processed'),('redistribution_processed','Redistribution Processed'),
                               ('modify','Modify'),('approved','Approved'),('done','Done'),('cancel','Cancelled')],string="Status",default='draft',track_visibility='always')
     ren_filled = fields.Boolean('Ren Filled')
     od_attachement_count = fields.Integer(string="Attachement Count",compute="_od_attachement_count"
