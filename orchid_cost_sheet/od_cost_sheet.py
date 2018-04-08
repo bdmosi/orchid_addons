@@ -3883,7 +3883,7 @@ class od_cost_sheet(models.Model):
                                              'od_original_price':line.new_unit_price if line.fixed else line.unit_price,
                                              'od_original_unit_cost':line.unit_cost_local,
                                              'product_uom_qty':line.qty,
-                                             'price_unit':line.new_unit_price if line.fixed else line.unit_price,,
+                                             'price_unit':line.new_unit_price if line.fixed else line.unit_price,
                                              'purchase_price':line.unit_cost_local,
                                              'od_analytic_acc_id':project_mat,
                                              'od_cost_sheet_id':self.id,
