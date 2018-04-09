@@ -243,11 +243,12 @@ class crm_lead(osv.osv):
             })
             sheet_pool= self.pool.get('od.cost.sheet')
             sheet_ids = sheet_pool.search(cr,uid,[('lead_id','=',ids[0])])
+            print "sheets>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",sheet_ids,partner_id
             for sheet in sheet_pool.browse(cr,uid,sheet_ids):
                 sheet.write({'od_customer_id':partner_id})
         return values
-    def on_change_use(self, cr, uid, ids, user_id, context=None):
-        res = super(crm_lead, self).on_change_user_id( cr, uid, ids, user_id)
+    def on_change_user(self, cr, uid, ids, user_id, context=None):
+        res = super(crm_lead, self).on_change_user( cr, uid, ids, user_id)
         sheet_pool= self.pool.get('od.cost.sheet')
         sheet_ids = sheet_pool.search(cr,uid,[('lead_id','=',ids[0])])
         for sheet in sheet_pool.browse(cr,uid,sheet_ids):

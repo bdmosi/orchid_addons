@@ -51,9 +51,11 @@ class crm_lead(models.Model):
     @api.one 
     @api.onchange('od_responsible_id')
     def onchange_od_responsible_id(self):
+        print "onchange>>>>>>>>>>>FFFD",self.od_responsible_id
         if self.od_responsible_id:
             sheet_pool = self.env['od.cost.sheet']
             sheets = sheet_pool.search([('lead_id','=',self.id)])
+            print "sheets>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",sheets,self.od_responsible_id.id
             for sheet in sheets:
                 sheet.write({'pre_sales_engineer':self.od_responsible_id.id})
             
