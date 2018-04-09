@@ -1756,14 +1756,13 @@ class hr_employee(models.Model):
         if type == 'sales_acc_mgr':
             today = dt.today()
             day = today.day
-            if day <=26: 
-                achieved_line,achieved_total = self.get_sales_achieved_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
-                commit_total = sample_id.commit_total
-                component_data,target = self.get_sales_acc_mgr_component(commit_total,achieved_total)
-                sample_id.comp_line.unlink()
-                sample_id.achieved_gp_line.unlink()
-                sample_id.write({'achieved_gp_line':achieved_line,'comp_line':component_data,'target':target})
-                self.write({'commit_total':commit_total})
+            achieved_line,achieved_total = self.get_sales_achieved_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
+            commit_total = sample_id.commit_total
+            component_data,target = self.get_sales_acc_mgr_component(commit_total,achieved_total)
+            sample_id.comp_line.unlink()
+            sample_id.achieved_gp_line.unlink()
+            sample_id.write({'achieved_gp_line':achieved_line,'comp_line':component_data,'target':target})
+            self.write({'commit_total':commit_total})
         
         if type == 'sm':
             achieved_gp_line,team_line,comp_line = self.get_sm_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
@@ -1917,13 +1916,12 @@ class hr_employee(models.Model):
         if type == 'sales_acc_mgr':
             today = dt.today()
             day = today.day
-            if day <=26: 
-                commit_line,commit_total = self.get_sales_commit_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
-                achieved_line,achieved_total = self.get_sales_achieved_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
-                component_data,target = self.get_sales_acc_mgr_component(commit_total,achieved_total)
-                vals.update({'commit_gp_line':commit_line,'achieved_gp_line':achieved_line,'comp_line':component_data,'target':target})
-                sample_id =self.env['audit.sample'].create(vals)
-                self.write({'commit_total':commit_total})
+            commit_line,commit_total = self.get_sales_commit_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
+            achieved_line,achieved_total = self.get_sales_achieved_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
+            component_data,target = self.get_sales_acc_mgr_component(commit_total,achieved_total)
+            vals.update({'commit_gp_line':commit_line,'achieved_gp_line':achieved_line,'comp_line':component_data,'target':target})
+            sample_id =self.env['audit.sample'].create(vals)
+            self.write({'commit_total':commit_total})
         
         if type == 'sm':
             achieved_gp_line,team_line,comp_line = self.get_sm_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
@@ -2050,6 +2048,22 @@ class hr_employee(models.Model):
                     utilization = sample_id.utilization
                     self.write({aud_samp:sample_id.id,scr:score,utl:utilization})
      
+#     
+#     def audit_set_date(self):
+#         year='2018'
+#         day_one =01
+#         day_end =26
+#         month_start1 =1
+#         month_start2 =1
+#         for i in range(1,13):
+#             date_start =year+'-'+str(month_start1)+'-'  + str(day_one)
+#             date_stop = year+'-'+str(month_start2)+'-'  + str(day_end)
+#             day_one =27
+#             month_start2+=1
+#             month_start1= month_start2-1
+#             sdate ='aud_date_start'+str(i)
+#             edate ='aud_date_end'+str(i)
+#             self.write({sdate:date_start,edate:date_stop})
     
     def audit_set_date(self):
         year='2018'
@@ -2057,22 +2071,24 @@ class hr_employee(models.Model):
         day_end =26
         month_start1 =1
         month_start2 =1
+        month_list =[('2018-01-01','2018-01-26'),('2018-01-27','2018-02-26'),('2018-02-27','2018-03-26'),('2018-03-27','2018-04-30'),('2018-05-01','2018-05-31'),
+                     ('2018-06-01','2018-06-30'), ('2018-07-01','2018-07-31'),('2018-08-01','2018-08-31'),('2018-09-01','2018-09-30'),('2018-10-01','2018-10-31'),
+                     ('2018-11-01','2018-11-30'), ('2018-12-01','2018-12-31')
+                     ]
         for i in range(1,13):
-            date_start =year+'-'+str(month_start1)+'-'  + str(day_one)
-            date_stop = year+'-'+str(month_start2)+'-'  + str(day_end)
-            day_one =27
-            month_start2+=1
-            month_start1= month_start2-1
+           
             sdate ='aud_date_start'+str(i)
             edate ='aud_date_end'+str(i)
+            date_tup = month_list[i-1]
+            date_start = date_tup[0]
+            date_stop = date_tup[1]
             self.write({sdate:date_start,edate:date_stop})
     def audit_set_execution(self,number=False):
         today = dt.today()
         month_number = today.month
-       
         day = today.day 
-        if day >26:
-            month_number +=1
+#         if day >26:
+#             month_number +=1
         if number:
             month_number = number
         ext ='execute'+str(month_number)

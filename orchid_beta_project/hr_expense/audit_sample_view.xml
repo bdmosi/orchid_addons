@@ -17,8 +17,8 @@
                     <field name="type"/>
                    <group expand="1" string="Group By">
                        <filter string="Comapny" domain="[]" name="g_company" context="{'group_by':'company_id'}"/>
-                        <filter string="Date" domain="[]" name="g_date_year" context="{'group_by':'date_end:year'}"/>
-                         <filter string="Date" domain="[]" name="g_date_month" context="{'group_by':'date_end'}"/>
+                        <filter string="Year" domain="[]" name="g_date_year" context="{'group_by':'date_end:year'}"/>
+                         <filter string="Month" domain="[]" name="g_date_month" context="{'group_by':'date_end'}"/>
                         <filter string="Audit Template" name="g_template" domain="[]" context="{'group_by':'aud_temp_id'}"/>
                         <filter string="Employee" domain="[]" context="{'group_by':'employee_id'}" />
                     </group>
