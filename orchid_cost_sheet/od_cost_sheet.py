@@ -813,7 +813,7 @@ class od_cost_sheet(models.Model):
     #hand over tab
     sales_acc_manager = fields.Many2one('res.users',string='Sales Account Manager')
     business_development = fields.Many2one('res.users',string='Business Development')
-    pre_sales_engineer = fields.Many2one('res.users',string='Pre-Sales Engineer',related="lead_id.od_responsible_id",store=True)
+    pre_sales_engineer = fields.Many2one('res.users',string='Pre-Sales Engineer',related="lead_id.od_responsible_id",store=True,readonly=True)
     technical_consultant1 = fields.Many2one('res.users',string='Technical Consultant 1')
     technical_consultant2 = fields.Many2one('res.users',string='Technical Consultant 2')
     accountant = fields.Many2one('res.users',string='Accountant')
