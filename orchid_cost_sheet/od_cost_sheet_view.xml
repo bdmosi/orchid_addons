@@ -124,6 +124,9 @@
 							<!-- <button name="cron_od_cost_sheet" string="send email" type='object' 
 							class='oe_highlight' /> -->
 						<button name="update_cost_sheet" string="Update" context="{'update_btn':1}" type="object" class="oe_highlight" attrs="{'invisible':[('state','in',('done','waiting_po'))]}" />
+						
+						<button name="print_cost_sheet" string="Print" type="object" class="oe_highlight"  groups="orchid_beta.group_beta_presales_engineer,orchid_beta.group_beta_presales_manager,orchid_beta.group_executive_management_beta_1"  attrs="{'invisible':[('state','not in',('draft','design_ready'))]}"/>
+						
 						<button name="print_cost_sheet" string="Print" type="object" class="oe_highlight" attrs="{'invisible':[('state','in',('draft','design_ready'))]}"/>
 
 
