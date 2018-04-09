@@ -813,7 +813,7 @@ class od_cost_sheet(models.Model):
     #hand over tab
     sales_acc_manager = fields.Many2one('res.users',string='Sales Account Manager')
     business_development = fields.Many2one('res.users',string='Business Development')
-    pre_sales_engineer = fields.Many2one('res.users',string='Pre-Sales Engineer')
+    pre_sales_engineer = fields.Many2one('res.users',string='Pre-Sales Engineer',related="lead_id.od_responsible_id",store=True)
     technical_consultant1 = fields.Many2one('res.users',string='Technical Consultant 1')
     technical_consultant2 = fields.Many2one('res.users',string='Technical Consultant 2')
     accountant = fields.Many2one('res.users',string='Accountant')
@@ -3241,7 +3241,7 @@ class od_cost_sheet(models.Model):
     number = fields.Char(string='Number',default='/',readonly="1")
     reviewed_id = fields.Many2one('res.users',string='Owner',readonly=True,track_visibility='always')
     prepared_by = fields.Many2one('res.users',string='Prepared By',required="1",states={'draft':[('readonly',False)]},readonly=True,track_visibility='always')
-    od_customer_id = fields.Many2one('res.partner',string='Customer',domain=[('customer','=',True),('is_company','=',True)],required=True,states={'draft':[('readonly',False)]},readonly=True,track_visibility='always')
+    od_customer_id = fields.Many2one('res.partner',string='Customer',domain=[('customer','=',True),('is_company','=',True)],required=True,readonly=True,track_visibility='always',related="lead_id.partner_id",store=True)
     od_mat_sale_id = fields.Many2one('sale.order',string="Quotation",readonly=True,copy=False)
     od_ren_sale_id = fields.Many2one('sale.order',string="Quotation",readonly=True,copy=False)
     od_trn_sale_id = fields.Many2one('sale.order',string="Quotation",readonly=True,copy=False)

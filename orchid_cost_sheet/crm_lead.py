@@ -46,27 +46,18 @@ class crm_lead(models.Model):
             
            
     
-    def on_change_partner_id(self, cr, uid, ids, partner_id, context=None):
-        values = super(crm_lead,self).on_change_partner_id(cr, uid, ids, partner_id, context=context)
-#         if partner_id and ids:
-#             sheet_pool= self.pool.get('od.cost.sheet')
-#             sheet_ids = sheet_pool.search(cr,uid,[('lead_id','=',ids[0])])
-#             print "sheets>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",sheet_ids,partner_id,type(partner_id)
-#             for sheet in sheet_pool.browse(cr,uid,sheet_ids):
-#                 sheet.write({'od_customer_id':partner_id})
-        return values
-
-    
-    @api.one 
-    @api.onchange('od_responsible_id')
-    def onchange_od_responsible_id(self):
-        print "onchange>>>>>>>>>>>FFFD",self.od_responsible_id
-        if self.od_responsible_id:
-            sheet_pool = self.env['od.cost.sheet']
-            sheets = sheet_pool.search([('lead_id','=',self.id)])
-            print "sheets>>>>>>>>>>onchange presale>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",sheets,self.od_responsible_id.id
-            for sheet in sheets:
-                sheet.write({'pre_sales_engineer':self.od_responsible_id.id})
+#    
+#     
+#     @api.one 
+#     @api.onchange('od_responsible_id')
+#     def onchange_od_responsible_id(self):
+#         print "onchange>>>>>>>>>>>FFFD",self.od_responsible_id
+#         if self.od_responsible_id:
+#             sheet_pool = self.env['od.cost.sheet']
+#             sheets = sheet_pool.search([('lead_id','=',self.id)])
+#             print "sheets>>>>>>>>>>onchange presale>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",sheets,self.od_responsible_id.id
+#             for sheet in sheets:
+#                 sheet.write({'pre_sales_engineer':self.od_responsible_id.id})
             
     
     
