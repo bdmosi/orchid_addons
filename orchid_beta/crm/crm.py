@@ -18,6 +18,9 @@ class crm_lead(osv.osv):
         'od_division_id':fields.many2one('od.cost.division',string='Division'),
     }
     
+    
+    
+    
     def _default_branch(self, cr, uid, context=None):
         res = False
         employee = self.pool.get('hr.employee')

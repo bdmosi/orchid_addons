@@ -45,7 +45,20 @@ class crm_lead(models.Model):
 #                 self.od_costsheet_new_profit_percent = (new_profit/sale) * 100.0
             
            
-
+    
+    
+    
+    @api.one 
+    @api.onchange('od_responsible_id')
+    def onchange_od_responsible_id(self):
+        if self.od_responsible_id:
+            sheet_pool = self.env['od.cost.sheet']
+            sheets = sheet_pool.search([('lead_id','=',self.id)])
+            for sheet in sheets:
+                sheet.write({'pre_sales_engineer':self.od_responsible_id.id})
+            
+    
+    
     od_cost_sheet_line = fields.One2many('od.cost.sheet','lead_id',string='Cost Sheet Lines')
     od_number = fields.Char(string='Number',readonly="1",default='/')
     od_costsheet_count  = fields.Integer(string='Count',compute="_compute_count")
@@ -107,3 +120,4 @@ class crm_lead(models.Model):
         result['domain'] = [('lead_id','=',ids[0])]
 
         return result
+    

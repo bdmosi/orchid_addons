@@ -241,7 +241,18 @@ class crm_lead(osv.osv):
                 'od_customer_name': partner.parent_id.name if partner.parent_id else partner.name,
                 'od_buisiness_type_id':partner.parent_id.od_industry_id.id if partner.parent_id else partner.od_industry_id.id
             })
+            sheet_pool= self.pool.get('od.cost.sheet')
+            sheet_ids = sheet_pool.search(cr,uid,[('lead_id','=',ids[0])])
+            for sheet in sheet_pool.browse(cr,uid,sheet_ids):
+                sheet.write({'od_customer_id':partner_id})
         return values
+    def on_change_use(self, cr, uid, ids, user_id, context=None):
+        res = super(crm_lead, self).on_change_user_id( cr, uid, ids, user_id)
+        sheet_pool= self.pool.get('od.cost.sheet')
+        sheet_ids = sheet_pool.search(cr,uid,[('lead_id','=',ids[0])])
+        for sheet in sheet_pool.browse(cr,uid,sheet_ids):
+            sheet.write({'sales_acc_manager':user_id})
+        return res
 
      
     
