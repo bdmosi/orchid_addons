@@ -162,7 +162,7 @@
 						<button name="btn_modify" string="Modify" type="object" class="oe_highlight" states="done" groups="orchid_beta.group_beta_finance_manger_acc,account.group_account_user,account.group_account_manager,orchid_beta.group_executive_management_beta_1"/>
 						<!-- <button name="btn_reset_handover" string="Return" type='object' 
 							class='oe_highlight' states="processed" groups="orchid_beta.group_beta_finance_manger_acc,account.group_account_user,account.group_account_manager"/> -->
-						<button name="1224" context="{'action':'btn_reset_handover'}" string="Return" type="action" class="oe_highlight" states="processed" groups="orchid_beta.group_beta_finance_manger_acc,account.group_account_user,account.group_account_manager,orchid_beta.group_executive_management_beta_1"/>
+						<button name="1224" context="{'action':'btn_reset_handover'}" string="Return" type="action" class="oe_highlight" states="processed,change_processed,waiting_po_processed,redistribution_processed" groups="orchid_beta.group_beta_finance_manger_acc,account.group_account_user,account.group_account_manager,orchid_beta.group_executive_management_beta_1"/>
 						<!-- <button name="generate_sale_order" string="Generate Sale Order" 
 							type='object' class='oe_highlight' states='approved' groups="orchid_beta.group_beta_finance_manger_acc,account.group_account_user,account.group_account_manager"/> 
 							<button name="btn_reset_process" string="Reset To Process" type='object' 
