@@ -1931,7 +1931,7 @@ class od_cost_sheet(models.Model):
             self.price_fix_line(self.om_eqpmentreq_line)
             self.price_fix_line(self.om_extra_line)
             self.write({'price_fixed':True})
-            
+            self.update_cost_sheet()
     
     @api.one
     def btn_unfreez_price(self):
@@ -1961,7 +1961,7 @@ class od_cost_sheet(models.Model):
             self.price_unfix_line(self.om_eqpmentreq_line)
             self.price_unfix_line(self.om_extra_line)
             self.write({'price_fixed':False})
-       
+            self.update_cost_sheet()
             
     
     
