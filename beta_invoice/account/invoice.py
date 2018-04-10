@@ -250,15 +250,23 @@ class invoice_alternate_line(models.Model):
     
     
     @api.one 
-    @api.depends('unit_price','quantity','tax_rate','bt_pay_perc','discount')
+    @api.depends('unit_price','quantity','tax_rate','bt_pay_perc','discount','disc_amount')
     def _compute_calc(self):
         total_bf_tax = self.unit_price * self.quantity
+        total_bf_discount = self.unit_price * self.quantity
         bt_pay_perc = self.bt_pay_perc
         discount = self.discount
+        disc_amount = self.disc_amount
         if bt_pay_perc:
             total_bf_tax = total_bf_tax * (bt_pay_perc/100.0)
+            total_bf_discount =total_bf_discount  * (bt_pay_perc/100.0)
         if discount:
             total_bf_tax = total_bf_tax * (1 - (discount or 0.0) / 100.0)
+        
+        if disc_amount:
+            total_bf_tax = total_bf_discount - disc_amount
+            
+        
         tax_rate = self.tax_rate /100.0
         tax_amount = total_bf_tax * tax_rate
         total_amount = total_bf_tax + tax_amount
@@ -272,12 +280,13 @@ class invoice_alternate_line(models.Model):
     name2 = fields.Text(string="Description English")
     quantity = fields.Float(string="Quantity")
     unit_price = fields.Float(string="Unit Price",digits=dp.get_precision('Gov'))
-    total_bf_tax = fields.Float(string="Total Before Tax",compute="_compute_calc",digits=dp.get_precision('Gov'))
+    total_bf_discount = fields.Float(string="Total Before Discount",compute="_compute_calc",digits=dp.get_precision('Gov'))
+    total_bf_tax = fields.Float(string="Total After Discount",compute="_compute_calc",digits=dp.get_precision('Gov'))
     tax_rate =fields.Float(string="Tax Rate(%)")
     tax_amount =fields.Float(string="Tax Amount",compute="_compute_calc",digits=dp.get_precision('Gov'))
     total_amount= fields.Float(string="Total Amount",compute="_compute_calc",digits=dp.get_precision('Gov'))
     bt_enable = fields.Boolean(string="Enable Pay %")
     bt_pay_perc = fields.Float(string="Payment %")
-    discount = fields.Float(string="Discount %",digits=dp.get_precision('Gov'))
-    
+    discount = fields.Float(string="Discount %",digits=dp.get_precision('Gov Disc'))
+    disc_amount = fields.Float(string="Discount Amount",digits=dp.get_precision('Gov'))
     
