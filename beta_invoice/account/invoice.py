@@ -271,6 +271,7 @@ class invoice_alternate_line(models.Model):
         tax_amount = total_bf_tax * tax_rate
         total_amount = total_bf_tax + tax_amount
         self.total_bf_tax = total_bf_tax 
+        self.total_bf_discount = total_bf_discount
         self.tax_amount = tax_amount 
         self.total_amount = total_amount
     
