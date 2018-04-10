@@ -1405,7 +1405,7 @@ class od_cost_sheet(models.Model):
     
     @api.multi
     def btn_submit(self):
-        
+        self.update_cost_sheet()
         if self.state == 'submitted':
             return { 'type': 'ir.actions.client', 'tag': 'reload'}
         self.update_submited()
@@ -1430,6 +1430,7 @@ class od_cost_sheet(models.Model):
     
     @api.one 
     def btn_cancel(self):
+        self.update_cost_sheet()
         sale_pool = self.env['sale.order']
         so_tab_map,so_analyti_map = self.get_so_tab_map()
         for tab,sale_id in so_tab_map.iteritems():
@@ -1442,6 +1443,7 @@ class od_cost_sheet(models.Model):
 
     @api.one
     def btn_reset_draft(self):
+        self.update_cost_sheet()
         self.state ='draft'
         self.date_log_history_line = [{'name':'Submit to Draft','date':str(datetime.now())}]
 
@@ -1487,6 +1489,7 @@ class od_cost_sheet(models.Model):
     
     @api.one
     def btn_handover(self):
+        self.update_cost_sheet()
         if self.status != 'active':
             raise Warning('Only Active Cost Sheet Can Be Handovered')
         if not self.check_any_tab_include():
@@ -1508,21 +1511,25 @@ class od_cost_sheet(models.Model):
 
     @api.one
     def btn_reset_submit(self):
+        self.update_cost_sheet()
         self.od_send_mail('cst_sheet_reset_submit_mail')
         self.date_log_history_line = [{'name':'Return By PMO','date':str(datetime.now())}]
         self.state = 'returned_by_pmo'
 
     @api.one
     def btn_waiting_po(self):
+        self.update_cost_sheet()
         self.date_log_history_line = [{'name':'Waiting PO','date':str(datetime.now())}]
         self.state = 'waiting_po'
 
     @api.one
     def btn_waiting_to_handover(self):
+        self.update_cost_sheet()
         self.date_log_history_line = [{'name':'Waiting to Handover','date':str(datetime.now())}]
         self.state = 'handover'
     @api.one
     def btn_process(self):
+        self.update_cost_sheet()
         self.check_rev_exist()
         self.processed_date = str(datetime.now())
         self.check_process_min_docs()
@@ -1531,6 +1538,7 @@ class od_cost_sheet(models.Model):
         self.state = 'processed'
     @api.one
     def btn_process_change(self):
+        self.update_cost_sheet()
         self.check_rev_exist()
         self.check_process_min_docs()
         self.od_send_mail('cst_sheet_process_mail')
@@ -1538,6 +1546,7 @@ class od_cost_sheet(models.Model):
         self.state = 'change_processed'
     @api.one
     def btn_process_waiting_po(self):
+        self.update_cost_sheet()
         self.check_rev_exist()
         self.check_process_min_docs()
         self.od_send_mail('cst_sheet_process_mail')
@@ -1546,6 +1555,7 @@ class od_cost_sheet(models.Model):
     
     @api.one
     def btn_process_redistribution(self):
+        self.update_cost_sheet()
         self.check_rev_exist()
         self.check_process_min_docs()
         self.od_send_mail('cst_sheet_process_mail')
@@ -1554,6 +1564,7 @@ class od_cost_sheet(models.Model):
     
     @api.one
     def btn_reset_handover(self):
+        self.update_cost_sheet()
         self.od_send_mail('cst_sheet_reset_handover_mail')
         self.date_log_history_line = [{'name':'Return By Finance','date':str(datetime.now())}]
         self.state = 'returned_by_fin'
@@ -1575,6 +1586,7 @@ class od_cost_sheet(models.Model):
     def btn_approved(self):
 #         self.od_send_mail('cst_sheet_approve_mail')
 # this mail wiil be sent when assign an accountant
+        self.update_cost_sheet()
         self.check_adv_payment()
         self.check_finance_comment()
 #         if not self.approved_date:
@@ -1587,11 +1599,13 @@ class od_cost_sheet(models.Model):
 
     @api.one
     def btn_reset_process(self):
+        self.update_cost_sheet()
         self.state = 'processed'
         self.date_log_history_line = [{'name':'Approved To Process','date':str(datetime.now())}]
         self.od_send_mail('cst_sheet_reset_process_mail')
     @api.one
     def btn_allow_change(self):
+        self.update_cost_sheet()
         self.sales_order_generated = True
         self.state = 'change'
         self.change_date = str(datetime.now())
@@ -1600,6 +1614,7 @@ class od_cost_sheet(models.Model):
 
     @api.one
     def btn_redistribute_analytic(self):
+        self.update_cost_sheet()
         self.sales_order_generated = True
         self.state = 'analytic_change'
         self.change_date = str(datetime.now())
@@ -1607,6 +1622,7 @@ class od_cost_sheet(models.Model):
 
     @api.one
     def btn_modify(self):
+        self.update_cost_sheet()
         self.sales_order_generated = True
         self.state = 'modify'
         self.change_date = str(datetime.now())

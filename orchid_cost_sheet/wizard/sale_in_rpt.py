@@ -65,43 +65,74 @@ class opp_rev_sale_in_wiz(models.TransientModel):
             date = sheet.approved_date 
             stage_id = sheet.op_stage_id and sheet.op_stage_id.id
             bdm_user_id = sheet.lead_created_by and sheet.lead_created_by.id
-            for line in sheet.summary_weight_line:
-                
-                if product_group_ids:
-                    if line.pdt_grp_id.id in product_group_ids:
+            partner_id = sheet.od_customer_id and sheet.od_customer_id.id 
+            company_id = sheet.company_id and sheet.company_id.id 
+            branch_id = sheet.od_branch_id and sheet.od_branch_id.id
+            if product_group_ids:
+                for line in sheet.summary_weight_line:
+                    
+                    if product_group_ids:
+                        if line.pdt_grp_id.id in product_group_ids:
+                            result.append((0,0,{
+                                'wiz_id':wiz_id,
+                                'cost_sheet_id':sheet_id, 
+                                'opp_id':opp_id ,
+                                'partner_id':partner_id,
+                                'company_id':company_id,
+                                'branch_id':branch_id,
+                                'bdm_user_id':bdm_user_id ,
+                                'date':date,
+                                'stage_id':stage_id,
+                                'pdt_grp_id':line.pdt_grp_id and line.pdt_grp_id.id,
+                                'total_sale':line.total_sale,
+                                'disc':line.disc,
+                                'sale_aftr_disc':line.sale_aftr_disc,
+                                'total_cost':line.total_cost,
+                                'profit':line.profit,
+                                'manpower_cost':line.manpower_cost,
+                                'total_gp':line.total_gp
+                                }))
+                    else:
                         result.append((0,0,{
-                            'wiz_id':wiz_id,
-                            'cost_sheet_id':sheet_id, 
-                            'opp_id':opp_id ,
-                            'bdm_user_id':bdm_user_id ,
-                            'date':date,
-                            'stage_id':stage_id,
-                            'pdt_grp_id':line.pdt_grp_id and line.pdt_grp_id.id,
-                            'total_sale':line.total_sale,
-                            'disc':line.disc,
-                            'sale_aftr_disc':line.sale_aftr_disc,
-                            'total_cost':line.total_cost,
-                            'profit':line.profit,
-                            'manpower_cost':line.manpower_cost,
-                            'total_gp':line.total_gp
-                            }))
-                else:
-                    result.append((0,0,{
-                            'wiz_id':wiz_id,
-                            'cost_sheet_id':sheet_id, 
-                            'opp_id':opp_id ,
-                            'bdm_user_id':bdm_user_id,
-                            'date':date,
-                            'stage_id':stage_id,
-                            'pdt_grp_id':line.pdt_grp_id and line.pdt_grp_id.id,
-                            'total_sale':line.total_sale,
-                            'disc':line.disc,
-                            'sale_aftr_disc':line.sale_aftr_disc,
-                            'total_cost':line.total_cost,
-                            'profit':line.profit,
-                            'manpower_cost':line.manpower_cost,
-                            'total_gp':line.total_gp
-                            }))        
+                                'wiz_id':wiz_id,
+                                'cost_sheet_id':sheet_id, 
+                                'opp_id':opp_id ,
+                                'partner_id':partner_id,
+                                'company_id':company_id,
+                                'branch_id':branch_id,
+                                'bdm_user_id':bdm_user_id,
+                                'date':date,
+                                'stage_id':stage_id,
+                                'pdt_grp_id':line.pdt_grp_id and line.pdt_grp_id.id,
+                                'total_sale':line.total_sale,
+                                'disc':line.disc,
+                                'sale_aftr_disc':line.sale_aftr_disc,
+                                'total_cost':line.total_cost,
+                                'profit':line.profit,
+                                'manpower_cost':line.manpower_cost,
+                                'total_gp':line.total_gp
+                                }))
+            else:
+                result.append((0,0,{
+                                'wiz_id':wiz_id,
+                                'cost_sheet_id':sheet_id, 
+                                'opp_id':opp_id ,
+                                'partner_id':partner_id,
+                                'company_id':company_id,
+                                'branch_id':branch_id,
+                                'bdm_user_id':bdm_user_id,
+                                'date':date,
+                                'stage_id':stage_id,
+                                'pdt_grp_id':False,
+                                'total_sale':sheet.sum_tot_sale,
+                                'disc':abs(sheet.special_discount),
+                                'sale_aftr_disc':sheet.sum_total_sale,
+                                'total_cost':sheet.sum_tot_cost,
+                                'profit':sheet.sum_profit,
+                                'manpower_cost':sheet.a_total_manpower_cost,
+                                'total_gp':sheet.sum_profit + sheet.a_total_manpower_cost
+                                }))
+                        
         
         self.write({'wiz_line':result})
         return {
@@ -121,6 +152,9 @@ class wiz_sale_in_rpt(models.TransientModel):
     _name = 'wiz.sale.in.data'
     wiz_id = fields.Many2one('opp.sale.in.rpt.wiz',string="Wizard")
     cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet')
+    partner_id = fields.Many2one('res.partner',string="Customer")
+    company_id = fields.Many2one('res.company',string="Company")
+    branch_id = fields.Many2one('od.cost.branch',string="Branch")
     opp_id = fields.Many2one('crm.lead',string='Opportunity')
     bdm_user_id = fields.Many2one('res.users',string="Lead/Opp Created By")
     date = fields.Datetime(string="Approved Date")
