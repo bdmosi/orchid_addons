@@ -561,9 +561,9 @@
             <xpath expr="//field[@name='user_id']" position="after">
             	<newline/>
             	<field name="od_state" widget="selection"/>
-            	<newline/>
+            <!-- 	<newline/>
                 <field name="od_branch_id" />
-              <newline/>
+              <newline/> -->
             </xpath>
 
             <field name="partner_id" position="after">
