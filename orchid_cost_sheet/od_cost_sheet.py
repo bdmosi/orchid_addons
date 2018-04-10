@@ -1890,7 +1890,9 @@ class od_cost_sheet(models.Model):
             unit_price = line.unit_price
             if xno ==2:
                 unit_price = line.unit_price2
-            line['new_unit_price'] = unit_price
+            
+            if not line.new_unit_price:
+                line['new_unit_price'] = unit_price
             line['temp_unit_price'] = unit_price 
             line['fixed'] = True
     
