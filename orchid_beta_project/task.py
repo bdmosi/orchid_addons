@@ -349,7 +349,10 @@ class task(models.Model):
 
     
     def edit_block(self,vals):
-        if self.od_type == 'activities':
+        write_count_check =2
+        if self.od_duplicated:
+            write_count_check =3
+        if self.od_type == 'activities' and self.od_write_count >=write_count_check:
             if vals.get('date_start') or vals.get('planned_hours') or vals.get('date_end'):
                 raise Warning("You Cannot Change Starting Date, Planned Hours or Complete Date, Please press the Discard Button")
     
@@ -357,8 +360,8 @@ class task(models.Model):
     def write(self, vals):
         ctx = self.env.context
         print "my cccctx>>>>>>>>>>>>>>>>>>>>>>888888xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx>>>>",ctx
-#         if not self.od_duplicated:
-#             self.edit_block(vals)
+        
+        self.edit_block(vals)
 #         if vals.get('user_id'):
 #             self.check_task_user_overlap(vals)
         
