@@ -140,9 +140,17 @@
 
     <record id="group_beta_finance_manger_acc" model="res.groups">
         <field name="name">Accountant</field>
-    <field name="category_id" ref="orchid_beta.module_orchid_beta_finance"/>
+    		<field name="category_id" ref="orchid_beta.module_orchid_beta_finance"/>
         <field name="description">Accountant</field>
     </record>
+    
+    
+     <record id="group_beta_finance_entry_cancel" model="res.groups">
+        <field name="name">Entry Controller</field>
+    		<field name="category_id" ref="orchid_beta.module_orchid_beta_finance"/>
+        <field name="description">Entry Controller</field>
+    </record>
+    
 
     <record id="group_beta_finance_manger_collectors" model="res.groups">
         <field name="name">Collectors</field>
