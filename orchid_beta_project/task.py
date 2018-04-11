@@ -295,8 +295,6 @@ class task(models.Model):
                         res['od_state'] = 9
                     else:
                         res['od_state'] = 1
-
-        pprint(res)
         return res
 
     @api.multi
