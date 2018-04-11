@@ -9,10 +9,12 @@
 			<field name="model">od.cost.sheet</field>
 			<field name="arch" type="xml">
 				<tree string="Cost Sheet">
+				     <field name="number"/>
+				     <field name="sum_total_sale" string="Total Sale Value" sum="total"/>
 					<field name="op_expected_booking"/>
 					<field name="name"/>
 					<field name="od_customer_id"/>
-					<field name="sum_total_sale" string="Total Sale Value" sum="total"/>
+					
 					<!-- <field name="special_discount" string="Discount or Addition" sum="total"/> -->
 					<!-- <field name="sum_tot_cost" string="Total Cost Value" sum="total"/> -->
 					<field name="total_gp" sum="Total" />
@@ -23,7 +25,7 @@
 					<field name="a_bmn_cost" string="AMC MP" sum="total"/>
 					<!-- <field name="a_om_cost" string="R.E. MP" sum="total"/> -->
 					<!-- <field name="lead_id"/> -->
-					<field name="number"/>
+					
 					<!-- <field name="date"/>
 					<field name="prepared_by"/>
 					<field name="reviewed_id"/>

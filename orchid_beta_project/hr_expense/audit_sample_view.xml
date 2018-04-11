@@ -329,7 +329,7 @@
 									</tree>
 								</field>
 							</page>
-							<page string="Commit" attrs="{'invisible':[('type','!=','sales_acc_mgr')]}" >
+							<page string="Commit" attrs="{'invisible':[('type','not in',('sales_acc_mgr','service_sale_spl'))]}" >
 								<field name="commit_gp_line">
 									<tree editable="bottom" create="false" delete="false">
 										<field name="cost_sheet_id" readonly="1"/>
@@ -340,7 +340,7 @@
 								</field>
 							</page>
 							
-							<page string="Achieved" attrs="{'invisible':[('type','not in',('sales_acc_mgr','sm'))]}" >
+							<page string="Achieved" attrs="{'invisible':[('type','not in',('sales_acc_mgr','sm','service_sale_spl'))]}" >
 								<field name="achieved_gp_line">
 									<tree editable="bottom" create="false" delete="false">
 										<field name="cost_sheet_id" readonly="1"/>

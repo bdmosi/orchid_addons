@@ -756,7 +756,7 @@ class hr_employee(models.Model):
         total_gp = 0.0
         domain = [('sales_acc_manager','=',user_id),('status','=','active')]
         domain.extend([('op_expected_booking','>=',aud_date_start),('op_expected_booking','<=',aud_date_end)])
-        domain1 = domain + [('state','in',('approved','done','modify','change','analytic_change'))]
+        domain1 = domain + [('state','in',('approved','done','modify','change','analytic_change','change_processed','redistribution_processed',))]
         sheet_ids =self.env['od.cost.sheet'].search(domain1)
         for sheet in sheet_ids:
             gp = sheet.total_gp
@@ -820,6 +820,115 @@ class hr_employee(models.Model):
                               ))
         
         return comp_data,target
+    
+    
+    
+    
+    def get_sales_spl_commit_data(self,sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id):
+        
+        total_gp = 0.0
+        month_start = aud_date_end[:8]+'01'
+        print "aud date end>>>>>>>>>>>>>>>>>>>>>>>",aud_date_end,month_start
+        result =[]
+        domain = [('sale_team_id','=',33),('status','=','active')]
+        domain.extend([('op_expected_booking','>=',aud_date_start),('op_expected_booking','<=',aud_date_end)])
+        domain1 = domain + [('state','not in',('approved','done','cancel','modify','change','analytic_change','change_processed','redistribution_processed','draft','design_ready','submitted'))]
+        domain2 = domain + [('state','in',('draft','design_ready','submitted'))]
+        
+#         domain3 = domain + [('state','in',('approved','done','modify','change','analytic_change')),('op_expected_booking','>=',aud_date_start),('op_expected_booking','<=',month_start)]
+        
+        sheet_ids =self.env['od.cost.sheet'].search(domain1)
+        
+        for sheet in sheet_ids:
+            stage_id = sheet.op_stage_id and sheet.op_stage_id.id 
+            if stage_id not in (7,8):
+                gp =sheet.total_gp
+                result.append((0,0,{'cost_sheet_id':sheet.id,'gp':gp}))
+                total_gp += gp
+        
+#         sheet_ids = self.env['od.cost.sheet'].search(domain3)
+#         for sheet in sheet_ids:
+#             stage_id = sheet.op_stage_id and sheet.op_stage_id.id 
+#             if stage_id not in (7,8):
+#                 gp =sheet.total_gp
+#                 result.append((0,0,{'cost_sheet_id':sheet.id,'gp':gp}))
+#                 total_gp += gp
+        
+        sheet_ids =self.env['od.cost.sheet'].search(domain2)
+        for sheet in sheet_ids:
+            stage_id = sheet.op_stage_id and sheet.op_stage_id.id 
+            if stage_id ==5:
+                gp = sheet.total_gp
+                result.append((0,0,{'cost_sheet_id':sheet.id,'gp':gp,'user_id':user_id}))
+                total_gp +=gp
+        return result,total_gp
+    def get_sales_spl_achieved_data(self,sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id):
+        
+        result =[]
+        total_gp = 0.0
+        domain = [('sale_team_id','=',33),('status','=','active')]
+        domain.extend([('op_expected_booking','>=',aud_date_start),('op_expected_booking','<=',aud_date_end)])
+        domain1 = domain + [('state','in',('approved','done','modify','change','analytic_change','change_processed','redistribution_processed'))]
+        sheet_ids =self.env['od.cost.sheet'].search(domain1)
+        for sheet in sheet_ids:
+            gp = sheet.total_gp
+            result.append((0,0,{'cost_sheet_id':sheet.id,'gp':sheet.total_gp,'user_id':user_id}))
+            total_gp +=gp
+        return result,total_gp
+    def get_sales_spl_component(self,commit_total,achieved_total):
+        
+        result =0.0
+        exclude_wt = 0.0
+        comp_data =[]
+        
+        if commit_total:
+            result = achieved_total/commit_total 
+            if result >1.5:
+                result =1.5
+        
+        mgr_score = self.get_mgr_feedback()
+        cert = self.get_certificate_status()
+        cert_ach = cert.get('achieved',False)
+        cert_req = cert.get('required',False)
+        if not mgr_score:
+            exclude_wt += 10
+        if not cert_req:
+            exclude_wt += 10
+        
+        wt_cmt = 80.0
+        wt_cert =10.0
+        wt_mgr =10.0
+        if exclude_wt:
+            wt_cmt =  wt_cmt + (wt_cmt*exclude_wt)/float(100-exclude_wt)
+            wt_cert =  wt_cert + (wt_cert*exclude_wt)/float(100-exclude_wt)
+            wt_mgr =  wt_mgr + (wt_mgr*exclude_wt)/float(100-exclude_wt)
+        
+        comp_data.append((0,0,
+                              {'name':'Commitment Performance',
+                               'weight':wt_cmt,
+                               'score':result*100,
+                               'final_score':wt_cmt *result}
+                              ))
+            
+        if cert_req:
+            cert_score  =0.0
+            if cert_ach:
+                cert_score = 100
+            comp_data.append((0,0,
+                              {'name':'Certificate',
+                               'weight':wt_cert,
+                               'score':cert_score,
+                               'final_score':(wt_cert/100.0)*cert_score}
+                              ))
+        if mgr_score:
+            comp_data.append((0,0,
+                              {'name':'Direct Manager Feedback',
+                               'weight':wt_mgr,
+                               'score':mgr_score*10,
+                               'final_score':(wt_mgr/10.0)*mgr_score}
+                              ))
+        
+        return comp_data
     
     def get_sales_acc_mgr_component_sm(self,emp_id,commit_total,achieved_total):
         emp = self.browse(emp_id)
@@ -1764,6 +1873,17 @@ class hr_employee(models.Model):
             sample_id.write({'achieved_gp_line':achieved_line,'comp_line':component_data,'target':target})
             self.write({'commit_total':commit_total})
         
+        if type == 'service_sale_spl':
+            today = dt.today()
+            day = today.day
+            achieved_line,achieved_total = self.get_sales_spl_achieved_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
+            commit_total = sample_id.commit_total
+            component_data = self.get_sales_spl_component(commit_total,achieved_total)
+            sample_id.comp_line.unlink()
+            sample_id.achieved_gp_line.unlink()
+            sample_id.write({'achieved_gp_line':achieved_line,'comp_line':component_data})
+            self.write({'commit_total':commit_total})
+        
         if type == 'sm':
             achieved_gp_line,team_line,comp_line = self.get_sm_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
             sample_id.comp_line.unlink()
@@ -1913,6 +2033,16 @@ class hr_employee(models.Model):
                              'tc_presale_comp_line':presale_comp_data,
                              'team_line':team_line})
             sample_id =self.env['audit.sample'].create(vals)
+        if type == 'service_sale_spl':
+            today = dt.today()
+            day = today.day
+            commit_line,commit_total = self.get_sales_spl_commit_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
+            achieved_line,achieved_total = self.get_sales_spl_achieved_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
+            component_data= self.get_sales_spl_component(commit_total,achieved_total)
+            vals.update({'commit_gp_line':commit_line,'achieved_gp_line':achieved_line,'comp_line':component_data})
+            sample_id =self.env['audit.sample'].create(vals)
+            self.write({'commit_total':commit_total})
+        
         if type == 'sales_acc_mgr':
             today = dt.today()
             day = today.day

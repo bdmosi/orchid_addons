@@ -6,6 +6,7 @@ class audit_template(models.Model):
     name = fields.Char(string="Name",required=True)
     type = fields.Selection([('post_sales','Post Sales'),('pre_sales','Pre-Sales Engineer'),
                              ('pre_sales_mgr','Pre-Sales Manager'),('sales_acc_mgr','Sales Account Manager'),
+                             ('service_sale_spl','Service Sale Specialist'),
                              ('sm','Sales Manager'),
                              ('bdm','BDM'), ('bdm_sec','BDM-SEC'),('bdm_net','BDM-NET-DC'),('ttl','Technical Team Leader'),
                              ('pm','Project Manager'),('pmo','PMO Director'),('pdm','Project Department Manager'),
