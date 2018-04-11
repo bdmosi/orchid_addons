@@ -39,7 +39,7 @@ class crm_lead(models.Model):
         timesheet_amounts = []
         for timesheet in all_timesheet_ids:
             if timesheet:
-                timesheet_amounts.append(timesheet.amount)
+                timesheet_amounts.append(timesheet.normal_amount)
         amount = sum(timesheet_amounts)
         self.od_timesheet_amount = amount
     @api.multi

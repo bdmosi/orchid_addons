@@ -536,7 +536,7 @@ class account_analytic_account(models.Model):
         analytic_id = self.id
         domain = [('account_id','=',analytic_id)]
         timesheet_obj = timesheet.search(domain)
-        amount = sum([tm.amount for tm in timesheet_obj])
+        amount = sum([tm.normal_amount for tm in timesheet_obj])
         self.od_timesheet_amount = amount
         self.od_timesheet_amount2 = amount
     @api.multi
