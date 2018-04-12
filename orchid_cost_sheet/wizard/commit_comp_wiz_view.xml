@@ -51,7 +51,7 @@
 		<field name="name">wiz.comp.data.tree</field>
 		<field name="model">wiz.comp.data</field>
 		<field name="arch" type="xml">
-			<tree string="Sale In">
+			<tree colors="red:total_gp_opp!=total_gp or total_sale_opp!=sale_aftr_disc" string="Commit Compare">
 			<field name="company_id" invisible="1" />
 				<field name="opp_id" />
 				<field name="partner_id" />
