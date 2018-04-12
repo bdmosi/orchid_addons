@@ -47,7 +47,7 @@
 			action="action_commit_comp_act" />
 
 
-	<record model="ir.ui.view" id="od_rev_sale_in_tree_view">
+	<record model="ir.ui.view" id="od_commit_comp_view">
 		<field name="name">wiz.comp.data.tree</field>
 		<field name="model">wiz.comp.data</field>
 		<field name="arch" type="xml">
@@ -74,7 +74,7 @@
 		</field>
 	</record>
 
-	<record model="ir.ui.view" id="ood_rev_sale_in_search_view">
+	<record model="ir.ui.view" id="ood_commit_comp_view">
 		<field name="name">wiz.comp.data.search</field>
 		<field name="model">wiz.comp.data</field>
 		<field name="arch" type="xml">
