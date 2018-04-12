@@ -2731,7 +2731,7 @@ class od_cost_sheet(models.Model):
     sum_tot_sale = fields.Float(string="Total Sale",compute="_get_total_summary",store=True,digits=dp.get_precision('Account'))
     sum_tot_cost = fields.Float(string='Total Cost',compute="_get_total_summary",store=True,digits=dp.get_precision('Account'))
     sum_profit = fields.Float(string="Total Profit",compute="_get_total_summary",store=True,digits=dp.get_precision('Account'))
-    total_gp = fields.Float(string="Total GP",compute="_get_total_gp",digits=dp.get_precision('Account'))
+    total_gp = fields.Float(string="Total GP",compute="_get_total_gp",store=True,digits=dp.get_precision('Account'))
 #     sum_od_new_profit = fields.Float(string="New Profit",compute="_get_total_summary",store=True)
     sum_profit_per = fields.Float(string="Total Profit Percentage",compute="_get_total_summary",store=True,digits=dp.get_precision('Account'))
     sum_total_weight = fields.Float(string="Total Weight",compute="_get_total_summary",store=True,digits=dp.get_precision('Account'))

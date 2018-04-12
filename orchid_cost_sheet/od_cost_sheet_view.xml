@@ -784,7 +784,9 @@
 							</table>
 							
 							
-							
+							<group>
+								<field name="total_gp" />
+							</group>
 							
 
 							<group col="4" colspan="2">
