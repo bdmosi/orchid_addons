@@ -40,11 +40,13 @@ class task(models.Model):
         duration = self.planned_hours
         self.b_plan_hr = duration 
         date_start = self.date_start
+        
+        if date_start:
+            date_start = datetime.strptime(date_start, DEFAULT_SERVER_DATETIME_FORMAT)
+            dt = date_start + timedelta(hours=duration or 0.0)
+            dt_s = dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+            self.date_end = dt_s 
         date_end = self.date_end
-#         if date_start:
-#             date_start = datetime.strptime(date_start, DEFAULT_SERVER_DATETIME_FORMAT)
-#             dt = date_start + timedelta(hours=duration or 0.0)
-#             dt_s = dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         self.b_date_end = date_end
     @api.multi 
     def btn_cancel_by_tl(self):
