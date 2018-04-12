@@ -67,7 +67,7 @@ class opp_comp_wiz(models.TransientModel):
 
 class wiz_comp_rpt(models.TransientModel):
     _name = 'wiz.comp.data'
-    wiz_id = fields.Many2one('opp.sale.in.rpt.wiz',string="Wizard")
+    wiz_id = fields.Many2one('opp.comp.wiz',string="Wizard")
     cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet')
     partner_id = fields.Many2one('res.partner',string="Customer")
     company_id = fields.Many2one('res.company',string="Company")
