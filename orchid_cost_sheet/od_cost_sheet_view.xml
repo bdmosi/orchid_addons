@@ -1572,7 +1572,9 @@
 									<field name="item"/>
 									<field name="name"/>
 									<field name="qty" sum="qty"/>
-									<field name="unit_price" />
+									<field name="fixed" invisible="1"/>
+									<field name="unit_price" attrs="{'invisible':[('fixed','=',True)]}"/>
+									<field name="new_unit_price" attrs="{'invisible':[('fixed','=',False)]}"/>
 									<field name="line_price" sum="line_price"/>
 									<field name="tax_id"/>
 									<field name="vat"/>

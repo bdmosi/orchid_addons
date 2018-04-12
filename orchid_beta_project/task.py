@@ -34,7 +34,7 @@ class task(models.Model):
         return False
     
     @api.one 
-    @api.depends('date_start','od_implementation_id')
+    @api.depends('date_start','od_implementation_id','date_end')
     def x_get_end_date(self):
 #         duration = self.od_implementation_id and self.od_implementation_id.expected_act_duration
         duration = self.planned_hours
