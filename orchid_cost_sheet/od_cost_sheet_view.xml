@@ -11,27 +11,13 @@
 				<tree string="Cost Sheet">
 				     <field name="number"/>
 				     <field name="sum_total_sale" string="Total Sale Value" sum="total"/>
+				     <field name="total_gp" sum="Total" />
+					<field name="sum_profit" string="Profit without MP" sum="total"/>
+					<field name="a_bim_cost" string="IMP MP" sum="total"/>
+					<field name="a_bmn_cost" string="AMC MP" sum="total"/>
 					<field name="op_expected_booking"/>
 					<field name="name"/>
 					<field name="od_customer_id"/>
-					
-					<!-- <field name="special_discount" string="Discount or Addition" sum="total"/> -->
-					<!-- <field name="sum_tot_cost" string="Total Cost Value" sum="total"/> -->
-					<field name="total_gp" sum="Total" />
-					<field name="sum_profit" string="Profit without MP" sum="total"/>
-					<!-- <field name="sum_profit_per"/> -->
-					<!-- <field name="a_tot_cost" string="Beta MP" sum="total"/> -->
-					<field name="a_bim_cost" string="IMP MP" sum="total"/>
-					<field name="a_bmn_cost" string="AMC MP" sum="total"/>
-					<!-- <field name="a_om_cost" string="R.E. MP" sum="total"/> -->
-					<!-- <field name="lead_id"/> -->
-					
-					<!-- <field name="date"/>
-					<field name="prepared_by"/>
-					<field name="reviewed_id"/>
-					<field name="sales_acc_manager"/>
-					<field name="business_development"/>
-					<field name="pre_sales_engineer"/> -->
 					<field name="status"/>
 					<field name="state"/>
 
