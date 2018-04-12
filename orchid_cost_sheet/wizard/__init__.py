@@ -7,3 +7,4 @@ import assign_accountant
 import material_issue_wiz
 import opp_revenue_rpt
 import sale_in_rpt
+import commit_comp_wiz

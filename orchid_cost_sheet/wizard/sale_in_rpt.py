@@ -161,7 +161,7 @@ class wiz_sale_in_rpt(models.TransientModel):
     stage_id = fields.Many2one('crm.case.stage',string="Opp Stage")
     pdt_grp_id = fields.Many2one('od.product.group',string='Product Group')
     total_sale = fields.Float(string="Sales",digits=dp.get_precision('Account'))
-    disc = fields.Float(string="Disc %",digits=dp.get_precision('Account'))
+    disc = fields.Float(string="Special Discount",digits=dp.get_precision('Account'))
     sale_aftr_disc = fields.Float(string="Sales After Disc",digits=dp.get_precision('Account'))
     total_cost = fields.Float(string="Cost",digits=dp.get_precision('Account'))
     profit = fields.Float(string="Profit",digits=dp.get_precision('Account'))

@@ -34,6 +34,7 @@
                 'wizard/section_wiz_view.xml',
                 'wizard/opp_revenue_rpt_view.xml',
                 'wizard/sale_in_view.xml',
+                'wizard/commit_comp_wiz_view.xml',
                 'od_cost_sheet_view.xml',
                 'import/material_view.xml',
                 'import/optional_material_view.xml',
