@@ -68,7 +68,7 @@
 				<field name="disc" sum="Total" />
 				<field name="sale_aftr_disc" sum="Total" />
 				<field name="total_cost" sum="Total" />
-				<field name="profit" sum="Total" />
+				
 				<field name="total_gp" sum="Total" />
 			</tree>
 		</field>
