@@ -3,7 +3,7 @@ from openerp import models, fields, api
 from pprint import pprint
 from datetime import datetime
 import openerp.addons.decimal_precision as dp
-from lib2to3.tests.support import proj_dir
+
 
 class project_rpt_wiz(models.TransientModel):
     _name = 'project.rpt.wiz'
