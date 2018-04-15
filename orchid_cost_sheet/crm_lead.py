@@ -28,7 +28,7 @@ class crm_lead(models.Model):
     def get_vals(self):
         cost_sheet = self.env['od.cost.sheet']
         lead_id = self.id
-        domain = [('lead_id','=',lead_id),('state','!=','draft'),('status','in',('active','baseline'))]
+        domain = [('lead_id','=',lead_id),('status','in',('active','baseline'))]
         sheet = cost_sheet.search(domain,limit=1)
         if sheet:
             self.od_costsheet_sale = sheet.sum_total_sale

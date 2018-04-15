@@ -2024,7 +2024,7 @@ class od_cost_sheet(models.Model):
     
     @api.one
     def update_opportunity(self):
-        if self.status == 'active' and self.state != 'draft':
+        if self.status == 'active':
             lead_id = self.lead_id and self.lead_id.id or False
             manpower_cost =self.calculate_total_manpower_cost()
             new_profit = self.sum_profit + manpower_cost

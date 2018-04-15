@@ -26,6 +26,7 @@
 			'wizard/gen_purchase_view.xml',
 			'wizard/gen_stock_picking_view.xml',
 			'wizard/wiz_assign_user_view.xml',
+			'wizard/project_rpt_view.xml',
 			'data/data.xml',
             'analytic_view.xml',
             'invoice_view.xml',

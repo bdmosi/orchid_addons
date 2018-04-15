@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="view_project_rpt_wizard" model="ir.ui.view">
+            <field name="name">Project Form</field>
+            <field name="model">project.rpt.wiz</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Report">
+                    <group >
+                        <group>
+	                        <field name="company_id" />
+                        </group>
+                        <group>
+                        		<field name="pm_ids" widget="many2many_tags"/>
+                        		<field name="sam_ids" widget="many2many_tags"/>
+                        </group>
+                        <group>
+                        		<field name="sale_team_ids" widget="many2many_tags"/>
+                        		<field name="territory_ids" widget="many2many_tags"/>
+                        </group>
+                        
+                        <group>
+	                        <field name="branch_ids" widget="many2many_tags"/>
+	                        <field name="cost_centre_ids" widget="many2many_tags"/>
+	                        <field name="division_ids" widget="many2many_tags"/>
+                        </group>
+                        
+                        <group>
+                        <field name="wip" />
+                        <field name="closed" />
+                        <field name="inactive" />
+                        </group>
+                       
+                      </group>
+
+                      
+                       <footer>
+                       <button name="export_rpt" string="Export" type="object" />
+                       or
+                        <button string="Cancel" special="cancel" />
+                       
+                       </footer>
+                        
+                </form>
+            </field>
+        </record>
+
+       
+
+        <record id="action_project_rpt_act" model="ir.actions.act_window">
+            <field name="name">Project Report</field>
+            <field name="res_model">project.rpt.wiz</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+         
+         
+         <menuitem
+         	
+			id="menu_project_rpt_1"
+			parent="project.menu_project_management"
+			 sequence="10" 
+			action="action_project_rpt_act" />
+
+
+	<record model="ir.ui.view" id="od_project_data_tree_view">
+		<field name="name">wiz.project.rpt.data.tree</field>
+		<field name="model">wiz.project.rpt.data</field>
+		<field name="arch" type="xml">
+			<tree string="Sale In">
+			<field name="company_id" invisible="1" />
+				
+				<field name="partner_id" />
+				<field name="project_id" />
+				<button name="btn_open_project" type="object" icon="STOCK_FIND" string="Open" />
+				
+				<field name="pm_id" />
+				<field name="sam_id" />
+				<field name="cost_sheet_id" />
+				<button name="btn_open_cost" type="object" icon="STOCK_FIND" string="Open" />
+				<field name="branch_id" />
+			
+				<field name="original_sale" sum="Total" />
+				<field name="original_cost" sum="Total" />
+				<field name="original_profit" sum="Total" />
+				
+				<field name="amended_sale" sum="Total" />
+				<field name="amended_cost" sum="Total" />
+				<field name="amended_profit" sum="Total" />
+				
+				<field name="actual_sale" sum="Total" />
+				<field name="actual_cost" sum="Total" />
+				<field name="actual_profit" sum="Total" />
+				
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="ood_rev_sale_in_search_view">
+		<field name="name">wiz.project.rpt.data.search</field>
+		<field name="model">wiz.project.rpt.data</field>
+		<field name="arch" type="xml">
+			<search>
+			<field name="pm_id" />
+				<field name="sam_id" />
+				<field name="cost_sheet_id" />
+				<field name="project_id" />
+				<field name="branch_id" />
+			<group expand="1" string="Group By">
+                       
+                        <filter string="Company" domain="[]" context="{'group_by':'company_id'}"/>
+                        <filter string="Branch" domain="[]" context="{'group_by':'branch_id'}"/>
+                        <filter string="Customer" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Cost Sheet" domain="[]" context="{'group_by':'cost_sheet_id'}"/>
+                       
+                        <filter string="Sale Account Manager" domain="[]" context="{'group_by':'sam_id'}"/>
+                        <filter string="Project Manager" domain="[]" context="{'group_by':'pm_id'}"/>
+                       
+                    </group>
+			
+			</search>
+			
+			
+		</field>
+	</record>
+    </data>
+</openerp>

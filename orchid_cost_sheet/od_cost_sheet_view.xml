@@ -12,9 +12,7 @@
 				     <field name="number"/>
 				     <field name="sum_total_sale" string="Total Sale Value" sum="total"/>
 				     <field name="total_gp" sum="Total" />
-					<field name="sum_profit" string="Profit without MP" sum="total"/>
-					<field name="a_bim_cost" string="IMP MP" sum="total"/>
-					<field name="a_bmn_cost" string="AMC MP" sum="total"/>
+					<field name="a_total_manpower_sale" sum="Total" />
 					<field name="op_expected_booking"/>
 					<field name="name"/>
 					<field name="od_customer_id"/>
