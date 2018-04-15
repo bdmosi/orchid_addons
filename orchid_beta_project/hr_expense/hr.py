@@ -466,15 +466,21 @@ class hr_employee(models.Model):
          
         if wt_fot:
             score = fot_score 
+            if score>100.0:
+                score=100.0
             final_score = wt_fot * score
             comp_data.append((0,0,{'name':'Average of Team -Finished On Time','weight':wt_fot*100.0,'final_score':final_score,'score':score}))
         
         if wt_utl:
             score = utl_score 
+            if score>100.0:
+                score=100.0
             final_score = wt_utl * score
             comp_data.append((0,0,{'name':'Average of Team Utilization','weight':wt_utl*100.0,'final_score':final_score,'score':score}))
         if wt_cancel:
             score = c_score 
+            if score>100.0:
+                score=100.0
             final_score = wt_cancel * score
             comp_data.append((0,0,{'name':'Average of Team Percentage Of Cancelled Activities','weight':wt_cancel*100.0,'final_score':final_score,'score':score}))
         return comp_data
@@ -539,6 +545,8 @@ class hr_employee(models.Model):
         pmo_score = self.get_pmo_score_from_comp(pmo_comp_line)
         pmo_comp_line = [(0,0,{'name':'Cash Flow Management','weight':50,'score':pmo_score,'final_score':pmo_score* 0.5})]
         team_avg_score = self.get_avg_score(team_score)
+        if team_avg_score >100:
+            team_avg_score =100.0
         sde_comp_line = [(0,0,{'name':'Average Of Service Desk Engineer','weight':20,'score':team_avg_score,'final_score':team_avg_score* 0.2})]
         comp_line = tech_comp_line + pmo_comp_line + sde_comp_line
         
@@ -1738,8 +1746,8 @@ class hr_employee(models.Model):
         closed_projects =[]
         analytic_pool = self.env['account.analytic.account']
         company_id = self.company_id and self.company_id.id
-        open_project_ids = analytic_pool.search([('company_id','=',company_id),('od_type_of_project','not in',('amc','o_m','credit','comp_gen')),('state','not in',('close','cancelled'))])
-        closed_project_ids = analytic_pool.search([('company_id','=',company_id),('od_type_of_project','not in',('amc','o_m','credit','comp_gen')),('state','=','close')])
+        open_project_ids = analytic_pool.search([('company_id','=',company_id),('od_type_of_project','not in',('o_m','credit','comp_gen')),('state','not in',('close','cancelled'))])
+        closed_project_ids = analytic_pool.search([('company_id','=',company_id),('od_type_of_project','not in',('o_m','credit','comp_gen')),('state','=','close')])
         sale_pool = self.env['sale.order']
         invoice_pool = self.env['account.invoice']
         total_collected =0.0
