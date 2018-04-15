@@ -20,8 +20,8 @@ class opp_rev_sale_in_wiz(models.TransientModel):
     date_start = fields.Date(string="Approved Date Start")
     date_end =fields.Date(string="Approved Date End")
     
-    sm_ids = fields.Many2many('res.users',string="Sales Account Manager")
-    owner_ids = fields.Many2many('res.users',string="Owner")
+    sm_ids = fields.Many2many('res.users','wiz_sale_x','wiz_id','user_id',string="Sales Account Manager")
+    owner_ids = fields.Many2many('res.users','wiz_sale_y','wiz_id','user_id',string="Owner")
     sale_team_ids = fields.Many2many('crm.case.section',string="Sales Team")
     
     wiz_line = fields.One2many('wiz.sale.in.data','wiz_id',string="Wiz Line")
