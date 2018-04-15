@@ -80,7 +80,7 @@
 				<field name="cost_sheet_id" />
 				<button name="btn_open_cost" type="object" icon="STOCK_FIND" string="Open" />
 				<field name="branch_id" />
-			
+			    <field name="status" /> 
 				<field name="original_sale" sum="Total" />
 				<field name="original_cost" sum="Total" />
 				<field name="original_profit" sum="Total" />
@@ -111,6 +111,7 @@
                        
                         <filter string="Company" domain="[]" context="{'group_by':'company_id'}"/>
                         <filter string="Branch" domain="[]" context="{'group_by':'branch_id'}"/>
+                        <filter string="Status" domain="[]" context="{'group_by':'status'}"/>
                         <filter string="Customer" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Cost Sheet" domain="[]" context="{'group_by':'cost_sheet_id'}"/>
                        
