@@ -2,8 +2,8 @@
 <openerp>
     <data>
         <record id="view_project_rpt_wizard" model="ir.ui.view">
-            <field name="name">Project Form</field>
-            <field name="model">project.rpt.wiz</field>
+            <field name="name">AMC Form</field>
+            <field name="model">amc.rpt.wiz</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Report">
@@ -48,9 +48,9 @@
 
        
 
-        <record id="action_project_rpt_act" model="ir.actions.act_window">
-            <field name="name">Project Report</field>
-            <field name="res_model">project.rpt.wiz</field>
+        <record id="action_amc_rpt_act" model="ir.actions.act_window">
+            <field name="name">SLA Report</field>
+            <field name="res_model">amc.rpt.wiz</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
@@ -58,15 +58,15 @@
          
          <menuitem
          	
-			id="menu_project_rpt_1"
-			parent="project.menu_project_management"
+			id="menu_amc_rpt_1"
+			parent="orchid_cost_sheet.od_menu_helpdesk_sub"
 			 sequence="10" 
-			action="action_project_rpt_act" />
+			action="action_amc_rpt_act" />
 
 
-	<record model="ir.ui.view" id="od_project_data_tree_view">
-		<field name="name">wiz.project.rpt.data.tree</field>
-		<field name="model">wiz.project.rpt.data</field>
+	<record model="ir.ui.view" id="od_amc_data_tree_view">
+		<field name="name">wiz.amc.rpt.data.tree</field>
+		<field name="model">wiz.amc.rpt.data</field>
 		<field name="arch" type="xml">
 			<tree string="Sale In">
 			<field name="company_id" invisible="1" />
@@ -97,9 +97,9 @@
 		</field>
 	</record>
 
-	<record model="ir.ui.view" id="ood_rev_project_search_view">
-		<field name="name">wiz.project.rpt.data.search</field>
-		<field name="model">wiz.project.rpt.data</field>
+	<record model="ir.ui.view" id="ood_rev_amc_search_view">
+		<field name="name">wiz.amc.rpt.data.search</field>
+		<field name="model">wiz.amc.rpt.data</field>
 		<field name="arch" type="xml">
 			<search>
 			<field name="pm_id" />
