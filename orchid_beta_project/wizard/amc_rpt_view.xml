@@ -48,7 +48,7 @@
 
        
 
-        <record id="action_amc_rpt_act" model="ir.actions.act_window">
+        <record id="action_amc_rpt_act2" model="ir.actions.act_window">
             <field name="name">SLA Report</field>
             <field name="res_model">amc.rpt.wiz</field>
             <field name="view_mode">form</field>
@@ -58,10 +58,10 @@
          
          <menuitem
          	
-			id="menu_amc_rpt_1"
+			id="menu_amc_rpt_2"
 			parent="orchid_cost_sheet.od_menu_helpdesk_sub"
 			 sequence="10" 
-			action="action_amc_rpt_act" />
+			action="action_amc_rpt_act2" />
 
 
 	<record model="ir.ui.view" id="od_amc_data_tree_view">
