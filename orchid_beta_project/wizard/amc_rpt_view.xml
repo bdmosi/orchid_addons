@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <record id="view_project_rpt_wizard" model="ir.ui.view">
+        <record id="view_amc_rpt_wizard" model="ir.ui.view">
             <field name="name">AMC Form</field>
             <field name="model">amc.rpt.wiz</field>
             <field name="type">form</field>
