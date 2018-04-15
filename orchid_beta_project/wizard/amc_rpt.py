@@ -16,8 +16,16 @@ class amc_rpt_wiz(models.TransientModel):
     division_ids = fields.Many2many('od.cost.division',string="Technology Unit")
     
     
-    pm_ids = fields.Many2many('res.users',string="Project Manager")
-    sam_ids = fields.Many2many('res.users',string="Sales Account Manager")
+    date_start_from = fields.Date(string="Starting Date From")
+    date_start_to = fields.Date(string="Starting Date To")
+    
+    date_end_from = fields.Date(string="Ending Date From")
+    date_end_to = fields.Date(string="Ending Date To")
+    
+    partner_ids = fields.Many2many('res.partner',string="Customer")
+    
+    pm_ids = fields.Many2many('res.users','amc_wiz_pm','wiz_id','user_id',string="Project Manager")
+    sam_ids = fields.Many2many('res.users','amc_wiz_sam','wiz_id','user_id',string="Sales Account Manager")
     sale_team_ids = fields.Many2many('crm.case.section',string="Sale Team")
     territory_ids = fields.Many2many('od.partner.territory',string="Territory")
     wiz_line = fields.One2many('wiz.amc.rpt.data','wiz_id',string="Wiz Line")
@@ -37,10 +45,16 @@ class amc_rpt_wiz(models.TransientModel):
         sam_ids =[pr.id for pr in self.sam_ids]
         sale_team_ids =[pr.id for pr in self.sale_team_ids]
         territory_ids =[pr.id for pr in self.territory_ids]
+        partner_ids =[pr.id for pr in self.partner_ids]
         wiz_id = self.id
         wip = self.wip 
         closed = self.closed 
         inactive= self.inactive
+            
+        date_start_from = self.date_start_from
+        date_start_to = self.date_start_to
+        date_end_from = self.date_end_from
+        date_end_to = self.date_end_to
         prj_states = []
         if wip:
             prj_states += ['active']
@@ -54,6 +68,8 @@ class amc_rpt_wiz(models.TransientModel):
         if company_id:
             domain += [('company_id','=',company_id)]
         
+        if partner_ids:
+            domain += [('partner_id','in',partner_ids)]
         
         if prj_states:
             domain+=[('od_amc_status','in',prj_states)]
@@ -72,6 +88,18 @@ class amc_rpt_wiz(models.TransientModel):
             domain += [('od_section_id','in',sale_team_ids)]
         if territory_ids:
             domain += [('od_territory_id','in',territory_ids)]
+        
+        
+        if date_start_from:
+            domain += [('od_project_start','>=',date_start_from)]
+        if date_start_to:
+            domain += [('od_project_start','<=',date_start_to)]
+        
+        if date_end_from:
+            domain += [('od_project_end','>=',date_end_from)]
+        
+        if date_end_to:
+            domain += [('od_project_end','<=',date_end_to)]
     
             
         project_data = self.env['project.project'].search(domain) 
@@ -102,7 +130,9 @@ class amc_rpt_wiz(models.TransientModel):
                                 'actual_sale':data.od_amc_sale,
                                 'actual_cost':data.od_amc_cost,
                                 'actual_profit':data.od_amc_profit,
-                                'status':data.od_amc_status 
+                                'status':data.od_amc_status,
+                                'date_start':data.od_amc_start,
+                                'date_end':data.od_amc_end,  
                                 }))
                         
         
@@ -141,6 +171,9 @@ class wiz_amc_rpt_data(models.TransientModel):
     actual_sale = fields.Float(string="Actual Sale",digits=dp.get_precision('Account'))
     actual_cost = fields.Float(string="Actual Cost",digits=dp.get_precision('Account'))
     actual_profit = fields.Float(string="Actual Profit",digits=dp.get_precision('Account'))
+    
+    date_start = fields.Date(string="Date Start")
+    date_end = fields.Date(string="Date End")
     status = fields.Selection([('active','Active'),('inactive','Inactive'),('close','Closed')],string="Status")
     @api.multi
     def btn_open_project(self):
