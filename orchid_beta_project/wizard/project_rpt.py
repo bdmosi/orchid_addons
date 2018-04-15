@@ -11,7 +11,6 @@ class project_rpt_wiz(models.TransientModel):
     
     
     
-    
     branch_ids= fields.Many2many('od.cost.branch',string="Branch")
     cost_centre_ids = fields.Many2many('od.cost.centre',string="Cost Center")
     division_ids = fields.Many2many('od.cost.division',string="Technology Unit")
@@ -99,7 +98,7 @@ class project_rpt_wiz(models.TransientModel):
                                 'original_profit':data.od_original_sale_profit,
                                 'amended_sale':data.od_amended_sale_price,
                                 'amended_cost':data.od_amended_sale_cost,
-                                'amended_profit':data.od_amended_sale_profit,
+                                'amended_profit':data.od_amended_profit,
                                 'actual_sale':data.od_project_sale,
                                 'actual_cost':data.od_project_cost,
                                 'actual_profit':data.od_project_profit,
