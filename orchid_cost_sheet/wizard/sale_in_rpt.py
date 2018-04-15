@@ -20,6 +20,10 @@ class opp_rev_sale_in_wiz(models.TransientModel):
     date_start = fields.Date(string="Approved Date Start")
     date_end =fields.Date(string="Approved Date End")
     
+    sm_ids = fields.Many2many('res.users',string="Sales Account Manager")
+    owner_ids = fields.Many2many('res.users',string="Owner")
+    sale_team_ids = fields.Many2many('crm.case.sections',string="Sales Team")
+    
     wiz_line = fields.One2many('wiz.sale.in.data','wiz_id',string="Wiz Line")
     def od_get_company_id(self):
         return self.env.user.company_id
@@ -34,6 +38,9 @@ class opp_rev_sale_in_wiz(models.TransientModel):
         branch_ids = [pr.id for pr in self.branch_ids]
         cost_centre_ids = [pr.id for pr in self.cost_centre_ids]
         division_ids = [pr.id for pr in self.division_ids]
+        sm_ids = [pr.id for pr in self.sm_ids]
+        owner_ids = [pr.id for pr in self.owner_ids]
+        sale_team_ids = [pr.id for pr in self.sale_team_ids]
         
         
         date_start = self.date_start
@@ -52,6 +59,17 @@ class opp_rev_sale_in_wiz(models.TransientModel):
             domain += [('od_cost_centre_id','in',cost_centre_ids)]
         if division_ids:
             domain += [('od_division_id','in',division_ids)]
+            
+        if sm_ids:
+            domain += [('sales_acc_manager','in',sm_ids)]
+        
+        if sale_team_ids:
+            domain += [('sale_team_id','in',sale_team_ids)]
+        
+        if owner_ids:
+            domain += [('reviewed_id','in',owner_ids)]
+        
+        
         if date_start:
             domain += [('approved_date','>=',date_start)]
         if date_end:
