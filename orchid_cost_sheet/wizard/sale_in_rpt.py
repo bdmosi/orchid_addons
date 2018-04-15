@@ -22,7 +22,7 @@ class opp_rev_sale_in_wiz(models.TransientModel):
     
     sm_ids = fields.Many2many('res.users',string="Sales Account Manager")
     owner_ids = fields.Many2many('res.users',string="Owner")
-    sale_team_ids = fields.Many2many('crm.case.sections',string="Sales Team")
+    sale_team_ids = fields.Many2many('crm.case.section',string="Sales Team")
     
     wiz_line = fields.One2many('wiz.sale.in.data','wiz_id',string="Wiz Line")
     def od_get_company_id(self):

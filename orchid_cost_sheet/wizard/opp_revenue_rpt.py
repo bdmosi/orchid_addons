@@ -31,7 +31,7 @@ class opp_rev_rpt_wiz(models.TransientModel):
      
     sm_ids = fields.Many2many('res.users',string="Sales Account Manager")
     owner_ids = fields.Many2many('res.users',string="Owner")
-    sale_team_ids = fields.Many2many('crm.case.sections',string="Sales Team")
+    sale_team_ids = fields.Many2many('crm.case.section',string="Sales Team")
     def od_get_company_id(self):
         return self.env.user.company_id
     company_id = fields.Many2one('res.company', string='Company',default=od_get_company_id)
