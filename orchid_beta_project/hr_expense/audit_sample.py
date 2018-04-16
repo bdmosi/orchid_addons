@@ -592,7 +592,9 @@ class ttl_utilization_sample(models.Model):
     sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
     actual_time_spent = fields.Float(string="Actual Time Spent")
     available_time = fields.Float(string="Available Time")
-    utl = fields.Float(string="Utilization")
+    utl = fields.Float(string="Actual Utilization")
+    planned_time = fields.Float(string="Planned Time")
+    planned_utl = fields.Float(string="Planned Utilization")
 class ttl_on_time_sample(models.Model):
     _name ='ttl.ontime.sample'
     user_id = fields.Many2one('res.users',string="User")

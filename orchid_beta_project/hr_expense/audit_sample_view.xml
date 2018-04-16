@@ -392,8 +392,10 @@
 								<field name="utl_sample_line">
 									<tree editable="bottom" create="false" delete="false">
 										<field name="user_id" readonly="1"/>
-										<field name="actual_time_spent" readonly="1"/>
 										<field name="available_time" readonly="1"/>
+										<field name="planned_time" readonly="1"/>
+										<field name="actual_time_spent" readonly="1"/>
+										<field name="planned_utl" readonly="1"/>
 										<field name="utl" readonly="1"/>
 									</tree>
 								</field>

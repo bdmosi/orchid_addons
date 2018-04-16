@@ -402,12 +402,14 @@ class hr_employee(models.Model):
             emp_id = self.get_employee_from_user(user)
             avl_time = self.get_available_time(emp_id,dt_start,aud_date_end) or 1
             utl = spent_time/float(avl_time)
-            result.append((0,0,{'user_id':user,'available_time':avl_time,'actual_time_spent':spent_time,'utl':(spent_time/avl_time)*100.0}))
+            planned_time = sum([dat.b_plan_hr for dat in data_ids])
+            planned_utl = planned_time/float(avl_time)
+            result.append((0,0,{'user_id':user,'available_time':avl_time,'actual_time_spent':spent_time,'utl':(spent_time/avl_time)*100.0,'planned_time':planned_time,'planned_utl':planned_utl}))
             fot_data.append((0,0,{'user_id':user,'fot':fot}))
-            utl  = (utl/0.65)
-            if utl>1.0:
-                utl = 1.0
-            utl_list.append(utl)
+            pl_utl  = (planned_utl/0.65)
+            if pl_utl>1.0:
+                pl_utl = 1.0
+            utl_list.append(pl_utl)
             fot_list.append(fot)
             
         utl_score =  self.get_avg_score(utl_list)  
