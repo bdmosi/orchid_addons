@@ -985,6 +985,8 @@ class account_analytic_account(models.Model):
         original_profit = self.od_original_sale_profit 
         if original_profit:
             result = (actual_profit/original_profit) * 100 
+        if original_profit <=0.0 and actual_profit >0.0:
+            result =100.0
         return result
     
     

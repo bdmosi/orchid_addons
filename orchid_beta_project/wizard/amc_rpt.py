@@ -166,7 +166,7 @@ class wiz_amc_rpt_data(models.TransientModel):
    
     amended_sale = fields.Float(string="Amended Sale",digits=dp.get_precision('Account'))
     amended_cost = fields.Float(string="Amended Cost",digits=dp.get_precision('Account'))
-    amended_profit = fields.Float(string="Amended Sale",digits=dp.get_precision('Account'))
+    amended_profit = fields.Float(string="Amended Profit",digits=dp.get_precision('Account'))
    
     actual_sale = fields.Float(string="Actual Sale",digits=dp.get_precision('Account'))
     actual_cost = fields.Float(string="Actual Cost",digits=dp.get_precision('Account'))
