@@ -41,7 +41,7 @@
 
         <record model="ir.actions.act_window" id="action_entry_sch">
             <field name="name">Entry Check</field>
-            <field name="res_model">openacademy.course</field>
+            <field name="res_model">od.entry.sch</field>
             <field name="view_mode">tree,form</field>
         </record>
 

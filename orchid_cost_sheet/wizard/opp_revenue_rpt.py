@@ -8,7 +8,7 @@ class opp_rev_rpt_wiz(models.TransientModel):
     _name = 'opp.rev.rpt.wiz'
     
     bdm_id = fields.Many2one('res.users',string="BDM")
-    product_group_id = fields.Many2one('od.product.group',string="Product Group")
+    product_group_id = fields.Many2one('od.product.group',string="Technolgoy Unit",domain=[('code','in',('1','2','3'))])
     stage_id = fields.Many2one('crm.case.stage',string="Opp Stage")
     branch_id = fields.Many2one('od.cost.branch',string="Branch")
     cost_centre_id = fields.Many2one('od.cost.centre',string="Cost Center")
