@@ -169,7 +169,7 @@ class project_work(models.Model):
     overtime = fields.Boolean(string="Overtime")
     overtime_type = fields.Many2one('hr.salary.rule',string="Overtime Type")
     ot_line_id = fields.Many2one('od.hr.over.time.line',string='Overtime Line')
-    b_hours = fields.Float(string="Time Spent",help="To Show Time Spent by User For the Tasl")
+    b_hours = fields.Float(string="Time Spent",help="To Show Time Spent by User For the Task",compute='get_show_time_spent')
 class project_project(models.Model):
     _inherit ='project.project'
     _od_project_types =[('credit','Credit'),('sup','Supply'),('imp','Implementation'),('sup_imp','Supply & Implementation'),('amc','AMC'),('o_m','O&M'), ('comp_gen','Company General -(POC,Training,Trips,etc.)')]
