@@ -850,6 +850,8 @@ class task(models.Model):
         return date_done
    
     def check_date_done_on_same_day(self,date_done,date_end):
+        if not date_done or not date_end:
+            return False
         date_end = datetime.strptime(date_end,DEFAULT_SERVER_DATETIME_FORMAT)
         date_done = datetime.strptime(date_done,DEFAULT_SERVER_DATETIME_FORMAT)
         
