@@ -695,19 +695,20 @@ class task(models.Model):
                 return min(date_list)
             return False
         if self.od_date_done and self.od_type == 'activities':
-            date_end= datetime.strptime(self.date_end,DEFAULT_SERVER_DATETIME_FORMAT)
-            date_reach = date_end + timedelta(hours=36)
-            eval_date = min_eval_date(self.od_tech_eval_log_ids)
-            if eval_date:
-                eval_date = datetime.strptime(eval_date,DEFAULT_SERVER_DATETIME_FORMAT)
-                print "eval date>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",eval_date
-                print "date reach>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",date_reach
-                if eval_date > date_reach :
-                    self.od_late_in_tech_eval = True
-                else:
+            if self.date_end > '2017-04-17':
+                date_end= datetime.strptime(self.date_end,DEFAULT_SERVER_DATETIME_FORMAT)
+                date_reach = date_end + timedelta(hours=36)
+                eval_date = min_eval_date(self.od_tech_eval_log_ids)
+                if eval_date:
+                    eval_date = datetime.strptime(eval_date,DEFAULT_SERVER_DATETIME_FORMAT)
+                    print "eval date>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",eval_date
+                    print "date reach>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",date_reach
+                    if eval_date > date_reach :
+                        self.od_late_in_tech_eval = True
+                    else:
+                        self.od_late_in_tech_eval = False
+                if datetime.now() > date_reach and not eval_date:
                     self.od_late_in_tech_eval = False
-            if datetime.now() > date_reach and not eval_date:
-                self.od_late_in_tech_eval = False
     # @api.one
     # def od_submit_task(self):
     #     self.od_status ='submitted'
