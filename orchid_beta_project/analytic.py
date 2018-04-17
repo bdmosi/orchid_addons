@@ -21,7 +21,7 @@ class account_move_line(models.Model):
 
 class account_analytic_account(models.Model):
     _inherit = "account.analytic.account"
-    DOMAIN = [('credit','Credit'),('sup','Supply'),('imp','Implementation'),('sup_imp','Supply & Implementation'),('amc','AMC'),('o_m','O&M'), ('comp_gen','Company General -(POC,Training,Trips,etc.)')]
+    DOMAIN = [('credit','Credit'),('sup','Supply'),('imp','Implementation'),('sup_imp','Supply & Implementation'),('amc','AMC'),('o_m','O&M'),('poc','(POC,Presales)'), ('comp_gen','Company General -(Training,Labs,Trips,etc.)')]
     od_type_of_project = fields.Selection(DOMAIN,string="Type Of Project")
     use_timesheets = fields.Boolean(string="Timesheets",readonly=True)
     use_tasks = fields.Boolean(string="Tasks",readonly=True)

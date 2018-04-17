@@ -402,7 +402,7 @@ class hr_employee(models.Model):
             emp_id = self.get_employee_from_user(user)
             avl_time = self.get_available_time(emp_id,dt_start,aud_date_end) or 1
             utl = spent_time/float(avl_time)
-            planned_time = sum([dat.b_plan_hr for dat in data_ids])
+            planned_time = sum([dat.b_plan_hr for dat in data_ids if dat.project_id.od_type_of_project != 'comp_gen'])
             planned_utl = planned_time/float(avl_time)
             result.append((0,0,{'user_id':user,'available_time':avl_time,'actual_time_spent':spent_time,'utl':(spent_time/avl_time)*100.0,'planned_time':planned_time,'planned_utl':planned_utl*100.0}))
             fot_data.append((0,0,{'user_id':user,'fot':fot}))
@@ -583,7 +583,7 @@ class hr_employee(models.Model):
             emp_id = self.get_employee_from_user(user_id)
             avl_time = self.get_available_time(emp_id,dt_start,aud_date_end) or 1
             utl = spent_time/float(avl_time)
-            planned_time = sum([dat.b_plan_hr for dat in data_ids])
+            planned_time = sum([dat.b_plan_hr for dat in data_ids if dat.project_id.od_type_of_project != 'comp_gen'])
             planned_utl = planned_time/float(avl_time)
             if user_id !=usr_id:
                 result.append((0,0,{'user_id':user_id,'available_time':avl_time,'actual_time_spent':spent_time,'utl':(spent_time/avl_time)*100.0,'planned_time':planned_time,'planned_utl':planned_utl*100.0}))
@@ -1750,8 +1750,8 @@ class hr_employee(models.Model):
         closed_projects =[]
         analytic_pool = self.env['account.analytic.account']
         company_id = self.company_id and self.company_id.id
-        open_project_ids = analytic_pool.search([('company_id','=',company_id),('od_type_of_project','not in',('o_m','credit','comp_gen')),('state','not in',('close','cancelled'))])
-        closed_project_ids = analytic_pool.search([('company_id','=',company_id),('od_type_of_project','not in',('o_m','credit','comp_gen')),('state','=','close')])
+        open_project_ids = analytic_pool.search([('company_id','=',company_id),('od_type_of_project','not in',('o_m','credit','comp_gen','poc')),('state','not in',('close','cancelled'))])
+        closed_project_ids = analytic_pool.search([('company_id','=',company_id),('od_type_of_project','not in',('o_m','credit','comp_gen','poc')),('state','=','close')])
         sale_pool = self.env['sale.order']
         invoice_pool = self.env['account.invoice']
         total_collected =0.0

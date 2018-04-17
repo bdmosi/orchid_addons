@@ -707,8 +707,8 @@ class task(models.Model):
                         self.od_late_in_tech_eval = True
                     else:
                         self.od_late_in_tech_eval = False
-                if datetime.now() > date_reach and not eval_date:
-                    self.od_late_in_tech_eval = False
+#                 if datetime.now() > date_reach and not eval_date:
+#                     self.od_late_in_tech_eval = False
     # @api.one
     # def od_submit_task(self):
     #     self.od_status ='submitted'
@@ -786,7 +786,7 @@ class task(models.Model):
     od_owner_approval = fields.Selection([('yes','Yes'),('partial','Partial Achievement'),('no','No')],'Owner Approval')
     od_satisfaction = fields.Float('Satisfaction %')
     od_auto_approved = fields.Boolean('Late In Approval',compute="_od_auto_approval")
-    od_late_in_tech_eval = fields.Boolean('Late In Evaluation',compute="_od_late_eval")
+    od_late_in_tech_eval = fields.Boolean('Not Evaluated/Late In Evaluation',compute="_od_late_eval")
     od_parent_id = fields.Many2one('project.task','Parent')
     od_by_delegate = fields.Boolean('By Delegate')
     od_owner_eval_log_ids = fields.One2many('od.task.owner.eval.log','task_id',string="Owner Eval Log",readonly=True)
