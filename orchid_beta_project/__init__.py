@@ -14,3 +14,4 @@ import stock
 import hr_expense
 import crm
 import helpdesk
+import entry

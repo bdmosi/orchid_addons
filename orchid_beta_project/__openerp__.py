@@ -46,6 +46,7 @@
             'hr_expense/audit_template_view.xml',
              'hr_expense/cert_view.xml',
              'views/widget_view.xml',
+             'entry/entry_view.xml',
 			],
 	'demo': [],
 	'test': [],
