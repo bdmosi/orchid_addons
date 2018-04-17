@@ -706,8 +706,8 @@ class task(models.Model):
                     self.od_late_in_tech_eval = True
                 else:
                     self.od_late_in_tech_eval = False
-            else:
-                self.od_late_in_tech_eval = True
+            if str(datetime.now()) > date_reach and not eval_date:
+                self.od_late_in_tech_eval = False
     # @api.one
     # def od_submit_task(self):
     #     self.od_status ='submitted'
