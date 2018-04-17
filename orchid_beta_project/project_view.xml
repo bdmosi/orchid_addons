@@ -275,7 +275,7 @@
             		<group>
             			<field name="od_quality_of_implementation" />
 	            		<field name="od_quality_of_documentation" />
-	            		<field name="od_complexiety" />
+	            		<field name="od_complexiety" invisible="1"/>
 	            		<field name="od_overnight" />
 	            		<field name="od_outstation" />
                         <field name="od_late_in_tech_eval" />

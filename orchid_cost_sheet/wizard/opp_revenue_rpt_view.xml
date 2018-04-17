@@ -58,7 +58,7 @@
 		<field name="arch" type="xml">
 			<tree string="Technology Report">
 				<field name="expected_booking" />
-				
+				<field name="partner_id" />
 				<field name="stage_id" />
 				<field name="bdm_user_id" />
 				<field name="cost_sheet_id" />
