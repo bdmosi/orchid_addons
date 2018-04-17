@@ -11,7 +11,7 @@
                     <button string="Show Entries" name="show_entries" type="object"  class="oe_highlight"  />
                    </header>
                     <sheet>
-                        <field name="image" widget="image" class="oe_left oe_avatar" />
+                     
                         <group>
                         		<group>
                         			<field name="move_id" />
