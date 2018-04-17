@@ -5,7 +5,7 @@ from datetime import datetime
 import openerp.addons.decimal_precision as dp
 
 
-class entry_sch(models.model):
+class entry_sch(models.Model):
     _name = 'od.entry.sch'
     _rec_name ='move_id'
     partner_ids = fields.Many2many('res.partner','entry_sch_part','en_sch_id','partner_id',string="Partner")
