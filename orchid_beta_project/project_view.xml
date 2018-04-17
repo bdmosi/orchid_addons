@@ -181,7 +181,7 @@
             		<field name="locked" invisible="1" />
             		<field name="date" string="Start Date/Time" on_change="onchange_time(date,od_complete_date)" attrs="{'readonly': [('locked','=',True)]}" />
             		<!-- <field name="od_start_date"  /> -->
-            		<field name="od_complete_date" on_change="onchange_time(date,od_complete_date)" attrs="{'readonly': [('locked','=',True)]}"/>
+            		<field name="od_complete_date" on_change="onchange_time(date,od_complete_date)" />
             		<field name="hours" widget="float_time" attrs="{'readonly': [('locked','=',True)]}"/>
             	</xpath>
 
