@@ -695,7 +695,7 @@ class task(models.Model):
                 return min(date_list)
             return False
         if self.od_date_done and self.od_type == 'activities':
-            if self.date_end > '2017-04-17':
+            if self.date_end > '2018-04-17':
                 date_end= datetime.strptime(self.date_end,DEFAULT_SERVER_DATETIME_FORMAT)
                 date_reach = date_end + timedelta(hours=36)
                 eval_date = min_eval_date(self.od_tech_eval_log_ids)
