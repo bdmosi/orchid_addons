@@ -93,19 +93,23 @@ class opp_rev_rpt_wiz(models.TransientModel):
         for sheet in cost_sheet_data:
             sheet_id = sheet.id
             opp_id = sheet.lead_id and sheet.lead_id.id 
-            date = sheet.approved_date 
+            date = sheet.approved_date
+            expected_booking = sheet.lead_id and sheet.lead_id.date_action 
             stage_id = sheet.op_stage_id and sheet.op_stage_id.id
             bdm_user_id = sheet.lead_created_by and sheet.lead_created_by.id
             partner_id = sheet.od_customer_id and sheet.od_customer_id.id 
             company_id = sheet.company_id and sheet.company_id.id 
             branch_id = sheet.od_branch_id and sheet.od_branch_id.id
+            sam_id = sheet.sales_acc_manager and sheet.sales_acc_manager.id
             if product_group_ids:
                 for line in sheet.summary_weight_line:
                     if product_group_ids:
                         if line.pdt_grp_id.id in product_group_ids:
                             result.append((0,0,{
                                 'wiz_id':wiz_id,
-                                'cost_sheet_id':sheet_id, 
+                                'cost_sheet_id':sheet_id,
+                                'expected_booking':expected_booking,
+                                 'mp_sales':sheet.a_total_manpower_sale,
                                 'opp_id':opp_id ,
                                 'partner_id':partner_id,
                                 'company_id':company_id,
@@ -120,12 +124,14 @@ class opp_rev_rpt_wiz(models.TransientModel):
                                 'total_cost':line.total_cost,
                                 'profit':line.profit,
                                 'manpower_cost':line.manpower_cost,
+                                'sam_id':sam_id,
                                 'total_gp':line.total_gp
                                 }))
                     else:
                         result.append((0,0,{
                                 'wiz_id':wiz_id,
                                 'cost_sheet_id':sheet_id, 
+                                 'expected_booking':expected_booking,
                                 'opp_id':opp_id ,
                                 'partner_id':partner_id,
                                 'company_id':company_id,
@@ -140,12 +146,15 @@ class opp_rev_rpt_wiz(models.TransientModel):
                                 'total_cost':line.total_cost,
                                 'profit':line.profit,
                                 'manpower_cost':line.manpower_cost,
+                                 'mp_sales':sheet.a_total_manpower_sale,
+                                 'sam_id':sam_id,
                                 'total_gp':line.total_gp
                                 }))
             else:
                 result.append((0,0,{
                                 'wiz_id':wiz_id,
                                 'cost_sheet_id':sheet_id, 
+                                 'expected_booking':expected_booking,
                                 'opp_id':opp_id ,
                                 'partner_id':partner_id,
                                 'company_id':company_id,
@@ -160,6 +169,8 @@ class opp_rev_rpt_wiz(models.TransientModel):
                                 'total_cost':sheet.sum_tot_cost,
                                 'profit':sheet.sum_profit,
                                 'manpower_cost':sheet.a_total_manpower_cost,
+                                 'mp_sales':sheet.a_total_manpower_sale,
+                                 'sam_id':sam_id,
                                 'total_gp':sheet.sum_profit + sheet.a_total_manpower_cost
                                 }))
         
@@ -182,6 +193,7 @@ class wiz_rev_rpt(models.TransientModel):
     wiz_id = fields.Many2one('opp.rev.rpt.wiz',string="Wizard")
     cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet')
     opp_id = fields.Many2one('crm.lead',string='Opportunity')
+    partner_id = fields.Many2one('res.partner',string="Customer")
     bdm_user_id = fields.Many2one('res.users',string="Lead/Opp Created By")
     expected_booking = fields.Date(string="Opp Expected Booking")
     stage_id = fields.Many2one('crm.case.stage',string="Opp Stage")
@@ -193,7 +205,10 @@ class wiz_rev_rpt(models.TransientModel):
     profit = fields.Float(string="Profit",digits=dp.get_precision('Account'))
     manpower_cost = fields.Float(string="Manpower Cost",digits=dp.get_precision('Account'))
     total_gp = fields.Float(string="Total GP",digits=dp.get_precision('Account'))
-    
+    mp_sales = fields.Float(string="MP Sales")
+    branch_id =  fields.Many2one('od.cost.branch',string="Branch")
+    sam_id = fields.Many2one('res.users',string="Sales Account Manager")
+    company_id = fields.Many2one('res.company',string="Company")
     @api.multi
     def btn_open_opp(self):
        

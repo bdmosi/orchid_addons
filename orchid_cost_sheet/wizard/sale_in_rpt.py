@@ -86,6 +86,7 @@ class opp_rev_sale_in_wiz(models.TransientModel):
             partner_id = sheet.od_customer_id and sheet.od_customer_id.id 
             company_id = sheet.company_id and sheet.company_id.id 
             branch_id = sheet.od_branch_id and sheet.od_branch_id.id
+            sam_id = sheet.sales_acc_manager and sheet.sales_acc_manager.id
             if product_group_ids:
                 for line in sheet.summary_weight_line:
                     
@@ -95,6 +96,7 @@ class opp_rev_sale_in_wiz(models.TransientModel):
                                 'wiz_id':wiz_id,
                                 'cost_sheet_id':sheet_id, 
                                 'opp_id':opp_id ,
+                                 'mp_sales':sheet.a_total_manpower_sale,
                                 'partner_id':partner_id,
                                 'company_id':company_id,
                                 'branch_id':branch_id,
@@ -108,6 +110,7 @@ class opp_rev_sale_in_wiz(models.TransientModel):
                                 'total_cost':line.total_cost,
                                 'profit':line.profit,
                                 'manpower_cost':line.manpower_cost,
+                                'sam_id':sam_id,
                                 'total_gp':line.total_gp
                                 }))
                     else:
@@ -128,6 +131,8 @@ class opp_rev_sale_in_wiz(models.TransientModel):
                                 'total_cost':line.total_cost,
                                 'profit':line.profit,
                                 'manpower_cost':line.manpower_cost,
+                                 'mp_sales':sheet.a_total_manpower_sale,
+                                 'sam_id':sam_id,
                                 'total_gp':line.total_gp
                                 }))
             else:
@@ -148,6 +153,8 @@ class opp_rev_sale_in_wiz(models.TransientModel):
                                 'total_cost':sheet.sum_tot_cost,
                                 'profit':sheet.sum_profit,
                                 'manpower_cost':sheet.a_total_manpower_cost,
+                                 'mp_sales':sheet.a_total_manpower_sale,
+                                 'sam_id':sam_id,
                                 'total_gp':sheet.sum_profit + sheet.a_total_manpower_cost
                                 }))
                         
@@ -185,7 +192,8 @@ class wiz_sale_in_rpt(models.TransientModel):
     profit = fields.Float(string="Profit",digits=dp.get_precision('Account'))
     manpower_cost = fields.Float(string="Manpower Cost",digits=dp.get_precision('Account'))
     total_gp = fields.Float(string="Total GP",digits=dp.get_precision('Account'))
-    
+    mp_sales = fields.Float(string="MP Sales")
+    sam_id = fields.Many2one('res.users',string="Sales Account Manager")
     @api.multi
     def btn_open_opp(self):
        

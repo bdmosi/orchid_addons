@@ -58,19 +58,18 @@
 		<field name="arch" type="xml">
 			<tree string="Technology Report">
 				<field name="expected_booking" />
-				<field name="opp_id" />
-				<button name="btn_open_opp" type="object" icon="STOCK_FIND" string="Open" />
+				
 				<field name="stage_id" />
 				<field name="bdm_user_id" />
 				<field name="cost_sheet_id" />
 				<button name="btn_open_cost" type="object" icon="STOCK_FIND" string="Open" />
 				<field name="pdt_grp_id" />
-				<field name="total_sale" sum="Total" />
-				<field name="sale_aftr_disc" sum="Total" />
-				<field name="total_cost" sum="Total" />
-				<field name="profit" sum="Total" />
-				<field name="manpower_cost" sum="Total" />
-				<field name="total_gp" sum="Total" />
+				<field name="sale_aftr_disc" string="Sales" sum="Total" />
+				<field name="total_gp" string="Profit With MP" sum="Total" />
+				<field name="mp_sales" string="MP Sales" sum="Total" />
+				
+				
+				
 			</tree>
 		</field>
 	</record>
@@ -85,11 +84,18 @@
 			<field name="stage_id" />
 			<field name="cost_sheet_id" />
 			<group expand="1" string="Group By">
-                        <filter string="Opportunity" domain="[]" context="{'group_by':'opp_id'}"/>
-                        <filter string="Cost Sheet" domain="[]" context="{'group_by':'cost_sheet_id'}"/>
+			            <filter string="Company" domain="[]" context="{'group_by':'company_id'}"/>
+                        <filter string="Branch" domain="[]" context="{'group_by':'branch_id'}"/>
+                        <filter string="Technology Unit" domain="[]" context="{'group_by':'pdt_grp_id'}"/>
+                        <filter string="Customer" domain="[]" context="{'group_by':'partner_id'}"/>
+                         <filter string="Sales Account Manager" domain="[]" context="{'group_by':'sam_id'}"/>
+                         <filter string="Created By" domain="[]" context="{'group_by':'bdm_user_id'}"/>
                         <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
-                        <filter string="BDM" domain="[]" context="{'group_by':'bdm_user_id'}"/>
-                        <filter string="Product Group" domain="[]" context="{'group_by':'pdt_grp_id'}"/>
+                        <filter string="Cost Sheet" domain="[]" context="{'group_by':'cost_sheet_id'}"/>
+                       
+                       
+                        
+                       
                        
                     </group>
 			
