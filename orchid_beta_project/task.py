@@ -225,10 +225,13 @@ class task(models.Model):
     def write_on_work(self,date_done):
 #         date_done = datetime.strftime(datetime.now(),DEFAULT_SERVER_DATETIME_FORMAT)
         date_start = self.date_start
-        duration = self.get_time_diff(date_start,date_done)
+        
         for line in self.work_ids:
+            if not line.od_complete_date:
+                raise Warning("You Need to Enter the Complete Date on Work Tab")
             if line.locked:
-                line.write({'od_complete_date':date_done,'date':date_start,'hours':duration})
+                duration = self.get_time_diff(date_start,line.od_complete_date)
+                line.write({'date':date_start,'hours':duration})
     
     
     
@@ -682,7 +685,7 @@ class task(models.Model):
             else:
                 self.od_auto_approved = True
     @api.one
-    @api.depends('od_date_done')
+    @api.depends('od_date_done','date_end')
     def _od_late_eval(self):
         def min_eval_date(line_id):
             date_list = []
@@ -692,8 +695,8 @@ class task(models.Model):
                 return min(date_list)
             return False
         if self.od_date_done and self.od_type == 'activities':
-            date_done= datetime.strptime(self.od_date_done,DEFAULT_SERVER_DATETIME_FORMAT)
-            date_reach = date_done + timedelta(days=2)
+            date_end= datetime.strptime(self.date_end,DEFAULT_SERVER_DATETIME_FORMAT)
+            date_reach = date_end + timedelta(hours=36)
             eval_date = min_eval_date(self.od_tech_eval_log_ids)
             if eval_date:
                 eval_date = datetime.strptime(eval_date,DEFAULT_SERVER_DATETIME_FORMAT)
@@ -846,21 +849,27 @@ class task(models.Model):
 #             date_done = self.od_date_done
         return date_done
    
+    def check_date_done_on_same_day(self,date_done,date_end):
+        date_end = datetime.strptime(date_end,DEFAULT_SERVER_DATETIME_FORMAT)
+        date_done = datetime.strptime(date_done,DEFAULT_SERVER_DATETIME_FORMAT)
+        
+        return date_done.day <= date_end.day
+    
     
     @api.one
     @api.depends('od_type','date_end','od_date_done')
     def _get_end_kpi(self):
         if self.od_type == 'activities':
             date_end = self.date_end 
-#             date_done = self.od_date_done
-            
-            date_done = self.get_date_done()
-            if date_done and date_end:
+            date_done = self.od_date_done
+            check_date_done = self.check_date_done_on_same_day(date_done,date_end)
+            complete_date = self.get_date_done()
+            if complete_date and date_end:
                 date_end = datetime.strptime(date_end,DEFAULT_SERVER_DATETIME_FORMAT)
-                date_done = datetime.strptime(date_done,DEFAULT_SERVER_DATETIME_FORMAT)
+                complete_date = datetime.strptime(complete_date,DEFAULT_SERVER_DATETIME_FORMAT)
                 date_end = date_end + timedelta(minutes=5)
-                if date_done and date_end:
-                    if date_done > date_end:
+                if complete_date and date_end:
+                    if (complete_date > date_end) or (not check_date_done) or (self.od_late_in_tech_eval):
                         self.od_end_kpi = 0
                     else:
                         self.od_end_kpi = 60
