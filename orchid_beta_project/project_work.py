@@ -159,9 +159,17 @@ class project_work(models.Model):
         if self.date and self.od_complete_date:
             if not self.od_complete_date > self.date:
                 raise Warning('Complete Date Should Be greater than Start Date')
+    
+    
+    @api.one 
+    @api.depends('hours')
+    def get_show_time_spent(self):
+        self.b_hours = self.hours
+    
     overtime = fields.Boolean(string="Overtime")
     overtime_type = fields.Many2one('hr.salary.rule',string="Overtime Type")
     ot_line_id = fields.Many2one('od.hr.over.time.line',string='Overtime Line')
+    b_hours = fields.Float(string="Time Spent",help="To Show Time Spent by User For the Tasl")
 class project_project(models.Model):
     _inherit ='project.project'
     _od_project_types =[('credit','Credit'),('sup','Supply'),('imp','Implementation'),('sup_imp','Supply & Implementation'),('amc','AMC'),('o_m','O&M'), ('comp_gen','Company General -(POC,Training,Trips,etc.)')]
