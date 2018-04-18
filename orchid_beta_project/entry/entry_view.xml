@@ -80,7 +80,7 @@
             <field name="name">account.move.line.beta.tree</field>
             <field name="model">account.move.line</field>
             <field name="arch" type="xml">
-                <tree string="Entry Lines" create="false" delete="false">
+                <tree string="Entry Lines" create="false" delete="false" editable="top">
                     <field name="od_branch_id"/>
                     <field name="move_id" readonly="1"/>
                     <field name="name" readonly="1"/>
