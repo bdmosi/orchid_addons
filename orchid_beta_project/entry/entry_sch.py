@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from openerp import models, fields, api
+from openerp import models, fields, api,_
 from pprint import pprint
 from datetime import datetime
 import openerp.addons.decimal_precision as dp
