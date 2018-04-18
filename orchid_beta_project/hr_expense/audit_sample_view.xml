@@ -388,7 +388,7 @@
 								</field>
 							</page>
 							
-							<page string="Utlization" attrs="{'invisible':[('type','not in',('ttl','tc','hoo'))]}" >
+							<page string="Utilization" attrs="{'invisible':[('type','not in',('ttl','tc','hoo'))]}" >
 								<field name="utl_sample_line">
 									<tree editable="bottom" create="false" delete="false">
 										<field name="user_id" readonly="1"/>
