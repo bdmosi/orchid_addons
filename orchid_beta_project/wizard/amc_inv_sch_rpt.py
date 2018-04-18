@@ -5,8 +5,8 @@ from datetime import datetime
 import openerp.addons.decimal_precision as dp
 
 
-class project_inv_sch_wiz(models.TransientModel):
-    _name = 'project.inv.sch.wiz'
+class amc_inv_sch_wiz(models.TransientModel):
+    _name = 'amc.inv.sch.wiz'
     
     
     
@@ -23,7 +23,7 @@ class project_inv_sch_wiz(models.TransientModel):
     accept_date_to = fields.Date(string="Invoice Customer Accept Date To")
     
     
-    wiz_line = fields.One2many('wiz.project.inv.sch.data','wiz_id',string="Wiz Line")
+    wiz_line = fields.One2many('wiz.amc.inv.sch.data','wiz_id',string="Wiz Line")
    
     
     def od_get_company_id(self):
@@ -47,7 +47,7 @@ class project_inv_sch_wiz(models.TransientModel):
         
             
         company_id = self.company_id and self.company_id.id 
-        domain = [('od_type_of_project','in',('credit','sup','imp','sup_imp'))]
+        domain = [('od_type_of_project','in',('amc','o_m'))]
         domain2=[]
         if company_id:
             domain += [('company_id','=',company_id)]
@@ -118,7 +118,7 @@ class project_inv_sch_wiz(models.TransientModel):
             'name': 'Project Invoice Schedule Report',
             'view_type': 'form',
             'view_mode': 'tree',
-            'res_model': 'wiz.project.inv.sch.data',
+            'res_model': 'wiz.amc.inv.sch.data',
             'type': 'ir.actions.act_window',
         }
                         
@@ -126,9 +126,9 @@ class project_inv_sch_wiz(models.TransientModel):
         
         
 
-class wiz_project_rpt_data(models.TransientModel):
-    _name = 'wiz.project.inv.sch.data'
-    wiz_id = fields.Many2one('project.inv.sch.wiz',string="Wizard")
+class wiz_amc_rpt_data(models.TransientModel):
+    _name = 'wiz.amc.inv.sch.data'
+    wiz_id = fields.Many2one('amc.inv.sch.wiz',string="Wizard")
     cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet')
     partner_id = fields.Many2one('res.partner',string="Customer")
     company_id = fields.Many2one('res.company',string="Company")

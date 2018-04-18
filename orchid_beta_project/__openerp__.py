@@ -29,6 +29,7 @@
 			'wizard/project_rpt_view.xml',
 			'wizard/amc_rpt_view.xml',
 			'wizard/project_inv_sch_view.xml',
+			'wizard/amc_inv_sch_rpt_view.xml',
 			'data/data.xml',
             'analytic_view.xml',
             'invoice_view.xml',
