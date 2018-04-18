@@ -15,7 +15,7 @@ class opp_rev_rpt_wiz(models.TransientModel):
     division_id = fields.Many2one('od.cost.division',string="Technology Unit")
     
     created_by_ids = fields.Many2many('res.users',string="Created By")
-    product_group_ids = fields.Many2many('od.product.group',string="Product Group",string="Technolgoy Unit",domain=[('code','in',('1','2','3'))])
+    product_group_ids = fields.Many2many('od.product.group',string="Technolgoy Unit",domain=[('code','in',('1','2','3'))])
     stage_ids = fields.Many2many('crm.case.stage',string="Opp Stage",domain=[('id','!=',6)])
 #     stage = fields.Selection([(1,'Approved'),(4,'Design Ready'),(12,'Pipeline'),(5,'Commit'),(6,'Lost'),(8,'Cancelled')],string="Opp Stage")
     
