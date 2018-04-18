@@ -84,15 +84,15 @@
 				<field name="date_end" />
 			    <field name="status" /> 
 				<field name="original_sale" sum="Total" />
-				<field name="original_cost" sum="Total" />
+				<field name="original_cost" sum="Total" invisible="1"/>
 				<field name="original_profit" sum="Total" />
 				
 				<field name="amended_sale" sum="Total" />
-				<field name="amended_cost" sum="Total" />
+				<field name="amended_cost" sum="Total" invisible="1"/>
 				<field name="amended_profit" sum="Total" />
 				
 				<field name="actual_sale" sum="Total" />
-				<field name="actual_cost" sum="Total" />
+				<field name="actual_cost" sum="Total" invisible="1"/>
 				<field name="actual_profit" sum="Total" />
 				
 			</tree>

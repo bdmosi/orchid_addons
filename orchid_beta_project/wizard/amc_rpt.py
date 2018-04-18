@@ -16,11 +16,11 @@ class amc_rpt_wiz(models.TransientModel):
     division_ids = fields.Many2many('od.cost.division',string="Technology Unit")
     
     
-    date_start_from = fields.Date(string="Starting Date From")
-    date_start_to = fields.Date(string="Starting Date To")
+    date_start_from = fields.Date(string="SLA Starting Date From")
+    date_start_to = fields.Date(string="SLA Starting Date To")
     
-    date_end_from = fields.Date(string="Ending Date From")
-    date_end_to = fields.Date(string="Ending Date To")
+    date_end_from = fields.Date(string="SLA Ending Date From")
+    date_end_to = fields.Date(string="SLA Ending Date To")
     
     partner_ids = fields.Many2many('res.partner',string="Customer")
     
