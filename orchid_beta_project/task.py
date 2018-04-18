@@ -231,7 +231,7 @@ class task(models.Model):
                 raise Warning("You Need to Enter the Complete Date on Work Tab")
             if line.locked:
                 duration = self.get_time_diff(date_start,line.od_complete_date)
-                line.write({'date':date_start,})
+                line.write({'date':date_start,'hours':duration})
     
     
     
