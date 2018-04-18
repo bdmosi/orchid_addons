@@ -63,6 +63,27 @@ class entry_sch(models.Model):
         entry_pool = self.env['account.move.line']
         entry_ids =entry_pool.search(domain)
         entry_ids.write({'od_branch_id':branch_id})
+    
+    @api.one 
+    def delete_branch(self):
+        partner_ids = [pr.id for pr in self.partner_ids]
+        account_ids = [pr.id for pr in self.account_ids]
+        move_id  = self.move_id and self.move_id.id
+        branch_id = self.branch_id and self.branch_id.id 
+        domain =[]
+        if move_id:
+            domain +=[('move_id','=',move_id)]
+        if partner_ids:
+            domain +=[('partner_id','in',partner_ids)]
+        if account_ids:
+            domain +=[('account_id','in',account_ids)]
+            
+        entry_pool = self.env['account.move.line']
+        entry_ids =entry_pool.search(domain)
+        for entry in entry_ids:
+            entry_branch_id = entry.od_branch_id and entry.od_branch_id.id 
+            if entry_branch_id == branch_id:
+                entry.write({'od_branch_id':False})
         
     
     

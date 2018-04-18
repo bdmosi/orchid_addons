@@ -10,6 +10,7 @@
                     <header>
                     <button string="Show Entries" name="show_entries" type="object"  class="oe_highlight"  />
                     <button string="Update Branch" name="update_branch" type="object"  class="oe_highlight"  />
+                    <button string="Delete Branch" name="delete_branch" type="object"  class="oe_highlight"  />
                    </header>
                     <sheet>
                      
