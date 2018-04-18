@@ -16,6 +16,7 @@
                      
                         <group>
                         		<group>
+                        		    <field name="name" />
                         			<field name="move_id" />
                         			<field name="branch_id" />
                         		</group>
@@ -38,9 +39,11 @@
             <field name="model">od.entry.sch</field>
             <field name="arch" type="xml">
                 <tree string="Course">
+                    <field name="name" />
                     <field name="move_id" />
                     <field name="partner_ids" widget="many2many_tags" />
                     <field name="account_ids" widget="many2many_tags" />
+                     <field name="branch_id" />
                 </tree>
             </field>
         </record>

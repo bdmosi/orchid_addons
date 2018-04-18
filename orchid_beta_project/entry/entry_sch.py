@@ -7,12 +7,13 @@ import openerp.addons.decimal_precision as dp
 
 class entry_sch(models.Model):
     _name = 'od.entry.sch'
-    _rec_name ='move_id'
+    
+    name = fields.Char(string="Name",required=True)
     partner_ids = fields.Many2many('res.partner','entry_sch_part','en_sch_id','partner_id',string="Partner")
     move_id = fields.Many2one('account.move',string="Opening Entry")
     account_ids = fields.Many2many('account.account','entry_sch_accounts','en_sch_id','account_id',string="Accounts")
     branch_id = fields.Many2one('od.cost.branch',string="Branch")
-    
+    state = fields.Selection([('draft','Draft'),('update','Branch Updated'),('deleted','Branch Deleted')],string="Status")
     
     @api.multi
     def show_entries(self):
@@ -63,6 +64,7 @@ class entry_sch(models.Model):
         entry_pool = self.env['account.move.line']
         entry_ids =entry_pool.search(domain)
         entry_ids.write({'od_branch_id':branch_id})
+        self.state ='update'
     
     @api.one 
     def delete_branch(self):
@@ -85,5 +87,6 @@ class entry_sch(models.Model):
             if entry_branch_id == branch_id:
                 entry.write({'od_branch_id':False})
         
+        self.state ='deleted'
     
     
