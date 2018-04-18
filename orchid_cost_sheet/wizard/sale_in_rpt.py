@@ -10,7 +10,7 @@ class opp_rev_sale_in_wiz(models.TransientModel):
     
     
     created_by_ids = fields.Many2many('res.users',string="Created By")
-    product_group_ids = fields.Many2many('od.product.group',string="Technolgoy Unit",domain=[('code','in',('1','2','3'))])
+    product_group_ids = fields.Many2many('od.product.group',string="Technolgoy Unit",domain=[('code','in',('1','2','3','4'))])
     
     
     branch_ids= fields.Many2many('od.cost.branch',string="Branch")
@@ -87,6 +87,7 @@ class opp_rev_sale_in_wiz(models.TransientModel):
             company_id = sheet.company_id and sheet.company_id.id 
             branch_id = sheet.od_branch_id and sheet.od_branch_id.id
             sam_id = sheet.sales_acc_manager and sheet.sales_acc_manager.id
+            po_status = sheet.po_status
             if product_group_ids:
                 for line in sheet.summary_weight_line:
                     
@@ -111,7 +112,8 @@ class opp_rev_sale_in_wiz(models.TransientModel):
                                 'profit':line.profit,
                                 'manpower_cost':line.manpower_cost,
                                 'sam_id':sam_id,
-                                'total_gp':line.total_gp
+                                'total_gp':line.total_gp,
+                                'po_status':po_status,
                                 }))
                     else:
                         result.append((0,0,{
@@ -133,7 +135,8 @@ class opp_rev_sale_in_wiz(models.TransientModel):
                                 'manpower_cost':line.manpower_cost,
                                  'mp_sales':sheet.a_total_manpower_sale,
                                  'sam_id':sam_id,
-                                'total_gp':line.total_gp
+                                'total_gp':line.total_gp,
+                                 'po_status':po_status,
                                 }))
             else:
                 result.append((0,0,{
@@ -155,7 +158,8 @@ class opp_rev_sale_in_wiz(models.TransientModel):
                                 'manpower_cost':sheet.a_total_manpower_cost,
                                  'mp_sales':sheet.a_total_manpower_sale,
                                  'sam_id':sam_id,
-                                'total_gp':sheet.sum_profit + sheet.a_total_manpower_cost
+                                'total_gp':sheet.sum_profit + sheet.a_total_manpower_cost,
+                                 'po_status':po_status,
                                 }))
                         
         
@@ -194,6 +198,7 @@ class wiz_sale_in_rpt(models.TransientModel):
     total_gp = fields.Float(string="Total GP",digits=dp.get_precision('Account'))
     mp_sales = fields.Float(string="MP Sales")
     sam_id = fields.Many2one('res.users',string="Sales Account Manager")
+    po_status = fields.Selection([('waiting_po','Waiting P.O'),('special_approval','Special Approval From GM'),('available','Available')],'Customer PO Status')
     @api.multi
     def btn_open_opp(self):
        

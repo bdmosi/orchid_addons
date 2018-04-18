@@ -112,6 +112,7 @@ class amc_rpt_wiz(models.TransientModel):
             company_id = data.company_id and data.company_id.id 
             branch_id = data.od_branch_id and data.od_branch_id.id
             od_cost_sheet_id = data.od_cost_sheet_id and data.od_cost_sheet_id.id
+            po_status = data.od_cost_sheet_id and data.od_cost_sheet_id and data.od_cost_sheet_id.po_status
             result.append((0,0,{
                                 'wiz_id':wiz_id,
                                 'cost_sheet_id':od_cost_sheet_id, 
@@ -132,7 +133,8 @@ class amc_rpt_wiz(models.TransientModel):
                                 'actual_profit':data.od_amc_profit,
                                 'status':data.od_amc_status,
                                 'date_start':data.od_amc_start,
-                                'date_end':data.od_amc_end,  
+                                'date_end':data.od_amc_end, 
+                                'po_status':po_status, 
                                 }))
                         
         
@@ -175,6 +177,7 @@ class wiz_amc_rpt_data(models.TransientModel):
     date_start = fields.Date(string="Date Start")
     date_end = fields.Date(string="Date End")
     status = fields.Selection([('active','Active'),('inactive','Inactive'),('close','Closed')],string="Status")
+    po_status = fields.Selection([('waiting_po','Waiting P.O'),('special_approval','Special Approval From GM'),('available','Available')],'Customer PO Status')
     @api.multi
     def btn_open_project(self):
        
