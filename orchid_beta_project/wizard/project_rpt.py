@@ -15,11 +15,11 @@ class project_rpt_wiz(models.TransientModel):
     cost_centre_ids = fields.Many2many('od.cost.centre',string="Cost Center")
     division_ids = fields.Many2many('od.cost.division',string="Technology Unit")
     
-    date_start_from = fields.Date(string="Project Starting Date From")
-    date_start_to = fields.Date(string="Project Starting Date To")
+    date_start_from = fields.Date(string="Starting Date From")
+    date_start_to = fields.Date(string="Starting Date To")
     
-    date_end_from = fields.Date(string="Project Ending Date From")
-    date_end_to = fields.Date(string="Project Ending Date To")
+    date_end_from = fields.Date(string="Ending Date From")
+    date_end_to = fields.Date(string="Ending Date To")
     partner_ids = fields.Many2many('res.partner',string="Customer")
     pm_ids = fields.Many2many('res.users','proj_wiz_pm','wiz_id','user_id',string="Project Manager")
     sam_ids = fields.Many2many('res.users','proj_wiz_sam','wiz_id','user_id',string="Sales Account Manager")
