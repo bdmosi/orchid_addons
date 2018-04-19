@@ -12,8 +12,8 @@ class project_inv_sch_wiz(models.TransientModel):
     
     
     branch_ids= fields.Many2many('od.cost.branch',string="Branch")
-    partner_ids = fields.Many2many('res.partner',string="Customer")
-    pm_ids = fields.Many2many('res.users','proj_wiz_pm','wiz_id','user_id',string="Project Manager")
+    partner_ids = fields.Many2many('res.partner','x_cust_inv_sch','wiz_id','partner_id',string="Customer")
+    pm_ids = fields.Many2many('res.users','proj_wiz_pm_inv_sch','wiz_id','user_id',string="Project Manager")
     analytic_account_ids = fields.Many2many('account.analytic.account',string="Analytic Accounts")
     
     planning_date_from = fields.Date(string="Invoice Planning Date From")
