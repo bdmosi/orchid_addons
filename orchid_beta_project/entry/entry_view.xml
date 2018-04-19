@@ -11,6 +11,7 @@
                     <button string="Show Entries" name="show_entries" type="object"  class="oe_highlight"  />
                     <button string="Update Branch" name="update_branch" type="object"  class="oe_highlight"  />
                     <button string="Delete Branch" name="delete_branch" type="object"  class="oe_highlight"  />
+                     <field name="state" widget="status_bar" />
                    </header>
                     <sheet>
                      
@@ -90,8 +91,8 @@
                     <field name="date" readonly="1"/>
                     <field name="partner_id" readonly="1"/>
                     <field name="account_id" readonly="1"/>
-                    <field name="debit" readonly="1"/>
-                    <field name="credit" readonly="1"/>
+                    <field name="debit" readonly="1" sum="Total"/>
+                    <field name="credit" readonly="1" sum="Total"/>
                     
                 </tree>
             </field>
