@@ -24,7 +24,7 @@ class amc_rpt_wiz(models.TransientModel):
     
     partner_ids = fields.Many2many('res.partner',string="Customer")
     
-    pm_ids = fields.Many2many('res.users','amc_wiz_pm','wiz_id','user_id',string="Project Manager")
+    pm_ids = fields.Many2many('res.users','amc_wiz_pm','wiz_id','user_id',string="Service Desk Engineer")
     sam_ids = fields.Many2many('res.users','amc_wiz_sam','wiz_id','user_id',string="Sales Account Manager")
     sale_team_ids = fields.Many2many('crm.case.section',string="Sale Team")
     territory_ids = fields.Many2many('od.partner.territory',string="Territory")
@@ -161,7 +161,7 @@ class wiz_amc_rpt_data(models.TransientModel):
     branch_id = fields.Many2one('od.cost.branch',string="Branch")
     project_id = fields.Many2one('project.project',string='Project')
     sam_id = fields.Many2one('res.users',string="Sale Account Manager")
-    pm_id = fields.Many2one('res.users',string="Project Manager")
+    pm_id = fields.Many2one('res.users',string="Service Desk Engineer")
     original_sale = fields.Float(string="Original Sale",digits=dp.get_precision('Account'))
     original_cost = fields.Float(string="Original Cost",digits=dp.get_precision('Account'))
     original_profit = fields.Float(string="Original Profit",digits=dp.get_precision('Account'))

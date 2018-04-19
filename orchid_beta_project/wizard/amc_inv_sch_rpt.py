@@ -13,7 +13,7 @@ class amc_inv_sch_wiz(models.TransientModel):
     
     branch_ids= fields.Many2many('od.cost.branch',string="Branch")
     partner_ids = fields.Many2many('res.partner',string="Customer")
-    pm_ids = fields.Many2many('res.users','proj_wiz_pm','wiz_id','user_id',string="Project Manager")
+    pm_ids = fields.Many2many('res.users','proj_wiz_pm','wiz_id','user_id',string="Service Desk Engineer")
     analytic_account_ids = fields.Many2many('account.analytic.account',string="Analytic Accounts")
     
     planning_date_from = fields.Date(string="Invoice Planning Date From")
@@ -134,7 +134,7 @@ class wiz_amc_rpt_data(models.TransientModel):
     company_id = fields.Many2one('res.company',string="Company")
     branch_id = fields.Many2one('od.cost.branch',string="Branch")
     analytic_id = fields.Many2one('account.analytic.account',string='Account')
-    pm_id = fields.Many2one('res.users',string="Project Manager")
+    pm_id = fields.Many2one('res.users',string="Service Desk Engineer")
     invoice_status = fields.Selection([('draft','Draft'),('proforma','Pro-forma'),('proforma2','Pro-forma'),('open','Open'),('accept','Accepted By Customer'),('paid','Paid'),('cancel','Cancelled')],string="Invoice Status")
     name =fields.Char(string="Name")
     planned_date = fields.Date(string="Planned Date")
