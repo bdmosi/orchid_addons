@@ -70,8 +70,8 @@ class project_inv_sch_wiz(models.TransientModel):
         an_ids = analytic_pool.search(domain)
         an_ac_ids = [an.id for an in an_ids] 
         
-        if an_ac_ids:
-            domain2 +=[('analytic_id','in',an_ac_ids)]
+        
+        domain2 +=[('analytic_id','in',an_ac_ids)]
         
         if planning_date_from:
             domain2 += [('date','>=',planning_date_from)]
