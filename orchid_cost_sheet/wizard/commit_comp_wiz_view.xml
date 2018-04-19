@@ -39,12 +39,12 @@
         </record>
          
          
-         <menuitem
+         <!-- <menuitem
          	
 			id="menu_comp_rpt"
 			parent="technology_rpt_gne"
 			 sequence="3" 
-			action="action_commit_comp_act" />
+			action="action_commit_comp_act" /> -->
 
 
 	<record model="ir.ui.view" id="od_commit_comp_view">
