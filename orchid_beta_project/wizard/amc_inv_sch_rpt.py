@@ -83,7 +83,7 @@ class amc_inv_sch_wiz(models.TransientModel):
         
         if accept_date_to:
             domain2 += [('cust_date','<=',accept_date_to)]
-        sch_data = self.env['od.project.invoice.schedule'].search(domain2) 
+        sch_data = self.env['od.amc.invoice.schedule'].search(domain2) 
         result =[]
         for data in sch_data:
             an_id = data.analytic_id and data.analytic_id.id 
@@ -115,7 +115,7 @@ class amc_inv_sch_wiz(models.TransientModel):
         self.write({'wiz_line':result})
         return {
             'domain': [('wiz_id','=',wiz_id)],
-            'name': 'Project Invoice Schedule Report',
+            'name': 'SLA Invoice Schedule Report',
             'view_type': 'form',
             'view_mode': 'tree',
             'res_model': 'wiz.amc.inv.sch.data',
