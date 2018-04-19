@@ -778,7 +778,7 @@ class od_cost_sheet(models.Model):
     peromance_bond = fields.Selection([('yes','Yes'),('no','No')],'Perfomance Bond')
     penalty_clause = fields.Selection([('yes','Yes'),('no','No')],'Penalty Clause')
     insurance_req = fields.Selection([('yes','Yes'),('no','No')],'Insurance Required')
-    po_status = fields.Selection([('waiting_po','Waiting P.O'),('special_approval','Special Approval From GM'),('available','Available')],'Customer PO Status')
+    po_status = fields.Selection([('waiting_po','Waiting P.O'),('special_approval','Special Approval From GM'),('available','Available'),('credit','Customer Credit')],'Customer PO Status')
     adv_payment_status = fields.Selection([('not_required','Not Required'),('required','Required,Not Paid'),('paid','Paid'),('gm',' Waived by G.M.')],'Advance Payment Status')
 
     po_date = fields.Date("Customer PO Date")

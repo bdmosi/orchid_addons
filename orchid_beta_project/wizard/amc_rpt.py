@@ -177,7 +177,7 @@ class wiz_amc_rpt_data(models.TransientModel):
     date_start = fields.Date(string="Date Start")
     date_end = fields.Date(string="Date End")
     status = fields.Selection([('active','Active'),('inactive','Inactive'),('close','Closed')],string="Status")
-    po_status = fields.Selection([('waiting_po','Waiting P.O'),('special_approval','Special Approval From GM'),('available','Available')],'Customer PO Status')
+    po_status = fields.Selection([('waiting_po','Waiting P.O'),('special_approval','Special Approval From GM'),('available','Available'),('credit','Customer Credit')],'Customer PO Status')
     @api.multi
     def btn_open_project(self):
        

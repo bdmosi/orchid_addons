@@ -198,7 +198,7 @@ class wiz_sale_in_rpt(models.TransientModel):
     total_gp = fields.Float(string="Total GP",digits=dp.get_precision('Account'))
     mp_sales = fields.Float(string="MP Sales")
     sam_id = fields.Many2one('res.users',string="Sales Account Manager")
-    po_status = fields.Selection([('waiting_po','Waiting P.O'),('special_approval','Special Approval From GM'),('available','Available')],'Customer PO Status')
+    po_status = fields.Selection([('waiting_po','Waiting P.O'),('special_approval','Special Approval From GM'),('available','Available'),('credit','Customer Credit')],'Customer PO Status')
     @api.multi
     def btn_open_opp(self):
        
