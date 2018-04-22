@@ -12,6 +12,7 @@
             'account/invoice_view.xml',
             'models/transfer_acc_view.xml',
              'models/replace_acc_view.xml',
+             'customer_aging/aging_view.xml',
 #             'wizard/transfer.xml',
             ], 
     'demo': [],
