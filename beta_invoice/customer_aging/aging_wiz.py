@@ -13,7 +13,7 @@ class BetaCustomeAgingWiz(models.TransientModel):
     branch_ids= fields.Many2many('od.cost.branch',string="Branch")
     date_from = fields.Date(string='Start Date',default=fields.Date.context_today)
     direction_selection = fields.Selection([('future','Future'),('past','Past')],string="Direction",default='past')
-    
+    wiz_line = fields.One2many('beta.customer.aging.data','wiz_id',string="Wiz Line")
     def od_get_company_id(self):
         return self.env.user.company_id
     company_id = fields.Many2one('res.company', string='Company',default=od_get_company_id)
