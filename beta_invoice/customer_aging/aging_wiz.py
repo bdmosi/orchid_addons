@@ -43,7 +43,7 @@ class BetaCustomeAgingWiz(models.TransientModel):
         branch_ids = [pr.id for pr in self.branch_ids]
         partner_ids =[pr.id for pr in self.partner_ids]
         journal_ids =[14, 20, 59, 60, 4, 2, 21, 5, 6, 7, 13, 18, 15, 19, 17, 12, 1, 10, 3, 9, 22, 8, 23]
-        ctx ={'partner_ids':partner_ids,'od_branch_ids':branch_ids,'journal_ids':journal_ids}
+        ctx ={'partner_ids':partner_ids,'od_branch_ids':branch_ids,'journal_ids':journal_ids,'fiscalyear': False, 'all_fiscalyear': True,'state':'posted'}
         cr = self.env.cr
         uid = self.env.uid
         self.query = obj_move._query_get(cr, uid, obj='l', context=ctx)
