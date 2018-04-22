@@ -42,8 +42,7 @@ class BetaCustomeAgingWiz(models.TransientModel):
         obj_move = self.pool.get('account.move.line')
         branch_ids = [pr.id for pr in self.branch_ids]
         partner_ids =[pr.id for pr in self.partner_ids]
-        journal_ids =[14, 20, 59, 60, 4, 2, 21, 5, 6, 7, 13, 18, 15, 19, 17, 12, 1, 10, 3, 9, 22, 8, 23]
-        ctx ={'partner_ids':partner_ids,'od_branch_ids':branch_ids,'journal_ids':journal_ids,'fiscalyear': False, 'all_fiscalyear': True,'state':'posted'}
+        ctx ={'partner_ids':partner_ids,'od_branch_ids':branch_ids,'fiscalyear': False, 'all_fiscalyear': True,'state':'posted'}
         cr = self.env.cr
         uid = self.env.uid
         self.query = obj_move._query_get(cr, uid, obj='l', context=ctx)
@@ -238,7 +237,7 @@ class BetaCustomeAgingWiz(models.TransientModel):
             ## Add for total
             total_account[(i+1)] = total_account[(i+1)] + (total and total[0] or 0.0)
             values['name'] = partner['name']
-            values['partner_id'] = partner['id']
+#             values['partner_id'] = partner['id']
             part =self.pool.get('res.partner').browse(cr,SUPERUSER_ID,partner['id'])
             payment_term = part.property_payment_term and part.property_payment_term.id or False
             values['payment_term_id'] = payment_term
