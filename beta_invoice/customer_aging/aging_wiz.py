@@ -41,7 +41,14 @@ class BetaCustomeAgingWiz(models.TransientModel):
         target_move = 'posted'
         ACCOUNT_TYPE = ['receivable']
         total_account =[]
-        cr = self.env.cr 
+        obj_move = self.pool.get('account.move.line')
+        branch_ids = [pr.id for pr in self.branch_ids]
+        partner_ids =[pr.id for pr in self.partner_ids]
+        ctx = {}   
+        ctx.update({'partner_ids':partner_ids,'od_branch_ids':branch_ids,'fiscalyear': False, 'all_fiscalyear': True,'state':'posted'})
+        cr = self.env.cr
+        uid = self.env.uid
+        self.query = obj_move._query_get(cr, uid, obj='l', context=ctx)
         if target_move == 'posted':
             move_state = ['posted']
         cr.execute('SELECT DISTINCT res_partner.id AS id,\
