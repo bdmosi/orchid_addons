@@ -46,6 +46,7 @@ class BetaCustomeAgingWiz(models.TransientModel):
         cr = self.env.cr
         uid = self.env.uid
         self.query = obj_move._query_get(cr, uid, obj='l', context=ctx)
+        print "self.query >>>>>>>>>>>>my form>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",self.query
         move_state = ['posted']
         ACCOUNT_TYPE = ['receivable']
         cr.execute('SELECT DISTINCT res_partner.id AS id,\
@@ -237,7 +238,7 @@ class BetaCustomeAgingWiz(models.TransientModel):
             ## Add for total
             total_account[(i+1)] = total_account[(i+1)] + (total and total[0] or 0.0)
             values['name'] = partner['name']
-#             values['partner_id'] = partner['id']
+            values['partner_id'] = partner['id']
             part =self.pool.get('res.partner').browse(cr,SUPERUSER_ID,partner['id'])
             payment_term = part.property_payment_term and part.property_payment_term.id or False
             values['payment_term_id'] = payment_term
