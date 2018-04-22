@@ -43,10 +43,12 @@ class BetaCustomeAgingWiz(models.TransientModel):
         branch_ids = [pr.id for pr in self.branch_ids]
         partner_ids =[pr.id for pr in self.partner_ids]
         ctx ={'partner_ids':partner_ids,'od_branch_ids':branch_ids}
-        self.query = obj_move._query_get(self.cr, self.uid, obj='l', context=ctx)
+        cr = self.env.cr
+        uid = self.env.uid
+        self.query = obj_move._query_get(cr, uid, obj='l', context=ctx)
         move_state = ['posted']
         ACCOUNT_TYPE = ['receivable']
-        self.cr.execute('SELECT DISTINCT res_partner.id AS id,\
+        cr.execute('SELECT DISTINCT res_partner.id AS id,\
                     res_partner.name AS name \
                 FROM res_partner,account_move_line AS l, account_account, account_move am\
                 WHERE (l.account_id=account_account.id) \
@@ -60,7 +62,7 @@ class BetaCustomeAgingWiz(models.TransientModel):
                     AND (l.date <= %s)\
                     AND ' + self.query + ' \
                 ORDER BY res_partner.name', (tuple(move_state), tuple(ACCOUNT_TYPE), self.date_from, self.date_from,))
-        partners = self.cr.dictfetchall()
+        partners = cr.dictfetchall()
         ## mise a 0 du total
         for i in range(7):
             total_account.append(0)
@@ -72,7 +74,7 @@ class BetaCustomeAgingWiz(models.TransientModel):
         # This dictionary will store the debit-credit for all partners, using partner_id as key.
 
         totals = {}
-        self.cr.execute('SELECT l.partner_id, SUM(l.debit-l.credit) \
+        cr.execute('SELECT l.partner_id, SUM(l.debit-l.credit) \
                     FROM account_move_line AS l, account_account, account_move am \
                     WHERE (l.account_id = account_account.id) AND (l.move_id=am.id) \
                     AND (am.state IN %s)\
@@ -84,14 +86,14 @@ class BetaCustomeAgingWiz(models.TransientModel):
                     AND account_account.active\
                     AND (l.date <= %s)\
                     GROUP BY l.partner_id ', (tuple(move_state), tuple(ACCOUNT_TYPE), tuple(partner_ids), self.date_from, self.date_from,))
-        t = self.cr.fetchall()
+        t = cr.fetchall()
         for i in t:
             totals[i[0]] = i[1]
 
         # This dictionary will store the future or past of all partners
         future_past = {}
         if self.direction_selection == 'future':
-            self.cr.execute('SELECT l.partner_id, SUM(l.debit-l.credit) \
+            cr.execute('SELECT l.partner_id, SUM(l.debit-l.credit) \
                         FROM account_move_line AS l, account_account, account_move am \
                         WHERE (l.account_id=account_account.id) AND (l.move_id=am.id) \
                         AND (am.state IN %s)\
@@ -104,11 +106,11 @@ class BetaCustomeAgingWiz(models.TransientModel):
                         AND account_account.active\
                     AND (l.date <= %s)\
                         GROUP BY l.partner_id', (tuple(move_state), tuple(ACCOUNT_TYPE), self.date_from, tuple(partner_ids),self.date_from, self.date_from,))
-            t = self.cr.fetchall()
+            t = cr.fetchall()
             for i in t:
                 future_past[i[0]] = i[1]
         elif self.direction_selection == 'past': # Using elif so people could extend without this breaking
-            self.cr.execute('SELECT l.partner_id, SUM(l.debit-l.credit) \
+            cr.execute('SELECT l.partner_id, SUM(l.debit-l.credit) \
                     FROM account_move_line AS l, account_account, account_move am \
                     WHERE (l.account_id=account_account.id) AND (l.move_id=am.id)\
                         AND (am.state IN %s)\
@@ -121,7 +123,7 @@ class BetaCustomeAgingWiz(models.TransientModel):
                         AND account_account.active\
                     AND (l.date <= %s)\
                         GROUP BY l.partner_id', (tuple(move_state), tuple(ACCOUNT_TYPE), self.date_from, tuple(partner_ids), self.date_from, self.date_from,))
-            t = self.cr.fetchall()
+            t = cr.fetchall()
             for i in t:
                 future_past[i[0]] = i[1]
 
@@ -149,7 +151,7 @@ class BetaCustomeAgingWiz(models.TransientModel):
                 date_partial = 'AND l.date <= %s'
                 arg_partial = (form[str(i)]['stop'],)
             args_list += (self.date_from,)
-            self.cr.execute('''SELECT l.partner_id, SUM(l.debit-l.credit), l.reconcile_partial_id
+            cr.execute('''SELECT l.partner_id, SUM(l.debit-l.credit), l.reconcile_partial_id
                     FROM account_move_line AS l, account_account, account_move am 
                     WHERE (l.account_id = account_account.id) AND (l.move_id=am.id)
                         AND (am.state IN %s)
@@ -162,13 +164,13 @@ class BetaCustomeAgingWiz(models.TransientModel):
                         AND ''' + dates_query + '''
                     AND (l.date <= %s)
                     GROUP BY l.partner_id, l.reconcile_partial_id''', args_list)
-            partners_partial = self.cr.fetchall()
+            partners_partial = cr.fetchall()
             partners_amount = dict((i[0],0) for i in partners_partial)
             for partner_info in partners_partial:
                 if partner_info[2]:
                     # in case of partial reconciliation, we want to keep the remaining amount in the
                     # period corresponding to the maturity date of the invoice.
-                    self.cr.execute('''
+                    cr.execute('''
                         SELECT MAX(COALESCE(l.date_maturity, l.date))
                         FROM account_move_line AS l
                         JOIN account_account AS a ON l.account_id = a.id
@@ -176,11 +178,11 @@ class BetaCustomeAgingWiz(models.TransientModel):
                             AND a.type IN %s
                             ''' + date_partial
                         , (partner_info[2], tuple(ACCOUNT_TYPE),) + arg_partial)
-                    date = self.cr.fetchall()
+                    date = cr.fetchall()
                     # Just in case date is not defined (but it should be defined)
                     if date and not date[0][0]:
-                        self.cr.execute('''SELECT MIN(COALESCE(date_maturity,date)) FROM account_move_line WHERE reconcile_partial_id = %s''', (partner_info[2],))
-                        date = self.cr.fetchall()
+                        cr.execute('''SELECT MIN(COALESCE(date_maturity,date)) FROM account_move_line WHERE reconcile_partial_id = %s''', (partner_info[2],))
+                        date = cr.fetchall()
                     partial = False
                     if 'BETWEEN' in dates_query:
                         partial = date and args_list[-3] <= date[0][0] <= args_list[-2]
@@ -191,12 +193,12 @@ class BetaCustomeAgingWiz(models.TransientModel):
                     if partial:
                         # partial reconcilation
                         limit_date = 'COALESCE(l.date_maturity,l.date) %s %%s' % ('<=' if self.direction_selection == 'past' else '>=',)
-                        self.cr.execute('''SELECT SUM(l.debit-l.credit)
+                        cr.execute('''SELECT SUM(l.debit-l.credit)
                                            FROM account_move_line AS l, account_move AS am
                                            WHERE l.move_id = am.id AND am.state in %s
                                            AND l.reconcile_partial_id = %s
                                            AND ''' + limit_date, (tuple(move_state), partner_info[2], self.date_from))
-                        unreconciled_amount = self.cr.fetchall()
+                        unreconciled_amount = cr.fetchall()
                         partners_amount[partner_info[0]] += unreconciled_amount[0][0]
                 else:
                     partners_amount[partner_info[0]] += partner_info[1]
@@ -236,7 +238,7 @@ class BetaCustomeAgingWiz(models.TransientModel):
             total_account[(i+1)] = total_account[(i+1)] + (total and total[0] or 0.0)
             values['name'] = partner['name']
             values['partner_id'] = partner['id']
-            part =self.pool.get('res.partner').browse(self.cr,SUPERUSER_ID,partner['id'])
+            part =self.pool.get('res.partner').browse(cr,SUPERUSER_ID,partner['id'])
             payment_term = part.property_payment_term and part.property_payment_term.id or False
             values['payment_term_id'] = payment_term
             res.append(values)
