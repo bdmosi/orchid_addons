@@ -35,14 +35,22 @@ class BetaCustomeAgingWiz(models.TransientModel):
                 start = stop - relativedelta(days=1)
         return res
     def _get_lines(self):
-        form = self.get_form()
+        form = {u'chart_account_id': 1, 
+u'0': {u'start': False, u'stop': u'2017-12-19', u'name': u'+120'}, 
+u'period_to': False, u'fiscalyear_id': 11, u'periods': [], u'od_cost_centre_ids': [], u'direction_selection': u'past', u'id': 879, u'period_length': 30, u'od_sale_person_ids': [], 
+
+u'used_context': {u'lang': u'en_US', u'chart_account_id': 1, 'all_fiscalyear': True, u'od_branch_ids': [], u'journal_ids': [14, 20, 59, 60, 4, 2, 21, 5, 6, 7, 13, 18, 15, 19, 17, 12, 1, 10, 3, 9, 22, 8, 23], u'state': u'posted', u'od_account_ids': [], u'od_cost_centre_ids': [], u'od_division_ids': [], u'partner_ids': [], u'fiscalyear': False}, 
+
+
+u'1': {u'start': u'2017-12-20', u'stop': u'2018-01-19', u'name': u'90-120'}, u'period_from': False, u'3': {u'start': u'2018-02-20', u'stop': u'2018-03-22', u'name': u'30-60'}, u'2': {u'start': u'2018-01-20', u'stop': u'2018-02-19', u'name': u'60-90'}, u'4': {u'start': u'2018-03-23', u'stop': u'2018-04-22', u'name': u'0-30'}, u'od_division_ids': [], u'journal_ids': [14, 20, 59, 60, 4, 2, 21, 5, 6, 7, 13, 18, 15, 19, 17, 12, 1, 10, 3, 9, 22, 8, 23], u'date_to': False, u'od_branch_ids': [], u'result_selection': u'customer', u'filter': u'filter_no', u'od_account_ids': [], u'date_from': u'2018-04-22', u'target_move': u'posted'}
         print "form>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>form,date vals>>>>>>>>>>>>",form
         res = []
         total_account =[]
         obj_move = self.pool.get('account.move.line')
         branch_ids = [pr.id for pr in self.branch_ids]
         partner_ids =[pr.id for pr in self.partner_ids]
-        ctx ={'partner_ids':partner_ids,'od_branch_ids':branch_ids,'fiscalyear': False, 'all_fiscalyear': True,'state':'posted'}
+        ctx =form.get('used_context',{})
+        ctx.update({'partner_ids':partner_ids,'od_branch_ids':branch_ids,'fiscalyear': False, 'all_fiscalyear': True,'state':'posted'})
         cr = self.env.cr
         uid = self.env.uid
         self.query = obj_move._query_get(cr, uid, obj='l', context=ctx)
