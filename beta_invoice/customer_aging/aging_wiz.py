@@ -258,7 +258,21 @@ class BetaCustomeAgingWiz(models.TransientModel):
         wiz_id = self.id
         values = self._get_lines()
         print "valuessssssssss>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",values
-        pprint(values)
+        result =[]
+        for val in values:
+            result.append((0,0,{
+                'wiz_id':wiz_id,
+                'partner_id':val.get('partner_id'),
+                'payment_term_id':val.get('payment_term_id'),
+                'bal1':val.get('0'),
+                'bal2':val.get('1'),
+                'bal3':val.get('2'),
+                'bal4':val.get('3'),
+                'bal5':val.get('4'),
+                'balance':val.get('total')
+                }))
+        self.write({'wiz_line':result})
+            
         return {
             'domain': [('wiz_id','=',wiz_id)],
             'name': 'Customer Aging Report',
