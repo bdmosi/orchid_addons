@@ -257,7 +257,7 @@ class BetaCustomeAgingWiz(models.TransientModel):
     def export_rpt(self):
         wiz_id = self.id
         values = self._get_lines()
-        print "valuessssssssss>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+        print "valuessssssssss>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",values
         pprint(values)
         return {
             'domain': [('wiz_id','=',wiz_id)],
