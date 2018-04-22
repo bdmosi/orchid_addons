@@ -264,11 +264,12 @@ class BetaCustomeAgingWiz(models.TransientModel):
                 'wiz_id':wiz_id,
                 'partner_id':val.get('partner_id'),
                 'payment_term_id':val.get('payment_term_id'),
-                'bal1':val.get('0'),
-                'bal2':val.get('1'),
+                'current':val.get('direction'),
+                'bal1':val.get('4'),
+                'bal2':val.get('3'),
                 'bal3':val.get('2'),
-                'bal4':val.get('3'),
-                'bal5':val.get('4'),
+                'bal4':val.get('1'),
+                'bal5':val.get('0'),
                 'balance':val.get('total')
                 }))
         self.write({'wiz_line':result})
@@ -288,6 +289,7 @@ class wiz_project_rpt_data(models.TransientModel):
     partner_id = fields.Many2one('res.partner',string="Customer")
     company_id = fields.Many2one('res.company',string="Company")
     branch_id = fields.Many2one('od.cost.branch',string="Branch")
+    current = fields.Float(string="Current")
     bal1= fields.Float(string="0  -  30")
     bal2= fields.Float(string="30 -  60")
     bal3= fields.Float(string="60 -  90")

@@ -8,7 +8,9 @@
             <field name="arch" type="xml">
                 <form string="Report">
                     <group >
-                       
+                        <group>
+                        	<field name="date_from" />
+                        </group>
                         <group>
                             <field name="branch_ids" widget="many2many_tags"/>
                            
@@ -64,6 +66,7 @@
 			<tree string="Cusotmer Aging Report">
 			<field name="company_id" invisible="1" />
 				<field name="partner_id" />
+				<field name="current" sum="Total" />
 				<field name="bal1" sum="Total" />
 				<field name="bal2" sum="Total" />
 				<field name="bal3" sum="Total" />
