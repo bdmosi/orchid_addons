@@ -3,7 +3,9 @@
 from openerp import models, fields, api
 from openerp.exceptions import Warning
 from openerp import SUPERUSER_ID
-from datetime import datetime,relativedelta
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+
 from pprint import pprint
 class BetaCustomeAgingWiz(models.TransientModel):
     _name='beta.customer.aging.wiz'
