@@ -36,7 +36,7 @@ class BetaCustomeAgingWiz(models.TransientModel):
         return res
     def _get_lines(self):
         form = self.get_form()
-        print "form>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>form",self.direction_selection
+        print "form>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>form,date vals>>>>>>>>>>>>",form
         res = []
         total_account =[]
         obj_move = self.pool.get('account.move.line')
@@ -258,6 +258,7 @@ class BetaCustomeAgingWiz(models.TransientModel):
         wiz_id = self.id
         values = self._get_lines()
         print "valuessssssssss>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",values
+        pprint(values)
         result =[]
         for val in values:
             result.append((0,0,{
