@@ -34,7 +34,7 @@ class BetaCustomeAgingWiz(models.TransientModel):
                 }
                 start = stop - relativedelta(days=1)
         return res
-    def _get_lines(self, form):
+    def _get_lines(self):
         res = []
         form = self.get_form()
         move_state = ['draft','posted']
