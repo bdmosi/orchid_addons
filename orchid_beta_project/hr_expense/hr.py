@@ -1765,8 +1765,14 @@ class hr_employee(models.Model):
             customer_invoice = invoice_pool.search([('od_analytic_account','=',project.id),('type','=','out_invoice'),('state','not in',('draft','cancel'))])
             supplier_invoice = invoice_pool.search([('od_analytic_account','=',project.id),('type','=','in_invoice'),('state','not in',('draft','cancel'))])
             collected = sum([inv.amount_total - inv.residual for inv in customer_invoice])
+            customer_refund = invoice_pool.search([('od_analytic_account','=',project.id),('type','=','out_refund'),('state','not in',('draft','cancel'))])
+            customer_refund_amount = sum([inv.amount_total - inv.residual for inv in customer_refund])
+            collected = collected - customer_refund_amount
+            supplier_refund= invoice_pool.search([('od_analytic_account','=',project.id),('type','=','in_refund'),('state','not in',('draft','cancel'))])
+            supplier_refund_amount = self.get_supplier_paid(supplier_refund)
 #             paid = sum([inv.amount_total - inv.residual for inv in supplier_invoice])
             paid = self.get_supplier_paid(supplier_invoice)
+            paid = paid - supplier_refund_amount
             total_collected += collected
             total_paid += paid
             manpower_cost = sum([tm.normal_amount for tm in timesheet_pool.search([('account_id','=',project.id),('date','<=',aud_date_end)])])

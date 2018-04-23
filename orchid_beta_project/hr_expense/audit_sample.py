@@ -11,7 +11,7 @@ class audit_sample(models.Model):
 #             self.avg_score = sum([x.score for x in self.post_sale_sample_line ])/float(len([x.score for x in self.post_sale_sample_line ]))
 #         if self.type !='post_sales':
         avg_score = sum([x.final_score for x in self.comp_line])
-        if avg_score >100.0 and self.type !='sales_acc_mgr':
+        if avg_score >100.0 and self.type not in ('sales_acc_mgr','pmo','hoo'):
             avg_score =100.0
         self.avg_score = avg_score
         
