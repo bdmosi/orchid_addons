@@ -1,6 +1,20 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+        
+         <record id="opp_rev_list" model="ir.ui.view">
+            <field name="name">opp.rev.rpt.wiz.tree</field>
+            <field name="model">opp.rev.rpt.wiz</field>
+            <field name="arch" type="xml">
+                <tree string="list">
+                    <field name="name"></field>
+                    <button name="export_rpt" string="Export" type="object" />
+
+                </tree>
+            </field>
+        </record>
+        
+        
         <record id="view_opp_rev_rpt_wizard" model="ir.ui.view">
             <field name="name">Opp Revenue</field>
             <field name="model">opp.rev.rpt.wiz</field>
@@ -39,8 +53,8 @@
         <record id="action_opp_rev_rpt_act" model="ir.actions.act_window">
             <field name="name">Pipeline/Technology</field>
             <field name="res_model">opp.rev.rpt.wiz</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">current</field>
         </record>
          
          <menuitem id="technology_rpt_gne" name="Technology Report" parent="base.menu_base_partner" sequence="2" />
