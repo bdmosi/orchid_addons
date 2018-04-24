@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <tree string="list">
                     <field name="name"></field>
-                    
+                    <button name="export_rpt" string="Export" type="object" />
 
                 </tree>
             </field>
@@ -58,6 +58,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="opp_sale_in_list" />
+            <field name="target">current</field>
         </record>
          
          
