@@ -1,6 +1,21 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+        
+        <record id="amc_rept_list" model="ir.ui.view">
+            <field name="name">amc.rpt.wiz.tree</field>
+            <field name="model">amc.rpt.wiz</field>
+            <field name="arch" type="xml">
+                <tree string="list">
+                    <field name="name"></field>
+                    <button name="export_rpt" string="Export" type="object" />
+
+                </tree>
+            </field>
+        </record>
+        
+        
+        
         <record id="view_amc_rpt_wizard" model="ir.ui.view">
             <field name="name">AMC Form</field>
             <field name="model">amc.rpt.wiz</field>
@@ -49,8 +64,8 @@
         <record id="action_amc_rpt_act2" model="ir.actions.act_window">
             <field name="name">SLA Report</field>
             <field name="res_model">amc.rpt.wiz</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">current</field>
         </record>
          
          

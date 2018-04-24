@@ -5,12 +5,12 @@ from datetime import datetime
 import openerp.addons.decimal_precision as dp
 
 
-class project_rpt_wiz(models.TransientModel):
+class project_rpt_wiz(models.Model):
     _name = 'project.rpt.wiz'
     
     
     
-    
+    name= fields.Char(string="Name",required=True)
     branch_ids= fields.Many2many('od.cost.branch',string="Branch")
     cost_centre_ids = fields.Many2many('od.cost.centre',string="Cost Center")
     division_ids = fields.Many2many('od.cost.division',string="Technology Unit")
@@ -132,7 +132,7 @@ class project_rpt_wiz(models.TransientModel):
                                 'po_status':po_status,
                                 }))
                         
-        
+        self.wiz_line.unlink()
         self.write({'wiz_line':result})
         return {
             'domain': [('wiz_id','=',wiz_id)],

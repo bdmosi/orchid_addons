@@ -1,6 +1,21 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+        
+        
+        
+          <record id="project_inv_sch_rept_list" model="ir.ui.view">
+            <field name="name">project.inv.sch.wiz.tree</field>
+            <field name="model">project.inv.sch.wiz</field>
+            <field name="arch" type="xml">
+                <tree string="list">
+                    <field name="name"></field>
+                    <button name="export_rpt" string="Export" type="object" />
+
+                </tree>
+            </field>
+        </record>
+        
         <record id="view_project_inv_sche_rpt_wizard" model="ir.ui.view">
             <field name="name">Project Invoice Schedule Form</field>
             <field name="model">project.inv.sch.wiz</field>
@@ -46,8 +61,8 @@
         <record id="action_project_invoice_sch_rpt_act" model="ir.actions.act_window">
             <field name="name">Project Invoice Schedule Report</field>
             <field name="res_model">project.inv.sch.wiz</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">current</field>
         </record>
          
          
