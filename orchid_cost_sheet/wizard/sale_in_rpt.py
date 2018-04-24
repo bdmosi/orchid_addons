@@ -4,11 +4,11 @@ from pprint import pprint
 from datetime import datetime
 import openerp.addons.decimal_precision as dp
 
-class opp_rev_sale_in_wiz(models.TransientModel):
+class opp_rev_sale_in_wiz(models.Model):
     _name = 'opp.sale.in.rpt.wiz'
     
     
-    
+    name = fields.Char(string="Name",required=True)
     created_by_ids = fields.Many2many('res.users',string="Created By")
     product_group_ids = fields.Many2many('od.product.group',string="Technolgoy Unit",domain=[('code','in',('1','2','3','4'))])
     
@@ -162,7 +162,7 @@ class opp_rev_sale_in_wiz(models.TransientModel):
                                  'po_status':po_status,
                                 }))
                         
-        
+        self.wiz_line.unlink()
         self.write({'wiz_line':result})
         return {
             'domain': [('wiz_id','=',wiz_id)],
