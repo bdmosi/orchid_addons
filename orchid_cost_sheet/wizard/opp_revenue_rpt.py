@@ -8,14 +8,14 @@ class opp_rev_rpt_wiz(models.Model):
     _name = 'opp.rev.rpt.wiz'
     name = fields.Char(string="Name",required=True)
     bdm_id = fields.Many2one('res.users',string="BDM")
-    product_group_id = fields.Many2one('od.product.group',string="Technolgoy Unit",domain=[('code','in',('1','2','3','4'))])
+#     product_group_id = fields.Many2one('od.product.group',string="Technolgoy Unit",domain=[('code','in',('1','2','3','4'))])
     stage_id = fields.Many2one('crm.case.stage',string="Opp Stage")
     branch_id = fields.Many2one('od.cost.branch',string="Branch")
     cost_centre_id = fields.Many2one('od.cost.centre',string="Cost Center")
     division_id = fields.Many2one('od.cost.division',string="Technology Unit")
     
     created_by_ids = fields.Many2many('res.users',string="Created By")
-    product_group_ids = fields.Many2many('od.product.group',string="Technolgoy Unit",domain=[('code','in',('1','2','3'))])
+    product_group_ids = fields.Many2many('od.product.group',string="Technolgoy Unit",domain=[('code','in',('1','2','3','4'))])
     stage_ids = fields.Many2many('crm.case.stage',string="Opp Stage",domain=[('id','!=',6)])
 #     stage = fields.Selection([(1,'Approved'),(4,'Design Ready'),(12,'Pipeline'),(5,'Commit'),(6,'Lost'),(8,'Cancelled')],string="Opp Stage")
     
@@ -37,7 +37,7 @@ class opp_rev_rpt_wiz(models.Model):
     company_id = fields.Many2one('res.company', string='Company',default=od_get_company_id)
     @api.multi 
     def export_rpt(self):
-        product_group_id = self.product_group_id and self.product_group_id.id or False
+#         product_group_id = self.product_group_id and self.product_group_id.id or False
         bdm_id = self.bdm_id and self.bdm_id.id or False
         stage_id = self.stage_id and self.stage_id.id or False
         branch_id = self.branch_id and self.branch_id.id or False

@@ -20,6 +20,9 @@ class opp_rev_sale_in_wiz(models.Model):
     date_start = fields.Date(string="Approved Date Start")
     date_end =fields.Date(string="Approved Date End")
     
+    lead_date_start = fields.Date(string="Lead Created On Start")
+    lead_date_end =fields.Date(string="Lead Created On End")
+    
     sm_ids = fields.Many2many('res.users','wiz_sale_x','wiz_id','user_id',string="Sales Account Manager")
     owner_ids = fields.Many2many('res.users','wiz_sale_y','wiz_id','user_id',string="Owner")
     sale_team_ids = fields.Many2many('crm.case.section',string="Sales Team")
@@ -45,9 +48,25 @@ class opp_rev_sale_in_wiz(models.Model):
         
         date_start = self.date_start
         date_end =self.date_end 
+        
+        lead_date_start = self.lead_date_start
+        lead_date_end =self.lead_date_end 
         wiz_id = self.id
         company_id = self.company_id and self.company_id.id 
         domain = [('status','=','active'),('state','in',('approved','done','modify','change','analytic_change','change_processed','redistribution_processed'))]
+        domain2= []
+        
+        
+        if lead_date_start:
+            domain2 += [('create_date','>=',lead_date_start)]
+        if lead_date_end:
+            domain2 += [('create_date','<=',lead_date_end)]
+        
+        if domain2:
+            lead_data =self.env['crm.lead'].search(domain2)
+            lead_ids = [ld.id for ld in lead_data]
+            domain += [('lead_id','in',lead_ids)] 
+        
         if company_id:
             domain += [('company_id','=',company_id)]
         if created_by_ids:
