@@ -7,8 +7,9 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from pprint import pprint
-class BetaCustomeAgingWiz(models.TransientModel):
+class BetaCustomeAgingWiz(models.Model):
     _name='beta.customer.aging.wiz'
+    name = fields.Char(string="Name",required=True)
     partner_ids = fields.Many2many('res.partner',string="Customer")
     branch_ids= fields.Many2many('od.cost.branch',string="Branch")
     date_from = fields.Date(string='Start Date',default=fields.Date.context_today)
@@ -476,6 +477,7 @@ class BetaCustomeAgingWiz(models.TransientModel):
                 'bal5':val.get('0'),
                 'balance':val.get('total')
                 }))
+        self.wiz_line.unlink()
         self.write({'wiz_line':result})
             
         return {

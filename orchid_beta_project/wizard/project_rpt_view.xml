@@ -22,7 +22,9 @@
             <field name="arch" type="xml">
                 <form string="Report">
                     <group >
-                       
+                        <group>
+                       	<field name="name" />
+                       </group>
                         <group>
                             <field name="branch_ids" widget="many2many_tags"/>
                             <field name="partner_ids" widget="many2many_tags"/>
