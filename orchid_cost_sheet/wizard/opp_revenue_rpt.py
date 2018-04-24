@@ -4,7 +4,7 @@ from pprint import pprint
 from datetime import datetime
 import openerp.addons.decimal_precision as dp
 
-class opp_rev_rpt_wiz(models.TransientModel):
+class opp_rev_rpt_wiz(models.Model):
     _name = 'opp.rev.rpt.wiz'
     name = fields.Char(string="Name",required=True)
     bdm_id = fields.Many2one('res.users',string="BDM")

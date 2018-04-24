@@ -23,6 +23,9 @@
                 <form string="Report">
                     <group >
                         <group>
+                         <field name="name" />
+                        </group>
+                        <group>
 	                        <field name="date_start" />
 	                        <field name="date_end" />
 	                        <field name="company_id" invisible="1"/>
