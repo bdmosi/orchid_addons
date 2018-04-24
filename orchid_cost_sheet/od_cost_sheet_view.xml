@@ -891,6 +891,7 @@
 									<field name="manufacture_id"/>
 									<!-- <field name="supplier_id"/> -->
 									<field name="part_no" string="Product Part Number" domain="[('od_pdt_brand_id','=', manufacture_id)]"/>
+									<field name="product_group_id"/>
 									<field name="name"/>
 									<field name="types"/>
 									<field name="cost_sheet_id" invisible="1"/>
@@ -1217,6 +1218,7 @@
 									<field name="manufacture_id" string="Training Center"/>
 									<!-- <field name="supplier_id"/> -->
 									<field name="part_no" string="Training Number" domain="[('od_pdt_brand_id','=', manufacture_id)]"/>
+									<field name="product_group_id"/>
 									<field name="name"/>
 									<field name="types"/>
 									<field name="cost_sheet_id" invisible="1"/>

@@ -5181,6 +5181,7 @@ class od_cost_mat_main_pro_line(models.Model):
     item_int = fields.Integer(string="Item Number")
     manufacture_id = fields.Many2one('od.product.brand',string='Manufacturer',required=True)
     part_no = fields.Many2one('product.product',string='Part No',required=True)
+    product_group_id = fields.Many2one('od.product.group',string="Product Group",related="part_no.od_pdt_group_id",readonly=True)
     name = fields.Text(string='_________Description_______',required="1")
     types = fields.Many2one('od.product.type',string='Type',required=True)
     uom_id = fields.Many2one('product.uom',string='UOM',required=True)
