@@ -57,14 +57,14 @@
        
 
         <record id="action_aging_rpt_act" model="ir.actions.act_window">
-            <field name="name">Customer Aging Report</field>
+            <field name="name">Receivable Aging Report</field>
             <field name="res_model">beta.customer.aging.wiz</field>
             <field name="view_mode">tree,form</field>
             <field name="target">current</field>
         </record>
          
          
-          <menuitem id="customer_aging_rpt_gne" name="Customer Aging Report" parent="base.menu_base_partner" sequence="3" />
+          <menuitem id="customer_aging_rpt_gne" name="Receivable Aging Report" parent="base.menu_base_partner" sequence="3" />
          <menuitem
          	
 			id="menu_cust_aging_rpt"
