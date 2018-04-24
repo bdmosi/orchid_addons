@@ -2171,6 +2171,8 @@ class hr_employee(models.Model):
     def trial_kpi(self):
         
         audit_temp_id = self.audit_temp_id
+        aud_date_start = False
+        aud_date_end = False 
         if audit_temp_id:
             type = audit_temp_id.type 
             ex_num = self.get_execution_number()
@@ -2189,12 +2191,13 @@ class hr_employee(models.Model):
                 utilization = sample_id.utilization
                 self.write({scr:score,utl:utilization})
             else:
-                sample_id =self.create_audit_sample(aud_date_start,aud_date_end,audit_temp_id)
-                if sample_id:
-#                     score =  self.get_score(sample_id.avg_score, type, ex_num)
-                    score = sample_id.avg_score
-                    utilization = sample_id.utilization
-                    self.write({aud_samp:sample_id.id,scr:score,utl:utilization})
+                if aud_date_start and aud_date_end:
+                    sample_id =self.create_audit_sample(aud_date_start,aud_date_end,audit_temp_id)
+                    if sample_id:
+    #                     score =  self.get_score(sample_id.avg_score, type, ex_num)
+                        score = sample_id.avg_score
+                        utilization = sample_id.utilization
+                        self.write({aud_samp:sample_id.id,scr:score,utl:utilization})
      
 #     
 #     def audit_set_date(self):
