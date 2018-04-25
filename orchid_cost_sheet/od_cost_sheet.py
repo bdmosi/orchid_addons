@@ -2604,10 +2604,23 @@ class od_cost_sheet(models.Model):
 
 
     def default_beta_service_line(self):
-        currency = self.env.user.company_id.currency_id.id
+        
+        currency = self.env.user.company_id.currency_id
+        currency2 = self.env.user.company_id and self.env.user.company_id.od_supplier_currency_id
         tax_id = self.env.user.company_id.od_tax_id  or False
+        rate=self.env['res.currency']._get_conversion_rate(currency, currency2)
+        exchange_fact = 1/rate
+        exchange_fact= float_round(exchange_fact, precision_rounding=currency2.rounding)
         line = [
-                {'name':' BIM','sales_currency_id':currency, 'tax_id':tax_id},
+                {'name':' BIM','sales_currency_id':currency.id,
+                 'round_up':1,
+                 'supplier_currency_id':currency2.id,
+                 'currency_exchange_factor':exchange_fact,
+                 'shipping':self.get_shipping_value(),
+                 'customs':self.get_custom(),
+                 'stock_provision':1.0,
+                 'conting_provision':0.50,
+                 'tax_id':tax_id},
                 {'name':'BMN','sales_currency_id':currency, 'tax_id':tax_id},
                 {'name':'OIM','sales_currency_id':currency, 'tax_id':tax_id},
                 {'name':'OMN','sales_currency_id':currency, 'tax_id':tax_id},
@@ -2660,7 +2673,7 @@ class od_cost_sheet(models.Model):
         line = [{
                  'name':'Main',
                  'sales_currency_id':currency.id,
-                 'round_up':4,
+                 'round_up':1,
                  'supplier_currency_id':currency2.id,
                  'currency_exchange_factor':exchange_fact,
                  'shipping':self.get_shipping_value(),
@@ -2685,7 +2698,7 @@ class od_cost_sheet(models.Model):
         line = [{
                  'name':'Extra Expense',
                  'sales_currency_id':currency.id,
-                 'round_up':4,
+                 'round_up':1,
                  'customer_discount':100,
                  'supplier_currency_id':currency2.id,
                  'currency_exchange_factor':exchange_fact,
@@ -2709,7 +2722,7 @@ class od_cost_sheet(models.Model):
         line = [{
                  'name':'Optional',
                  'sales_currency_id':currency.id,
-                  'round_up':4,
+                  'round_up':1,
                  'supplier_currency_id':currency2.id,
                  'currency_exchange_factor':exchange_fact,
                  'shipping':self.get_shipping_value(),
