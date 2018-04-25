@@ -5132,7 +5132,7 @@ class od_cost_costgroup_it_service_line(models.Model):
         return res
 
     def get_stock_provision(self):
-        res = self.my_value(0.50,1)
+        res = self.my_value(1.0,1)
         return res
     @api.one
     @api.depends('tax_id')

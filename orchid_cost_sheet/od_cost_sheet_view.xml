@@ -2410,7 +2410,7 @@
 									<field name="shipping_value" sum="shipping_value"/>
 									<field name="customs" string="Customs % الجمارك"/>
 									<field name="customs_value" sum="customs_value"/>
-									<field name="stock_provision" readonly="1"/>
+									<field name="stock_provision" readonly="0"/>
 									<field name="stock_provision_value" sum="stock_provision_value"/>
 									<field name="conting_provision"/>
 									<field name="conting_provision_value" sum="conting_provision_value"/>
