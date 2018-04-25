@@ -75,7 +75,7 @@
 				<field name="stage_id" />
 				<field name="cost_sheet_id" />
 				<button name="btn_open_cost" type="object" icon="STOCK_FIND" string="Open" />
-				<field name="pdt_grp_id" />
+				
 				<field name="cs_sale" string="CS Sales" sum="Total" />
 				<field name="mp_sales" string="MP Sales" sum="Total" />
 				<field name="profit_mp" string="Profit With MP" sum="Total" />
