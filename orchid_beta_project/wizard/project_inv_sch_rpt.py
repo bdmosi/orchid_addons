@@ -5,7 +5,7 @@ from datetime import datetime
 import openerp.addons.decimal_precision as dp
 
 
-class project_inv_sch_wiz(models.Model):
+class project_inv_sch_wiz(models.TransientModel):
     _name = 'project.inv.sch.wiz'
     
     

@@ -63,7 +63,7 @@
         <record id="action_project_invoice_sch_rpt_act" model="ir.actions.act_window">
             <field name="name">Project Invoice Schedule Report</field>
             <field name="res_model">project.inv.sch.wiz</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">form</field>
             <field name="target">current</field>
         </record>
          
