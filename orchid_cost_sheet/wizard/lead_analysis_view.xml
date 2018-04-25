@@ -2,32 +2,22 @@
 <openerp>
     <data>
         
-         <record id="opp_rev_list" model="ir.ui.view">
-            <field name="name">opp.rev.rpt.wiz.tree</field>
-            <field name="model">opp.rev.rpt.wiz</field>
-            <field name="arch" type="xml">
-                <tree string="list">
-                    <field name="name"></field>
-                    <button name="export_rpt" string="Export" type="object" />
-
-                </tree>
-            </field>
-        </record>
+     
         
         
-        <record id="view_opp_rev_rpt_wizard" model="ir.ui.view">
-            <field name="name">Opp Revenue</field>
-            <field name="model">opp.rev.rpt.wiz</field>
+        <record id="view_lead_analysis_rpt_wizard" model="ir.ui.view">
+            <field name="name">Lead Analysis Report</field>
+            <field name="model">lead.analysis.rpt.wiz</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Report">
                     <group >
-                        <group>
-                         <field name="name" />
-                        </group>
+                        
                         <group>
 	                        <field name="date_start" />
 	                        <field name="date_end" />
+	                          <field name="lead_date_start" />
+	                        <field name="lead_date_end" />
 	                        <field name="company_id" invisible="1"/>
                         </group>
                         <group>
@@ -53,48 +43,54 @@
 
        
 
-        <record id="action_opp_rev_rpt_act" model="ir.actions.act_window">
-            <field name="name">Pipeline/Technology</field>
+        <record id="action_lead_analysis_act" model="ir.actions.act_window">
+            <field name="name">Lead Analysis</field>
             <field name="res_model">opp.rev.rpt.wiz</field>
             <field name="view_mode">tree,form</field>
             <field name="target">current</field>
         </record>
          
-         <menuitem id="technology_rpt_gne" name="Technology Report" parent="base.menu_base_partner" sequence="2" />
+        
          <menuitem
          	
-			id="menu_opp_rev_rpt"
+			id="menu_lead_analysis_rpt"
 			parent="technology_rpt_gne"
 			sequence="1" 
-			action="action_opp_rev_rpt_act" />
+			action="action_lead_analysis_act" />
 
 
-	<record model="ir.ui.view" id="od_rev_opp_tree_view">
-		<field name="name">wiz.rev.rpt.data</field>
-		<field name="model">wiz.rev.rpt.data</field>
+	<record model="ir.ui.view" id="od_lead_analysis_data_tree_view">
+		<field name="name">wiz.lead.analysis.data</field>
+		<field name="model">wiz.lead.analysis.data</field>
 		<field name="arch" type="xml">
-			<tree string="Technology Report">
-				<field name="expected_booking" />
+			<tree string="Lead Analysis">
+				<field name="type" />
+				<field name="opp_id" />
+				<field name="name" />
 				<field name="partner_id" />
-				<field name="stage_id" />
-				<field name="bdm_user_id" />
+				<field name="branch_id" />
+				<field name="division_id" />
+				<field name="created_on" />
+				<field name="created_by_id" />
 				<field name="sam_id" />
+				<field name="stage_id" />
 				<field name="cost_sheet_id" />
 				<button name="btn_open_cost" type="object" icon="STOCK_FIND" string="Open" />
 				<field name="pdt_grp_id" />
-				<field name="sale_aftr_disc" string="Sales" sum="Total" />
-				<field name="total_gp" string="Profit With MP" sum="Total" />
+				<field name="cs_sale" string="CS Sales" sum="Total" />
 				<field name="mp_sales" string="MP Sales" sum="Total" />
-				
+				<field name="profit_mp" string="Profit With MP" sum="Total" />
+				<field name="expected_booking" />
+				<field name="submitted_on" />
 				
 				
 			</tree>
 		</field>
 	</record>
 
-	<record model="ir.ui.view" id="ood_rev_opp_search_view">
-		<field name="name">wiz.rev.rpt.data.search</field>
-		<field name="model">wiz.rev.rpt.data</field>
+	<record model="ir.ui.view" id="ood_lead_analysis_search_view">
+		<field name="name">wiz.lead.analysis.data.search</field>
+		<field name="model">wiz.lead.analysis.data</field>
 		<field name="arch" type="xml">
 			<search>
 			<field name="expected_booking" />
@@ -104,10 +100,10 @@
 			<group expand="1" string="Group By">
 			            <filter string="Company" domain="[]" context="{'group_by':'company_id'}"/>
                         <filter string="Branch" domain="[]" context="{'group_by':'branch_id'}"/>
-                        <filter string="Technology Unit" domain="[]" context="{'group_by':'pdt_grp_id'}"/>
+                        <filter string="Technology Unit" domain="[]" context="{'group_by':'division_id'}"/>
                         <filter string="Customer" domain="[]" context="{'group_by':'partner_id'}"/>
                          <filter string="Sales Account Manager" domain="[]" context="{'group_by':'sam_id'}"/>
-                         <filter string="Created By" domain="[]" context="{'group_by':'bdm_user_id'}"/>
+                         <filter string="Created By" domain="[]" context="{'group_by':'created_by_id'}"/>
                         <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="Cost Sheet" domain="[]" context="{'group_by':'cost_sheet_id'}"/>
                        

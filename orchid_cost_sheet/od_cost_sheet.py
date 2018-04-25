@@ -2621,7 +2621,8 @@ class od_cost_sheet(models.Model):
                  'stock_provision':1.0,
                  'conting_provision':0.50,
                  'tax_id':tax_id},
-                {'name':'BMN','round_up':1,
+                {'name':'BMN','sales_currency_id':currency.id,
+                 'round_up':1,
                  'supplier_currency_id':currency2.id,
                  'currency_exchange_factor':exchange_fact,
                  'shipping':self.get_shipping_value(),
@@ -2629,7 +2630,7 @@ class od_cost_sheet(models.Model):
                  'stock_provision':1.0,
                  'conting_provision':0.50,
                  'tax_id':tax_id},
-                {'name':'OIM','round_up':1,
+                {'name':'OIM','sales_currency_id':currency.id,'round_up':1,
                  'supplier_currency_id':currency2.id,
                  'currency_exchange_factor':exchange_fact,
                  'shipping':self.get_shipping_value(),
@@ -2637,7 +2638,7 @@ class od_cost_sheet(models.Model):
                  'stock_provision':1.0,
                  'conting_provision':0.50,
                  'tax_id':tax_id},
-                {'name':'OMN','round_up':1,
+                {'name':'OMN','sales_currency_id':currency.id,'round_up':1,
                  'supplier_currency_id':currency2.id,
                  'currency_exchange_factor':exchange_fact,
                  'shipping':self.get_shipping_value(),
@@ -2645,7 +2646,7 @@ class od_cost_sheet(models.Model):
                  'stock_provision':1.0,
                  'conting_provision':0.50,
                  'tax_id':tax_id},
-                {'name':'O&M','round_up':1,
+                {'name':'O&M','sales_currency_id':currency.id,'round_up':1,
                  'supplier_currency_id':currency2.id,
                  'currency_exchange_factor':exchange_fact,
                  'shipping':self.get_shipping_value(),
@@ -3325,6 +3326,14 @@ class od_cost_sheet(models.Model):
     costgroup_material_line = fields.One2many('od.cost.costgroup.material.line','cost_sheet_id',string='Cost Costgroup Material Line',copy=True,states={'draft':[('readonly',False)],'design_ready':[('readonly',False)],'submitted':[('readonly',False)],'returned_by_pmo':[('readonly',False)],'returned_by_fin':[('readonly',False)],'handover':[('readonly',False)],'change':[('readonly',False)],'modify':[('readonly',False)]},readonly=True,default=default_costgroup_material_line)
     costgroup_extra_expense_line = fields.One2many('od.cost.costgroup.extra.expense.line','cost_sheet_id',string='Cost Costgroup Material Line',copy=True,states={'draft':[('readonly',False)],'design_ready':[('readonly',False)],'submitted':[('readonly',False)],'returned_by_pmo':[('readonly',False)],'returned_by_fin':[('readonly',False)],'handover':[('readonly',False)],'change':[('readonly',False)],'modify':[('readonly',False)]},readonly=True,default=default_costgroup_extra_expense_line)
     costgroup_optional_line = fields.One2many('od.cost.costgroup.optional.line.two','cost_sheet_id',string='Cost Costgroup Optional Line',copy=True,states={'draft':[('readonly',False)],'design_ready':[('readonly',False)],'submitted':[('readonly',False)],'returned_by_pmo':[('readonly',False)],'returned_by_fin':[('readonly',False)],'handover':[('readonly',False)],'change':[('readonly',False)],'modify':[('readonly',False)]},readonly=True,default=default_costgroup_optional_line)
+    
+    
+    amc_tech_line = fields.One2many('od.cost.amc.tech.line','cost_sheet_id',string='AMC Technology Line',states={'draft':[('readonly',False)],'design_ready':[('readonly',False)],'submitted':[('readonly',False)],'returned_by_pmo':[('readonly',False)],'returned_by_fin':[('readonly',False)],'handover':[('readonly',False)],'change':[('readonly',False)],'modify':[('readonly',False)]},readonly=True,copy=True)
+    imp_tech_line = fields.One2many('od.cost.imp.tech.line','cost_sheet_id',string='IMP Technology Line',states={'draft':[('readonly',False)],'design_ready':[('readonly',False)],'submitted':[('readonly',False)],'returned_by_pmo':[('readonly',False)],'returned_by_fin':[('readonly',False)],'handover':[('readonly',False)],'change':[('readonly',False)],'modify':[('readonly',False)]},readonly=True,copy=True)
+    om_tech_line = fields.One2many('od.cost.om.tech.line','cost_sheet_id',string='OM Technology Line',states={'draft':[('readonly',False)],'design_ready':[('readonly',False)],'submitted':[('readonly',False)],'returned_by_pmo':[('readonly',False)],'returned_by_fin':[('readonly',False)],'handover':[('readonly',False)],'change':[('readonly',False)],'modify':[('readonly',False)]},readonly=True,copy=True)
+    
+    
+    
     mat_main_pro_line = fields.One2many('od.cost.mat.main.pro.line','cost_sheet_id',string='Mat Main Proposal Line',states={'draft':[('readonly',False)],'design_ready':[('readonly',False)],'submitted':[('readonly',False)],'returned_by_pmo':[('readonly',False)],'returned_by_fin':[('readonly',False)],'handover':[('readonly',False)],'change':[('readonly',False)],'modify':[('readonly',False)]},readonly=True,copy=True)
     mat_optional_item_line = fields.One2many('od.cost.mat.optional.item.line','cost_sheet_id',string='Mat Optional Line',states={'draft':[('readonly',False)],'design_ready':[('readonly',False)],'submitted':[('readonly',False)],'returned_by_pmo':[('readonly',False)],'returned_by_fin':[('readonly',False)],'handover':[('readonly',False)],'change':[('readonly',False)],'modify':[('readonly',False)]},readonly=True,copy=True)
     mat_brand_weight_line = fields.One2many('od.cost.mat.brand.weight','cost_sheet_id',string='Brand Weight',readonly=True)
@@ -5825,12 +5834,23 @@ class od_cost_trn_customer_training_line(models.Model):
     _name = 'od.cost.trn.customer.training.line'
     _inherit = 'od.cost.mat.main.pro.line'
     trn_section_id = fields.Many2one('od.cost.trn.section.line',string='Section',copy=True)
-# class od_cost_trn_optional_line(models.Model):
-#
-#
-#     _name="od.cost.trn.optional.line"
-#     _inherit = 'od.cost.mat.main.pro.line'
-#
+    
+    
+class od_cost_amc_technology(models.Model):
+    _name = 'od.cost.amc.tech.line'
+    _inherit = 'od.cost.mat.main.pro.line'
+    group = fields.Many2one('od.cost.costgroup.it.service.line',string='Group',copy=True)
+
+class od_cost_imp_technology(models.Model):
+    _name = 'od.cost.imp.tech.line'
+    _inherit = 'od.cost.mat.main.pro.line'
+    group = fields.Many2one('od.cost.costgroup.it.service.line',string='Group',copy=True)
+
+
+class od_cost_om_technology(models.Model):
+    _name = 'od.cost.om.tech.line'
+    _inherit = 'od.cost.mat.main.pro.line'
+    group = fields.Many2one('od.cost.costgroup.it.service.line',string='Group',copy=True)
 
 
 class od_cost_trn_customer_training_extra_expense_line(models.Model):

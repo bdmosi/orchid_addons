@@ -100,7 +100,7 @@ class opp_rev_rpt_wiz(models.Model):
             partner_id = sheet.od_customer_id and sheet.od_customer_id.id 
             company_id = sheet.company_id and sheet.company_id.id 
             branch_id = sheet.od_branch_id and sheet.od_branch_id.id
-            sam_id = sheet.sales_acc_manager and sheet.sales_acc_manager.id
+            sam_id = sheet.lead_id and sheet.lead_id.user_id and sheet.lead_id.user_id.id
             if product_group_ids:
                 for line in sheet.summary_weight_line:
                     if product_group_ids:
