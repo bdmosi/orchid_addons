@@ -46,7 +46,7 @@
             <field name="name">Lead Analysis</field>
             <field name="res_model">lead.analysis.rpt.wiz</field>
             <field name="view_mode">form</field>
-            <field name="target">current</field>
+            <field name="target">new</field>
         </record>
          
         

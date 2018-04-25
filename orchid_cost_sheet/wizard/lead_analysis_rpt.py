@@ -6,7 +6,7 @@ import openerp.addons.decimal_precision as dp
 
 class lead_analysis_rpt_wiz(models.TransientModel):
     _name = 'lead.analysis.rpt.wiz'
-    name = fields.Char(string="Name",required=True)
+    
        
     created_by_ids = fields.Many2many('res.users',string="Created By")
     stage_ids = fields.Many2many('crm.case.stage',string="Opp Stage",domain=[('id','!=',6)])    
