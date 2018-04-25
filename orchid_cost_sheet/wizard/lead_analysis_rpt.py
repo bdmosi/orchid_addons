@@ -33,7 +33,7 @@ class lead_analysis_rpt_wiz(models.TransientModel):
         lead_date_end =self.lead_date_end 
         wiz_id = self.id
         company_id = self.company_id and self.company_id.id 
-        domain = [('status','=','active')]
+        domain =[]
         if company_id:
             domain += [('company_id','=',company_id)]
         if created_by_ids:
