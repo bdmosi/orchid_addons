@@ -45,7 +45,7 @@
         <record id="action_lead_analysis_act" model="ir.actions.act_window">
             <field name="name">Lead Analysis</field>
             <field name="res_model">lead.analysis.rpt.wiz</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">form</field>
             <field name="target">current</field>
         </record>
          
