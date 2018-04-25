@@ -2621,10 +2621,38 @@ class od_cost_sheet(models.Model):
                  'stock_provision':1.0,
                  'conting_provision':0.50,
                  'tax_id':tax_id},
-                {'name':'BMN','sales_currency_id':currency, 'tax_id':tax_id},
-                {'name':'OIM','sales_currency_id':currency, 'tax_id':tax_id},
-                {'name':'OMN','sales_currency_id':currency, 'tax_id':tax_id},
-                {'name':'O&M','sales_currency_id':currency, 'tax_id':tax_id},
+                {'name':'BMN','round_up':1,
+                 'supplier_currency_id':currency2.id,
+                 'currency_exchange_factor':exchange_fact,
+                 'shipping':self.get_shipping_value(),
+                 'customs':self.get_custom(),
+                 'stock_provision':1.0,
+                 'conting_provision':0.50,
+                 'tax_id':tax_id},
+                {'name':'OIM','round_up':1,
+                 'supplier_currency_id':currency2.id,
+                 'currency_exchange_factor':exchange_fact,
+                 'shipping':self.get_shipping_value(),
+                 'customs':self.get_custom(),
+                 'stock_provision':1.0,
+                 'conting_provision':0.50,
+                 'tax_id':tax_id},
+                {'name':'OMN','round_up':1,
+                 'supplier_currency_id':currency2.id,
+                 'currency_exchange_factor':exchange_fact,
+                 'shipping':self.get_shipping_value(),
+                 'customs':self.get_custom(),
+                 'stock_provision':1.0,
+                 'conting_provision':0.50,
+                 'tax_id':tax_id},
+                {'name':'O&M','round_up':1,
+                 'supplier_currency_id':currency2.id,
+                 'currency_exchange_factor':exchange_fact,
+                 'shipping':self.get_shipping_value(),
+                 'customs':self.get_custom(),
+                 'stock_provision':1.0,
+                 'conting_provision':0.50,
+                 'tax_id':tax_id},
                 ]
         return line
 
@@ -4896,7 +4924,7 @@ class od_cost_costgroup_material_line(models.Model):
     company_id = fields.Many2one('res.company', string='Company',default=od_get_company_id,readonly=True)
     supplier_id = fields.Many2one('res.partner',domain=[('supplier','=',True)],string="Manufacturer")
     cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet',ondelete='cascade',)
-    round_up = fields.Selection([(1,'0'),(2,'1'),(3,'2'),(4,'No Round')],string="Round Up",default=4)
+    round_up = fields.Selection([(1,'0'),(2,'1'),(3,'2'),(4,'No Round')],string="Round Up",default=1)
     cost_group_number = fields.Char(string='Number')
     name = fields.Char(string='Description',required="1")
     sales_currency_id = fields.Many2one('res.currency',string='Sales Currency',default=od_get_currency)
@@ -5027,158 +5055,9 @@ class od_cost_costgroup_extra_expenase_line(models.Model):
 
 class od_cost_costgroup_it_service_line(models.Model):
     _name = 'od.cost.costgroup.it.service.line'
-    _order = "item_int ASC"
-    item_int = fields.Integer(string="Item Seq",default=1)
-
-#     def name_get(self, cr, uid, ids, context=None):
-#         res = []
-#         for inst in self.browse(cr, uid, ids, context=context):
-#             name = inst.name or '/'
-#             cost_sheet_number = inst.cost_sheet_id.number
-#             if name and cost_sheet_number:
-#                 name='[' +  cost_sheet_number  + ']' + name
-#             res.append((inst.id, name))
-#         return res
-# 
-#     def od_get_company_id(self):
-#         return self.env.user.company_id
-#     
-#     
-#     def get_vat(self):
-#         return self.env.user.company_id.od_tax_id and self.env.user.company_id.od_tax_id.id or False
-#     @api.one
-#     @api.depends('tax_id')
-#     def _compute_vat_group(self):
-#         vat = self.tax_id and self.tax_id.amount or 0.0
-#         vat = vat * 100
-#         self.vat = vat
-        
-    ####Copy
-    
-    
-    @api.multi
-    def link_costgroup(self):
-        context = self.env.context
-        cost_sheet_id = self.cost_sheet_id and self.cost_sheet_id.id or False
-        ctx =  context.copy()
-        ctx['cost_sheet_id'] = cost_sheet_id
-        return {
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'costgroup.wiz',
-            'context':ctx,
-            'target': 'new',
-            'type': 'ir.actions.act_window',
-        }
-    @api.multi
-    def unlink_costgroup(self):
-        context = self.env.context
-        cost_sheet_id = self.cost_sheet_id and self.cost_sheet_id.id or False
-        costgroup_id = self.id
-        ctx =  context.copy()
-        ctx['cost_sheet_id'] = cost_sheet_id
-        ctx['group_id'] = costgroup_id
-        return {
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'costgroup.remove.wiz',
-            'context':ctx,
-            'target': 'new',
-            'type': 'ir.actions.act_window',
-        }
-
-    def name_get(self, cr, uid, ids, context=None):
-        res = []
-        for inst in self.browse(cr, uid, ids, context=context):
-            name = inst.name or '/'
-            cost_sheet_number = inst.cost_sheet_id.number
-            if name and cost_sheet_number:
-                name='['+ cost_sheet_number +']' + name
-            res.append((inst.id, name))
-        return res
-
-    def od_get_currency(self):
-        return self.env.user.company_id.currency_id.id
-    
-    def get_vat(self):
-        return self.env.user.company_id.od_tax_id 
-    
-    def od_supplier_currency(self):
-        currency2 = self.env.user.company_id and self.env.user.company_id.od_supplier_currency_id
-        if not currency2:
-            raise Warning("Please Configure CostGroup Default Supplier Currency")
-        return currency2
-
-    def od_get_company_id(self):
-        return self.env.user.company_id
-
-    def get_saudi_company_id(self):
-        parameter_obj = self.env['ir.config_parameter']
-        key =[('key', '=', 'od_beta_saudi_co')]
-        company_param = parameter_obj.search(key)
-        if not company_param:
-            raise Warning(_('Settings Warning!'),_('No Company Parameter Not defined\nconfig it in System Parameters with od_beta_saudi_co!'))
-        saudi_company_id = company_param.od_model_id and company_param.od_model_id.id or False
-        return saudi_company_id
-
-
-    def is_saudi_comp(self):
-        res = False
-        saudi_comp_id = self.get_saudi_company_id()
-        user_comp_id = self.env.user.company_id.id
-        if user_comp_id == saudi_comp_id:
-            res = True
-        return res
-
-    def my_value(self,uae_val,saudi_val):
-        res = uae_val
-        if self.is_saudi_comp():
-            res =saudi_val
-        return res
-
-    def get_shipping_value(self):
-        res = self.my_value(5, 2)
-        return res
-
-    def get_custom(self):
-        res = self.my_value(1, 5)
-        return res
-
-    def get_stock_provision(self):
-        res = self.my_value(1.0,1)
-        return res
-    @api.one
-    @api.depends('tax_id')
-    def _compute_vat_group(self):
-        vat = self.tax_id and self.tax_id.amount or 0.0
-        vat = vat * 100
-        self.vat = vat
-
-    company_id = fields.Many2one('res.company', string='Company',default=od_get_company_id,readonly=True)
-    supplier_id = fields.Many2one('res.partner',domain=[('supplier','=',True)],string="Manufacturer")
-    cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet',ondelete='cascade',)
-    round_up = fields.Selection([(1,'0'),(2,'1'),(3,'2'),(4,'No Round')],string="Round Up",default=4)
-    cost_group_number = fields.Char(string='Number')
-    name = fields.Char(string='Description',required="1")
-    sales_currency_id = fields.Many2one('res.currency',string='Sales Currency',default=od_get_currency)
-    customer_discount = fields.Float(string='Customer Discount(%)',digits=dp.get_precision('Account'))
-    profit = fields.Float(string='Profit(%)',digits=dp.get_precision('Account'))
-    supplier_discount = fields.Float(string='Supplier Discount(%)',digits=dp.get_precision('Account'))
-    supplier_currency_id = fields.Many2one('res.currency',string='Supplier Currency',default=od_supplier_currency)
-    currency_exchange_factor = fields.Float(string='Currency Exchange Factor',digits=dp.get_precision('Account'))
-    currency_fluctation_provision = fields.Float(string='Currency Fluctuation Provision',digits=dp.get_precision('Account'))
-    currency_fluct_value = fields.Float(string='Currency Fluct.Value',readonly=True,digits=dp.get_precision('Account'))
-    shipping = fields.Float(string='Shipping(%)',default=get_shipping_value,digits=dp.get_precision('Account'))
-    shipping_value = fields.Float(string="Shipping Value",readonly=True,digits=dp.get_precision('Account'))
-    customs = fields.Float(string='Customs(%)',default=get_custom,digits=dp.get_precision('Account'))
-    customs_value = fields.Float(string='Customs Value',readonly=True,digits=dp.get_precision('Account'))
-    stock_provision = fields.Float(string='Stock Provision',default=get_stock_provision,digits=dp.get_precision('Account'))
-    stock_provision_value = fields.Float(string='Stock Provision Value',readonly=True,digits=dp.get_precision('Account'))
-    conting_provision = fields.Float(string='Conting Provision',default=0.50,digits=dp.get_precision('Account'))
-    conting_provision_value = fields.Float(string='Conting Provision Value',readonly=True,digits=dp.get_precision('Account'))
-    proof_of_cost  = fields.Many2one('od.proof.cost','Proof Of Cost')
-    tax_id = fields.Many2one('account.tax',string="Tax",default=get_vat)
-    vat = fields.Float(string="Vat %",compute='_compute_vat_group',digits=dp.get_precision('Account'))
+    _inherit = 'od.cost.costgroup.material.line'
+    stock_provision = fields.Float(string='Stock Provision',default=1.0,digits=dp.get_precision('Account'))
+   
     
     
     ### copy End
