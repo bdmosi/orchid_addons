@@ -22,7 +22,6 @@
                         </group>
                         <group>
                              <field name="branch_ids" widget="many2many_tags"/>
-                             <field name="product_group_ids" widget="many2many_tags" string="Technology Unit"/>
                         		  <field name="stage_ids" widget="many2many_tags"/>
                         		  <field name="sm_ids" widget="many2many_tags"/>
                         		<field name="created_by_ids" widget="many2many_tags"/>
