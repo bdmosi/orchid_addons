@@ -6,7 +6,7 @@ import openerp.addons.decimal_precision as dp
 
 class opp_rev_rpt_wiz(models.TransientModel):
     _name = 'opp.rev.rpt.wiz'
-    name = fields.Char(string="Name",required=True)
+    
     bdm_id = fields.Many2one('res.users',string="BDM")
 #     product_group_id = fields.Many2one('od.product.group',string="Technolgoy Unit",domain=[('code','in',('1','2','3','4'))])
     stage_id = fields.Many2one('crm.case.stage',string="Opp Stage")

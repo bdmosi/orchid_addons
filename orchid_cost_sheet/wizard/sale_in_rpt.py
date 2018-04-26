@@ -8,7 +8,7 @@ class opp_rev_sale_in_wiz(models.TransientModel):
     _name = 'opp.sale.in.rpt.wiz'
     
     
-    name = fields.Char(string="Name",required=True)
+  
     created_by_ids = fields.Many2many('res.users',string="Created By")
     product_group_ids = fields.Many2many('od.product.group',string="Technolgoy Unit",domain=[('code','in',('1','2','3','4'))])
     
