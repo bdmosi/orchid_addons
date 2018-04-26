@@ -20,7 +20,7 @@
             <field name="model">project.rpt.wiz</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Report">
+                <form string="Report" create="false">
                     <group >
                         <group>
                        	<field name="name" />
