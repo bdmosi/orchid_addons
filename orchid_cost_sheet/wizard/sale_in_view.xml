@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        
+        <!-- 
         <record id="opp_sale_in_list" model="ir.ui.view">
             <field name="name">opp.sale.in.rpt.wiz.tree</field>
             <field name="model">opp.sale.in.rpt.wiz</field>
@@ -12,7 +12,7 @@
 
                 </tree>
             </field>
-        </record>
+        </record> -->
         
         
         <record id="view_sale_in_rev_rpt_wizard" model="ir.ui.view">
