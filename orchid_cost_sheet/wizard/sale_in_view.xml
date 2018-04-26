@@ -68,7 +68,7 @@
             <field name="res_model">opp.sale.in.rpt.wiz</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="opp_sale_in_list" />
+            <field name="view_id"  />
             <field name="target">new</field>
         </record>
          
