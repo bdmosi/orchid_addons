@@ -56,8 +56,8 @@
         <record id="action_opp_rev_rpt_act" model="ir.actions.act_window">
             <field name="name">Pipeline/Technology</field>
             <field name="res_model">opp.rev.rpt.wiz</field>
-            <field name="view_mode">tree,form</field>
-            <field name="target">current</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
         </record>
          
          <menuitem id="technology_rpt_gne" name="Technology Report" parent="base.menu_base_partner" sequence="2" />

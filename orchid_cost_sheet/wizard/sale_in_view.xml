@@ -60,9 +60,9 @@
             <field name="name">Sale In/Technology</field>
             <field name="res_model">opp.sale.in.rpt.wiz</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">form</field>
             <field name="view_id" ref="opp_sale_in_list" />
-            <field name="target">current</field>
+            <field name="target">new</field>
         </record>
          
          

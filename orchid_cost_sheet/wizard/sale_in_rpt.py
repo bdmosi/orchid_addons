@@ -4,7 +4,7 @@ from pprint import pprint
 from datetime import datetime
 import openerp.addons.decimal_precision as dp
 
-class opp_rev_sale_in_wiz(models.Model):
+class opp_rev_sale_in_wiz(models.TransientModel):
     _name = 'opp.sale.in.rpt.wiz'
     
     
