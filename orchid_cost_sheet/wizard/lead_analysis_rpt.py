@@ -137,12 +137,16 @@ class wiz_lead_analysis_rpt(models.TransientModel):
     company_id = fields.Many2one('res.company',string="Company")
     @api.multi
     def btn_open_opp(self):
-       
+        model_data = self.env['ir.model.data']
+        form_view = model_data.get_object_reference('crm', 'rm_case_form_view_oppor')
+        
+
         return {
                 'view_type': 'form',
                 'view_mode': 'form',
                 'res_model': 'crm.lead',
                 'res_id':self.opp_id and self.opp_id.id or False,
+                'views': [(form_view and form_view[1] or False, 'form')],
                 'type': 'ir.actions.act_window',
                 'target': 'new',
 
