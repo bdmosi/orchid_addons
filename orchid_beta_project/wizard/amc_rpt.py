@@ -113,6 +113,11 @@ class amc_rpt_wiz(models.TransientModel):
             branch_id = data.od_branch_id and data.od_branch_id.id
             od_cost_sheet_id = data.od_cost_sheet_id and data.od_cost_sheet_id.id
             po_status = data.od_cost_sheet_id and data.od_cost_sheet_id and data.od_cost_sheet_id.po_status
+            
+            contract_status = data.state 
+            contract_start_date = data.date_start
+            contract_end_date = data.date 
+            closing_date = data.od_amc_closing
             result.append((0,0,{
                                 'wiz_id':wiz_id,
                                 'cost_sheet_id':od_cost_sheet_id, 
@@ -134,7 +139,11 @@ class amc_rpt_wiz(models.TransientModel):
                                 'status':data.od_amc_status,
                                 'date_start':data.od_amc_start,
                                 'date_end':data.od_amc_end, 
-                                'po_status':po_status, 
+                                'po_status':po_status,
+                                 'contract_status':contract_status,
+                                'contract_start_date':contract_start_date,
+                                'contract_end_date':contract_end_date,
+                                'closing_data':closing_date 
                                 }))
                         
         self.wiz_line.unlink()
@@ -173,9 +182,12 @@ class wiz_amc_rpt_data(models.TransientModel):
     actual_sale = fields.Float(string="Actual Sale",digits=dp.get_precision('Account'))
     actual_cost = fields.Float(string="Actual Cost",digits=dp.get_precision('Account'))
     actual_profit = fields.Float(string="Actual Profit",digits=dp.get_precision('Account'))
-    
-    date_start = fields.Date(string="Date Start")
-    date_end = fields.Date(string="Date End")
+    date_start = fields.Date(string="Planned Date Start")
+    date_end = fields.Date(string="Planned Date End")
+    closing_date = fields.Date(string="Actual Closing Date")
+    contract_status = fields.Selection([('template','Template'),('draft','New'),('open','In Progress'),('pending','To Renew'),('close','Closed'),('cancelled','Cancelled')],string="Contract Status")
+    contract_start_date =  fields.Date(string="Contract Start Date")
+    contract_end_date =  fields.Date(string="Contract End Date")
     status = fields.Selection([('active','Active'),('inactive','Inactive'),('close','Closed')],string="Status")
     po_status = fields.Selection([('waiting_po','Waiting P.O'),('special_approval','Special Approval From GM'),('available','Available'),('credit','Customer Credit')],'Customer PO Status')
     @api.multi
