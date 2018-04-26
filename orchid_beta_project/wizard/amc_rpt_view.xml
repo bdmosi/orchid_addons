@@ -160,9 +160,15 @@
                          <filter string="AMC End Year" context="{'group_by':'date_end:year'}" name="Year"/>
                         <filter string="AMC End Month" context="{'group_by':'date_end:month'}"/>
                         <filter string="AMC End Quarter" context="{'group_by':'date_end:quarter'}"/>
-                       
+                         <filter string="Actual Closing Date" context="{'group_by':'closing_date:month'}"/>
                         <filter string="Sale Account Manager" domain="[]" context="{'group_by':'sam_id'}"/>
                         <filter string="Project Manager" domain="[]" context="{'group_by':'pm_id'}"/>
+                        
+                        
+                         <filter string="Contract Status" domain="[]" context="{'group_by':'contract_status'}"/>
+                         <filter string="Contract Start Date" context="{'group_by':'contract_start_date:month'}"/>
+                         <filter string="Contract End Date" context="{'group_by':'contract_end_date:month'}"/>
+                        
                        
                     </group>
 			
