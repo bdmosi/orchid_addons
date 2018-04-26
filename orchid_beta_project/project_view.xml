@@ -600,7 +600,7 @@
                     <tbody>
                     <tr>
                     <td><strong>Date Start</strong></td>
-                    <td><field name="date_start" /></td>
+                    <td><field name="date_start" readonly="1"  /></td>
                     <td><field name="od_project_start" readonly="1" /></td>
                     <td><field name="od_amc_start" readonly="1"/></td>
                     <td><field name="od_om_start" readonly="1"/></td>
@@ -610,7 +610,7 @@
                     </tr>
                     <tr>
                     <td><strong>Date End</strong></td>
-                    <td><field name="date" /></td>
+                    <td><field name="date" readonly="1" /></td>
                     <td><field name="od_project_end" readonly="1"/></td>
                     <td><field name="od_amc_end" readonly="1"/></td>
                     <td><field name="od_om_end" readonly="1"/></td>
