@@ -158,7 +158,7 @@ class amc_rpt_wiz(models.TransientModel):
                                  'contract_status':contract_status,
                                 'contract_start_date':contract_start_date,
                                 'contract_end_date':contract_end_date,
-                                'closing_data':closing_date 
+                                'closing_date':closing_date 
                                 }))
                         
         self.wiz_line.unlink()
