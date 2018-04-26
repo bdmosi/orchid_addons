@@ -32,15 +32,23 @@
                         	   <group>
                         	        <field name="branch_ids" widget="many2many_tags"/>
                         	    </group>
+                        	    <group></group>
+                        	    <group></group>
                            <group>
                                <field name="product_group_ids" widget="many2many_tags" string="Technology Unit"/>
                            </group>
+                             <group></group>
+                        	    <group></group>
                            <group>
                            <field name="sm_ids" widget="many2many_tags"/>
                            </group>
+                             <group></group>
+                        	    <group></group>
                         		 <group>
                         		 <field name="created_by_ids" widget="many2many_tags"/>
                         		 </group>
+                        		   <group></group>
+                        	    <group></group>
                         		
                        
                         <group>
