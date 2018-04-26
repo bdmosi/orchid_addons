@@ -22,14 +22,19 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Report">
-                    <group >
-                       
+                   
+                       <group>
                         <group>
                         	<field name="planning_date_from" />
                         	<field name="planning_date_to" />
+                        
+                        
+                        </group>
+                        
+                        <group>
                         	<field name="accept_date_from" />
                         	<field name="accept_date_to" />
-                        
+                        </group>
                         </group>
                        
                          <group>
@@ -53,7 +58,7 @@
                         <field name="analytic_account_ids" widget="many2many_tags"/>
                         </group>
                             
-                      </group>
+                      
 
                       
                        <footer>
@@ -73,7 +78,7 @@
             <field name="name">Project Invoice Schedule Report</field>
             <field name="res_model">project.inv.sch.wiz</field>
             <field name="view_mode">form</field>
-            <field name="target">current</field>
+            <field name="target">new</field>
         </record>
          
          

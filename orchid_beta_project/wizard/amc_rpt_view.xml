@@ -22,15 +22,19 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Report">
-                    <group >
+                    <group>
                       <group>
                         	<field name="date_start_from" />
                         	<field name="date_start_to" />
-                        	<field name="date_end_from" />
-                        	<field name="date_end_to" />
+                        
                         
                         </group>
                         
+                        <group>
+                        	<field name="date_end_from" />
+                        	<field name="date_end_to" />
+                        </group>
+                       </group>
                         <group>
                            <field name="branch_ids" widget="many2many_tags"/>
                         </group>
@@ -59,7 +63,7 @@
                         <field name="inactive" />
                         </group>
                        
-                      </group>
+                      
 
                       
                        <footer>
