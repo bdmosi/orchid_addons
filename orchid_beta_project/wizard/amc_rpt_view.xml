@@ -57,11 +57,19 @@
                         </group>
                         <group />
                           <group />
+                       
+                       
                         <group>
-                        <field name="wip" />
-                        <field name="closed" />
-                        <field name="inactive" />
+                        <group>
+                        <field name="wip"/>
+                        <field name="closed"/>
+                        <field name="inactive"/>
                         </group>
+                        <group>
+                        	<field name="closing_date_from"/>
+                        	<field name="closing_date_to"/>
+                        </group>
+                      </group>
                        
                       
 

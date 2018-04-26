@@ -16,11 +16,15 @@ class amc_rpt_wiz(models.TransientModel):
     division_ids = fields.Many2many('od.cost.division',string="Technology Unit")
     
     
-    date_start_from = fields.Date(string="SLA Starting Date From")
-    date_start_to = fields.Date(string="SLA Starting Date To")
+    date_start_from = fields.Date(string="SLA Planned Starting Date From")
+    date_start_to = fields.Date(string="SLA Planned Starting Date To")
     
     date_end_from = fields.Date(string="SLA Ending Date From")
     date_end_to = fields.Date(string="SLA Ending Date To")
+    
+    
+    closing_date_from = fields.Date(string="SLA Actual Closing  From")
+    closing_date_to = fields.Date(string="SLA Actual Closing  To")
     
     partner_ids = fields.Many2many('res.partner',string="Customer")
     
@@ -55,6 +59,10 @@ class amc_rpt_wiz(models.TransientModel):
         date_start_to = self.date_start_to
         date_end_from = self.date_end_from
         date_end_to = self.date_end_to
+        
+        closing_date_from =self.closing_date_from
+        closing_date_to =self.closing_date_to
+        
         prj_states = []
         if wip:
             prj_states += ['active']
@@ -100,6 +108,13 @@ class amc_rpt_wiz(models.TransientModel):
         
         if date_end_to:
             domain += [('od_amc_end','<=',date_end_to)]
+        
+          
+        if closing_date_from:
+            domain += [('od_amc_closing','>=',closing_date_from)]
+        
+        if closing_date_to:
+            domain += [('od_amc_closing','<=',closing_date_to)]
     
             
         project_data = self.env['project.project'].search(domain) 

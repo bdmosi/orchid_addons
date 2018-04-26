@@ -15,11 +15,15 @@ class project_rpt_wiz(models.TransientModel):
     cost_centre_ids = fields.Many2many('od.cost.centre',string="Cost Center")
     division_ids = fields.Many2many('od.cost.division',string="Technology Unit")
     
-    date_start_from = fields.Date(string="Project Starting Date From")
-    date_start_to = fields.Date(string="Project Starting Date To")
+    date_start_from = fields.Date(string="Project Planned Starting Date From")
+    date_start_to = fields.Date(string="Project Planned Starting Date To")
     
-    date_end_from = fields.Date(string="Project Ending Date From")
-    date_end_to = fields.Date(string="Project Ending Date To")
+    date_end_from = fields.Date(string="Project Planned Ending Date From")
+    date_end_to = fields.Date(string="Project Planned Ending Date To")
+    
+    closing_date_from = fields.Date(string="Project Actual Closing  From")
+    closing_date_to = fields.Date(string="Project Actual Closing  To")
+    
     partner_ids = fields.Many2many('res.partner',string="Customer")
     pm_ids = fields.Many2many('res.users','proj_wiz_pm','wiz_id','user_id',string="Project Manager")
     sam_ids = fields.Many2many('res.users','proj_wiz_sam','wiz_id','user_id',string="Sales Account Manager")
@@ -52,6 +56,10 @@ class project_rpt_wiz(models.TransientModel):
         date_start_to = self.date_start_to
         date_end_from = self.date_end_from
         date_end_to = self.date_end_to
+        
+        closing_date_from =self.closing_date_from
+        closing_date_to =self.closing_date_to
+        
         
         prj_states = []
         if wip:
@@ -97,6 +105,14 @@ class project_rpt_wiz(models.TransientModel):
         
         if date_end_to:
             domain += [('od_project_end','<=',date_end_to)]
+            
+        if closing_date_from:
+            domain += [('od_project_closing','>=',closing_date_from)]
+        
+        if closing_date_to:
+            domain += [('od_project_closing','<=',closing_date_to)]
+        
+            
         project_data = self.env['project.project'].search(domain) 
         result =[]
         for data in project_data:
