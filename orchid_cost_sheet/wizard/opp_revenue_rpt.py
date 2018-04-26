@@ -26,6 +26,10 @@ class opp_rev_rpt_wiz(models.TransientModel):
     date_start = fields.Date(string="Expected Booking Date Start")
     date_end =fields.Date(string="Expected Booking Date End")
     
+    
+    lead_date_start = fields.Date(string="Lead Created On Start")
+    lead_date_end =fields.Date(string="Lead Created On End")
+    
     wiz_line = fields.One2many('wiz.rev.rpt.data','wiz_id',string="Wiz Line")
     
      
@@ -38,11 +42,10 @@ class opp_rev_rpt_wiz(models.TransientModel):
     @api.multi 
     def export_rpt(self):
 #         product_group_id = self.product_group_id and self.product_group_id.id or False
-        bdm_id = self.bdm_id and self.bdm_id.id or False
+        
         stage_id = self.stage_id and self.stage_id.id or False
         branch_id = self.branch_id and self.branch_id.id or False
-        cost_centre_id = self.cost_centre_id and self.cost_centre_id.id or False
-        division_id = self.division_id and self.division_id.id or False
+       
         
         product_group_ids = [pr.id for pr in self.product_group_ids]
         created_by_ids = [pr.id for pr in self.created_by_ids]
@@ -56,9 +59,25 @@ class opp_rev_rpt_wiz(models.TransientModel):
         
         date_start = self.date_start
         date_end =self.date_end 
+        
+        
+        lead_date_start = self.lead_date_start
+        lead_date_end =self.lead_date_end 
         wiz_id = self.id
         company_id = self.company_id and self.company_id.id 
         domain = [('status','=','active')]
+        domain2= []
+        
+        
+        if lead_date_start:
+            domain2 += [('create_date','>=',lead_date_start)]
+        if lead_date_end:
+            domain2 += [('create_date','<=',lead_date_end)]
+        
+        if domain2:
+            lead_data =self.env['crm.lead'].search(domain2)
+            lead_ids = [ld.id for ld in lead_data]
+            domain += [('lead_id','in',lead_ids)] 
         if company_id:
             domain += [('company_id','=',company_id)]
         if created_by_ids:

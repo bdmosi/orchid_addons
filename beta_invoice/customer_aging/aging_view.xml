@@ -55,7 +55,7 @@
         <record id="action_aging_rpt_act" model="ir.actions.act_window">
             <field name="name">Receivable Aging Report</field>
             <field name="res_model">beta.customer.aging.wiz</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
          

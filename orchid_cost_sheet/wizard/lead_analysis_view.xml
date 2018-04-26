@@ -16,11 +16,17 @@
                         <group>
 	                        <field name="date_start" />
 	                        <field name="date_end" />
-	                        <field name="lead_date_start" />
-	                        <field name="lead_date_end" />
+	                       
 	                         
 	                        <field name="company_id" invisible="1"/>
                         </group>
+                        
+                        <group>
+                         <field name="lead_date_start" />
+	                        <field name="lead_date_end" />
+                        </group>
+                       
+                       </group>
                         
                         <group>
                          <field name="branch_ids" widget="many2many_tags"/>
@@ -42,7 +48,7 @@
                         <group>
                         <field name="created_by_ids" widget="many2many_tags"/>
                         </group>
-                      </group>
+                      
 
                       
                        <footer>

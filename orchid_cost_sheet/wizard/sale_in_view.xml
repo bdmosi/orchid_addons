@@ -32,6 +32,8 @@
                        	 <field name="lead_date_start" />
 	                        <field name="lead_date_end" />
                         </group>
+                      
+                       </group>
                         
                         	   <group>
                         	        <field name="branch_ids" widget="many2many_tags"/>
@@ -55,7 +57,7 @@
                         		
                        
                        
-                      </group>
+                     
 
                       
                        <footer>
