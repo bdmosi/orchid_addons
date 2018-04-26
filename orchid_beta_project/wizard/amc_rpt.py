@@ -10,7 +10,7 @@ class amc_rpt_wiz(models.TransientModel):
     
     
     
-    name= fields.Char(string="Name",required=True)
+    
     branch_ids= fields.Many2many('od.cost.branch',string="Branch")
     cost_centre_ids = fields.Many2many('od.cost.centre',string="Cost Center")
     division_ids = fields.Many2many('od.cost.division',string="Technology Unit")

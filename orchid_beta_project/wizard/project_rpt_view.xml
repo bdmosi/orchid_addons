@@ -47,6 +47,8 @@
                            <group>
                             <field name="sam_ids" widget="many2many_tags"/>
                            </group>
+                           <group />
+                            <group />
                         <group>
                         <field name="wip" />
                         <field name="closed" />
@@ -73,7 +75,7 @@
             <field name="name">Project Report</field>
             <field name="res_model">project.rpt.wiz</field>
             <field name="view_mode">form</field>
-            <field name="target">current</field>
+            <field name="target">new</field>
         </record>
          
          

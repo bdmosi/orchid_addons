@@ -2,7 +2,7 @@
 <openerp>
     <data>
         
-        <record id="amc_rept_list" model="ir.ui.view">
+       <!--  <record id="amc_rept_list" model="ir.ui.view">
             <field name="name">amc.rpt.wiz.tree</field>
             <field name="model">amc.rpt.wiz</field>
             <field name="arch" type="xml">
@@ -12,7 +12,7 @@
 
                 </tree>
             </field>
-        </record>
+        </record> -->
         
         
         
@@ -23,25 +23,36 @@
             <field name="arch" type="xml">
                 <form string="Report">
                     <group >
-                     <group>
-                       	<field name="name" />
-                       </group>
-                        <group>
-                            <field name="branch_ids" widget="many2many_tags"/>
-                            <field name="partner_ids" widget="many2many_tags"/>
-                        		<field name="pm_ids" widget="many2many_tags"/>
-                        		<field name="sam_ids" widget="many2many_tags"/>
-                        </group>
-                        
-                        <group>
+                      <group>
                         	<field name="date_start_from" />
                         	<field name="date_start_to" />
                         	<field name="date_end_from" />
                         	<field name="date_end_to" />
                         
                         </group>
-                         
                         
+                        <group>
+                           <field name="branch_ids" widget="many2many_tags"/>
+                        </group>
+                          <group />
+                          <group />
+                        <group>
+                        <field name="partner_ids" widget="many2many_tags"/>
+                        </group>
+                         <group />
+                          <group />
+                         
+                        <group>
+                         <field name="pm_ids" widget="many2many_tags"/>
+                        </group>
+                        <group />
+                          <group />
+                        
+                        <group>
+                          <field name="sam_ids" widget="many2many_tags"/>
+                        </group>
+                        <group />
+                          <group />
                         <group>
                         <field name="wip" />
                         <field name="closed" />
@@ -68,7 +79,7 @@
             <field name="name">SLA Report</field>
             <field name="res_model">amc.rpt.wiz</field>
             <field name="view_mode">form</field>
-            <field name="target">current</field>
+            <field name="target">new</field>
         </record>
          
          

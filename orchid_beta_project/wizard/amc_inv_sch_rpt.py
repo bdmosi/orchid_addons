@@ -10,7 +10,7 @@ class amc_inv_sch_wiz(models.TransientModel):
     
     
     
-    name= fields.Char(string="Name",required=True)
+   
     branch_ids= fields.Many2many('od.cost.branch',string="Branch")
     partner_ids = fields.Many2many('res.partner','x_partner_amc_inv_sch','wiz_id','partner_id',string="Customer")
     pm_ids = fields.Many2many('res.users','proj_wiz_pm_amc_inv_sch','wiz_id','user_id',string="Service Desk Engineer")

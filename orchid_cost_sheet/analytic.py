@@ -5,9 +5,9 @@ class account_analytic_account(models.Model):
     _inherit = "account.analytic.account"
     od_cost_sheet_id = fields.Many2one('od.cost.sheet',string="Cost Sheet",readonly=True)
 
-    od_cost_centre_id =fields.Many2one('od.cost.centre',string='Cost Centre',related="od_cost_sheet_id.od_cost_centre_id",readonly=True,store=True)
-    od_branch_id =fields.Many2one('od.cost.branch',string='Branch',related="od_cost_sheet_id.od_branch_id",readonly=True,store=True)
-    od_division_id = fields.Many2one('od.cost.division',string='Division',related="od_cost_sheet_id.od_division_id",readonly=True,store=True)
+    od_cost_centre_id =fields.Many2one('od.cost.centre',string='Cost Centre')
+    od_branch_id =fields.Many2one('od.cost.branch',string='Branch',)
+    od_division_id = fields.Many2one('od.cost.division',string='Division')
     lead_id = fields.Many2one('crm.lead',string="Opportunity",related="od_cost_sheet_id.lead_id",readonly=True)
     
     od_manual = fields.Boolean("Manual Link")
