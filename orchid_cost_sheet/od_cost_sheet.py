@@ -3717,6 +3717,13 @@ class od_cost_sheet(models.Model):
         analytic_so_map = {v: k for k, v in so_analyti_map.items()}
         for analytic_id,tabs in anal_maped_dict.iteritems():
             print "tabs>>>>>>>>>>>>>>>>>>>>>>>>,analytic_id",tabs,analytic_id
+            analytic_ob = analytic.browse(analytic_id)
+            analytic_ob.write({'od_cost_sheet_id':self.id,
+                               'od_cost_centre_id':self.od_cost_centre_id and self.od_cost_centre_id.id ,
+                               'od_branch_id':self.od_branch_id and self.od_branch_id.id,
+                               'od_division_id':self.od_division_id and self.od_division_id.id
+                               })
+            
             so_vals['project_id'] = analytic_id
             so_vals['name'] = '/'
             order_line = []
