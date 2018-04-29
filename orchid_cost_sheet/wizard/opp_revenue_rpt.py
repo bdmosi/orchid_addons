@@ -16,7 +16,7 @@ class opp_rev_rpt_wiz(models.TransientModel):
     
     created_by_ids = fields.Many2many('res.users',string="Created By")
     product_group_ids = fields.Many2many('od.product.group',string="Technolgoy Unit",domain=[('code','in',('1','2','3','4'))])
-    stage_ids = fields.Many2many('crm.case.stage',string="Opp Stage",domain=[('id','!=',6)])
+    stage_ids = fields.Many2many('crm.case.stage',string="Opp Stage",domain=[('id','not in',(6,9,1,2))])
 #     stage = fields.Selection([(1,'Approved'),(4,'Design Ready'),(12,'Pipeline'),(5,'Commit'),(6,'Lost'),(8,'Cancelled')],string="Opp Stage")
     
     branch_ids= fields.Many2many('od.cost.branch',string="Branch")

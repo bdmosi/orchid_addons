@@ -61,8 +61,8 @@
                 <xpath expr="//field[@name='categ_ids']" position="after">
                     
                      <field name="write_uid" string="Last Updated By" readonly="1"/>
-                       <field name="od_branch_id" required="1" />
-                     <field name="od_division_id" required="1" string="Technology Unit" />
+                       <field name="od_branch_id" required="1" domain="[('id','!=',14)]" />
+                     <field name="od_division_id" required="1" string="Technology Unit" domain="[('id','!=',29)]"/>
                </xpath>
                
                <xpath expr="//field[@name='fax']" position="after">

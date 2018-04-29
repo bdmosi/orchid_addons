@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import user
 import confirm
 import wizard
 import product
