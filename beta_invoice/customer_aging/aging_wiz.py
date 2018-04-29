@@ -7,9 +7,9 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from pprint import pprint
-class BetaCustomeAgingWiz(models.Model):
+class BetaCustomeAgingWiz(models.TransientModel):
     _name='beta.customer.aging.wiz'
-    name = fields.Char(string="Name",required=True)
+#     name = fields.Char(string="Name",required=True)
     partner_ids = fields.Many2many('res.partner',string="Customer")
     branch_ids= fields.Many2many('od.cost.branch',string="Branch")
     date_from = fields.Date(string='Start Date',default=fields.Date.context_today)
