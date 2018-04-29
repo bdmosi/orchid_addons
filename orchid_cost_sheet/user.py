@@ -12,7 +12,7 @@ class res_users(osv.osv):
         if context.get('sam_ids',False):
             company_id = self.browse(cr, uid, uid, context=context).company_id.id
             team_pool = self.pool.get('crm.case.section')
-            team_ids = team_pool.search(cr, uid,  [('company_id', '=', company_id)], context=context)
+            team_ids = team_pool.search(cr, uid,  [('user_id.company_id', '=', company_id)], context=context)
             user_ids = []
             for team_id in team_ids:
                 team = team_pool.browse(cr,uid,team_id)
