@@ -45,7 +45,7 @@
 					<field name="status"/>
 					<field name="state"/>
 					<filter name="handover" string="Handover" domain="[('state','=','handover')]"/>
-					<filter name="processed" string="Processed" domain="[('state','=','processed')]"/> <!-- #FA -->
+					<filter name="processed" string="Processed" domain="[('state','in','processed','waiting_po_processed','change_processed')]"/> <!-- #FA -->
                                         <filter name="Waiting PO" string="Waiting PO" domain="[('state','=','waiting_po')]"/>
 					<filter name="Approved" string="Approved" domain="[('state','=','done')]"/>
 					<filter name="handover" string="Returned by PMO" domain="[('state','=','returned_by_pmo')]"/>
