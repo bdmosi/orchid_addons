@@ -78,6 +78,18 @@ class audit_sample(models.Model):
     my_comp_line = fields.One2many('my.component.line','sample_id',string="Details")
     hd_line = fields.One2many('help.desk.sample.line','sample_id',string="Details")
     
+    
+    def update_closed_project_data(self,vals):
+        pmo_closed_project = self.env['pmo.closed.project.sample']
+        sample_id = self.id 
+        for _,_,val in vals:
+            analytic_id = val.get('analytic_id')
+            closed_data = pmo_closed_project.search([('sample_id','=',sample_id),('analytic_id','=',analytic_id)])
+            if closed_data:
+                closed_data.write(val)
+            else:
+                pmo_closed_project.create(val)
+        return True
 
 
 

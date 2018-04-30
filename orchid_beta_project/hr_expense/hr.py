@@ -2011,20 +2011,20 @@ class hr_employee(models.Model):
         if type == 'pmo':
             pmo_open_project_line,pmo_closed_project_line,comp_line = self.get_pmo_dir_data(sample_id, aud_date_start, aud_date_end, audit_temp_id)
             sample_id.pmo_open_project_line.unlink()
-            sample_id.pmo_closed_project_line.unlink()
+            sample_id.update_closed_project_data(pmo_closed_project_line)
             sample_id.comp_line.unlink()
-            sample_id.write({'pmo_open_project_line':pmo_open_project_line,'comp_line':comp_line,'pmo_closed_project_line':pmo_closed_project_line})
+            sample_id.write({'pmo_open_project_line':pmo_open_project_line,'comp_line':comp_line,})
         
         if type == 'hoo':
             utl_sample_line,ttl_fot_line,pmo_open_project_line,pmo_closed_project_line,team_line,ttl_comp_line = self.get_hoo_data(sample_id,user_id, aud_date_start, aud_date_end, audit_temp_id)
             sample_id.pmo_open_project_line.unlink()
-            sample_id.pmo_closed_project_line.unlink()
+            sample_id.update_closed_project_data(pmo_closed_project_line)
             sample_id.comp_line.unlink()
             sample_id.team_line.unlink()
             sample_id.utl_sample_line.unlink()
             sample_id.ttl_fot_line.unlink()
             sample_id.write({'utl_sample_line':utl_sample_line,'ttl_fot_line':ttl_fot_line,
-                         'pmo_open_project_line':pmo_open_project_line,'pmo_closed_project_line':pmo_closed_project_line,
+                         'pmo_open_project_line':pmo_open_project_line,
                          'team_line':team_line,
                          'comp_line':ttl_comp_line}) 
         
