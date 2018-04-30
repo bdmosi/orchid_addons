@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from openerp.osv import fields,osv
 from openerp.tools.translate import _
+from openerp import SUPERUSER_ID
 class crm_lead(osv.osv):
     _inherit = 'crm.lead'
     _columns = {
@@ -19,7 +20,34 @@ class crm_lead(osv.osv):
     }
     
     
+    def get_saleteam_user(self, cr, uid, ids, user_id, context=None):
+        sale_team = self.pool.get('crm.case.section')
+        user_pool = self.pool.get('res.users')
+        user_data = user_pool.browse(cr,uid,uid)
+        od_sales_team_ids = user_data.od_sales_team_ids
+        team_ids = [team.id for team in od_sales_team_ids]
+        return team_ids and team_ids[0]
     
+    def get_branch_user(self, cr, uid, ids, user_id, context=None):
+        employee = self.pool.get('hr.employee')
+        employee_id = employee.search(cr,SUPERUSER_ID,[('user_id','=',user_id)],limit=1)
+        emp_data = employee.browse(cr,SUPERUSER_ID,employee_id)
+        branch_id = emp_data and emp_data.od_branch_id and emp_data.od_branch_id.id
+        return branch_id
+    def on_change_user(self, cr, uid, ids, user_id, context=None):
+        res = super(crm_lead, self).on_change_user( cr, uid, ids, user_id)
+        if user_id:
+            branch_id = self.get_branch_user(cr, uid, ids, user_id, context)
+            section_id = self._get_default_section_id(cr, uid, user_id=user_id, context=context) or False
+            if user_id and not section_id:
+                section_ids = self.pool.get('crm.case.section').search(cr, uid, ['|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], context=context)
+            if section_ids:
+                section_id = section_ids[0]
+            if res.get('value'):
+                res['value']['od_branch_id'] = branch_id 
+                res['value']['section_id'] = section_id 
+                
+        return res
     
     def _default_branch(self, cr, uid, context=None):
         res = False
