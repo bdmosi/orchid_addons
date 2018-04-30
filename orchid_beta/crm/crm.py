@@ -32,7 +32,7 @@ class crm_lead(osv.osv):
         employee = self.pool.get('hr.employee')
         employee_id = employee.search(cr,SUPERUSER_ID,[('user_id','=',user_id)],limit=1)
         emp_data = employee.browse(cr,SUPERUSER_ID,employee_id)
-        branch_id = emp_data and emp_data.od_branch_id and emp_data.od_branch_id.id
+        branch_id = emp_data and emp_data.od_branch_id and emp_data.od_branch_id.id or False
         return branch_id
     def on_change_user(self, cr, uid, ids, user_id, context=None):
         res = super(crm_lead, self).on_change_user( cr, uid, ids, user_id)
