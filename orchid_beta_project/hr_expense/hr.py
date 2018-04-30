@@ -1830,7 +1830,11 @@ class hr_employee(models.Model):
             paid = paid - supplier_refund_amount
             
             if (collected >= customer_inv_amount or collected>=project_value) and paid >=supplier_inv_amount:
-                continue
+                analytic_id = project.id 
+                pmo_closed_project = self.env['pmo.closed.project.sample']
+                closed_data = pmo_closed_project.search([('sample_id','=',sample_id),('analytic_id','=',analytic_id)])
+                if not closed_data:
+                    continue
             total_paid += project_value
             total_paid += manpower_cost
             total_collected += collected
