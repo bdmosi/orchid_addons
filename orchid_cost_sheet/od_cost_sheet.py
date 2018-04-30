@@ -206,6 +206,12 @@ class od_cost_sheet(models.Model):
                 'total_cost': line.line_cost_local_currency,
                 })
             all_brand_cost += line.line_cost_local_currency
+        for line in self.trn_customer_training_line:
+            res.append({'manufacture_id':line.manufacture_id and line.manufacture_id.id or False,
+                'total_sale':line.line_price,
+                'total_cost': line.line_cost_local_currency,
+                })
+            all_brand_cost += line.line_cost_local_currency
         result = self.grouped_brand_weight(res,all_brand_cost)
         return result
     

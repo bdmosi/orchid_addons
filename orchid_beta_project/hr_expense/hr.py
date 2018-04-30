@@ -1662,6 +1662,29 @@ class hr_employee(models.Model):
         return result
     
     
+    def get_aruba_juniper_gp(self,sheet):
+        
+        gp =0.0
+        for line in sheet.mat_brand_weight_line:
+            if line.manufacture_id.id in (26,29):
+                profit = line.profit 
+                gp += profit
+        return gp
+    
+    def get_brand_sec(self,sheet):
+        gp =0.0
+        all_brand_cost = 0.0
+        for line in sheet.mat_main_pro_line:
+            if line.product_group_id.id ==2 and line.manufacture_id.id in (26,29):
+                profit = (line.line_price - line.line_cost_local_currency)
+                gp += profit
+        for line in sheet.trn_customer_training_line:
+            if line.product_group_id.id ==2 and line.manufacture_id.id in (26,29):
+                profit = (line.line_price - line.line_cost_local_currency)
+                gp += profit
+        return gp
+    
+    
     def get_bdm_sec_data(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):
         result =[]
         total_gp =0.0
@@ -1673,14 +1696,18 @@ class hr_employee(models.Model):
         sheet_ids =self.env['od.cost.sheet'].search(domain1)
         for sheet in sheet_ids:
 #             sheet.update_cost_sheet()
+            aruba_juniper_gp = self.get_brand_sec(sheet)
             for line in sheet.summary_weight_line:
                 if line.pdt_grp_id.id ==2:
                     gp = line.total_gp
                     result.append((0,0,{'cost_sheet_id':sheet.id,'gp':line.total_gp,'sales':line.total_sale,'sales_aftr_disc':line.sale_aftr_disc,'cost':line.total_cost,
                                         'profit':line.profit,'profit_percent':line.profit_percent,'manpower_cost':line.manpower_cost,'product_group_id':line.pdt_grp_id.id}))
-                    total_gp +=gp
+                    
+                    total_gp +=gp 
+            total_gp -= aruba_juniper_gp
         comp_data,target = self.get_bdm_component(total_gp)
         return result,comp_data,target
+    
     
     def get_bdm_net_data(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):
         result =[]
@@ -1692,12 +1719,15 @@ class hr_employee(models.Model):
         sheet_ids =self.env['od.cost.sheet'].search(domain1)
         for sheet in sheet_ids:
 #             sheet.update_cost_sheet()
+            aruba_juniper_gp = self.get_brand_sec(sheet)
+            
             for line in sheet.summary_weight_line:
                 if line.pdt_grp_id.id in (1,3):
                     gp = line.total_gp
                     result.append((0,0,{'cost_sheet_id':sheet.id,'gp':line.total_gp,'sales':line.total_sale,'sales_aftr_disc':line.sale_aftr_disc,'cost':line.total_cost,
                                         'profit':line.profit,'profit_percent':line.profit_percent,'manpower_cost':line.manpower_cost,'product_group_id':line.pdt_grp_id.id}))
                     total_gp +=gp
+            total_gp += aruba_juniper_gp
         comp_data,target = self.get_bdm_component(total_gp)
         return result,comp_data,target        
     
