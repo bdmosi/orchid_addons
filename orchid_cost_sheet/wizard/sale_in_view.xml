@@ -46,12 +46,12 @@
                              <group></group>
                         	    <group></group>
                            <group>
-                           <field name="sm_ids" widget="many2many_tags"/>
+                           <field name="sm_ids" widget="many2many_tags" context="{'sam_ids':1}"/>
                            </group>
                              <group></group>
                         	    <group></group>
                         		 <group>
-                        		 <field name="created_by_ids" widget="many2many_tags"/>
+                        		 <field name="created_by_ids" widget="many2many_tags" context="{'sam_ids':1}"/>
                         		 </group>
                         		  
                         		

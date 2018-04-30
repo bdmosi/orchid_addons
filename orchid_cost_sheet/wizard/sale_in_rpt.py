@@ -207,7 +207,7 @@ class wiz_sale_in_rpt(models.TransientModel):
     bdm_user_id = fields.Many2one('res.users',string="Lead/Opp Created By")
     date = fields.Datetime(string="Approved Date")
     stage_id = fields.Many2one('crm.case.stage',string="Opp Stage")
-    pdt_grp_id = fields.Many2one('od.product.group',string='Product Group')
+    pdt_grp_id = fields.Many2one('od.product.group',string='Technology Unit')
     total_sale = fields.Float(string="Sales",digits=dp.get_precision('Account'))
     disc = fields.Float(string="Special Discount",digits=dp.get_precision('Account'))
     sale_aftr_disc = fields.Float(string="Sales After Disc",digits=dp.get_precision('Account'))

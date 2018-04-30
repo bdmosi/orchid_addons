@@ -125,9 +125,16 @@
 
 
                 <xpath expr="//field[@name='categ_ids']" position="after">
+                      <field name="od_branch_id" required="1" domain="[('id','!=',14)]" />
                     <field name="create_uid"  string='Created By' readonly="1"/>
                      <field name="write_uid"  string='Last Updated By' readonly="1"/>
+                       
                    
+               </xpath>
+               
+               
+                <xpath expr="//field[@name='section_id']" position="replace">
+                    <field name="section_id" widget="selection" required="1"/>
                </xpath>
 
             </field>
