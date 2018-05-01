@@ -3,7 +3,7 @@ from openerp.osv import fields,osv
 
 class res_users(osv.osv):
     _inherit = 'res.users'
-    
+          
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if args is None:
             args = []
@@ -19,6 +19,10 @@ class res_users(osv.osv):
                 for memb in team.member_ids:
                     user_ids.append(memb.id)
             user_ids = list(set(user_ids))
-            return self.name_get(cr, uid, user_ids, context=context)
+            if name:
+                ids = self.search(cr, uid, [('name', operator, name),('id','in',user_ids)] + args, limit=limit, context=context or {})
+            else:
+                ids = user_ids
+            return self.name_get(cr, uid, ids, context=context)
 
         return super(res_users, self).name_search(cr, uid, name, args=args, operator=operator, context=context, limit=limit)
