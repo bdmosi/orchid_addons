@@ -56,7 +56,8 @@
                        <group>
                        	<field name="analytic_account_ids" widget="many2many_tags"/>
                        </group>
-                       
+                         <group />
+                         <group />
                      
 
                       
