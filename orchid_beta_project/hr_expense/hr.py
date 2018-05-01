@@ -1263,11 +1263,15 @@ class hr_employee(models.Model):
                 return True
         return False
     def get_inv_sch_score(self,proj,aud_date_start,aud_date_end):
-        project_start_date = proj.od_project_start 
+        project_start_date = proj.od_project_start
+        if not project_start_date:
+            raise Warning("Project Date Start Not Set in Project : %s"%proj.name) 
         score_board = []
         check = False
         for line in proj.od_project_invoice_schedule_line:
             planned_date = line.date
+            if not planned_date:
+                raise Warning("Planning Date not In Project : %s"%proj.name) 
             pl_dt = self.get_x_days(project_start_date, planned_date)
             today = str(dt.today())
             td_dt =self.get_x_days(project_start_date, today)
