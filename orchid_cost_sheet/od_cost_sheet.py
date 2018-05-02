@@ -5856,9 +5856,7 @@ class od_cost_trn_customer_training_line(models.Model):
     
 class od_cost_amc_technology(models.Model):
     _name = 'od.cost.amc.tech.line'
-    _inherit = 'od.cost.mat.main.pro.line'
     group = fields.Many2one('od.cost.costgroup.it.service.line',string='Group',copy=True)
-    
     
     @api.one
     @api.depends('qty','unit_cost_local','group')
@@ -5967,6 +5965,68 @@ class od_cost_amc_technology(models.Model):
             self.vat = vat  * 100
             vat_value = self.line_price * vat
             self.vat_value = vat_value
+            
+            
+#     
+#     @api.one 
+#     @api.onchange('vat','line_price')
+#     def onchange_vat(self):
+#         vat = self.vat
+#         line_price = self.line_price
+#         vat_value = line_price * (vat/100.0)
+#         self.vat_value = vat_value
+
+
+    cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet',ondelete='cascade',)
+    check = fields.Boolean(string="Check")
+    item = fields.Char(string='Item')
+    item_int = fields.Integer(string="Item Number")
+    manufacture_id = fields.Many2one('od.product.brand',string='Manufacturer',required=True)
+    part_no = fields.Many2one('product.product',string='Part No',required=True)
+    product_group_id = fields.Many2one('od.product.group',string="Product Group",related="part_no.od_pdt_group_id",readonly=True)
+    name = fields.Text(string='_________Description_______',required="1")
+    types = fields.Many2one('od.product.type',string='Type',required=True)
+    uom_id = fields.Many2one('product.uom',string='UOM',required=True)
+    qty = fields.Integer(string='Qty',default=1)
+    unit_price = fields.Float(string="Unit Sale",compute="_compute_unit_price",digits=dp.get_precision('Account'))
+    temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
+    new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
+    fixed = fields.Boolean(string="Price Fix")
+    
+    line_price = fields.Float(string='Total Sale', compute='_compute_line_price',digits=dp.get_precision('Account'))
+#     group = fields.Many2one('od.cost.costgroup.material.line',string='Group',copy=True)
+    section_id = fields.Many2one('od.cost.section.line',string='Section',copy=True)
+    sales_currency_id = fields.Many2one('res.currency',string='Sales Currency',compute='_compute_currency_supp_discount')
+    unit_cost_local = fields.Float(string='Unit Cost Local', compute='_compute_supplier_discount',digits=dp.get_precision('Account'))
+    line_cost_local_currency = fields.Float(string='Line Cost Local Currency',compute="_compute_unit_price",digits=dp.get_precision('Account'))
+    profit = fields.Float(string='Profit', compute='_compute_profit',digits=dp.get_precision('Account'))
+    profit_percentage = fields.Float(string='Profit(%)', compute='_compute_profit_percentage',digits=dp.get_precision('Account'))
+    supplier_currency_id = fields.Many2one('res.currency',string='Supplier Currency',compute="_compute_currency_supp_discount")
+    min_order = fields.Integer(string='Min Order',default=1)
+    unit_cost_supplier_currency = fields.Float(string='List Price',digits=dp.get_precision('Account'))
+    supplier_discount = fields.Float(string='Supplier Discount',compute='_compute_currency_supp_discount',digits=dp.get_precision('Account'))
+    discounted_unit_supplier_currency = fields.Float(string='Discounted Unit Supplier Currency',compute='_compute_supplier_discount',digits=dp.get_precision('Account'))
+    discounted_total_supplier_currency = fields.Float(string='Discounted Total Supplier Currency',compute='_discounted_total_unit',digits=dp.get_precision('Account'))
+    show_main_pro_line = fields.Boolean(string='Show to Customer',default=False)
+    ren = fields.Boolean(string='REN')
+    tax_id = fields.Many2one('account.tax',string="Tax")
+    vat = fields.Float(string="VAT %",compute='_compute_vat',digits=dp.get_precision('Account'))
+    vat_value = fields.Float(sttring="VAT Value",compute='_compute_vat',digits=dp.get_precision('Account'))
+
+
+    @api.onchange('part_no')
+    def onchange_product_id(self):
+        if self.part_no.id:
+            part_no = self.part_no.id
+            prod = self.env['product.product'].browse(part_no)
+            self.name = prod.description
+            if not prod.description:
+                self.name = prod.name
+            self.types = prod.od_pdt_type_id.id
+            self.uom_id = prod.uom_id.id
+
+
+    
 
 class od_cost_imp_technology(models.Model):
     _name = 'od.cost.imp.tech.line'
