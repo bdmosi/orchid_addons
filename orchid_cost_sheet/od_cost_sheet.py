@@ -272,6 +272,45 @@ class od_cost_sheet(models.Model):
         return result
     
     
+    
+    def get_tech_pdtgrp_vals(self):
+        res = []
+        all_group_cost = 0.0
+        disc = 0.0
+#         disc =abs(self.sp_disc_percentage)
+        if self.included_bim_in_quotation:
+            for line in self.imp_tech_line:
+                res.append({'pdt_grp_id':line.part_no and line.part_no.od_pdt_group_id and line.part_no.od_pdt_group_id.id,
+                    'total_sale':line.line_price,
+                  'sale_aftr_disc':line.line_price,
+                    'total_cost': line.line_cost_local_currency,
+                    })
+                all_group_cost += line.line_cost_local_currency
+        if self.included_bmn_in_quotation:
+            for line in self.amc_tech_line:
+                res.append({'pdt_grp_id':line.part_no and line.part_no.od_pdt_group_id and line.part_no.od_pdt_group_id.id,
+                    'total_sale':line.line_price,
+                    'sale_aftr_disc':line.line_price,
+                    'total_cost': line.line_cost_local_currency,
+                    })
+                all_group_cost += line.line_cost_local_currency
+        
+        if self.included_om_in_quotation:
+            for line in self.om_tech_line:
+                res.append({'pdt_grp_id':line.part_no and line.part_no.od_pdt_group_id and line.part_no.od_pdt_group_id.id,
+                    'total_sale':line.line_price,
+                    'sale_aftr_disc':line.line_price,
+                    'total_cost': line.line_cost_local_currency,
+                    })
+                all_group_cost += line.line_cost_local_currency
+            
+        result = self.grouped_prdgrp_weight(res,all_group_cost)
+       
+        return result
+    
+    
+    
+    
     @api.one
     def generate_group_weight(self):
         vals = self.get_pdtgrp_vals()
@@ -1806,8 +1845,16 @@ class od_cost_sheet(models.Model):
                 data['sale'] += line.total_sale
                 data['sale_aftr_disc'] += line.sale_aftr_disc 
                 data['cost'] += line.total_cost
-
-        print "res>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>,res",res
+        tech_lines = self.get_tech_pdtgrp_vals()
+        for tech_dat in tech_lines:
+            pdt_grp_id = tech_dat.get('pdt_grp_pd')
+            data =  res.get(pdt_grp_id)
+            if data:
+                data['sale'] += tech_dat.get('total_sale') 
+                data['sale_aftr_disc'] += tech_dat.get('total_sale') 
+                data['cost'] += tech_dat.get('total_cost')
+            else:
+                res[pdt_grp_id] = {'sale':tech_dat.get('total_sale'),'sale_aftr_disc': tech_dat.get('total_sale') ,'cost':tech_dat.get('total_cost'),'manpower_cost':0.0}
         return res
     
     
@@ -4080,6 +4127,28 @@ class od_cost_sheet(models.Model):
             if not project_bim:
                 raise Warning("Analytic Account Not Selected In IMP Tab, Which is Enabled Included In Quotation,Please Select It")
 
+            
+            for line in self.imp_tech_line:
+                b_lines.append((0,0,{
+                                            'od_manufacture_id':line.manufacture_id and line.manufacture_id.id or False,
+                                             'product_id':line.part_no.id,
+                                             'name':line.part_no.description_sale or line.part_no.name,
+                                             'od_original_qty':line.qty,
+                                             'od_original_price':line.new_unit_price if line.fixed else line.unit_price,
+                                             'od_original_unit_cost':line.unit_cost_local,
+                                             'product_uom_qty':line.qty,
+                                             'price_unit':line.new_unit_price if line.fixed else line.unit_price,
+                                             'purchase_price':line.unit_cost_local,
+                                             'od_analytic_acc_id':project_bim,
+                                             'od_cost_sheet_id':self.id,
+                                             'od_tab_type':'imp',
+                                             'od_sup_unit_cost':line.discounted_unit_supplier_currency,
+                                             'od_sup_line_cost':line.discounted_total_supplier_currency,
+                                             'tax_id':[[6,False,[line.tax_id.id]]] 
+                                             }))
+            
+            
+            
             for oim_line in self.oim_extra_expenses_line:
                 oim_exp += oim_line.qty * (oim_line.new_unit_price if oim_line.fixed else oim_line.unit_price)
                 oim_exp_cost += oim_line.qty * oim_line.unit_cost
@@ -4181,6 +4250,32 @@ class od_cost_sheet(models.Model):
         omn_exp = 0.0
         omn_exp_cost = 0.0
         if self.included_bmn_in_quotation:
+            
+            
+            
+            for line in self.amc_tech_line:
+                bm_lines.append((0,0,{
+                                            'od_manufacture_id':line.manufacture_id and line.manufacture_id.id or False,
+                                             'product_id':line.part_no.id,
+                                             'name':line.part_no.description_sale or line.part_no.name,
+                                             'od_original_qty':line.qty,
+                                             'od_original_price':line.new_unit_price if line.fixed else line.unit_price,
+                                             'od_original_unit_cost':line.unit_cost_local,
+                                             'product_uom_qty':line.qty,
+                                             'price_unit':line.new_unit_price if line.fixed else line.unit_price,
+                                             'purchase_price':line.unit_cost_local,
+                                             'od_analytic_acc_id':project_bmn,
+                                             'od_cost_sheet_id':self.id,
+                                             'od_tab_type':'amc',
+                                             'od_sup_unit_cost':line.discounted_unit_supplier_currency,
+                                             'od_sup_line_cost':line.discounted_total_supplier_currency,
+                                             'tax_id':[[6,False,[line.tax_id.id]]] 
+                                             }))
+            
+            
+            
+            
+            
             if not project_bmn:
                 raise Warning("Analytic Account Not Selected In AMC Tab, Which is Enabled Included In Quotation,Please Select It")
             for omn_line in self.omn_out_preventive_maintenance_line:
@@ -4189,6 +4284,12 @@ class od_cost_sheet(models.Model):
             for omn_line in self.omn_out_remedial_maintenance_line:
                 omn_price += omn_line.qty * (omn_line.new_unit_price if omn_line.fixed else omn_line.unit_price)
                 omn_cost += omn_line.qty * omn_line.unit_cost
+            
+            
+            
+            
+            
+            
             omn_product_id = self.get_product_id_from_param('product_omn')
             bm_lines.append((0,0,{'name':self.get_product_name(omn_product_id),
                                  'product_id':omn_product_id,
@@ -4318,6 +4419,30 @@ class od_cost_sheet(models.Model):
         if self.included_om_in_quotation:
             if not project_o_m:
                 raise Warning("Analytic Account Not Selected In O&amp;M Tab, Which is Enabled Included In Quotation,Please Select It")
+            
+            
+            
+            
+            for line in self.om_tech_line:
+                om_r_lines.append((0,0,{
+                                            'od_manufacture_id':line.manufacture_id and line.manufacture_id.id or False,
+                                             'product_id':line.part_no.id,
+                                             'name':line.part_no.description_sale or line.part_no.name,
+                                             'od_original_qty':line.qty,
+                                             'od_original_price':line.new_unit_price if line.fixed else line.unit_price,
+                                             'od_original_unit_cost':line.unit_cost_local,
+                                             'product_uom_qty':line.qty,
+                                             'price_unit':line.new_unit_price if line.fixed else line.unit_price,
+                                             'purchase_price':line.unit_cost_local,
+                                             'od_analytic_acc_id':project_bmn,
+                                             'od_cost_sheet_id':self.id,
+                                             'od_tab_type':'o_m',
+                                             'od_sup_unit_cost':line.discounted_unit_supplier_currency,
+                                             'od_sup_line_cost':line.discounted_total_supplier_currency,
+                                             'tax_id':[[6,False,[line.tax_id.id]]] 
+                                             }))
+            
+            
             for om_res_line in self.om_residenteng_line:
                 om_price +=  om_res_line.qty * (om_res_line.new_unit_price if om_res_line.fixed else om_res_line.unit_price)
                 om_cost +=  om_res_line.qty * om_res_line.unit_cost
