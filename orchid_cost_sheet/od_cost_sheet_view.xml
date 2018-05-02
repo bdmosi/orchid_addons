@@ -1456,7 +1456,7 @@
                             <label string="Beta IT Implementation Technolgoy Units Products" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
                             </group>
                             
-							<field name="amc_tech_line">
+							<field name="imp_tech_line">
 								<tree editable="bottom">
 									<field name="item_int"/>
 									<field name="check"/>
@@ -1754,7 +1754,52 @@
 							</group>
 							<field name="bmn_beta_it_maintanance"/>
 
+                            <group col="4" colspan="2">
+								<label string="AMC Technology Product Unit" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
 
+							</group>
+							
+							<field name="amc_tech_line">
+								<tree editable="bottom">
+									<field name="item_int"/>
+									<field name="check"/>
+									<field name="item" invisible="0"/>
+									<field name="manufacture_id"/>
+									<!-- <field name="supplier_id"/> -->
+									<field name="part_no" string="Product Part Number" domain="[('od_pdt_brand_id','=', manufacture_id)]"/>
+									<field name="product_group_id"/>
+									<field name="name"/>
+									<field name="types"/>
+									<field name="cost_sheet_id" invisible="1"/>
+									<field name="uom_id"/>
+									<field name="qty"/>
+									<field name="sales_currency_id"/>
+									<field name="fixed" invisible="1"/>
+									<field name="unit_price" attrs="{'invisible':[('fixed','=',True)]}"/>
+									<field name="new_unit_price" attrs="{'invisible':[('fixed','=',False)]}"/>
+									<!-- <field name="temp_unit_price" /> -->
+									<field name="line_price" sum="Total"/>
+									<field name="tax_id"/>
+									<field name="vat"/>
+									<field name="vat_value" sum="Total"/>
+									<field name="group" domain="[('cost_sheet_id','=',parent.id)]" options="{'no_create': True}"/>
+									<field name="supplier_currency_id"/>
+									<field name="unit_cost_supplier_currency" attrs="{'readonly': [('supplier_currency_id','=',False)]}"/>
+									<!-- <field name="show_main_pro_line"/> -->
+									<field name="ren"/>
+									<field name="unit_cost_local"/>
+									<field name="line_cost_local_currency" sum="Total"/>
+									<field name="section_id" domain="[('cost_sheet_id','=',parent.id)]"/>
+									<field name="min_order"/>
+									<field name="profit" sum="Total"/>
+									<field name="profit_percentage" sum="Total"/>
+									<field name="supplier_discount"/>
+									<field name="discounted_unit_supplier_currency"/>
+									<field name="discounted_total_supplier_currency" sum="Total"/>
+								</tree>
+							</field>
+							
+							
 							<group col="4" colspan="2">
 								<label string="Beta IT Preventive Maintenance" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
 								<field name="show_bmn_it_preventive_line"/>
@@ -2172,6 +2217,54 @@
 								<button name="quick_create_analytic" type="object" class="oe_link" string="New" attrs="{'invisible':[('state','in',('draft','submitted','handover','waiting_po'))]}"/>
 								<field name="od_om_res_sale_id" attrs="{'invisible':[('state','in',('draft','submitted','handover','waiting_po'))]}"/>
 							</group>
+							
+							
+							
+							<group col="4" colspan="2">
+								<label string="O&amp;M Technolgoy Product Units" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
+							</group>
+							
+							<field name="om_tech_line">
+								<tree editable="bottom">
+									<field name="item_int"/>
+									<field name="check"/>
+									<field name="item" invisible="0"/>
+									<field name="manufacture_id"/>
+									<!-- <field name="supplier_id"/> -->
+									<field name="part_no" string="Product Part Number" domain="[('od_pdt_brand_id','=', manufacture_id)]"/>
+									<field name="product_group_id"/>
+									<field name="name"/>
+									<field name="types"/>
+									<field name="cost_sheet_id" invisible="1"/>
+									<field name="uom_id"/>
+									<field name="qty"/>
+									<field name="sales_currency_id"/>
+									<field name="fixed" invisible="1"/>
+									<field name="unit_price" attrs="{'invisible':[('fixed','=',True)]}"/>
+									<field name="new_unit_price" attrs="{'invisible':[('fixed','=',False)]}"/>
+									<!-- <field name="temp_unit_price" /> -->
+									<field name="line_price" sum="Total"/>
+									<field name="tax_id"/>
+									<field name="vat"/>
+									<field name="vat_value" sum="Total"/>
+									<field name="group" domain="[('cost_sheet_id','=',parent.id)]" options="{'no_create': True}"/>
+									<field name="supplier_currency_id"/>
+									<field name="unit_cost_supplier_currency" attrs="{'readonly': [('supplier_currency_id','=',False)]}"/>
+									<!-- <field name="show_main_pro_line"/> -->
+									<field name="ren"/>
+									<field name="unit_cost_local"/>
+									<field name="line_cost_local_currency" sum="Total"/>
+									<field name="section_id" domain="[('cost_sheet_id','=',parent.id)]"/>
+									<field name="min_order"/>
+									<field name="profit" sum="Total"/>
+									<field name="profit_percentage" sum="Total"/>
+									<field name="supplier_discount"/>
+									<field name="discounted_unit_supplier_currency"/>
+									<field name="discounted_total_supplier_currency" sum="Total"/>
+								</tree>
+							</field>
+							
+							
 							<group col="4" colspan="2">
 								<label string="Resident Engineers" style="font-weight: bold;font-size: 20px;color: #7C7BAD;"/>
 								<field name="show_om_residenteng_cust"/>
