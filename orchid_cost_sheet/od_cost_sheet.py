@@ -2376,11 +2376,12 @@ class od_cost_sheet(models.Model):
 
         bim_res = self.line_single(self.manpower_manual_line)
         bim_extra = self.line_single(self.implimentation_extra_expense_line)
-        bim_total_sale = bim_res.get('tot_sale',0.0) + bim_extra.get('tot_sale',0.0)
-        bim_total_cost = bim_res.get('tot_cost',0.0) + bim_extra.get('tot_cost',0.0)
+        imp_tech_res=self.line_summarize(self.imp_tech_line)
+        bim_total_sale = bim_res.get('tot_sale',0.0) + bim_extra.get('tot_sale',0.0) + imp_tech_res.get('tot_sale',0.0)
+        bim_total_cost = bim_res.get('tot_cost',0.0) + bim_extra.get('tot_cost',0.0) + imp_tech_res.get('tot_cost',0.0)
         bim_profit =  bim_total_sale - bim_total_cost
         bim_profit_per = 0.0
-        bim_vat =  self.get_vat_total(self.implimentation_extra_expense_line) + self.get_vat_total(self.manpower_manual_line) + self.get_vat_total(self.bim_implementation_code_line) 
+        bim_vat = self.get_vat_total(self.imp_tech_line) +self.get_vat_total(self.implimentation_extra_expense_line) + self.get_vat_total(self.manpower_manual_line) + self.get_vat_total(self.bim_implementation_code_line) 
         if self.bim_log_select:
             bim_vat +=self.bim_log_vat_value
         if bim_total_sale:
@@ -2436,12 +2437,14 @@ class od_cost_sheet(models.Model):
 
         bmn_res = self.line_single(self.bmn_it_preventive_line)
         bmn_rem = self.line_single(self.bmn_it_remedial_line)
+        bmn_tech_res = self.line_summarize(self.amc_tech_line)
+        
         bmn_ext = self.line_two(self.bmn_spareparts_beta_it_maintenance_line, self.bmn_beta_it_maintenance_extra_expense_line)
-        bmn_total_sale = bmn_res.get('tot_sale',0.0) + bmn_rem.get('tot_sale',0.0) + bmn_ext.get('tot_sale',0.0)
-        bmn_total_cost = bmn_res.get('tot_cost') + bmn_rem.get('tot_cost',0.0) + bmn_ext.get('tot_cost',0.0)
+        bmn_total_sale = bmn_res.get('tot_sale',0.0) + bmn_rem.get('tot_sale',0.0) + bmn_ext.get('tot_sale',0.0) + bmn_tech_res.get('tot_sale',0.0)
+        bmn_total_cost = bmn_res.get('tot_cost') + bmn_rem.get('tot_cost',0.0) + bmn_ext.get('tot_cost',0.0) + bmn_tech_res.get('tot_cost',0.0)
         bmn_profit =  bmn_total_sale - bmn_total_cost
         bmn_profit_per = 0.0
-        bmn_vat = self.get_vat_total(self.bmn_it_preventive_line) + self.get_vat_total(self.bmn_it_remedial_line) + self.get_vat_total(self.bmn_spareparts_beta_it_maintenance_line) + self.get_vat_total(self.bmn_beta_it_maintenance_extra_expense_line)
+        bmn_vat = self.get_vat_total(self.amc_tech_line) + self.get_vat_total(self.bmn_it_preventive_line) + self.get_vat_total(self.bmn_it_remedial_line) + self.get_vat_total(self.bmn_spareparts_beta_it_maintenance_line) + self.get_vat_total(self.bmn_beta_it_maintenance_extra_expense_line)
 
         if bmn_total_sale:
             bmn_profit_per = (bmn_profit/bmn_total_sale) * 100
@@ -2495,11 +2498,12 @@ class od_cost_sheet(models.Model):
         self.omn_vat1 = omn_vat
         om_res = self.line_two(self.om_eqpmentreq_line, self.om_extra_line)
         om_eng = self.line_single(self.om_residenteng_line)
-        om_total_sale = om_res.get('tot_sale') + om_eng.get('tot_sale')
-        om_total_cost = om_res.get('tot_cost') + om_eng.get('tot_cost')
+        om_tech_res = self.line_summarize(self.om_tech_line)
+        om_total_sale = om_res.get('tot_sale') + om_eng.get('tot_sale') + om_tech_res.get('tot_sale',0.0)
+        om_total_cost = om_res.get('tot_cost') + om_eng.get('tot_cost') + om_tech_res.get('tot_cost',0.0)
         om_profit =  om_total_sale - om_total_cost
         om_profit_per = 0.0
-        o_m_vat = self.get_vat_total(self.om_residenteng_line) + self.get_vat_total(self.om_eqpmentreq_line) +self.get_vat_total(self.om_extra_line)
+        o_m_vat = self.get_vat_total(self.om_tech_line) + self.get_vat_total(self.om_residenteng_line) + self.get_vat_total(self.om_eqpmentreq_line) +self.get_vat_total(self.om_extra_line)
 
         if om_total_sale:
             om_profit_per = (om_profit/om_total_sale) * 100
