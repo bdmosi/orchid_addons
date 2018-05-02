@@ -3780,7 +3780,12 @@ class od_cost_sheet(models.Model):
             analytic_ob.write({'od_cost_sheet_id':self.id,
                                'od_cost_centre_id':self.od_cost_centre_id and self.od_cost_centre_id.id ,
                                'od_branch_id':self.od_branch_id and self.od_branch_id.id,
-                               'od_division_id':self.od_division_id and self.od_division_id.id
+                               'od_division_id':self.od_division_id and self.od_division_id.id,
+                              'od_project_owner_id':self.reviewed_id and self.reviewed_id.id,
+                               'od_amc_owner_id':self.reviewed_id and self.reviewed_id.id,
+                               'od_om_owner_id':self.reviewed_id and self.reviewed_id.id,
+
+                                
                                })
             
             so_vals['project_id'] = analytic_id
@@ -3851,7 +3856,10 @@ class od_cost_sheet(models.Model):
             analytic_ob.write({'od_cost_sheet_id':self.id,
                                'od_cost_centre_id':self.od_cost_centre_id and self.od_cost_centre_id.id ,
                                'od_branch_id':self.od_branch_id and self.od_branch_id.id,
-                               'od_division_id':self.od_division_id and self.od_division_id.id
+                               'od_division_id':self.od_division_id and self.od_division_id.id,
+                               'od_project_owner_id':self.reviewed_id and self.reviewed_id.id,
+                               'od_amc_owner_id':self.reviewed_id and self.reviewed_id.id,
+                               'od_om_owner_id':self.reviewed_id and self.reviewed_id.id,
                                })
             
             order_line = []

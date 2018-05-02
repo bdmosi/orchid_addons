@@ -818,7 +818,7 @@ class account_analytic_account(models.Model):
     od_hr_claim_amount_draft = fields.Float(string="Hr Exp Claim Amount Draft",compute="od_get_hr_exp_claim_amount_draft")
     od_timesheet_amount = fields.Float(string="Timesheet Amount",compute="od_get_timesheet_amount")
     od_timesheet_amount2 = fields.Float(string="Timesheet Amount",compute="od_get_timesheet_amount")
-    od_owner_id = fields.Many2one('res.users',string="Owner",required=True)
+    od_owner_id = fields.Many2one('res.users',string="Owner",required=False)
     od_sale_count = fields.Integer(string="Sale Count",compute="od_get_sales_order_count")
     od_meeting_count = fields.Integer(string="Meeting Count",compute="_od_meeting_count")
     od_amnt_invoiced = fields.Float(string="Customer Invoice Amount",compute="od_get_total_invoice")

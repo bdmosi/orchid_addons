@@ -594,7 +594,7 @@
                        <th>Analytic</th>
                        <th>Project</th>
                        <th>AMC</th>
-                       <th>O&amp;M</th>
+                       <!-- <th>O&amp;M</th> -->
                       
                     </thead>
                     <tbody>
@@ -603,7 +603,7 @@
                     <td><field name="date_start" readonly="1"  /></td>
                     <td><field name="od_project_start" readonly="1" /></td>
                     <td><field name="od_amc_start" readonly="1"/></td>
-                    <td><field name="od_om_start" readonly="1"/></td>
+                   <!--  <td><field name="od_om_start" readonly="1"/></td> -->
                     
                     
                     
@@ -613,7 +613,7 @@
                     <td><field name="date" readonly="1" /></td>
                     <td><field name="od_project_end" readonly="1"/></td>
                     <td><field name="od_amc_end" readonly="1"/></td>
-                    <td><field name="od_om_end" readonly="1"/></td>
+                    <!-- <td><field name="od_om_end" readonly="1"/></td> -->
                     </tr>
                    
                      <tr>
@@ -621,7 +621,7 @@
                    <td></td>
                    <td><field name="od_project_owner_id" readonly="1"/></td>
                    <td><field name="od_amc_owner_id" readonly="1"/></td>
-                   <td><field name="od_om_owner_id" readonly="1"/></td>
+                 <!--   <td><field name="od_om_owner_id" readonly="1"/></td> -->
                     </tr>
                     
                     
@@ -632,7 +632,7 @@
                    <td></td>
                    <td><field name="od_original_sale_price" /></td>
                    <td></td>
-                   <td></td>
+                  <!--  <td></td> -->
                     </tr>
                     
                    <tr>
@@ -640,7 +640,7 @@
                    <td></td>
                    <td><field name="od_original_sale_cost" /></td>
                    <td></td>
-                   <td></td>
+                  <!--  <td></td> -->
                     </tr>
                    
                    
@@ -649,7 +649,7 @@
                    <td></td>
                    <td><field name="od_original_sale_profit" /></td>
                    <td></td>
-                   <td></td>
+                  <!--  <td></td> -->
                     </tr>
                    
                    
@@ -659,7 +659,7 @@
                    <td></td>
                    <td><field name="od_amended_sale_price" /></td>
                    <td></td>
-                   <td></td>
+                  <!--  <td></td> -->
                     </tr>
                     
                    <tr>
@@ -667,7 +667,7 @@
                    <td></td>
                    <td><field name="od_amended_sale_cost" /></td>
                    <td></td>
-                   <td></td>
+                  <!--  <td></td> -->
                     </tr>
                    
                    
@@ -676,7 +676,7 @@
                    <td></td>
                    <td><field name="od_amended_profit" /></td>
                    <td></td>
-                   <td></td>
+                   <!-- <td></td> -->
                     </tr>
                    
                    
@@ -688,7 +688,7 @@
                    <td></td>
                    <td><field name="od_project_sale" /></td>
                    <td><field name="od_amc_sale" /></td>
-                   <td><field name="od_om_sale" readonly="1"/></td>
+                   <!-- <td><field name="od_om_sale" readonly="1"/></td> -->
                     </tr>
                     
                      <tr>
@@ -696,7 +696,7 @@
                    <td></td>
                    <td><field name="od_project_cost" /></td>
                    <td><field name="od_amc_cost" /></td>
-                   <td><field name="od_om_cost" readonly="1"/></td>
+                   <!-- <td><field name="od_om_cost" readonly="1"/></td> -->
                     </tr>
                    
                     <tr>
@@ -704,7 +704,7 @@
                    <td></td>
                    <td><field name="od_project_profit" /></td>
                    <td><field name="od_amc_profit" /></td>
-                   <td><field name="od_om_profit" readonly="1"/></td>
+                   <!-- <td><field name="od_om_profit" readonly="1"/></td> -->
                     </tr>
                    
                    
@@ -713,7 +713,7 @@
                    <td></td>
                    <td><field name="od_project_status" readonly="1"/></td>
                    <td><field name="od_amc_status" readonly="1"/></td>
-                   <td><field name="od_om_status" readonly="1"/></td>
+                <!--    <td><field name="od_om_status" readonly="1"/></td> -->
                     </tr>
                     
                      
@@ -725,7 +725,7 @@
                    <td></td>
                    <td><field name="od_project_closing" readonly="1"/></td>
                    <td><field name="od_amc_closing" readonly="1" /></td>
-                   <td><field name="od_om_closing"  readonly="1" /></td>
+                 <!--   <td><field name="od_om_closing"  readonly="1" /></td> -->
                     </tr>
                    
                    
