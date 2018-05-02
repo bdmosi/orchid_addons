@@ -1854,7 +1854,7 @@ class od_cost_sheet(models.Model):
                 data['sale_aftr_disc'] += tech_dat.get('total_sale') 
                 data['cost'] += tech_dat.get('total_cost')
             else:
-                res[pdt_grp_id] = {'sale':tech_dat.get('total_sale'),'sale_aftr_disc': tech_dat.get('total_sale') ,'cost':tech_dat.get('total_cost'),'manpower_cost':0.0}
+                res[pdt_grp_id] = {'pdt_grp_id':pdt_grp_id,'sale':tech_dat.get('total_sale'),'sale_aftr_disc': tech_dat.get('total_sale') ,'cost':tech_dat.get('total_cost'),'manpower_cost':0.0}
         return res
     
     
