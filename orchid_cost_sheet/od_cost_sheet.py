@@ -1845,18 +1845,18 @@ class od_cost_sheet(models.Model):
                 data['sale'] += line.total_sale
                 data['sale_aftr_disc'] += line.sale_aftr_disc 
                 data['cost'] += line.total_cost
-        tech_lines = self.get_tech_pdtgrp_vals()
-        print "tech lines>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",tech_lines
-        for tech_dat in tech_lines:
-            pdt_grp_id = tech_dat.get('pdt_grp_id')
-            data =  res.get(pdt_grp_id)
-            if data:
-                data['sale'] += tech_dat.get('total_sale') 
-                data['sale_aftr_disc'] += tech_dat.get('total_sale') 
-                data['cost'] += tech_dat.get('total_cost')
-            else:
-                res[pdt_grp_id] = {'sale':tech_dat.get('total_sale'),'sale_aftr_disc': tech_dat.get('total_sale') ,'cost':tech_dat.get('total_cost'),'manpower_cost':0.0}
-        print "res>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",res
+#         tech_lines = self.get_tech_pdtgrp_vals()
+#        
+#         for tech_dat in tech_lines:
+#             pdt_grp_id = tech_dat.get('pdt_grp_id')
+#             data =  res.get(pdt_grp_id)
+#             if data:
+#                 data['sale'] += tech_dat.get('total_sale') 
+#                 data['sale_aftr_disc'] += tech_dat.get('total_sale') 
+#                 data['cost'] += tech_dat.get('total_cost')
+#             else:
+#                 res[pdt_grp_id] = {'sale':tech_dat.get('total_sale'),'sale_aftr_disc': tech_dat.get('total_sale') ,'cost':tech_dat.get('total_cost'),'manpower_cost':0.0}
+#         
         return res
     
     
@@ -2673,45 +2673,45 @@ class od_cost_sheet(models.Model):
         line = [
                 {'name':' BIM','sales_currency_id':currency.id,
                  'round_up':1,
-                 'supplier_currency_id':currency2.id,
+                 'supplier_currency_id':currency.id,
                  'currency_exchange_factor':exchange_fact,
                  'shipping':self.get_shipping_value(),
                  'customs':self.get_custom(),
-                 'stock_provision':1.0,
-                 'conting_provision':0.50,
+                 'stock_provision':0.0,
+                 'conting_provision':0.0,
                  'tax_id':tax_id},
                 {'name':'BMN','sales_currency_id':currency.id,
                  'round_up':1,
-                 'supplier_currency_id':currency2.id,
+                 'supplier_currency_id':currency.id,
                  'currency_exchange_factor':exchange_fact,
                  'shipping':self.get_shipping_value(),
                  'customs':self.get_custom(),
-                 'stock_provision':1.0,
-                 'conting_provision':0.50,
+                 'stock_provision':0.0,
+                 'conting_provision':0.0,
                  'tax_id':tax_id},
                 {'name':'OIM','sales_currency_id':currency.id,'round_up':1,
-                 'supplier_currency_id':currency2.id,
+                 'supplier_currency_id':currency.id,
                  'currency_exchange_factor':exchange_fact,
                  'shipping':self.get_shipping_value(),
                  'customs':self.get_custom(),
-                 'stock_provision':1.0,
-                 'conting_provision':0.50,
+                 'stock_provision':0.0,
+                 'conting_provision':0.0,
                  'tax_id':tax_id},
                 {'name':'OMN','sales_currency_id':currency.id,'round_up':1,
-                 'supplier_currency_id':currency2.id,
+                 'supplier_currency_id':currency.id,
                  'currency_exchange_factor':exchange_fact,
                  'shipping':self.get_shipping_value(),
                  'customs':self.get_custom(),
-                 'stock_provision':1.0,
-                 'conting_provision':0.50,
+                 'stock_provision':0.0,
+                 'conting_provision':0.0,
                  'tax_id':tax_id},
                 {'name':'O&M','sales_currency_id':currency.id,'round_up':1,
-                 'supplier_currency_id':currency2.id,
+                 'supplier_currency_id':currency.id,
                  'currency_exchange_factor':exchange_fact,
                  'shipping':self.get_shipping_value(),
                  'customs':self.get_custom(),
-                 'stock_provision':1.0,
-                 'conting_provision':0.50,
+                 'stock_provision':0.0,
+                 'conting_provision':0.0,
                  'tax_id':tax_id},
                 ]
         return line
@@ -5214,7 +5214,22 @@ class od_cost_costgroup_extra_expenase_line(models.Model):
 class od_cost_costgroup_it_service_line(models.Model):
     _name = 'od.cost.costgroup.it.service.line'
     _inherit = 'od.cost.costgroup.material.line'
-    stock_provision = fields.Float(string='Stock Provision',default=1.0,digits=dp.get_precision('Account'))
+    
+    
+    def od_get_currency(self):
+        return self.env.user.company_id.currency_id.id
+    
+    def get_vat(self):
+        return self.env.user.company_id.od_tax_id 
+    stock_provision = fields.Float(string='Stock Provision',default=0.0,digits=dp.get_precision('Account'))
+   
+    supplier_currency_id = fields.Many2one('res.currency',string='Supplier Currency',default=od_get_currency)
+   
+    conting_provision = fields.Float(string='Conting Provision',default=0.00,digits=dp.get_precision('Account'))
+    conting_provision_value = fields.Float(string='Conting Provision Value',readonly=True,digits=dp.get_precision('Account'))
+    proof_of_cost  = fields.Many2one('od.proof.cost','Proof Of Cost')
+    tax_id = fields.Many2one('account.tax',string="Tax",default=get_vat)
+    vat = fields.Float(string="Vat %",compute='_compute_vat_group',digits=dp.get_precision('Account'))
    
     
     
