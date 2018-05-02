@@ -584,7 +584,7 @@
             <xpath expr="//field[@name='date_start']" position="replace" />
            <xpath expr="//field[@name='date']" position="replace" />
 
-            <xpath expr="/form/sheet/notebook/page[@string='Project Stages']" position="after">
+            <xpath expr="/form/sheet/notebook/page[@string='Team']" position="before">
             	
             	
             	<page string="Contract Information">
