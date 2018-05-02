@@ -5858,6 +5858,115 @@ class od_cost_amc_technology(models.Model):
     _name = 'od.cost.amc.tech.line'
     _inherit = 'od.cost.mat.main.pro.line'
     group = fields.Many2one('od.cost.costgroup.it.service.line',string='Group',copy=True)
+    
+    
+    @api.one
+    @api.depends('qty','unit_cost_local','group')
+    def _compute_unit_price(self):
+        self.line_cost_local_currency = self.qty * self.unit_cost_local
+       
+        if self.group:
+            group_obj = self.group
+            profit = group_obj.profit/100
+            if profit >=1:
+                raise Warning("Profit value for the costgroup %s set 100 or above,it should be below 100"%group_obj.name)
+            round_up_val = group_obj.round_up or 3
+            round_up_val -=1
+            customer_discount = group_obj.customer_discount/100
+            unit_cost_local = self.unit_cost_local
+#             unit_price = (unit_cost_local / (1-profit)) - (unit_cost_local * customer_discount)
+            unit = unit_cost_local/(1-profit)
+            unit_price = unit *(1-customer_discount)
+            if round_up_val < 3:
+                unit_price = round(unit_price,round_up_val)
+            self.unit_price = unit_price
+         
+
+    @api.one
+    @api.depends('unit_cost_supplier_currency','supplier_discount')
+    def _compute_supplier_discount(self):
+        if self.unit_cost_supplier_currency:
+            unit_cost_supplier_currency = self.unit_cost_supplier_currency
+            supplier_discount = self.supplier_discount/100
+            discount_value = unit_cost_supplier_currency * supplier_discount
+            discounted_unit_price = unit_cost_supplier_currency - discount_value
+            group_obj = self.group
+            ex_rate = group_obj.currency_exchange_factor
+            min_qty =self.min_order
+            sale_qty = self.qty
+            if min_qty <= sale_qty:
+                base_factor = discounted_unit_price * ex_rate
+            else:
+                if sale_qty:
+                    base_factor = ((discounted_unit_price*min_qty)/sale_qty)* ex_rate
+                else:
+                    base_factor = 0
+            currency_fluct = group_obj.currency_fluctation_provision/100
+            shipping = group_obj.shipping/100
+            customs = group_obj.customs/100
+            stock_provision = group_obj.stock_provision/100
+            conting_provision = group_obj.conting_provision/100
+            unit_cost_local = base_factor + base_factor * currency_fluct + base_factor * shipping + base_factor * customs + base_factor * stock_provision + base_factor * conting_provision
+            round_up_val = group_obj.round_up or 3
+            round_up_val -=1
+            if round_up_val <3:
+                unit_cost_local = round(unit_cost_local,round_up_val)
+
+
+            self.unit_cost_local = unit_cost_local
+            self.discounted_unit_supplier_currency = discounted_unit_price
+
+
+    @api.one
+    @api.depends('discounted_unit_supplier_currency','qty','min_order')
+    def _discounted_total_unit(self):
+        qty = self.qty
+        min_order = self.min_order
+        if qty > min_order:
+            self.discounted_total_supplier_currency = self.discounted_unit_supplier_currency * qty
+        else:
+            self.discounted_total_supplier_currency = self.discounted_unit_supplier_currency * min_order
+    @api.one
+    @api.depends('group')
+    def _compute_currency_supp_discount(self):
+        if self.group:
+            group_obj = self.group
+            self.supplier_currency_id = group_obj.supplier_currency_id and group_obj.supplier_currency_id.id
+            sales_currency_id = group_obj.sales_currency_id and group_obj.sales_currency_id.id
+            supplier_discount = group_obj.supplier_discount
+            self.sales_currency_id = sales_currency_id
+            self.supplier_discount = supplier_discount
+#             if not self.tax_id:
+#                 self.tax_id = group_obj.tax_id and group_obj.tax_id.id
+
+    @api.one
+    @api.depends('qty','unit_price','new_unit_price')
+    def _compute_line_price(self):
+        fixed = self.fixed
+        if not fixed:
+            self.line_price = self.qty * self.unit_price
+        else:
+            self.line_price = self.qty * self.new_unit_price
+    @api.one
+    @api.depends('line_price','line_cost_local_currency')
+    def _compute_profit(self):
+        self.profit = round(self.line_price )- round(self.line_cost_local_currency)
+    @api.one
+    @api.depends('line_price','profit')
+    def _compute_profit_percentage(self):
+        if self.line_price:
+            self.profit_percentage = (self.profit/self.line_price)*100
+
+    
+    
+    @api.one 
+    @api.depends('tax_id','line_price','qty')
+    def _compute_vat(self):
+        if self.tax_id:
+            vat = self.tax_id.amount 
+            self.vat = vat  * 100
+            vat_value = self.line_price * vat
+            self.vat_value = vat_value
 
 class od_cost_imp_technology(models.Model):
     _name = 'od.cost.imp.tech.line'
