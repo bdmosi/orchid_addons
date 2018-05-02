@@ -1848,7 +1848,7 @@ class od_cost_sheet(models.Model):
         tech_lines = self.get_tech_pdtgrp_vals()
         print "tech lines>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",tech_lines
         for tech_dat in tech_lines:
-            pdt_grp_id = tech_dat.get('pdt_grp_pd')
+            pdt_grp_id = tech_dat.get('pdt_grp_id')
             data =  res.get(pdt_grp_id)
             if data:
                 data['sale'] += tech_dat.get('total_sale') 
