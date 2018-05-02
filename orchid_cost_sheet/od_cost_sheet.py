@@ -1846,6 +1846,7 @@ class od_cost_sheet(models.Model):
                 data['sale_aftr_disc'] += line.sale_aftr_disc 
                 data['cost'] += line.total_cost
         tech_lines = self.get_tech_pdtgrp_vals()
+        print "tech lines>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",tech_lines
         for tech_dat in tech_lines:
             pdt_grp_id = tech_dat.get('pdt_grp_pd')
             data =  res.get(pdt_grp_id)
@@ -1854,7 +1855,8 @@ class od_cost_sheet(models.Model):
                 data['sale_aftr_disc'] += tech_dat.get('total_sale') 
                 data['cost'] += tech_dat.get('total_cost')
             else:
-                res[pdt_grp_id] = {'pdt_grp_id':pdt_grp_id,'sale':tech_dat.get('total_sale'),'sale_aftr_disc': tech_dat.get('total_sale') ,'cost':tech_dat.get('total_cost'),'manpower_cost':0.0}
+                res[pdt_grp_id] = {'sale':tech_dat.get('total_sale'),'sale_aftr_disc': tech_dat.get('total_sale') ,'cost':tech_dat.get('total_cost'),'manpower_cost':0.0}
+        print "res>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",res
         return res
     
     
