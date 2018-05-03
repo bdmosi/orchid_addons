@@ -276,13 +276,12 @@ class od_cost_sheet(models.Model):
     def get_tech_pdtgrp_vals(self):
         res = []
         all_group_cost = 0.0
-        disc = 0.0
 #         disc =abs(self.sp_disc_percentage)
         if self.included_bim_in_quotation:
             for line in self.imp_tech_line:
                 res.append({'pdt_grp_id':line.part_no and line.part_no.od_pdt_group_id and line.part_no.od_pdt_group_id.id,
                     'total_sale':line.line_price,
-                  'sale_aftr_disc':line.line_price,
+                 
                     'total_cost': line.line_cost_local_currency,
                     })
                 all_group_cost += line.line_cost_local_currency
@@ -290,19 +289,10 @@ class od_cost_sheet(models.Model):
             for line in self.amc_tech_line:
                 res.append({'pdt_grp_id':line.part_no and line.part_no.od_pdt_group_id and line.part_no.od_pdt_group_id.id,
                     'total_sale':line.line_price,
-                    'sale_aftr_disc':line.line_price,
                     'total_cost': line.line_cost_local_currency,
                     })
                 all_group_cost += line.line_cost_local_currency
         
-        if self.included_om_in_quotation:
-            for line in self.om_tech_line:
-                res.append({'pdt_grp_id':line.part_no and line.part_no.od_pdt_group_id and line.part_no.od_pdt_group_id.id,
-                    'total_sale':line.line_price,
-                    'sale_aftr_disc':line.line_price,
-                    'total_cost': line.line_cost_local_currency,
-                    })
-                all_group_cost += line.line_cost_local_currency
             
         result = self.grouped_prdgrp_weight(res,all_group_cost)
        
@@ -317,6 +307,10 @@ class od_cost_sheet(models.Model):
         self.mat_group_weight_line.unlink()
         self.mat_group_weight_line = vals
     
+    def generate_tech_mp_products(self):
+        vals = self.get_tech_pdtgrp_vals()
+        self.mp_tech_summary_line.unlink()
+        self.mat_group_weight_line = vals
     
     def get_imp_vals(self):
         result = []
@@ -1930,6 +1924,7 @@ class od_cost_sheet(models.Model):
         self.calculate_total_manpower_cost()
         self.update_opportunity()
         self.generate_group_weight()
+        self.generate_tech_mp_products()
         self.generate_brand_weight()
         self.generate_impl_weight()
         self.generate_amc_weight()
@@ -1946,8 +1941,8 @@ class od_cost_sheet(models.Model):
             if xno ==2:
                 unit_price = line.unit_price2
             
-            if not line.new_unit_price:
-                line['new_unit_price'] = unit_price
+#             if not line.new_unit_price:
+            line['new_unit_price'] = unit_price
             line['temp_unit_price'] = unit_price 
             line['fixed'] = True
     
@@ -1985,6 +1980,9 @@ class od_cost_sheet(models.Model):
             self.price_fix_line(self.om_residenteng_line)
             self.price_fix_line(self.om_eqpmentreq_line)
             self.price_fix_line(self.om_extra_line)
+            self.price_fix_line(self.imp_tech_line)
+            self.price_fix_line(self.amc_tech_line)
+            self.price_fix_line(self.om_tech_line)
             self.write({'price_fixed':True})
             self.update_cost_sheet()
     
@@ -2015,6 +2013,9 @@ class od_cost_sheet(models.Model):
             self.price_unfix_line(self.om_residenteng_line)
             self.price_unfix_line(self.om_eqpmentreq_line)
             self.price_unfix_line(self.om_extra_line)
+            self.price_unfix_line(self.imp_tech_line)
+            self.price_unfix_line(self.amc_tech_line)
+            self.price_unfix_line(self.om_tech_line)
             self.write({'price_fixed':False})
             self.update_cost_sheet()
             
@@ -3391,6 +3392,7 @@ class od_cost_sheet(models.Model):
     imp_tech_line = fields.One2many('od.cost.imp.tech.line','cost_sheet_id',string='IMP Technology Line',states={'draft':[('readonly',False)],'design_ready':[('readonly',False)],'submitted':[('readonly',False)],'returned_by_pmo':[('readonly',False)],'returned_by_fin':[('readonly',False)],'handover':[('readonly',False)],'waiting_po':[('readonly',False)],'change':[('readonly',False)],'modify':[('readonly',False)]},readonly=True,copy=True)
     om_tech_line = fields.One2many('od.cost.om.tech.line','cost_sheet_id',string='OM Technology Line',states={'draft':[('readonly',False)],'design_ready':[('readonly',False)],'submitted':[('readonly',False)],'returned_by_pmo':[('readonly',False)],'returned_by_fin':[('readonly',False)],'handover':[('readonly',False)],'waiting_po':[('readonly',False)],'change':[('readonly',False)],'modify':[('readonly',False)]},readonly=True,copy=True)
     
+    mp_tech_summary_line = fields.One2many('od.mp.tech.summary.line','cost_sheet_id',string='MP Tech Summary Line',readonly=True)
     
     
     mat_main_pro_line = fields.One2many('od.cost.mat.main.pro.line','cost_sheet_id',string='Mat Main Proposal Line',states={'draft':[('readonly',False)],'design_ready':[('readonly',False)],'submitted':[('readonly',False)],'returned_by_pmo':[('readonly',False)],'returned_by_fin':[('readonly',False)],'handover':[('readonly',False)],'waiting_po':[('readonly',False)],'change':[('readonly',False)],'modify':[('readonly',False)]},readonly=True,copy=True)
@@ -5749,6 +5751,33 @@ class od_cost_mat_group_weight(models.Model):
     weight  = fields.Float(string="Weight",compute="_compute_vals",digits=dp.get_precision('Account'))
 
 
+
+
+class od_mp_tech_summary_line(models.Model):
+    _name = 'od.mp.tech.summary.line'
+    @api.one
+    @api.depends('total_sale','total_cost')
+    def _compute_vals(self):
+        total_sale = round(self.total_sale)
+        total_cost = round(self.total_cost)
+        profit = total_sale- total_cost
+        self.profit = profit
+        if total_sale:
+            self.profit_percent =  (profit /(total_sale or 1.0)) * 100
+        
+
+    cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet',ondelete='cascade',)
+    pdt_grp_id = fields.Many2one('od.product.group',string='Product Group')
+    total_sale = fields.Float(string="Sales Value",digits=dp.get_precision('Account'))
+    total_cost = fields.Float(string="Cost Value",digits=dp.get_precision('Account'))
+    vat = fields.Float(string="VAT",digits=dp.get_precision('Account'))
+    profit = fields.Float(string="Profit",compute="_compute_vals",digits=dp.get_precision('Account'))
+    profit_percent = fields.Float(string="Profit %",compute="_compute_vals",digits=dp.get_precision('Account'))
+    
+
+
+
+
 class od_cost_imp_weight(models.Model):
     _name = 'od.cost.impl.group.weight'
     _order = "item_int ASC"
@@ -6012,7 +6041,8 @@ class od_cost_amc_technology(models.Model):
     _name = 'od.cost.amc.tech.line'
     _inherit = 'od.cost.mat.main.pro.line'
     group = fields.Many2one('od.cost.costgroup.it.service.line',string='Group',copy=True)
-  
+
+
 
 class od_cost_imp_technology(models.Model):
     _name = 'od.cost.imp.tech.line'

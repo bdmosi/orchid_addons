@@ -771,6 +771,22 @@
 							<group>
 								<field name="total_gp" />
 							</group>
+							<separator string="Technology MP Products"/>
+							<field name="mp_tech_summary_line">
+								<tree>
+								<field name="pdt_grp_id" />
+								<field name="total_sale" />
+								<field name="vat" />
+								<field name="total_cost" />
+								<field name="profit" />
+								<field name="profit_percent" />
+								
+								
+								</tree>
+							
+							</field>
+							
+							
 							
 
 							<group col="4" colspan="2">
