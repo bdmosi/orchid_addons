@@ -775,10 +775,10 @@
 							<field name="mp_tech_summary_line">
 								<tree>
 								<field name="pdt_grp_id" />
-								<field name="total_sale" />
-								<field name="vat" />
-								<field name="total_cost" />
-								<field name="profit" />
+								<field name="total_sale" sum="Total"/>
+								<field name="vat" sum="Total"/>
+								<field name="total_cost" sum="Total"/>
+								<field name="profit" sum="Total"/>
 								<field name="profit_percent" />
 								
 								
