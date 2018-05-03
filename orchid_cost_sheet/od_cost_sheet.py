@@ -1897,6 +1897,7 @@ class od_cost_sheet(models.Model):
         data = []
         total_cost =0.0
         total_sale =0.0
+        distribute_cost =0.0
         disc  = abs(self.special_discount)
         tech_vals = self.get_tech_pdtgrp_vals()
         print "result>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",result
@@ -1916,18 +1917,21 @@ class od_cost_sheet(models.Model):
                 result_data['cost'] = cost 
                 result_data['manpower_cost'] = total_cost1
             else:
-                result[pdt_grp_id] = {'sale':total_sale1,'cost':total_cost1,'manpower_cost':total_cost1}
+                result[pdt_grp_id] = {'sale':total_sale1,'cost':total_cost1,'manpower_cost':total_cost1,'no_distribute':True}
         for key,val in result.iteritems():
             pdt_grp_id = key 
             sale = val.get('sale')
             total_sale += sale
             sale_aftr_disc = sale 
             cost = val.get('cost')
+            if not val.get('no_distribute',False):
+                distribute_cost += cost
             manpower_cost = val.get('manpower_cost',0.0)
             total_cost += cost
             profit = sale_aftr_disc- cost
             gp = profit + manpower_cost
-            data.append({'pdt_grp_id':pdt_grp_id,'total_sale':sale,'total_cost':cost,'sale_aftr_disc':sale_aftr_disc,'profit':profit,'total_gp':gp,'manpower_cost':manpower_cost})
+            data.append({'pdt_grp_id':pdt_grp_id,'total_sale':sale,'total_cost':cost,'sale_aftr_disc':sale_aftr_disc,'profit':profit,
+                         'total_gp':gp,'manpower_cost':manpower_cost,'no_distribute':val.get('no_distribute',False)})
         
         if total_sale:
             for val in data:
@@ -1944,7 +1948,9 @@ class od_cost_sheet(models.Model):
             total_manpower_cost = self.get_imp_cost() + self.get_bmn_cost()
             for val in data:
                 cost = val.get('total_cost')
-                manpower_cost = total_manpower_cost *(cost/total_cost)
+                manpower_cost =0.0
+                if not val.get('no_distribute'):
+                    manpower_cost = total_manpower_cost *(cost/(distribute_cost or 1.0))
                 mp = val.get('manpower_cost',0.0)
                 val['manpower_cost'] = manpower_cost +mp
                 profit = val.get('profit')
