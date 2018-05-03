@@ -338,18 +338,30 @@ class od_cost_sheet(models.Model):
         self.mp_tech_summary_line.unlink()
         self.mp_tech_summary_line = vals
     
+    
+    def get_tot_sale_cost(self,line_id):
+        tot_sale =0.0
+        tot_cost =0.0
+        for line in line_id:
+            tot_sale += line.line_price 
+            tot_cost += line.line_cost_local_currency 
+        profit = tot_sale - tot_cost 
+        return tot_sale,tot_cost,profit
+    
     def get_imp_vals(self):
         result = []
         if (self.bim_tot_sale1 != 0.0 or self.bim_tot_cost1 != 0.0):
-            result.append({'sale':self.bim_tot_sale1,'cost':self.bim_tot_cost1,'profit':self.bim_profit1,'tab':'bim'})
+            tech_sale,tech_cost,tech_profit = self.get_tot_sale_cost(self.imp_tech_line)
+            result.append({'sale':self.bim_tot_sale1 - tech_sale,'cost':self.bim_tot_cost1 - tech_cost,'profit':self.bim_profit1 - tech_profit,'tab':'bim'})
         if (self.oim_tot_sale1 != 0.0 or self.oim_tot_cost1 != 0.0):
             result.append({'sale':self.oim_tot_sale1,'cost':self.oim_tot_cost1,'profit':self.oim_profit1,'tab':'oim'})
         return result
     
     def get_amc_vals(self):
         result = []
+        tech_sale,tech_cost,tech_profit = self.get_tot_sale_cost(self.amc_tech_line)
         if (self.bmn_tot_sale1 != 0.0 or self.bmn_tot_cost1 != 0.0):
-            result.append({'sale':self.bmn_tot_sale1,'cost':self.bmn_tot_cost1,'profit':self.bmn_profit1,'tab':'bmn'})
+            result.append({'sale':self.bmn_tot_sale1 -tech_sale,'cost':self.bmn_tot_cost1 - tech_cost,'profit':self.bmn_profit1 -tech_profit,'tab':'bmn'})
         if (self.omn_tot_sale1 != 0.0 or self.omn_tot_cost1 != 0.0):
             result.append({'sale':self.omn_tot_sale1,'cost':self.omn_tot_cost1,'profit':self.omn_profit1,'tab':'omn'})
         return result
@@ -1887,15 +1899,34 @@ class od_cost_sheet(models.Model):
         total_cost =0.0
         total_sale =0.0
         disc  = abs(self.special_discount)
+        tech_vals = self.get_tech_pdtgrp_vals()
+        for val in tech_vals:
+            pdt_grp_id = val.get('pdt_grp_id')
+            total_sale = val.get('total_sale')
+            total_cost = val.get('total_cost')
+            profit = total_sale - total_cost
+            result_data = result.get(pdt_grp_id,{})
+            if result_data:
+                sale =result_data.get('total_sale',0.0)
+                sale += total_sale
+                cost = result_data.get('total_sale',0.0)
+                cost += total_cost
+                result_data['total_sale'] = sale 
+                result_data['total_cost'] = cost 
+                result_data['manpower_cost'] = cost
+            else:
+                result[pdt_grp_id] = {'sale':total_sale,'cost':total_cost,'manpower_cost':total_cost}
         for key,val in result.iteritems():
             pdt_grp_id = key 
             sale = val.get('sale')
             total_sale += sale
             sale_aftr_disc = sale 
             cost = val.get('cost')
+            manpower_cost = val.get('manpower_cost',0.0)
             total_cost += cost
             profit = sale_aftr_disc- cost
-            data.append({'pdt_grp_id':pdt_grp_id,'total_sale':sale,'total_cost':cost,'sale_aftr_disc':sale_aftr_disc,'profit':profit,'total_gp':profit})
+            gp = profit + manpower_cost
+            data.append({'pdt_grp_id':pdt_grp_id,'total_sale':sale,'total_cost':cost,'sale_aftr_disc':sale_aftr_disc,'profit':profit,'total_gp':gp,'manpower_cost':manpower_cost})
         
         if total_sale:
             for val in data:
@@ -1913,7 +1944,8 @@ class od_cost_sheet(models.Model):
             for val in data:
                 cost = val.get('total_cost')
                 manpower_cost = total_manpower_cost *(cost/total_cost)
-                val['manpower_cost'] = manpower_cost
+                mp = val.get('manpower_cost',0.0)
+                val['manpower_cost'] = manpower_cost +mp
                 profit = val.get('profit')
                 total_gp = profit + manpower_cost 
                 val['total_gp'] = total_gp
@@ -1924,6 +1956,10 @@ class od_cost_sheet(models.Model):
                     'manpower_cost':total_manpower_cost,
                     'total_gp':total_manpower_cost,
                     })
+        
+        
+            
+        
         
         self.summary_weight_line.unlink()
         self.summary_weight_line = data
