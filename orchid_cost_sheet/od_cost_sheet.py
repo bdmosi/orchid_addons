@@ -1910,7 +1910,7 @@ class od_cost_sheet(models.Model):
             result_data = result.get(pdt_grp_id,{})
             if result_data:
                 sale =result_data.get('sale',0.0)
-                sale += total_sale
+                sale += total_sale1
                 cost = result_data.get('cost',0.0)
                 cost += total_cost1
                 result_data['sale'] = sale 
