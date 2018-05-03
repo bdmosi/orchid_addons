@@ -1952,7 +1952,10 @@ class od_cost_sheet(models.Model):
                 manpower_cost =0.0
                 if not val.get('no_distribute'):
                     manpower_cost = total_manpower_cost *(cost/(distribute_cost or 1.0))
+                    print "caluclation tm, cost,distribution cost",total_manpower_cost,cost,distribute_cost
                 mp = val.get('manpower_cost',0.0)
+                print "mp>>>>>>>>>>>>>>>>>>",mp
+                print "mp>>>>>>>>>>>>>>>>>>> mp+manpowercost",mp,manpower_cost,mp+manpower_cost
                 val['manpower_cost'] = manpower_cost +mp
                 profit = val.get('profit')
                 total_gp = profit + manpower_cost +mp
