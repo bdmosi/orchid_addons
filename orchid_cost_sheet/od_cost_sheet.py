@@ -1900,6 +1900,8 @@ class od_cost_sheet(models.Model):
         total_sale =0.0
         disc  = abs(self.special_discount)
         tech_vals = self.get_tech_pdtgrp_vals()
+        print "result>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",result
+        print "tech valsssssssssssssss>>>>>>>>>>>>>>>>>>>>>>>>>>>>",tech_vals
         for val in tech_vals:
             pdt_grp_id = val.get('pdt_grp_id')
             total_sale = val.get('total_sale')
@@ -1911,8 +1913,8 @@ class od_cost_sheet(models.Model):
                 sale += total_sale
                 cost = result_data.get('total_sale',0.0)
                 cost += total_cost
-                result_data['total_sale'] = sale 
-                result_data['total_cost'] = cost 
+                result_data['sale'] = sale 
+                result_data['cost'] = cost 
                 result_data['manpower_cost'] = cost
             else:
                 result[pdt_grp_id] = {'sale':total_sale,'cost':total_cost,'manpower_cost':total_cost}
