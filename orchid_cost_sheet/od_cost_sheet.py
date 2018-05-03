@@ -1903,20 +1903,20 @@ class od_cost_sheet(models.Model):
         print "tech valsssssssssssssss>>>>>>>>>>>>>>>>>>>>>>>>>>>>",tech_vals
         for val in tech_vals:
             pdt_grp_id = val.get('pdt_grp_id')
-            total_sale = val.get('total_sale')
-            total_cost = val.get('total_cost')
-            profit = total_sale - total_cost
+            total_sale1 = val.get('total_sale')
+            total_cost1 = val.get('total_cost')
+            profit = total_sale1 - total_cost1
             result_data = result.get(pdt_grp_id,{})
             if result_data:
                 sale =result_data.get('sale',0.0)
                 sale += total_sale
                 cost = result_data.get('cost',0.0)
-                cost += total_cost
+                cost += total_cost1
                 result_data['sale'] = sale 
                 result_data['cost'] = cost 
-                result_data['manpower_cost'] = total_cost
+                result_data['manpower_cost'] = total_cost1
             else:
-                result[pdt_grp_id] = {'sale':total_sale,'cost':total_cost,'manpower_cost':total_cost}
+                result[pdt_grp_id] = {'sale':total_sale1,'cost':total_cost1,'manpower_cost':total_cost1}
         for key,val in result.iteritems():
             pdt_grp_id = key 
             sale = val.get('sale')
