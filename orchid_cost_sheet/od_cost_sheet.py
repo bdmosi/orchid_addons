@@ -236,6 +236,26 @@ class od_cost_sheet(models.Model):
                     total_cost = r_item['total_cost']
                     total_cost += item['total_cost']
                     r_item['total_cost'] = total_cost
+                    
+                  
+            if check == False :
+                item['all_group_cost'] = all_group_cost
+                result.append( item )
+        return result
+    
+    def grouped_tech_weight(self,res,all_group_cost):
+        result = []
+        for item in res :
+            check = False
+            for r_item in result :
+                if item['pdt_grp_id'] == r_item['pdt_grp_id'] :
+                    check = True
+                    total_sale = r_item['total_sale']
+                    total_sale += item['total_sale']
+                    r_item['total_sale'] = total_sale
+                    total_cost = r_item['total_cost']
+                    total_cost += item['total_cost']
+                    r_item['total_cost'] = total_cost
                     vat = r_item['vat']
                     vat += item['vat']
                     r_item['vat'] = vat
@@ -300,7 +320,7 @@ class od_cost_sheet(models.Model):
                 all_group_cost += line.line_cost_local_currency
         
             
-        result = self.grouped_prdgrp_weight(res,all_group_cost)
+        result = self.grouped_tech_weight(res,all_group_cost)
        
         return result
     
