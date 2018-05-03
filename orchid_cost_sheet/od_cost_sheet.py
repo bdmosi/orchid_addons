@@ -1947,7 +1947,7 @@ class od_cost_sheet(models.Model):
                 mp = val.get('manpower_cost',0.0)
                 val['manpower_cost'] = manpower_cost +mp
                 profit = val.get('profit')
-                total_gp = profit + manpower_cost 
+                total_gp = profit + manpower_cost +mp
                 val['total_gp'] = total_gp
         if not data:
             total_manpower_cost = self.get_imp_cost() + self.get_bmn_cost()
