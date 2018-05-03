@@ -1909,9 +1909,9 @@ class od_cost_sheet(models.Model):
             profit = total_sale - total_cost
             result_data = result.get(pdt_grp_id,{})
             if result_data:
-                sale =result_data.get('total_sale',0.0)
+                sale =result_data.get('sale',0.0)
                 sale += total_sale
-                cost = result_data.get('total_sale',0.0)
+                cost = result_data.get('cost',0.0)
                 cost += total_cost
                 result_data['sale'] = sale 
                 result_data['cost'] = cost 
