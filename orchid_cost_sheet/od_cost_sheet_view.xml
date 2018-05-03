@@ -699,7 +699,7 @@
 										
 										<tr style="color:blue;font-weight:bold;">
 											<td>
-												<label string="Total Manpower"/>
+												<label string="Distributed MP"/>
 											</td>
 											<td>
 												<field name="a_total_manpower_sale"/>

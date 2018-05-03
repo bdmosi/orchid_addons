@@ -310,7 +310,7 @@ class od_cost_sheet(models.Model):
     def generate_tech_mp_products(self):
         vals = self.get_tech_pdtgrp_vals()
         self.mp_tech_summary_line.unlink()
-        self.mat_group_weight_line = vals
+        self.mp_tech_summary_line = vals
     
     def get_imp_vals(self):
         result = []
