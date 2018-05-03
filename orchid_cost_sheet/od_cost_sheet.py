@@ -1712,7 +1712,7 @@ class od_cost_sheet(models.Model):
         cost =0.0
         
         if self.included_bim_in_quotation:
-            cost = sum([x.line_cost for x in self.manpower_manual_line ]) + sum([x.line_cost for x in self.imp_tech_line])
+            cost = sum([x.line_cost for x in self.manpower_manual_line ]) + sum([x.line_cost_local_currency for x in self.imp_tech_line])
             
             if self.bim_log_select:
                 cost += self.bim_log_cost
@@ -1725,7 +1725,7 @@ class od_cost_sheet(models.Model):
     def get_bmn_cost(self):
         cost =0.0
         if self.included_bmn_in_quotation:
-            cost =sum([x.line_cost for x in self.bmn_it_preventive_line ])+sum([x.line_cost for x in self.bmn_it_remedial_line]) + sum([x.line_cost for x in self.amc_tech_line])
+            cost =sum([x.line_cost for x in self.bmn_it_preventive_line ])+sum([x.line_cost for x in self.bmn_it_remedial_line]) + sum([x.line_cost_local_currency for x in self.amc_tech_line])
         return cost
     
     def calculate_imp(self):
