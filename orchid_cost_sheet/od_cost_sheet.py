@@ -239,6 +239,7 @@ class od_cost_sheet(models.Model):
                     vat = r_item['vat']
                     vat += item['vat']
                     r_item['vat'] = vat
+                  
             if check == False :
                 item['all_group_cost'] = all_group_cost
                 result.append( item )
