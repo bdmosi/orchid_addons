@@ -1844,8 +1844,12 @@ class od_cost_sheet(models.Model):
     
     def get_weight_summary(self):
         res = {}
+        mat_res = {}
+        total_mat_cost =0.0
         for line in self.mat_group_weight_line:
             res[line.pdt_grp_id.id] = {'sale':line.total_sale,'sale_aftr_disc':line.sale_aftr_disc,'cost':line.total_cost,'manpower_cost':0.0}
+            mat_res[line.pdt_grp_id.id] = line.total_cost
+            total_mat_cost += line.total_cost
         for line in self.extra_weight_line:
             data = res.get(line.pdt_grp_id.id,{})
             if data:
@@ -1888,12 +1892,12 @@ class od_cost_sheet(models.Model):
 #             else:
 #                 res[pdt_grp_id] = {'sale':tech_dat.get('total_sale'),'sale_aftr_disc': tech_dat.get('total_sale') ,'cost':tech_dat.get('total_cost'),'manpower_cost':0.0}
 #         
-        return res
+        return res,mat_res,total_mat_cost
     
     
     
     def generate_summary_weight(self):
-        result = self.get_weight_summary()
+        result,mat_res,total_mat_cost = self.get_weight_summary()
         data = []
         total_cost =0.0
         total_sale =0.0
@@ -1944,14 +1948,14 @@ class od_cost_sheet(models.Model):
                 val['profit'] = profit
                 val['total_gp'] = profit
                 
-        if total_cost:
+        if total_mat_cost:
             total_manpower_cost = self.get_imp_cost() + self.get_bmn_cost()
             print "total manpower cost???????>>>>>>>>>>>>>>>>>>>>>>>>>>>,distribution cost",total_manpower_cost,distribute_cost
             for val in data:
-                cost = val.get('total_cost')
+                pdt_grp_id = val.get('pdt_grp_id')
                 manpower_cost =0.0
                 if not val.get('no_distribute'):
-                    manpower_cost = total_manpower_cost *(cost/(distribute_cost or 1.0))
+                    manpower_cost = total_manpower_cost *(mat_res.get(pdt_grp_id,0.0)/(total_mat_cost or 1.0))
                     print "caluclation tm, cost,distribution cost",total_manpower_cost,cost,distribute_cost
                 mp = val.get('manpower_cost',0.0)
                 print "mp>>>>>>>>>>>>>>>>>>",mp
