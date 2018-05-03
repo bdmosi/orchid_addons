@@ -236,6 +236,9 @@ class od_cost_sheet(models.Model):
                     total_cost = r_item['total_cost']
                     total_cost += item['total_cost']
                     r_item['total_cost'] = total_cost
+                    vat = r_item['vat']
+                    vat += item['vat']
+                    r_item['vat'] = vat
             if check == False :
                 item['all_group_cost'] = all_group_cost
                 result.append( item )
@@ -283,6 +286,7 @@ class od_cost_sheet(models.Model):
                     'total_sale':line.line_price,
                  
                     'total_cost': line.line_cost_local_currency,
+                    'vat':line.vat_value
                     })
                 all_group_cost += line.line_cost_local_currency
         if self.included_bmn_in_quotation:
@@ -290,6 +294,7 @@ class od_cost_sheet(models.Model):
                 res.append({'pdt_grp_id':line.part_no and line.part_no.od_pdt_group_id and line.part_no.od_pdt_group_id.id,
                     'total_sale':line.line_price,
                     'total_cost': line.line_cost_local_currency,
+                      'vat':line.vat_value
                     })
                 all_group_cost += line.line_cost_local_currency
         
