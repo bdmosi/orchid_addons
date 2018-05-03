@@ -1915,7 +1915,7 @@ class od_cost_sheet(models.Model):
                 cost += total_cost
                 result_data['sale'] = sale 
                 result_data['cost'] = cost 
-                result_data['manpower_cost'] = cost
+                result_data['manpower_cost'] = total_cost
             else:
                 result[pdt_grp_id] = {'sale':total_sale,'cost':total_cost,'manpower_cost':total_cost}
         for key,val in result.iteritems():
