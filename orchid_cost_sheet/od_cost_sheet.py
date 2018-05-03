@@ -2891,12 +2891,18 @@ class od_cost_sheet(models.Model):
                  }]
         return line
     
-    
-    
+    def get_tech_cost(self):
+        cost =0.0
+        if self.included_bim_in_quotation:
+            cost += sum([line.line_cost_local_currency for line in self.imp_tech_line])
+        if self.included_bmn_in_quotation:
+            cost += sum([line.line_cost_local_currency for line in self.amc_tech_line])
+        return cost
     @api.one 
     @api.depends('sum_profit','a_bim_cost','a_bmn_cost')
     def _get_total_gp(self):
-        self.total_gp = self.sum_profit + self.a_bim_cost + self.a_bmn_cost
+        tech_cost = self.get_tech_cost()
+        self.total_gp = self.sum_profit + self.a_bim_cost + self.a_bmn_cost + tech_cost
     
     summary_tot_cost = fields.Float(string='Total Cost',compute='_get_sum_total_cost',store=True,digits=dp.get_precision('Account'))
     sum_tot_sale = fields.Float(string="Total Sale",compute="_get_total_summary",store=True,digits=dp.get_precision('Account'))
