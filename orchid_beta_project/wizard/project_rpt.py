@@ -70,7 +70,7 @@ class project_rpt_wiz(models.TransientModel):
             prj_states += ['inactive']
             
         company_id = self.company_id and self.company_id.id 
-        domain = [('od_type_of_project','in',('credit','sup','imp','sup_imp'))]
+        domain = [('od_type_of_project','in',('credit','sup','imp','sup_imp','o_m'))]
         if company_id:
             domain += [('company_id','=',company_id)]
         if partner_ids:
