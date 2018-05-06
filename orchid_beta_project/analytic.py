@@ -1036,11 +1036,21 @@ class account_analytic_account(models.Model):
     
     @api.one
     def _kpi_score(self):
+        
+#         day_process_score = .1 *self.get_day_procss_score()
+#         invoice_schedule_score =  .3 *self.get_invoice_schedule_score()
+#         cost_control_score = .2 * self.get_cost_control_score()
+#         compliance_score = .1 * self.get_compliance_score()
+#         schedule_control_score = .3 * self.get_schedule_control_score()
+        
+           
         day_process_score = .1 *self.get_day_procss_score()
         invoice_schedule_score =  .3 *self.get_invoice_schedule_score()
-        cost_control_score = .2 * self.get_cost_control_score()
+        cost_control_score = .1 * self.get_cost_control_score()
         compliance_score = .1 * self.get_compliance_score()
-        schedule_control_score = .3 * self.get_schedule_control_score()
+        schedule_control_score = self.get_schedule_control_score()
+        
+        
         total_score = day_process_score + invoice_schedule_score + cost_control_score+ compliance_score + schedule_control_score
         self.day_process_score = day_process_score 
         self.invoice_schedule_score = invoice_schedule_score 
