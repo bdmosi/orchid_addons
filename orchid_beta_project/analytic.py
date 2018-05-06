@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from openerp import models, fields, api, _
 from pprint import pprint
-from datetime import datetime,date as dt
+from datetime import datetime,timedelta,date as dt
 from od_default_milestone import od_project_vals,od_om_vals,od_amc_vals
 from openerp.exceptions import Warning
-
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 class account_invoice(models.Model):
     _inherit = 'account.invoice'
     cust_date = fields.Date(string="Customer Accepted Date")
@@ -1028,7 +1028,7 @@ class account_analytic_account(models.Model):
         project_planned_end = self.od_project_end 
         closed_date = self.od_project_closing 
         if closed_date <= project_planned_end:
-            result =30.0
+            result =100.0
         return result
             
         
@@ -1037,18 +1037,18 @@ class account_analytic_account(models.Model):
     @api.one
     def _kpi_score(self):
         
-#         day_process_score = .1 *self.get_day_procss_score()
-#         invoice_schedule_score =  .3 *self.get_invoice_schedule_score()
-#         cost_control_score = .2 * self.get_cost_control_score()
-#         compliance_score = .1 * self.get_compliance_score()
-#         schedule_control_score = .3 * self.get_schedule_control_score()
-        
-           
         day_process_score = .1 *self.get_day_procss_score()
         invoice_schedule_score =  .3 *self.get_invoice_schedule_score()
-        cost_control_score = .1 * self.get_cost_control_score()
+        cost_control_score = .2 * self.get_cost_control_score()
         compliance_score = .1 * self.get_compliance_score()
-        schedule_control_score = self.get_schedule_control_score()
+        schedule_control_score = .3 * self.get_schedule_control_score()
+        
+           
+#         day_process_score = .1 *self.get_day_procss_score()
+#         invoice_schedule_score =  .3 *self.get_invoice_schedule_score()
+#         cost_control_score = .1 * self.get_cost_control_score()
+#         compliance_score = .1 * self.get_compliance_score()
+#         schedule_control_score = self.get_schedule_control_score()
         
         
         total_score = day_process_score + invoice_schedule_score + cost_control_score+ compliance_score + schedule_control_score
