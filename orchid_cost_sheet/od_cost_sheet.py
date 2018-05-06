@@ -5461,7 +5461,12 @@ class od_cost_mat_main_pro_line(models.Model):
 #         vat_value = line_price * (vat/100.0)
 #         self.vat_value = vat_value
 
-
+    
+    
+    
+    def get_vat(self):
+        return self.env.user.company_id.od_tax_id 
+    
     cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet',ondelete='cascade',)
     check = fields.Boolean(string="Check")
     item = fields.Char(string='Item')
@@ -5494,7 +5499,7 @@ class od_cost_mat_main_pro_line(models.Model):
     discounted_total_supplier_currency = fields.Float(string='Discounted Total Supplier Currency',compute='_discounted_total_unit',digits=dp.get_precision('Account'))
     show_main_pro_line = fields.Boolean(string='Show to Customer',default=False)
     ren = fields.Boolean(string='REN')
-    tax_id = fields.Many2one('account.tax',string="Tax")
+    tax_id = fields.Many2one('account.tax',string="Tax",default=get_vat)
     vat = fields.Float(string="VAT %",compute='_compute_vat',digits=dp.get_precision('Account'))
     vat_value = fields.Float(sttring="VAT Value",compute='_compute_vat',digits=dp.get_precision('Account'))
 
