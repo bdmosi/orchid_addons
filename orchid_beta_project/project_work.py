@@ -216,7 +216,7 @@ class project_project(models.Model):
             analytic_account_id = vals.get('analytic_account_id')
             analytic_obj = self.env['account.analytic.account']
             analytic = analytic_obj.browse(analytic_account_id)
-            owner_id = analytic.od_owner_id and analytic.od_owner_id.id or False
+            owner_id = analytic.od_project_owner_id and analytic.od_owner_id.id or False
             type_of_project = analytic.od_type_of_project
             quantity_max = analytic.quantity_max
             vals['user_id'] = owner_id

@@ -607,7 +607,8 @@ class od_cost_sheet(models.Model):
         account_manager = self.sales_acc_manager and self.sales_acc_manager.id
         partner_id = self.od_customer_id and self.od_customer_id.id
         ctx = {'default_type':type,'default_od_owner_id':owner_id,'default_template_id':template_id,'default_date':date,
-        'default_manager_id':account_manager,'partner_id':partner_id
+        'default_manager_id':account_manager,'partner_id':partner_id,
+        'default_od_project_owner_id':owner_id,'default_od_amc_owner_id':owner_id,
         }
         return {
                     'view_type': 'form',
