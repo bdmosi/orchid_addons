@@ -149,6 +149,7 @@ class PmoOpenProjects(models.Model):
     collected = fields.Float(string="Collected From Customer")
     project_value = fields.Float(string="Project Value")
     manpower_cost = fields.Float(string="Manpower Cost")
+    general_cost =fields.Float(string="General Cost")
     @api.multi
     def btn_open(self):
        
@@ -168,6 +169,7 @@ class PmoClosedProjects(models.Model):
     analytic_id = fields.Many2one('account.analytic.account',string="Analytic/Project")
     paid = fields.Float(string="Paid to Supplier")
     manpower_cost = fields.Float(string="Manpower Cost")
+    general_cost =fields.Float(string="General Cost")
     collected = fields.Float(string="Collected From Customer")
     project_value = fields.Float(string="Project Value")
     

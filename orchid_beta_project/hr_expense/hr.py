@@ -1779,6 +1779,24 @@ class hr_employee(models.Model):
             bal  = sup_inv.amount_total
             amount += currency.compute(bal,company_currency,round=False)
         return amount
+    
+    def get_general_cost(self,analytic):
+        analytic_id = analytic.id
+        move_line_pool = self.env['account.move.line']
+        company_id = analytic.company_id and analytic.company_id.id 
+        wip_account = False
+        journal_id = False
+        if company_id ==6:
+            wip_account =5732
+            journal_id =41
+        if company_id ==1:
+            wip_account =2128
+            journal_id =5
+       
+        domain = [('analytic_account_id','=',analytic_id),('journal_id','=',journal_id),('account_id','=',wip_account)]
+        move_line_ids = move_line_pool.search(domain)
+        general_cost = sum([(mvl.debit-mvl.credit) for mvl in move_line_ids if mvl.od_state =='posted'])
+        return general_cost
     def get_pmo_dir_data(self,sample_id, aud_date_start, aud_date_end, audit_temp_id):
         open_projects = []
         closed_projects =[]
@@ -1810,8 +1828,10 @@ class hr_employee(models.Model):
             total_collected += collected
             total_paid += paid
             manpower_cost = sum([tm.normal_amount for tm in timesheet_pool.search([('account_id','=',project.id),('date','<=',aud_date_end)])])
+            general_cost = self.get_general_cost(project)
             total_paid += manpower_cost
-            open_projects.append((0,0,{'analytic_id':project.id,'project_value':project_value,'collected':collected,'paid':paid,'manpower_cost':manpower_cost}))
+            total_paid += general_cost
+            open_projects.append((0,0,{'analytic_id':project.id,'project_value':project_value,'collected':collected,'paid':paid,'manpower_cost':manpower_cost,'general_cost':general_cost}))
             
         for project in closed_project_ids:
             sale = sale_pool.search([('project_id','=',project.id),('state','!=','cancel')],limit=1)
@@ -1832,7 +1852,7 @@ class hr_employee(models.Model):
             paid = self.get_supplier_paid(supplier_invoice)
             collected = collected - customer_refund_amount
             paid = paid - supplier_refund_amount
-            
+            general_cost = self.get_general_cost(project)
             if (collected >= customer_inv_amount or collected>=project_value) and paid >=supplier_inv_amount:
                 continue
 #                 if sample_id:
@@ -1843,8 +1863,9 @@ class hr_employee(models.Model):
 #                         continue
             total_paid += project_value
             total_paid += manpower_cost
+            total_paid += general_cost
             total_collected += collected
-            closed_projects.append((0,0,{'analytic_id':project.id,'project_value':project_value,'collected':collected,'paid':paid,'manpower_cost':manpower_cost})) 
+            closed_projects.append((0,0,{'analytic_id':project.id,'project_value':project_value,'collected':collected,'paid':paid,'manpower_cost':manpower_cost,'general_cost':general_cost})) 
         res =0.0
         if total_paid:
             res = total_collected/float(total_paid)
