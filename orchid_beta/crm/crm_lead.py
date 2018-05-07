@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from openerp import models, fields, api,_
+from openerp import models, fields, api,
+from openerp.exception import Warning
 class crm_lead(models.Model):
     _inherit = "crm.lead"
     def get_saudi_company_id(self):
