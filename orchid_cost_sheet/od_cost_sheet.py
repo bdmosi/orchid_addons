@@ -1455,11 +1455,17 @@ class od_cost_sheet(models.Model):
             self.lead_id.write({'stage_id':opp_design_ready_state_id})
     
     def update_opp_stage_submitted(self):
-        pipe_stage_id =12
-        check_ids = [1,4] #approved, design ready stage
-        if self.lead_id.stage_id.id in check_ids:
-            self.lead_id.write({'stage_id':pipe_stage_id})
-            
+        if self.status =='active':
+            pipe_stage_id =12
+            check_ids = [1,4] #approved, design ready stage
+            if self.lead_id.stage_id.id in check_ids:
+                self.lead_id.write({'stage_id':pipe_stage_id})
+        
+    def update_opp_stage_committed(self):
+        if self.status =='active':
+            commit_stage_id =5
+            self.lead_id.write({'stage_id':commit_stage_id})
+                
     @api.one 
     def btn_design_ready(self):
         self.update_cost_sheet()
@@ -1491,7 +1497,14 @@ class od_cost_sheet(models.Model):
         self.refresh()
         return self.print_cost_sheet()
 
-    
+    @api.multi 
+    def btn_commit(self):
+        self.update_cost_sheet()
+        date_now =str(datetime.now())
+        self.date_log_history_line = [{'name':'Commit','date':date_now}]
+        self.update_opp_stage_committed()
+        self.write({'state':'commit'})
+        
     
     @api.multi
     def button_cancel(self):
@@ -3228,7 +3241,7 @@ class od_cost_sheet(models.Model):
     #             ]
     #     return line
 
-    state = fields.Selection([('draft','Draft'),('design_ready','Design Ready'),('submitted','Submit To Customer'),('returned_by_pmo','Returned By PMO'),
+    state = fields.Selection([('draft','Draft'),('design_ready','Design Ready'),('submitted','Pipeline'),('commit','Commit'),('returned_by_pmo','Returned By PMO'),
                               ('handover','Hand-Over'),('waiting_po','Waiting PO'),('returned_by_fin','Returned By Finance'),
                               ('change','Change'),('analytic_change','Redistribute Analytic'),('processed','Processed'),
                               ('change_processed','Change Processed'),('waiting_po_processed','Waiting PO Processed'),('redistribution_processed','Redistribution Processed'),
