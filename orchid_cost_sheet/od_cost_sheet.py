@@ -887,7 +887,7 @@ class od_cost_sheet(models.Model):
     submit_to_customer_date = fields.Datetime("Submit To Customer Date")
     handover_date = fields.Datetime('Hand-Over Date',readonly=True)
     processed_date = fields.Datetime('Processed Date',readonly=True)
-    approved_date = fields.Datetime('Approved Date',readonly=False)
+    approved_date = fields.Datetime('Approved Date',readonly=True)
     #hand over tab
     sales_acc_manager = fields.Many2one('res.users',string='Sales Account Manager')
     business_development = fields.Many2one('res.users',string='Business Development')
@@ -1664,12 +1664,14 @@ class od_cost_sheet(models.Model):
     def btn_approved(self):
 #         self.od_send_mail('cst_sheet_approve_mail')
 # this mail wiil be sent when assign an accountant
+        appr_date =str(datetime.now())
+        self.approved_date =appr_date
         self.update_cost_sheet()
         self.check_adv_payment()
         self.check_finance_comment()
 #         if not self.approved_date:
 #             self.approved_date = str(datetime.now())
-        self.date_log_history_line = [{'name':'Button Approved Log Date','date':str(datetime.now())}]
+        self.date_log_history_line = [{'name':'Button Approved Log Date','date':appr_date}]
         # self.status = 'baseline'
         self.generate_sale_order()
         self.update_opp_stage()

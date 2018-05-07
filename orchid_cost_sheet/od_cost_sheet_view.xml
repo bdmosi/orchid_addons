@@ -307,7 +307,8 @@
 									<tr>
 										<td>Approved Date</td>
 										<td>
-											<field name="approved_date" attrs="{'required':[('state','in',('processed','modify','approved','done'))]}"/>
+<!-- 											<field name="approved_date" attrs="{'required':[('state','in',('processed','modify','approved','done'))]}"/>
+ -->											<field name="approved_date" />
 										</td>
 										<td>Finance KPI (2-Day Rule)</td>
 										<td>
