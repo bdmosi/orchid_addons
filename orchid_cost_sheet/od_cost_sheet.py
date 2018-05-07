@@ -2037,8 +2037,8 @@ class od_cost_sheet(models.Model):
     def btn_freez_price(self):
         price_fixed = self.price_fixed 
         if not price_fixed:
-            if not self.bim_log_price_fixed:
-                self.bim_log_price_fixed = self.bim_log_price
+            
+            self.bim_log_price_fixed = self.bim_log_price
             self.price_fix_line(self.mat_main_pro_line)
             self.price_fix_line(self.mat_extra_expense_line,2)
             self.price_fix_line(self.mat_optional_item_line )
@@ -2071,7 +2071,7 @@ class od_cost_sheet(models.Model):
         
         price_fixed = self.price_fixed 
         if price_fixed:
-#             self.bim_log_price_fixed =0.0
+            self.bim_log_price_fixed =0.0
             self.price_unfix_line(self.mat_main_pro_line)
             self.price_unfix_line(self.mat_extra_expense_line)
             self.price_unfix_line(self.mat_optional_item_line )
@@ -5394,8 +5394,8 @@ class od_cost_mat_main_pro_line(models.Model):
             unit_cost_local = base_factor + base_factor * currency_fluct + base_factor * shipping + base_factor * customs + base_factor * stock_provision + base_factor * conting_provision
             round_up_val = group_obj.round_up or 3
             round_up_val -=1
-            if round_up_val <3:
-                unit_cost_local = round(unit_cost_local,round_up_val)
+#             if round_up_val <3:
+#                 unit_cost_local = round(unit_cost_local,round_up_val)
 
 
             self.unit_cost_local = unit_cost_local
@@ -5582,8 +5582,8 @@ class od_cost_mat_optional_item_line(models.Model):
             unit_cost_local = base_factor + base_factor * currency_fluct + base_factor * shipping + base_factor * customs + base_factor * stock_provision + base_factor * conting_provision
             round_up_val = group_obj.round_up or 3
             round_up_val -=1
-            if round_up_val < 3:
-                unit_cost_local = round(unit_cost_local,round_up_val)
+#             if round_up_val < 3:
+#                 unit_cost_local = round(unit_cost_local,round_up_val)
 
             self.unit_cost_local = unit_cost_local
             self.discounted_unit_supplier_currency = discounted_unit_price
@@ -6000,8 +6000,8 @@ class od_cost_mat_extra_expense_line(models.Model):
             unit_cost_local = base_factor + base_factor * currency_fluct + base_factor * shipping + base_factor * customs + base_factor * stock_provision + base_factor * conting_provision
             round_up_val = self.group2.round_up or 3
             round_up_val -=1
-            if round_up_val <3:
-                unit_cost_local = round(unit_cost_local,round_up_val)
+#             if round_up_val <3:
+#                 unit_cost_local = round(unit_cost_local,round_up_val)
             self.unit_cost_local = unit_cost_local
 #             unit_price = (unit_cost_local / (1-profit)) - (unit_cost_local * discount)
             unit_price = (unit_cost_local / (1-profit))
