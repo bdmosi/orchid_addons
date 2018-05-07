@@ -22,6 +22,14 @@ class crm_lead(models.Model):
         crm_id = self.id
         email_obj.send_mail(self.env.cr,self.env.uid,template_id,crm_id, force_send=True)
         return True
+    
+    @api.multi 
+    def write(self,vals):
+        if self.uid !=1 and self.od_branch_id and vals.get('od_branch_id'):
+            raise Warning("You Cannot Change Branch")
+        if self.uid !=1 and self.partner_id and vals.get('partner_id'):
+            raise Warning("You Cannot change Customer/Organization")
+        return super(crm_lead,self).write(vals)
 
     @api.one
     def od_approve(self):
