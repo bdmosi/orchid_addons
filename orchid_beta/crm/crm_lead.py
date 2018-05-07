@@ -27,9 +27,11 @@ class crm_lead(models.Model):
     @api.multi 
     def write(self,vals):
         if self._uid !=1 and self.od_branch_id and vals.get('od_branch_id'):
-            raise Warning("You Cannot Change Branch")
+            if self.od_branch_id.id != vals.get('od_branch_id'):
+                raise Warning("You Cannot Change Branch,Please Discard")
         if self._uid !=1 and self.partner_id and vals.get('partner_id'):
-            raise Warning("You Cannot change Customer/Organization")
+            if self.partner_id.id != vals.get('partner_id'):
+                raise Warning("You Cannot change Customer/Organization,Please Discard")
         return super(crm_lead,self).write(vals)
 
     @api.one
