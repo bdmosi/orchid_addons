@@ -2870,7 +2870,7 @@
 							</field>
 					
 					
-					<separator string="MAT &amp; TRN"/>
+					<separator string="MAT &amp; TRN &amp; O&amp;M"/>
 							<field name="mat_group_weight_line">
 								<tree>
 									<field name="pdt_grp_id"/>
@@ -2922,7 +2922,7 @@
 									<field name="profit" sum="Total"/>
 								</tree>
 							</field>
-						<separator string="O&amp;M"/>
+						<separator string="O&amp;M Extra Expesne"/>
 							<field name="om_weight_line">
 								<tree>
 								<field name="tab"/>

@@ -385,7 +385,12 @@ class od_cost_sheet(models.Model):
     def get_om_vals(self):
         result = []
         if (self.o_m_tot_sale1 != 0.0 or self.o_m_tot_cost1 != 0.0):
-            result.append({'sale':self.o_m_tot_sale1,'cost':self.o_m_tot_cost1,'profit':self.o_m_profit1,'tab':'om'})
+            sale,cost,profit = self.get_tot_sale_cost(self.om_residenteng_line) 
+            sale2,cost2,profit2= self.get_tot_sale_cost(self.om_extra_line)
+            sale += sale2 
+            cost += cost2 
+            profit += profit2
+            result.append({'sale':sale,'cost':cost,'profit':profit,'tab':'om'})
         
         return result
     
