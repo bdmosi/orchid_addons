@@ -286,6 +286,22 @@ class od_cost_sheet(models.Model):
                     'total_cost': line.line_cost_local_currency,
                     })
                 all_group_cost += line.line_cost_local_currency
+        
+        if self.included_om_in_quotation:
+            for line in self.om_tech_line:
+                res.append({'pdt_grp_id':line.part_no and line.part_no.od_pdt_group_id and line.part_no.od_pdt_group_id.id,
+                    'total_sale':line.line_price,
+                    'total_cost': line.line_cost_local_currency,
+                    })
+                all_group_cost += line.line_cost_local_currency
+            
+            for line in self.om_eqpmentreq_line:
+                res.append({'pdt_grp_id':line.part_no and line.part_no.od_pdt_group_id and line.part_no.od_pdt_group_id.id,
+                    'total_sale':line.line_price,
+                    'total_cost': line.line_cost_local_currency,
+                    })
+                all_group_cost += line.line_cost_local_currency
+            
             
         result = self.grouped_prdgrp_weight(res,all_group_cost)
         for val in result:
