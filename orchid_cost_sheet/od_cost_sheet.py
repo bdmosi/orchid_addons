@@ -498,7 +498,7 @@ class od_cost_sheet(models.Model):
                                 'profit':total_profit})
             
         self.om_weight_line.unlink()
-        self.om_weight_line = res
+#         self.om_weight_line = res
         
     
     def generate_extra_weight(self):
