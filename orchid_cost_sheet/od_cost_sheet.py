@@ -363,6 +363,17 @@ class od_cost_sheet(models.Model):
             tot_cost += line.line_cost_local_currency 
         profit = tot_sale - tot_cost 
         return tot_sale,tot_cost,profit
+
+    
+    def get_tot_sale_cost2(self,line_id):
+        tot_sale =0.0
+        tot_cost =0.0
+        for line in line_id:
+            tot_sale += line.line_price 
+            tot_cost += line.line_cost
+        profit = tot_sale - tot_cost 
+        return tot_sale,tot_cost,profit
+    
     
     def get_imp_vals(self):
         result = []
@@ -385,8 +396,8 @@ class od_cost_sheet(models.Model):
     def get_om_vals(self):
         result = []
         if (self.o_m_tot_sale1 != 0.0 or self.o_m_tot_cost1 != 0.0):
-            sale,cost,profit = self.get_tot_sale_cost(self.om_residenteng_line) 
-            sale2,cost2,profit2= self.get_tot_sale_cost(self.om_extra_line)
+            sale,cost,profit = self.get_tot_sale_cost2(self.om_residenteng_line) 
+            sale2,cost2,profit2= self.get_tot_sale_cost2(self.om_extra_line)
             sale += sale2 
             cost += cost2 
             profit += profit2
