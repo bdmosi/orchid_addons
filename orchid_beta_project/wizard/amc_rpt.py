@@ -72,7 +72,7 @@ class amc_rpt_wiz(models.TransientModel):
             prj_states += ['inactive']
             
         company_id = self.company_id and self.company_id.id 
-        domain = [('od_type_of_project','in',('amc','o_m'))]
+        domain = [('od_type_of_project','in',('amc','o_m')),('state','!=','cancelled')]
         if company_id:
             domain += [('company_id','=',company_id)]
         

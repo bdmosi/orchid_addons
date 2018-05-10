@@ -251,6 +251,7 @@ class account_analytic_account(models.Model):
     def set_cancel(self):
         project_obj = self.od_get_project()
         project_obj.write({'state':'cancelled'})
+        self.write({'od_project_status':'cancel','od_amc_status':'cancel'})
         return super(account_analytic_account,self).set_cancel()
 
     @api.multi
@@ -770,7 +771,7 @@ class account_analytic_account(models.Model):
     
     od_project_start = fields.Date(string="Project Start")
     od_project_end = fields.Date(string="Project End")
-    od_project_status = fields.Selection([('active','Active'),('inactive','Inactive'),('close','Closed')],string="Project Status",default='inactive',copy=False)
+    od_project_status = fields.Selection([('active','Active'),('inactive','Inactive'),('close','Closed'),('cancel','Cancelled')],string="Project Status",default='inactive',copy=False)
     od_project_owner_id = fields.Many2one('res.users',string="Project Owner")
     od_project_closing = fields.Date(string="Project Closing Date",copy=False)
     od_project_cost = fields.Float(string="Project Cost",compute="_get_cost_from_jv")
@@ -779,7 +780,7 @@ class account_analytic_account(models.Model):
     
     od_amc_start = fields.Date(string="AMC Start")
     od_amc_end = fields.Date(string="AMC End")
-    od_amc_status = fields.Selection([('active','Active'),('inactive','Inactive'),('close','Closed')],string="Project Status",default='inactive',copy=False)
+    od_amc_status = fields.Selection([('active','Active'),('inactive','Inactive'),('close','Closed'),('cancel','Cancelled')],string="Project Status",default='inactive',copy=False)
     od_amc_owner_id = fields.Many2one('res.users',string="AMC Owner")
     od_amc_closing = fields.Date(string="AMC Closing Date",copy=False)
     od_amc_cost = fields.Float(string="AMC Cost",compute="_get_cost_from_jv")
@@ -788,7 +789,7 @@ class account_analytic_account(models.Model):
     
     od_om_start = fields.Date(string="O&M Start")
     od_om_end = fields.Date(string="O&M End")
-    od_om_status = fields.Selection([('active','Active'),('inactive','Inactive'),('close','Closed')],string="O&M Status",default='inactive')
+    od_om_status = fields.Selection([('active','Active'),('inactive','Inactive'),('close','Closed'),('cancel','Cancelled')],string="O&M Status",default='inactive')
     od_om_owner_id = fields.Many2one('res.users',string="OM Owner")
     od_om_closing = fields.Date(string="O&M Closing Date",copy=False)
     od_om_cost = fields.Float(string="O&M Cost")
