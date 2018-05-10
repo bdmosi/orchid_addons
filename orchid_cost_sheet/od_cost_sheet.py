@@ -919,7 +919,7 @@ class od_cost_sheet(models.Model):
     submit_to_customer_date = fields.Datetime("Submit To Customer Date")
     handover_date = fields.Datetime('Hand-Over Date',readonly=True)
     processed_date = fields.Datetime('Processed Date',readonly=True)
-    approved_date = fields.Datetime('Approved Date',readonly=True)
+    approved_date = fields.Datetime('Approved Date',readonly=False)
     #hand over tab
     sales_acc_manager = fields.Many2one('res.users',string='Sales Account Manager')
     business_development = fields.Many2one('res.users',string='Business Development')
@@ -1710,7 +1710,8 @@ class od_cost_sheet(models.Model):
 #         self.od_send_mail('cst_sheet_approve_mail')
 # this mail wiil be sent when assign an accountant
         appr_date =str(datetime.now())
-        self.approved_date =appr_date
+        if not self.approved_date:
+            self.approved_date =appr_date
         self.update_cost_sheet()
         self.check_adv_payment()
         self.check_finance_comment()
