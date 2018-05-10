@@ -22,6 +22,10 @@
            	
            
            </xpath>
+           
+             <xpath expr="//page[@string='Invoice Lines']/field[@name='invoice_line']/tree/field[@name='name']" position="after">
+           		<field name="name_ar"  />
+             </xpath>
           
          
           <field name="payment_term" position="after">

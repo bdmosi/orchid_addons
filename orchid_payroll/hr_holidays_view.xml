@@ -68,10 +68,9 @@
 				<field name="od_total_leave_taken" readonly="1"
 					attrs="{'invisible':[('holiday_status_id','=',1)]}" />
 
-				<field name="od_leave_eligible" readonly="1"
-					 />
+				<field name="od_leave_eligible" readonly="1" invisible="1"/>
 
-				<field name="od_leave_sal" readonly="1" />
+				<field name="od_leave_sal" readonly="1" invisible="1"/>
 
 				<field name="od_leave_sal_invisible" invisible="1" />
 

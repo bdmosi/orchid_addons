@@ -222,6 +222,8 @@ class account_invoice_tax(models.Model):
     
 class account_invoice_line(models.Model):
     _inherit = "account.invoice.line"
+    
+    name_ar = fields.Char(string="Product Description(Arabic)")
     bt_enable = fields.Boolean(string="Enable Pay %")
     bt_pay_perc = fields.Float(string="Payment %")
     
