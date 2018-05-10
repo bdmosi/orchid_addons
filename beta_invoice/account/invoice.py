@@ -24,7 +24,12 @@ class account_invoice(models.Model):
     @api.multi    
     def amount_to_text_en(self, amount, currency):
         convert_amount_in_words = amount_to_text_en.amount_to_text(amount, lang='en', currency=currency)        
-        convert_amount_in_words = convert_amount_in_words.replace('Cent', 'Halala')                  
+        company_id = self.company_id and self.company_id.id
+        if company_id ==6:
+            convert_amount_in_words = convert_amount_in_words.replace('Cent', 'Halala')
+        else:
+            convert_amount_in_words = convert_amount_in_words.replace('Cent', 'Fill')
+                              
         return convert_amount_in_words
     
     @api.multi    
