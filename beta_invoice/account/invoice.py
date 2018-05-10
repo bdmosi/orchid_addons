@@ -24,7 +24,7 @@ class account_invoice(models.Model):
     @api.multi    
     def amount_to_text_en(self, amount, currency):
         convert_amount_in_words = amount_to_text_en.amount_to_text(amount, lang='en', currency=currency)        
-        convert_amount_in_words = convert_amount_in_words.replace('Cent', 'Fil')                  
+        convert_amount_in_words = convert_amount_in_words.replace('Cent', 'Halala')                  
         return convert_amount_in_words
     
     @api.multi    

@@ -124,7 +124,6 @@ def convert_to_ar(number):
     else:
         return convert_over_billion(number)
 
-
 def amount_to_text_ar(number, currency):
     number = '%.2f' % number
     units_name = currency
@@ -132,7 +131,7 @@ def amount_to_text_ar(number, currency):
     start_word = convert_to_ar(abs(int(list[0])))
     end_word = convert_to_ar(int(list[1]))
     cents_number = int(list[1])
-    cents_name = (cents_number > 1) and u' سنتيم ' or u' سنتيم '
+    cents_name = (cents_number > 1) and u' هلله ' or u' هلله '
     final_result = start_word + u' ' + units_name + u' و ' + end_word + u' ' + cents_name
     return final_result
 
