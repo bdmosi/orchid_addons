@@ -755,14 +755,14 @@ class account_analytic_account(models.Model):
                 
                 if line.product_id.id in amc_products:
                     amc_sale += line.price_subtotal
-                    amc_original_sale = line.od_original_line_price
-                    amc_original_cost = line.od_original_line_cost
-                    amc_amend_cost = line.od_amended_line_cost
+                    amc_original_sale += line.od_original_line_price
+                    amc_original_cost += line.od_original_line_cost
+                    amc_amend_cost += line.od_amended_line_cost
                 else:
                     project_sale += line.price_subtotal
-                    project_original_sale = line.od_original_line_price
-                    project_original_cost = line.od_original_line_cost
-                    project_amend_cost = line.od_amended_line_cost
+                    project_original_sale += line.od_original_line_price
+                    project_original_cost += line.od_original_line_cost
+                    project_amend_cost += line.od_amended_line_cost
         self.od_actual_sale = actual_sale
         self.od_amc_sale = amc_sale 
         self.od_project_sale = project_sale
