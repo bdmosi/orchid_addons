@@ -5516,6 +5516,7 @@ class od_cost_mat_main_pro_line(models.Model):
         return self.env.user.company_id.od_tax_id
     
     def get_fix(self):
+        print "get fix default>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",self.cost_sheet_id
         return self.cost_sheet_id.price_fixed 
     
     cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet',ondelete='cascade',)
