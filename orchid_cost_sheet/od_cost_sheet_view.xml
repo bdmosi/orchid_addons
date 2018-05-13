@@ -2638,7 +2638,7 @@
                                  
                             </group>
                              
-							<button string="Assign Accountant" name="1159" type="action" states="processed,approved" class="oe_link oe_right"/>
+							<button string="Assign Accountant" name="1159" type="action" states="processed,approved,handover,waiting_po_processed,change_processed,redistribution_processed" class="oe_link oe_right"/>
 
 							<!-- <separator string="Supporting Documents" /> <field name="support_doc_line"> 
 								<tree editable="bottom"> <field name="doc_type_id" /> <field name="date" 

@@ -739,16 +739,49 @@ class account_analytic_account(models.Model):
         amc_sale =0.0
         project_sale =0.0
         actual_sale = 0.0
+        project_original_sale =0.0
+        amc_original_sale =0.0
+        project_original_cost =0.0
+        amc_original_cost=0.0
+        project_amend_cost =0.0 
+        amc_amend_cost =0.0
+        project_amend_profit =0.0
+        amc_amend_profit =0.0
+       
+        
         if sale_order:
             for line in sale_order.order_line:
                 actual_sale += line.price_subtotal
+                
                 if line.product_id.id in amc_products:
-                    amc_sale += line.price_subtotal 
+                    amc_sale += line.price_subtotal
+                    amc_original_sale = line.od_original_line_price
+                    amc_original_cost = line.od_original_line_cost
+                    amc_amend_cost = line.od_amended_line_cost
                 else:
                     project_sale += line.price_subtotal
+                    project_original_sale = line.od_original_line_price
+                    project_original_cost = line.od_original_line_cost
+                    project_amend_cost = line.od_amended_line_cost
         self.od_actual_sale = actual_sale
         self.od_amc_sale = amc_sale 
         self.od_project_sale = project_sale
+        self.od_project_amend_sale = project_sale 
+        self.od_amc_amend_sale = amc_sale
+        self.od_project_amend_cost = project_amend_cost 
+        self.od_amc_amend_cost = amc_amend_cost
+        self.od_project_amend_profit = project_sale - project_amend_cost
+        self.od_amc_amend_profit = amc_sale - amc_amend_cost    
+        
+        
+        self.od_project_original_sale = project_original_sale 
+        self.od_project_original_cost = project_original_cost 
+        self.od_project_original_profit = project_original_sale -project_original_cost
+        
+        self.od_amc_original_sale = amc_original_sale 
+        self.od_amc_original_cost = amc_original_cost 
+        self.od_amc_original_profit = amc_original_sale - amc_original_cost
+        
         
     
     
@@ -776,6 +809,12 @@ class account_analytic_account(models.Model):
     od_project_closing = fields.Date(string="Project Closing Date",copy=False)
     od_project_cost = fields.Float(string="Project Cost",compute="_get_cost_from_jv")
     od_project_sale =  fields.Float(string="Project Sale",compute="_get_sale_value")
+    od_project_amend_sale =  fields.Float(string="Project Sale Amend",compute="_get_sale_value")
+    od_project_amend_cost =  fields.Float(string="Project Cost Amend",compute="_get_sale_value")
+    od_project_amend_profit =  fields.Float(string="Project Profit Amend",compute="_get_sale_value")
+    od_project_original_sale =  fields.Float(string="Project Sale Amend",compute="_get_sale_value")
+    od_project_original_cost =  fields.Float(string="Project Sale Amend",compute="_get_sale_value")
+    od_project_original_profit =  fields.Float(string="Project Sale Amend",compute="_get_sale_value")
     od_project_profit = fields.Float(string="Project Profit",compute="_get_actual_profit")
     
     od_amc_start = fields.Date(string="AMC Start")
@@ -785,6 +824,12 @@ class account_analytic_account(models.Model):
     od_amc_closing = fields.Date(string="AMC Closing Date",copy=False)
     od_amc_cost = fields.Float(string="AMC Cost",compute="_get_cost_from_jv")
     od_amc_sale =  fields.Float(string="AMC Sale",compute="_get_sale_value")
+    od_amc_amend_sale =  fields.Float(string="Project Sale Amend",compute="_get_sale_value")
+    od_amc_amend_cost =  fields.Float(string="Project Cost Amend",compute="_get_sale_value")
+    od_amc_amend_profit =  fields.Float(string="Project Profit Amend",compute="_get_sale_value")
+    od_amc_original_sale =  fields.Float(string="Project Sale Amend",compute="_get_sale_value")
+    od_amc_original_cost =  fields.Float(string="Project Sale Amend",compute="_get_sale_value")
+    od_amc_original_profit =  fields.Float(string="Project Sale Amend",compute="_get_sale_value")
     od_amc_profit = fields.Float(string="AMC Profit",compute="_get_actual_profit")
     
     od_om_start = fields.Date(string="O&M Start")
