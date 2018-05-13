@@ -1028,7 +1028,7 @@ class account_analytic_account(models.Model):
     def get_cost_control_score(self):
         result =0.0
         actual_profit = self.od_project_profit
-        original_profit = self.od_original_sale_profit 
+        original_profit = self.od_project_original_profit 
         if original_profit:
             result = (actual_profit/original_profit) * 100 
         if original_profit <=0.0 and actual_profit >0.0:
