@@ -629,29 +629,29 @@
                     
                     
                    
-                   
+                    
                    <tr>
                    <td><strong>Original Sale</strong></td>
-                   <td></td>
                    <td><field name="od_original_sale_price" /></td>
-                   <td></td>
+                   <td><field name="od_project_original_sale" /></td>
+                   <td><field name="od_amc_original_sale" /></td>
                   <!--  <td></td> -->
                     </tr>
                     
                    <tr>
                    <td><strong>Original Cost</strong></td>
-                   <td></td>
                    <td><field name="od_original_sale_cost" /></td>
-                   <td></td>
-                  <!--  <td></td> -->
+                   <td><field name="od_project_original_cost" /></td>
+                   <td><field name="od_amc_original_cost" /></td>
+                   <!-- <td></td> -->
                     </tr>
                    
                    
                    <tr>
                    <td><strong>Original Profit</strong></td>
-                   <td></td>
                    <td><field name="od_original_sale_profit" /></td>
-                   <td></td>
+                   <td><field name="od_project_original_profit" /></td>
+                   <td><field name="od_amc_original_profit" /></td>
                   <!--  <td></td> -->
                     </tr>
                    
@@ -659,26 +659,26 @@
                    
                      <tr>
                    <td><strong>Amended Sale</strong></td>
-                   <td></td>
                    <td><field name="od_amended_sale_price" /></td>
-                   <td></td>
+                   <td><field name="od_project_amend_sale" /></td>
+                   <td><field name="od_amc_amend_sale" /></td>
                   <!--  <td></td> -->
                     </tr>
                     
                    <tr>
                    <td><strong>Amended Cost</strong></td>
-                   <td></td>
                    <td><field name="od_amended_sale_cost" /></td>
-                   <td></td>
-                  <!--  <td></td> -->
+                   <td><field name="od_project_amend_cost" /></td>
+                   <td><field name="od_amc_amend_cost" /></td>
+                 <!--   <td></td> -->
                     </tr>
                    
                    
                    <tr>
                    <td><strong>Amended Profit</strong></td>
-                   <td></td>
                    <td><field name="od_amended_profit" /></td>
-                   <td></td>
+                   <td><field name="od_project_amend_profit" /></td>
+                   <td><field name="od_amc_amend_profit" /></td>
                    <!-- <td></td> -->
                     </tr>
                    
@@ -688,26 +688,26 @@
                    
                    <tr>
                    <td><strong>Actual Sale</strong></td>
-                   <td></td>
+                   <td><field name="od_actual_sale" /></td>
                    <td><field name="od_project_sale" /></td>
                    <td><field name="od_amc_sale" /></td>
-                   <!-- <td><field name="od_om_sale" readonly="1"/></td> -->
+                  <!--  <td><field name="od_om_sale" readonly="1"/></td> -->
                     </tr>
                     
                      <tr>
                    <td><strong>Actual Cost</strong></td>
-                   <td></td>
+                   <td><field name="od_actual_cost" /></td>
                    <td><field name="od_project_cost" /></td>
                    <td><field name="od_amc_cost" /></td>
-                   <!-- <td><field name="od_om_cost" readonly="1"/></td> -->
+                  <!--  <td><field name="od_om_cost" readonly="1"/></td> -->
                     </tr>
                    
                     <tr>
                    <td><strong>Actual Profit</strong></td>
-                   <td></td>
+                   <td><field name="od_actual_profit" /></td>
                    <td><field name="od_project_profit" /></td>
                    <td><field name="od_amc_profit" /></td>
-                   <!-- <td><field name="od_om_profit" readonly="1"/></td> -->
+                  <!--  <td><field name="od_om_profit" readonly="1"/></td> -->
                     </tr>
                    
                    
