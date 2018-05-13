@@ -123,7 +123,7 @@
 						
 						<button name="update_vat" string="Link VAT" type="object" class="oe_highlight" states="draft,design_ready,submitted,returned_by_pmo" />
 						<button name="btn_freez_price" string="Freeze Selling" type="object" class="oe_highlight" attrs="{'invisible':[('price_fixed','=',True)]}"  />
-						<button name="btn_unfreez_price" string="Un-Freeze Selling" type="object" class="oe_highlight" attrs="{'invisible':[('price_fixed','=',False)]}"  />
+						<button name="btn_unfreez_price" string="Un-Freeze Selling" type="object" class="oe_highlight" attrs="{'invisible':['|',('price_fixed','=',False),('state','not in',('draft','design_ready','submitted','commit','returned_by_pmo'))]}"  />
 						<button name="btn_design_ready" string="Design Ready" type="object" class="oe_highlight" states="draft" groups="orchid_beta.group_beta_presales_engineer,orchid_beta.group_beta_presales_manager,orchid_beta.group_executive_management_beta_1"/>
 						<button name="btn_submit" string="Submit To Customer" type="object" class="oe_highlight" states="design_ready" groups="orchid_beta.group_beta_sale_account_mananger,orchid_beta.group_beta_sale_coordinator_1,orchid_beta.group_beta_presales_engineer,orchid_beta.group_beta_presales_manager,orchid_beta.group_executive_management_beta_1"/>
 						<button name="btn_commit" string="Commit" type="object" class="oe_highlight" states="submitted" groups="orchid_beta.group_beta_sale_account_mananger,orchid_beta.group_beta_sale_coordinator_1,orchid_beta.group_beta_presales_engineer,orchid_beta.group_beta_presales_manager,orchid_beta.group_executive_management_beta_1"/>
@@ -164,7 +164,7 @@
 						<button class="oe_inline oe_stat_button" name="od_open_attachement" type="object" icon="fa-book">
 							<field name="od_attachement_count" widget="statinfo" string="Documents"/>
 						</button>
-						<button class="oe_inline oe_stat_button" name="od_open_hr_expense_claim" type="object" icon="fa-list">
+						<!-- <button class="oe_inline oe_stat_button" name="od_open_hr_expense_claim" type="object" icon="fa-list">
 							<div>
 								<strong>
 									<field name="od_hr_claim_amount"/>
@@ -172,7 +172,7 @@
 								<br/>
 								HR Expense
 							</div>
-						</button>
+						</button> -->
 						<button class="oe_inline oe_stat_button" name="od_btn_open_account_move_lines" type="object" icon="fa-list">
 							<div>
 								<strong>
