@@ -5513,7 +5513,10 @@ class od_cost_mat_main_pro_line(models.Model):
     
     
     def get_vat(self):
-        return self.env.user.company_id.od_tax_id 
+        return self.env.user.company_id.od_tax_id
+    
+    def get_fix(self):
+        return self.cost_sheet_id.price_fixed 
     
     cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet',ondelete='cascade',)
     check = fields.Boolean(string="Check")
@@ -5529,7 +5532,7 @@ class od_cost_mat_main_pro_line(models.Model):
     unit_price = fields.Float(string="Unit Sale",compute="_compute_unit_price",digits=dp.get_precision('Account'))
     temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
     new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
-    fixed = fields.Boolean(string="Price Fix")
+    fixed = fields.Boolean(string="Price Fix",default=get_fix)
     
     line_price = fields.Float(string='Total Sale', compute='_compute_line_price',digits=dp.get_precision('Account'))
     group = fields.Many2one('od.cost.costgroup.material.line',string='Group',copy=True)
@@ -5692,6 +5695,10 @@ class od_cost_mat_optional_item_line(models.Model):
             self.vat = vat  * 100
             vat_value = self.line_price * vat
             self.vat_value = vat_value
+    
+    
+    def get_fix(self):
+        return self.cost_sheet_id.price_fixed 
 
     cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet',ondelete='cascade')
     item = fields.Char(string='Item')
@@ -5706,7 +5713,7 @@ class od_cost_mat_optional_item_line(models.Model):
     unit_price = fields.Float(string="Unit Sale",compute="_compute_unit_price",digits=dp.get_precision('Account'))
     temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
     new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
-    fixed = fields.Boolean(string="Price Fix",)
+    fixed = fields.Boolean(string="Price Fix",default=get_fix)
     
     line_price = fields.Float(string='Total Sale',readonly=True, compute='_compute_line_price',digits=dp.get_precision('Account'))
     group_id = fields.Many2one('od.cost.costgroup.optional.line.two',string='Group',copy=True)
