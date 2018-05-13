@@ -126,7 +126,7 @@ def convert_to_ar(number):
 
 def amount_to_text_ar(number, currency):
     number = '%.2f' % number
-    units_name = u' دينار جزائري '
+    units_name = u' ريال سعودي '
     list = str(number).split('.')
     start_word = convert_to_ar(abs(int(list[0])))
     end_word = convert_to_ar(int(list[1]))
