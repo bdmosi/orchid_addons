@@ -96,8 +96,13 @@ class opp_rev_sale_in_wiz(models.TransientModel):
             
         cost_sheet_data = self.env['od.cost.sheet'].search(domain) 
         result =[]
+        analytic_pool = self.env['account.analytic.account']
         for sheet in cost_sheet_data:
             sheet_id = sheet.id
+            analytic = analytic_pool.search([('od_cost_sheet_id','=',sheet_id)],limit=1)
+            analytic_state = analytic and analytic.state
+            if analytic_state =='cancelled':
+                continue
             opp_id = sheet.lead_id and sheet.lead_id.id 
             date = sheet.approved_date 
             stage_id = sheet.op_stage_id and sheet.op_stage_id.id
