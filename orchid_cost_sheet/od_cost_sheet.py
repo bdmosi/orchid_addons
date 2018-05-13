@@ -5533,7 +5533,7 @@ class od_cost_mat_main_pro_line(models.Model):
     unit_price = fields.Float(string="Unit Sale",compute="_compute_unit_price",digits=dp.get_precision('Account'))
     temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
     new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
-    fixed = fields.Boolean(string="Price Fix",default=get_fix)
+    fixed = fields.Boolean(string="Price Fix",related="cost_sheet_id.price_fixed")
     
     line_price = fields.Float(string='Total Sale', compute='_compute_line_price',digits=dp.get_precision('Account'))
     group = fields.Many2one('od.cost.costgroup.material.line',string='Group',copy=True)
