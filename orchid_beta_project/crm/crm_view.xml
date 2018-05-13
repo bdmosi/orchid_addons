@@ -7,18 +7,18 @@
             <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
             <field name="arch" type="xml">
                 <xpath expr="/form/sheet/div/button[@name='action_schedule_meeting']" position="after">
-                           <button class="oe_inline oe_stat_button" name="od_open_hr_expense_claim" type="object"  icon="fa-list">
+                         <!--   <button class="oe_inline oe_stat_button" name="od_open_hr_expense_claim" type="object"  icon="fa-list">
                                    <div><strong><field name="od_hr_claim_amount" /></strong><br/>HR Expense</div>
-                           </button>
-                           <button class="oe_inline oe_stat_button" name="od_open_hr_expense_claim_draft" type="object"  icon="fa-list">
+                           </button> -->
+                           <!-- <button class="oe_inline oe_stat_button" name="od_open_hr_expense_claim_draft" type="object"  icon="fa-list">
                                    <div style="color:#C7ABA5"><strong><field name="od_hr_claim_amount_draft" /></strong><br/>HR Expense</div>
-                           </button>
+                           </button> -->
                            <button class="oe_inline oe_stat_button" name="od_btn_open_account_move_lines" type="object"  icon="fa-list">
                                    <div><strong><field name="od_journal_amount" /></strong><br/>Journal Items</div>
                            </button>
-                           <button class="oe_inline oe_stat_button" name="od_btn_open_account_move_lines_draft" type="object"  icon="fa-list">
+                          <!--  <button class="oe_inline oe_stat_button" name="od_btn_open_account_move_lines_draft" type="object"  icon="fa-list">
                                    <div style="color:#C7ABA5"><strong><field name="od_journal_amount_draft" /></strong><br/>Journal Items</div>
-                           </button>
+                           </button> -->
                            <button class="oe_inline oe_stat_button" name="od_btn_open_timsheet_for_opp" type="object"  icon="fa-list">
                                    <div><strong><field name="od_timesheet_amount" /></strong><br/>Timesheets</div>
                            </button>
