@@ -796,17 +796,7 @@ class account_analytic_account(models.Model):
         self.od_project_profit = self.od_project_sale - self.od_project_cost 
         self.od_amc_profit = self.od_amc_sale - self.od_amc_cost 
     
-    
-    for i in range(1,6):
-    ...:     for b in range(1,5):
-    ...:         
-    ...:         
-    ...:         
-    ...:         
-    ...:         
-    ...:         l1.append(('y'+str(i) +'-' +'q'+str(b),'AMC'+' '+'Y'+str(i) +'-
-    ...: ' +'Q'+str(b)))
-    
+   
     
     def get_amc_yrs(self):
         res =[]
