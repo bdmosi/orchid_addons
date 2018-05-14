@@ -156,7 +156,7 @@
     				</tr>
     				<tr>
     				   <td>Project</td>
-    					<td></td>
+    					<td><field name="od_project_type"  /></td>
     					<td><field name="od_project_linked_table"  /></td>
     					<td><field name="od_project_start"  /></td>
     					<td><field name="od_project_end"  /></td>
@@ -169,12 +169,37 @@
     					<td><field name="od_project_amend_profit"  /></td>
     					<td><field name="od_project_cost"/></td>
     					<td><field name="od_project_profit"/></td>
-    					<td><field name="od_project_status"/></td>
+    					<td><field name="od_project_status" readonly="1"/></td>
     					<td><button name="btn_activate_project" string="Activate" class="oe_highlight" type="object"  attrs="{'invisible':[('od_project_status','!=','inactive')]}"/></td>
     					<td><field name="od_project_closing"/></td>
     					 <td><button name="btn_close_project" string="Close" class="oe_highlight" type="object"  attrs="{'invisible':[('od_project_status','!=','active')]}"/></td>
     					
     				</tr>
+    				<tr>
+    				   <td>AMC</td>
+    					<td><field name="od_amc_type"  /></td>
+    					<td><field name="od_amc_linked_table"  /></td>
+    					<td><field name="od_amc_start"  /></td>
+    					<td><field name="od_amc_end"  /></td>
+    					<td><field name="od_amc_owner_id"  /></td>
+    					<td><field name="od_amc_original_sale"  /></td>
+    					<td><field name="od_amc_original_cost"  /></td>
+    					<td><field name="od_amc_original_profit"  /></td>
+    					<td><field name="od_amc_amend_sale"  /></td>
+    					<td><field name="od_amc_amend_cost"  /></td>
+    					<td><field name="od_amc_amend_profit"  /></td>
+    					<td><field name="od_amc_cost"/></td>
+    					<td><field name="od_amc_profit"/></td>
+    					<td><field name="od_amc_status" readonly="1"/></td>
+    					<td><button name="btn_activate_amc" string="Activate" class="oe_highlight" type="object"  attrs="{'invisible':[('od_amc_status','!=','inactive')]}"/></td>
+    					<td><field name="od_amc_closing"/></td>
+    					 <td><button name="btn_close_amc" string="Close" class="oe_highlight" type="object"  attrs="{'invisible':[('od_amc_status','!=','active')]}"/></td>
+    					
+    				</tr>
+    				<tr></tr>
+    				<tr></tr>
+    				<tr></tr>
+    				<tr></tr>
     			</tbody>
     			</table>
     			
