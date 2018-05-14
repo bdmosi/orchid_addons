@@ -807,15 +807,17 @@ class account_analytic_account(models.Model):
     def get_type_list(self):
         amc_list = self.get_amc_yrs()
         stat_list = [('mat','MAT Supply Only'),('imp','IMP Service Only'),('project','Project (MAT & IMP)'),('trn','TRN'),('credit','Credit')]
-        final_list  =  stat_list + amc_list
+        final_list  =  stat_list + amc_list +[('om','O&M')]
         return final_list
     
     od_actual_cost = fields.Float(string="Actual Cost",compute="_get_cost_from_jv")
     od_actual_sale = fields.Float(string="Actual Sale",compute="_get_sale_value")
     od_actual_profit = fields.Float(string="Actual Profit",compute="_get_actual_profit")
     od_actual_profit_percent = fields.Float(string="Actual Profit",compute="_get_actual_profit")
+    od_analytic_linked_table = fields.Char(string="Analytic Linked Table")
     
     od_project_type = fields.Selection(get_type_list,string="Project Type")
+    od_project_linked_table = fields.Char(string="Project Linked Table")
     od_project_start = fields.Date(string="Project Start")
     od_project_end = fields.Date(string="Project End")
     od_project_status = fields.Selection([('active','Active'),('inactive','Inactive'),('close','Closed'),('cancel','Cancelled')],string="Project Status",default='inactive',copy=False)
@@ -832,6 +834,7 @@ class account_analytic_account(models.Model):
     od_project_profit = fields.Float(string="Project Profit",compute="_get_actual_profit")
     
     od_amc_type = fields.Selection(get_type_list,string="AMC Type")
+    od_amc_linked_table = fields.Char(string="AMC Linked Table")
     od_amc_start = fields.Date(string="AMC Start")
     od_amc_end = fields.Date(string="AMC End")
     od_amc_status = fields.Selection([('active','Active'),('inactive','Inactive'),('close','Closed'),('cancel','Cancelled')],string="Project Status",default='inactive',copy=False)
