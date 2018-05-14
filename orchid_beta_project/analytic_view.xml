@@ -136,7 +136,7 @@
     				<tr>
     				   <td>Analytic</td>
     					<td></td>
-    					<td><field name="od_analtyic_linked_table"  /></td>
+    					<td><field name="od_analytic_linked_table"  /></td>
     					<td><field name="date_start"  /></td>
     					<td><field name="date"  /></td>
     					<td><field name="od_owner_id"  /></td>
