@@ -5474,7 +5474,8 @@ class od_cost_mat_main_pro_line(models.Model):
     @api.depends('qty','unit_price','new_unit_price')
     def _compute_line_price(self):
         fixed = self.fixed
-        if not fixed:
+        locked = self.locked
+        if not (fixed or locked):
             self.line_price = self.qty * self.unit_price
         else:
             self.line_price = self.qty * self.new_unit_price
@@ -5534,6 +5535,7 @@ class od_cost_mat_main_pro_line(models.Model):
     temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
     new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
     fixed = fields.Boolean(string="Price Fix")
+    locked = fields.Boolean(string="Locked")
     
     line_price = fields.Float(string='Total Sale', compute='_compute_line_price',digits=dp.get_precision('Account'))
     group = fields.Many2one('od.cost.costgroup.material.line',string='Group',copy=True)
@@ -5664,7 +5666,8 @@ class od_cost_mat_optional_item_line(models.Model):
     @api.depends('qty','unit_price')
     def _compute_line_price(self):
         fixed = self.fixed
-        if not fixed:
+        locked = self.locked
+        if not (fixed or locked):
             self.line_price = self.qty * self.unit_price
         else:
             self.line_price = self.qty * self.new_unit_price
@@ -5715,6 +5718,7 @@ class od_cost_mat_optional_item_line(models.Model):
     temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
     new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
     fixed = fields.Boolean(string="Price Fix")
+    locked = fields.Boolean(string="Locked")
     
     line_price = fields.Float(string='Total Sale',readonly=True, compute='_compute_line_price',digits=dp.get_precision('Account'))
     group_id = fields.Many2one('od.cost.costgroup.optional.line.two',string='Group',copy=True)
@@ -6026,10 +6030,12 @@ class od_cost_mat_extra_expense_line(models.Model):
         if self.qty or self.unit_cost:
             self.line_cost = self.qty * self.unit_cost
         fixed = self.fixed
-        if fixed:
-            self.line_price = self.qty * self.new_unit_price 
-        if not fixed:
+        locked = self.locked
+        
+        if not (fixed or locked):
             self.line_price = self.qty * self.unit_price
+        else:
+            self.line_price = self.qty * self.new_unit_price 
 
     @api.one
     @api.depends('qty','list_price','unit_price2','new_unit_price','group2')
@@ -6063,7 +6069,8 @@ class od_cost_mat_extra_expense_line(models.Model):
             self.unit_price2 = unit_price
 #             self.vat = self.group2.vat
         fixed = self.fixed
-        if fixed:
+        locked = self.locked
+        if (fixed or locked):
             self.line_price2 = self.qty * self.new_unit_price 
         else:
             self.line_price2 = self.qty * self.unit_price2
@@ -6098,6 +6105,7 @@ class od_cost_mat_extra_expense_line(models.Model):
     temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
     new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
     fixed = fields.Boolean(string="Price Fix")
+    locked = fields.Boolean(string="Locked")
     
     line_price = fields.Float(string='Line Price',compute='compute_calculation',digits=dp.get_precision('Account'))
     unit_cost_local = fields.Float(string="Unit Cost Local",compute='compute_calculation2',digits=dp.get_precision('Account'))
@@ -6270,7 +6278,8 @@ class od_cost_bim_beta_manpower_manual_line(models.Model):
         if self.qty or self.unit_cost:
             self.line_cost = self.qty * self.unit_cost
         fixed = self.fixed
-        if not fixed:
+        locked = self.locked
+        if not (fixed or locked):
             self.line_price = self.qty * self.unit_price
         else:
             self.line_price = self.qty * self.new_unit_price
@@ -6294,6 +6303,7 @@ class od_cost_bim_beta_manpower_manual_line(models.Model):
     temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
     new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
     fixed = fields.Boolean(string="Price Fix")
+    locked = fields.Boolean(string="Locked")
     
     
     line_price = fields.Float(string='Line Price',compute='compute_calc',digits=dp.get_precision('Account'))
@@ -6379,9 +6389,10 @@ class od_cost_bim_beta_implementation_code(models.Model):
             self.line_cost = self.unit_cost * self.qty
         
         fixed = self.fixed
-        if fixed:
+        locked = self.locked
+        if (fixed or locked):
             self.line_price = self.new_unit_price * self.qty
-        if not fixed:
+        else:
             self.line_price = self.unit_price * self.qty
             
     
@@ -6403,6 +6414,7 @@ class od_cost_bim_beta_implementation_code(models.Model):
     temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
     new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
     fixed = fields.Boolean(string="Price Fix")
+    locked = fields.Boolean(string="Locked")
     
     line_price = fields.Float('Total Sale',compute='compute_calc',digits=dp.get_precision('Account'))
     unit_cost = fields.Float('Unit Cost',compute='compute_calc',digits=dp.get_precision('Account'))
@@ -6498,6 +6510,7 @@ class od_cost_oim_implimentation_price_line(models.Model):
     temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
     new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
     fixed = fields.Boolean(string="Price Fix")
+    locked = fields.Boolean(string="Locked")
     
     line_price = fields.Float(string='Total Sale',compute='compute_calc',digits=dp.get_precision('Account'))
     unit_cost = fields.Float(string='Unit Cost',digits=dp.get_precision('Account'))
@@ -6609,7 +6622,8 @@ class od_cost_om_residenteng_line(models.Model):
             unit_price = unit_price * (1-discount)
             self.unit_price = unit_price
         fixed = self.fixed
-        if not fixed:
+        locked = self.locked
+        if not (fixed or locked):
             self.line_price = self.qty * self.unit_price
         else:
             self.line_price = self.qty * self.new_unit_price
@@ -6638,6 +6652,7 @@ class od_cost_om_residenteng_line(models.Model):
     temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
     new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
     fixed = fields.Boolean(string="Price Fix")
+    locked = fields.Boolean(string="Locked")
     
     line_price = fields.Float(string='Line Price',compute='compute_calc',digits=dp.get_precision('Account'))
     unit_cost = fields.Float(string='Unit Cost',digits=dp.get_precision('Account'))
@@ -6735,7 +6750,8 @@ class od_cost_omn_out_preventive_maintenance_line(models.Model):
             unit_price = unit_price * (1-discount)
             self.unit_price = unit_price
         fixed = self.fixed
-        if not fixed:
+        locked = self.locked 
+        if not (fixed or locked):
             self.line_price = self.qty * self.unit_price
         else:
             self.line_price = self.qty * self.new_unit_price
@@ -6768,6 +6784,7 @@ class od_cost_omn_out_preventive_maintenance_line(models.Model):
     temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
     new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
     fixed = fields.Boolean(string="Price Fix")
+    locked = fields.Boolean(string="Locked")
     
     
     line_price = fields.Float(string='Line Price',compute='compute_calc',digits=dp.get_precision('Account'))
@@ -6848,7 +6865,8 @@ class od_cost_omn_out_remedial_maintenance_line(models.Model):
             unit_price = unit_price * (1-discount)
             self.unit_price = unit_price
         fixed = self.fixed
-        if not fixed:
+        locked = self.locked 
+        if not (fixed or locked):
             self.line_price = self.qty * self.unit_price
         else:
             self.line_price = self.qty * self.new_unit_price
@@ -6881,6 +6899,7 @@ class od_cost_omn_out_remedial_maintenance_line(models.Model):
     temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
     new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
     fixed = fields.Boolean(string="Price Fix")
+    locked = fields.Boolean(string="Locked")
     
     line_price = fields.Float(string='Line Price',compute='compute_calc',digits=dp.get_precision('Account'))
     unit_cost = fields.Float(string='Unit Cost',digits=dp.get_precision('Account'))
@@ -6991,7 +7010,8 @@ class od_cost_bmn_it_preventive_line(models.Model):
             unit_price = unit_price * (1-discount)
             self.unit_price = unit_price
         fixed = self.fixed
-        if not fixed:
+        locked = self.locked
+        if not (fixed or locked):
             self.line_price = self.qty * self.unit_price
         else:
             self.line_price = self.qty * self.new_unit_price
@@ -7026,6 +7046,7 @@ class od_cost_bmn_it_preventive_line(models.Model):
     temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
     new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
     fixed = fields.Boolean(string="Price Fix")
+    locked = fields.Boolean(string="Locked")
     
     
     line_price = fields.Float(string='Line Price',compute='compute_calc',digits=dp.get_precision('Account'))
@@ -7104,7 +7125,8 @@ class od_cost_bmn_it_remedial_line(models.Model):
             unit_price = unit_price * (1-discount)
             self.unit_price = unit_price
         fixed = self.fixed
-        if not fixed:
+        locked = self.locked 
+        if not (fixed or locked):
             self.line_price = self.qty * self.unit_price
         else:
             self.line_price = self.qty * self.new_unit_price
@@ -7134,7 +7156,7 @@ class od_cost_bmn_it_remedial_line(models.Model):
     temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
     new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
     fixed = fields.Boolean(string="Price Fix")
-    
+    locked = fields.Boolean(string="Locked")
     
     line_price = fields.Float(string='Line Price',compute='compute_calc',digits=dp.get_precision('Account'))
     unit_cost = fields.Float(string='Unit Cost',digits=dp.get_precision('Account'))
