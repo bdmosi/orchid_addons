@@ -120,6 +120,21 @@
                       
                     </thead>
                     <tbody>
+                    
+                    <tr>
+                    <td><strong>Type</strong></td>
+                    <td></td>
+                  
+                    
+                    <td><field name="od_project_type"  /></td>
+                    <td><field name="od_amc_type" /></td>
+                
+                    
+                    
+                    
+                    </tr>
+                    
+                    
                     <tr>
                     <td><strong>Date Start</strong></td>
                     <td><field name="date_start" /></td>
