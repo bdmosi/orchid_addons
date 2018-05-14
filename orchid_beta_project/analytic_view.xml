@@ -196,10 +196,28 @@
     					 <td><button name="btn_close_amc" string="Close" class="oe_highlight" type="object"  attrs="{'invisible':[('od_amc_status','!=','active')]}"/></td>
     					
     				</tr>
-    				<tr></tr>
-    				<tr></tr>
-    				<tr></tr>
-    				<tr></tr>
+    				
+    				<tr>
+ 				    <td></td>
+    					<td></td>
+    					<td></td>
+    					<td></td>
+    					<td></td>
+    					<td></td>
+    					<td></td>
+    					<td></td>
+    					<td></td>
+    					<td></td>
+    					<td></td>
+    					<td></td>
+    					<td></td>
+    					<td></td>
+    					<td></td>
+    					<td></td>
+    					<td></td>
+    					<td></td>   				
+    				</tr>
+    				
     			</tbody>
     			</table>
     			
