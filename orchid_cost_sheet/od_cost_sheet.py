@@ -4162,10 +4162,10 @@ class od_cost_sheet(models.Model):
                                              'product_id':line.part_no.id,
                                              'name':line.part_no.description_sale or line.part_no.name,
                                              'od_original_qty':line.qty,
-                                             'od_original_price':line.new_unit_price if line.fixed else line.unit_price,
+                                             'od_original_price':line.new_unit_price if line.locked else line.unit_price,
                                              'od_original_unit_cost':line.unit_cost_local,
                                              'product_uom_qty':line.qty,
-                                             'price_unit':line.new_unit_price if line.fixed else line.unit_price,
+                                             'price_unit':line.new_unit_price if line.locked else line.unit_price,
                                              'purchase_price':line.unit_cost_local,
                                              'od_analytic_acc_id':project_mat,
                                              'od_cost_sheet_id':self.id,
@@ -4179,7 +4179,7 @@ class od_cost_sheet(models.Model):
 
             for line in self.mat_extra_expense_line:
                 mat_expense += line.qty * line.unit_cost_local
-                mat_ext_sale += line.qty * (line.new_unit_price if line.fixed else line.unit_price2)
+                mat_ext_sale += line.qty * (line.new_unit_price if line.locked else line.unit_price2)
             mat_exp_product_id = self.get_product_id_from_param('product_mat_extra_expense')
             material_lines.append((0,0,{
                                     'name':self.get_product_name(mat_exp_product_id),
@@ -4216,11 +4216,11 @@ class od_cost_sheet(models.Model):
                                              'product_id':line.part_no.id,
                                                'name':line.part_no.description_sale or line.part_no.name,
                                               'od_original_qty':line.qty,
-                                              'od_original_price':line.new_unit_price if line.fixed else line.unit_price,
+                                              'od_original_price':line.new_unit_price if line.locked else line.unit_price,
                                               'od_original_unit_cost':line.unit_cost_local,
                                               'purchase_price':line.unit_cost_local,
                                               'product_uom_qty':line.qty,
-                                              'price_unit':line.new_unit_price if line.fixed else line.unit_price,
+                                              'price_unit':line.new_unit_price if line.locked else line.unit_price,
                                                'od_cost_sheet_id':self.id,
                                                 'od_tab_type':'trn',
                                               'od_analytic_acc_id':project_trn,
@@ -4230,7 +4230,7 @@ class od_cost_sheet(models.Model):
                                              }))
             for line in self.trn_customer_training_extra_expense_line:
                 trn_expense += line.qty * line.unit_cost_local
-                trn_extra_sale += line.qty * (line.new_unit_price if line.fixed else line.unit_price2)
+                trn_extra_sale += line.qty * (line.new_unit_price if line.locked else line.unit_price2)
             trn_exp_product_id = self.get_product_id_from_param('product_trn_extra_expense')
             trn_lines.append((0,0,{
                                     'name':self.get_product_name(trn_exp_product_id),
@@ -4278,10 +4278,10 @@ class od_cost_sheet(models.Model):
                                              'product_id':line.part_no.id,
                                              'name':line.part_no.description_sale or line.part_no.name,
                                              'od_original_qty':line.qty,
-                                             'od_original_price':line.new_unit_price if line.fixed else line.unit_price,
+                                             'od_original_price':line.new_unit_price if line.locked else line.unit_price,
                                              'od_original_unit_cost':line.unit_cost_local,
                                              'product_uom_qty':line.qty,
-                                             'price_unit':line.new_unit_price if line.fixed else line.unit_price,
+                                             'price_unit':line.new_unit_price if line.locked else line.unit_price,
                                              'purchase_price':line.unit_cost_local,
                                              'od_analytic_acc_id':project_bim,
                                              'od_cost_sheet_id':self.id,
@@ -4294,7 +4294,7 @@ class od_cost_sheet(models.Model):
             
             
             for oim_line in self.oim_extra_expenses_line:
-                oim_exp += oim_line.qty * (oim_line.new_unit_price if oim_line.fixed else oim_line.unit_price)
+                oim_exp += oim_line.qty * (oim_line.new_unit_price if oim_line.locked else oim_line.unit_price)
                 oim_exp_cost += oim_line.qty * oim_line.unit_cost
             oim_exp_product_id = self.get_product_id_from_param('product_oim_extra_expense')
             b_lines.append((0,0,{'name':self.get_product_name(oim_exp_product_id),
@@ -4315,7 +4315,7 @@ class od_cost_sheet(models.Model):
                                 'od_sup_unit_cost':0,
                                 }))
             for oim_line in self.oim_implimentation_price_line:
-                oim_price += oim_line.qty * (oim_line.new_unit_price if oim_line.fixed else oim_line.unit_price)
+                oim_price += oim_line.qty * (oim_line.new_unit_price if oim_line.locked else oim_line.unit_price)
                 oim_cost += oim_line.qty * oim_line.unit_cost
             oim_product_id = self.get_product_id_from_param('product_oim')
             b_lines.append((0,0,{'name':self.get_product_name(oim_product_id),
@@ -4337,7 +4337,7 @@ class od_cost_sheet(models.Model):
 
 
             for bim_line in self.implimentation_extra_expense_line:
-                bi_ext_exp += bim_line.qty * ( bim_line.new_unit_price if bim_line.fixed else bim_line.unit_price)
+                bi_ext_exp += bim_line.qty * ( bim_line.new_unit_price if bim_line.locked else bim_line.unit_price)
                 bi_ext_exp_cost +=  bim_line.qty * bim_line.unit_cost
             bim_exp_product_id = self.get_product_id_from_param('product_bim_extra_expense')
             b_lines.append((0,0,{
@@ -4358,11 +4358,11 @@ class od_cost_sheet(models.Model):
                             'od_sup_unit_cost':0,
                                 }))
             for bim_line in self.manpower_manual_line:
-                bim_price +=  bim_line.qty * ( bim_line.new_unit_price if bim_line.fixed else  bim_line.unit_price)
+                bim_price +=  bim_line.qty * ( bim_line.new_unit_price if bim_line.locked else  bim_line.unit_price)
                 bim_cost += bim_line.qty * bim_line.unit_cost
             if self.bim_imp_select:
                 for bim_line in self.bim_implementation_code_line:
-                    bim_price +=  bim_line.qty *( bim_line.new_unit_price if bim_line.fixed else  bim_line.unit_price)
+                    bim_price +=  bim_line.qty *( bim_line.new_unit_price if bim_line.locked else  bim_line.unit_price)
                     bim_cost += bim_line.qty * bim_line.unit_cost
             bim_product_id = self.get_product_id_from_param('product_bim')
             b_lines.append((0,0,{'name':self.get_product_name(bim_product_id),
@@ -4403,10 +4403,10 @@ class od_cost_sheet(models.Model):
                                              'product_id':line.part_no.id,
                                              'name':line.part_no.description_sale or line.part_no.name,
                                              'od_original_qty':line.qty,
-                                             'od_original_price':line.new_unit_price if line.fixed else line.unit_price,
+                                             'od_original_price':line.new_unit_price if line.locked else line.unit_price,
                                              'od_original_unit_cost':line.unit_cost_local,
                                              'product_uom_qty':line.qty,
-                                             'price_unit':line.new_unit_price if line.fixed else line.unit_price,
+                                             'price_unit':line.new_unit_price if line.locked else line.unit_price,
                                              'purchase_price':line.unit_cost_local,
                                              'od_analytic_acc_id':project_bmn,
                                              'od_cost_sheet_id':self.id,
@@ -4423,10 +4423,10 @@ class od_cost_sheet(models.Model):
             if not project_bmn:
                 raise Warning("Analytic Account Not Selected In AMC Tab, Which is Enabled Included In Quotation,Please Select It")
             for omn_line in self.omn_out_preventive_maintenance_line:
-                omn_price += omn_line.qty * (omn_line.new_unit_price if omn_line.fixed else omn_line.unit_price)
+                omn_price += omn_line.qty * (omn_line.new_unit_price if omn_line.locked else omn_line.unit_price)
                 omn_cost += omn_line.qty * omn_line.unit_cost
             for omn_line in self.omn_out_remedial_maintenance_line:
-                omn_price += omn_line.qty * (omn_line.new_unit_price if omn_line.fixed else omn_line.unit_price)
+                omn_price += omn_line.qty * (omn_line.new_unit_price if omn_line.locked else omn_line.unit_price)
                 omn_cost += omn_line.qty * omn_line.unit_cost
             
             
@@ -4457,10 +4457,10 @@ class od_cost_sheet(models.Model):
                                              'name':line.part_no.description_sale or line.part_no.name,
                                              'product_uom_qty':line.qty,
                                              'od_original_qty':line.qty,
-                                             'od_original_price':line.new_unit_price if line.fixed else line.unit_price,
+                                             'od_original_price':line.new_unit_price if line.locked else line.unit_price,
                                              'od_original_unit_cost':line.unit_cost_local,
                                              'purchase_price':line.unit_cost_local,
-                                             'price_unit':line.new_unit_price if line.fixed else line.unit_price,
+                                             'price_unit':line.new_unit_price if line.locked else line.unit_price,
                                               'od_cost_sheet_id':self.id,
                                              'od_tab_type':'amc',
                                              'tax_id':[[6,False,[line.tax_id.id]]],
@@ -4469,7 +4469,7 @@ class od_cost_sheet(models.Model):
 
                                              }))
             for line in self.omn_maintenance_extra_expense_line:
-                omn_exp += line.qty * (line.new_unit_price if line.fixed else line.unit_price)
+                omn_exp += line.qty * (line.new_unit_price if line.locked else line.unit_price)
                 omn_exp_cost += line.qty * line.unit_cost
             omn_exp_product_id = self.get_product_id_from_param('product_omn_extra_expense')
             bm_lines.append((0,0,{'name':self.get_product_name(omn_exp_product_id),
@@ -4490,10 +4490,10 @@ class od_cost_sheet(models.Model):
                                 }))
 
             for bmn_line in self.bmn_it_preventive_line:
-                bmn_price += bmn_line.qty * (bmn_line.new_unit_price if bmn_line.fixed else bmn_line.unit_price)
+                bmn_price += bmn_line.qty * (bmn_line.new_unit_price if bmn_line.locked else bmn_line.unit_price)
                 bmn_cost += bmn_line.qty * bmn_line.unit_cost
             for bmn_line in self.bmn_it_remedial_line:
-                bmn_price += bmn_line.qty * (bmn_line.new_unit_price if bmn_line.fixed else bmn_line.unit_price)
+                bmn_price += bmn_line.qty * (bmn_line.new_unit_price if bmn_line.locked else bmn_line.unit_price)
                 bmn_cost += bmn_line.qty * bmn_line.unit_cost
             bmn_product_id = self.get_product_id_from_param('product_bmn')
             bm_lines.append((0,0,{'name':self.get_product_name(bmn_product_id),
@@ -4518,11 +4518,11 @@ class od_cost_sheet(models.Model):
                                              'product_id':line.part_no.id,
                                               'name':line.part_no.description_sale or line.part_no.name,
                                               'od_original_qty':line.qty,
-                                              'od_original_price':(line.new_unit_price if line.fixed else line.unit_price),
+                                              'od_original_price':(line.new_unit_price if line.locked else line.unit_price),
                                               'od_original_unit_cost':line.unit_cost_local,
                                               'purchase_price':line.unit_cost_local,
                                               'product_uom_qty':line.qty,
-                                              'price_unit':(line.new_unit_price if line.fixed else line.unit_price),
+                                              'price_unit':(line.new_unit_price if line.locked else line.unit_price),
                                               'od_cost_sheet_id':self.id,
                                               'od_tab_type':'amc',
                                               'tax_id':[[6,False,[line.tax_id.id]]],
@@ -4530,7 +4530,7 @@ class od_cost_sheet(models.Model):
                                               'od_sup_unit_cost':0,
                                              }))
             for line in self.bmn_beta_it_maintenance_extra_expense_line:
-                bmn_exp += line.qty * (line.new_unit_price if line.fixed else line.unit_price)
+                bmn_exp += line.qty * (line.new_unit_price if line.locked else line.unit_price)
                 bmn_exp_cost += line.qty * line.unit_cost
             bmn_exp_product_id = self.get_product_id_from_param('product_bmn_extra_expense')
             bm_lines.append((0,0,{'name':self.get_product_name(bmn_exp_product_id),
@@ -4573,10 +4573,10 @@ class od_cost_sheet(models.Model):
                                              'product_id':line.part_no.id,
                                              'name':line.part_no.description_sale or line.part_no.name,
                                              'od_original_qty':line.qty,
-                                             'od_original_price':line.new_unit_price if line.fixed else line.unit_price,
+                                             'od_original_price':line.new_unit_price if line.locked else line.unit_price,
                                              'od_original_unit_cost':line.unit_cost_local,
                                              'product_uom_qty':line.qty,
-                                             'price_unit':line.new_unit_price if line.fixed else line.unit_price,
+                                             'price_unit':line.new_unit_price if line.locked else line.unit_price,
                                              'purchase_price':line.unit_cost_local,
                                              'od_analytic_acc_id':project_bmn,
                                              'od_cost_sheet_id':self.id,
@@ -4588,7 +4588,7 @@ class od_cost_sheet(models.Model):
             
             
             for om_res_line in self.om_residenteng_line:
-                om_price +=  om_res_line.qty * (om_res_line.new_unit_price if om_res_line.fixed else om_res_line.unit_price)
+                om_price +=  om_res_line.qty * (om_res_line.new_unit_price if om_res_line.locked else om_res_line.unit_price)
                 om_cost +=  om_res_line.qty * om_res_line.unit_cost
                 print "om_price>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",om_price
                 print "om_cost>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",om_cost
@@ -4616,11 +4616,11 @@ class od_cost_sheet(models.Model):
                                              'product_id':line.part_no.id,
                                               'name':line.part_no.description_sale or line.part_no.name,
                                               'od_original_qty':line.qty,
-                                              'od_original_price':line.new_unit_price if line.fixed else line.unit_price,
+                                              'od_original_price':line.new_unit_price if line.locked else line.unit_price,
                                               'od_original_unit_cost':line.unit_cost_local,
                                               'purchase_price':line.unit_cost_local,
                                               'product_uom_qty':line.qty,
-                                              'price_unit':line.new_unit_price if line.fixed else line.unit_price,
+                                              'price_unit':line.new_unit_price if line.locked else line.unit_price,
                                               'od_cost_sheet_id':self.id,
                                               'od_tab_type':'o_m',
                                               'tax_id':[[6,False,[line.tax_id.id]]],
@@ -4628,7 +4628,7 @@ class od_cost_sheet(models.Model):
                                               'od_sup_unit_cost':0,
                                              }))
             for line in self.om_extra_line:
-                om_exp += line.qty * (line.new_unit_price if line.fixed else line.unit_price)
+                om_exp += line.qty * (line.new_unit_price if line.locked else line.unit_price)
                 om_exp_cost += line.qty * line.unit_cost
             o_m_exp_product_id = self.get_product_id_from_param('product_o_m_extra_expense')
             om_r_lines.append((0,0,{'name':self.get_product_name(o_m_exp_product_id),
