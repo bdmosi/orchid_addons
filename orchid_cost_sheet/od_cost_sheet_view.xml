@@ -917,8 +917,9 @@
 									<field name="qty"/>
 									<field name="sales_currency_id"/>
 									<field name="fixed" invisible="1"/>
+									<field name="locked" invisible="0"/>
 									<field name="unit_price" attrs="{'invisible':[('fixed','=',True)]}"/>
-									<field name="new_unit_price" attrs="{'invisible':[('fixed','=',False)]}"/>
+									<field name="new_unit_price" attrs="{'invisible':[('fixed','=',False)],'readonly':[('locked','=',True)]}"/>
 									<!-- <field name="temp_unit_price" /> -->
 									<field name="line_price" sum="Total"/>
 									<field name="tax_id"/>
