@@ -5526,7 +5526,7 @@ class od_cost_mat_main_pro_line(models.Model):
         
         if self.cost_sheet_id and self.cost_sheet_id.price_fixed and self.cost_sheet_id.state not in ('draft','design_ready','committed','submitted','returned_by_pmo'):
             self.locked = True
-            self.fixed = True
+            
     
     cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet',ondelete='cascade',)
     check = fields.Boolean(string="Check")
@@ -5711,6 +5711,12 @@ class od_cost_mat_optional_item_line(models.Model):
     
     def get_fix(self):
         return self.cost_sheet_id.price_fixed 
+    
+    @api.one
+    def _get_locked_status(self):
+        
+        if self.cost_sheet_id and self.cost_sheet_id.price_fixed and self.cost_sheet_id.state not in ('draft','design_ready','committed','submitted','returned_by_pmo'):
+            self.locked = True
 
     cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet',ondelete='cascade')
     item = fields.Char(string='Item')
@@ -5726,7 +5732,7 @@ class od_cost_mat_optional_item_line(models.Model):
     temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
     new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
     fixed = fields.Boolean(string="Price Fix")
-    locked = fields.Boolean(string="Locked",)
+    locked = fields.Boolean(string="Locked",compute='_get_locked_status')
     
     line_price = fields.Float(string='Total Sale',readonly=True, compute='_compute_line_price',digits=dp.get_precision('Account'))
     group_id = fields.Many2one('od.cost.costgroup.optional.line.two',string='Group',copy=True)
@@ -6096,6 +6102,13 @@ class od_cost_mat_extra_expense_line(models.Model):
             
             vat_value2 = self.line_price2 * vat
             self.vat_value2 = vat_value2
+            
+    
+    @api.one
+    def _get_locked_status(self):
+        
+        if self.cost_sheet_id and self.cost_sheet_id.price_fixed and self.cost_sheet_id.state not in ('draft','design_ready','committed','submitted','returned_by_pmo'):
+            self.locked = True
     
     cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet',ondelete='cascade',)
     item = fields.Char(string='Item')
@@ -6113,7 +6126,7 @@ class od_cost_mat_extra_expense_line(models.Model):
     temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
     new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
     fixed = fields.Boolean(string="Price Fix")
-    locked = fields.Boolean(string="Locked",)
+    locked = fields.Boolean(string="Locked",compute='_get_locked_status')
     
     line_price = fields.Float(string='Line Price',compute='compute_calculation',digits=dp.get_precision('Account'))
     unit_cost_local = fields.Float(string="Unit Cost Local",compute='compute_calculation2',digits=dp.get_precision('Account'))
@@ -6302,6 +6315,12 @@ class od_cost_bim_beta_manpower_manual_line(models.Model):
             self.vat_value = vat_value1
            
     
+    @api.one
+    def _get_locked_status(self):
+        
+        if self.cost_sheet_id and self.cost_sheet_id.price_fixed and self.cost_sheet_id.state not in ('draft','design_ready','committed','submitted','returned_by_pmo'):
+            self.locked = True
+            
     cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet',ondelete='cascade',)
     sheet_id = fields.Many2one('od.cost.sheet',string='Sheet')
     item = fields.Char(string='Item')
@@ -6311,7 +6330,7 @@ class od_cost_bim_beta_manpower_manual_line(models.Model):
     temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
     new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
     fixed = fields.Boolean(string="Price Fix")
-    locked = fields.Boolean(string="Locked",)
+    locked = fields.Boolean(string="Locked",compute='_get_locked_status')
     
     
     line_price = fields.Float(string='Line Price',compute='compute_calc',digits=dp.get_precision('Account'))
@@ -6413,6 +6432,14 @@ class od_cost_bim_beta_implementation_code(models.Model):
             vat_value1 = self.line_price * vat
             self.vat_value = vat_value1
     
+    
+    
+    @api.one
+    def _get_locked_status(self):
+        
+        if self.cost_sheet_id and self.cost_sheet_id.price_fixed and self.cost_sheet_id.state not in ('draft','design_ready','committed','submitted','returned_by_pmo'):
+            self.locked = True
+    
     cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet',ondelete='cascade',)
     item = fields.Char(string='Item')
     imp_code = fields.Many2one('od.implementation',string='Implementation Code')
@@ -6422,7 +6449,7 @@ class od_cost_bim_beta_implementation_code(models.Model):
     temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
     new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
     fixed = fields.Boolean(string="Price Fix")
-    locked = fields.Boolean(string="Locked",)
+    locked = fields.Boolean(string="Locked",compute='_get_locked_status')
     
     line_price = fields.Float('Total Sale',compute='compute_calc',digits=dp.get_precision('Account'))
     unit_cost = fields.Float('Unit Cost',compute='compute_calc',digits=dp.get_precision('Account'))
@@ -6507,6 +6534,13 @@ class od_cost_oim_implimentation_price_line(models.Model):
             self.vat = vat  * 100
             vat_value1 = self.line_price * vat
             self.vat_value = vat_value1
+            
+    
+    @api.one
+    def _get_locked_status(self):
+        
+        if self.cost_sheet_id and self.cost_sheet_id.price_fixed and self.cost_sheet_id.state not in ('draft','design_ready','committed','submitted','returned_by_pmo'):
+            self.locked = True
     
     cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet',ondelete='cascade',)
     item = fields.Char(string='Item')
@@ -6518,7 +6552,7 @@ class od_cost_oim_implimentation_price_line(models.Model):
     temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
     new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
     fixed = fields.Boolean(string="Price Fix")
-    locked = fields.Boolean(string="Locked",)
+    locked = fields.Boolean(string="Locked",compute='_get_locked_status')
     
     line_price = fields.Float(string='Total Sale',compute='compute_calc',digits=dp.get_precision('Account'))
     unit_cost = fields.Float(string='Unit Cost',digits=dp.get_precision('Account'))
@@ -6651,6 +6685,12 @@ class od_cost_om_residenteng_line(models.Model):
             self.vat_value = vat_value1
     
     
+    @api.one
+    def _get_locked_status(self):
+        
+        if self.cost_sheet_id and self.cost_sheet_id.price_fixed and self.cost_sheet_id.state not in ('draft','design_ready','committed','submitted','returned_by_pmo'):
+            self.locked = True
+    
     cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet',ondelete='cascade',)
     item = fields.Char(string='Item')
     od_product_id = fields.Many2one('product.product',string='Job Position',domain=[('type','=','service')])
@@ -6660,7 +6700,7 @@ class od_cost_om_residenteng_line(models.Model):
     temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
     new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
     fixed = fields.Boolean(string="Price Fix")
-    locked = fields.Boolean(string="Locked",)
+    locked = fields.Boolean(string="Locked",compute='_get_locked_status')
     
     line_price = fields.Float(string='Line Price',compute='compute_calc',digits=dp.get_precision('Account'))
     unit_cost = fields.Float(string='Unit Cost',digits=dp.get_precision('Account'))
@@ -6779,6 +6819,11 @@ class od_cost_omn_out_preventive_maintenance_line(models.Model):
             self.vat_value = vat_value1
 
     
+    @api.one
+    def _get_locked_status(self):
+        
+        if self.cost_sheet_id and self.cost_sheet_id.price_fixed and self.cost_sheet_id.state not in ('draft','design_ready','committed','submitted','returned_by_pmo'):
+            self.locked = True
     
     cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet',ondelete='cascade',)
     sheet_id = fields.Many2one('od.cost.sheet',string="Sheet")
@@ -6792,7 +6837,7 @@ class od_cost_omn_out_preventive_maintenance_line(models.Model):
     temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
     new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
     fixed = fields.Boolean(string="Price Fix")
-    locked = fields.Boolean(string="Locked",)
+    locked = fields.Boolean(string="Locked",compute='_get_locked_status')
     
     
     line_price = fields.Float(string='Line Price',compute='compute_calc',digits=dp.get_precision('Account'))
@@ -6896,6 +6941,13 @@ class od_cost_omn_out_remedial_maintenance_line(models.Model):
             self.vat_value = vat_value1
 
     
+    
+    @api.one
+    def _get_locked_status(self):
+        
+        if self.cost_sheet_id and self.cost_sheet_id.price_fixed and self.cost_sheet_id.state not in ('draft','design_ready','committed','submitted','returned_by_pmo'):
+            self.locked = True
+    
     cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet',ondelete='cascade',)
     sheet_id = fields.Many2one('od.cost.sheet',string="Sheet")
     item = fields.Char(string='Item')
@@ -6907,7 +6959,7 @@ class od_cost_omn_out_remedial_maintenance_line(models.Model):
     temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
     new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
     fixed = fields.Boolean(string="Price Fix")
-    locked = fields.Boolean(string="Locked",)
+    locked = fields.Boolean(string="Locked",compute='_get_locked_status')
     
     line_price = fields.Float(string='Line Price',compute='compute_calc',digits=dp.get_precision('Account'))
     unit_cost = fields.Float(string='Unit Cost',digits=dp.get_precision('Account'))
@@ -7039,6 +7091,13 @@ class od_cost_bmn_it_preventive_line(models.Model):
             self.vat = vat  * 100
             vat_value1 = self.line_price * vat
             self.vat_value = vat_value1
+            
+    
+    @api.one
+    def _get_locked_status(self):
+        
+        if self.cost_sheet_id and self.cost_sheet_id.price_fixed and self.cost_sheet_id.state not in ('draft','design_ready','committed','submitted','returned_by_pmo'):
+            self.locked = True
 
     cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet',ondelete='cascade',)
     sheet_id = fields.Many2one('od.cost.sheet',string="sheet")
@@ -7054,7 +7113,7 @@ class od_cost_bmn_it_preventive_line(models.Model):
     temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
     new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
     fixed = fields.Boolean(string="Price Fix")
-    locked = fields.Boolean(string="Locked",)
+    locked = fields.Boolean(string="Locked",compute='_get_locked_status')
     
     
     line_price = fields.Float(string='Line Price',compute='compute_calc',digits=dp.get_precision('Account'))
@@ -7154,6 +7213,13 @@ class od_cost_bmn_it_remedial_line(models.Model):
             vat_value1 = self.line_price * vat
             self.vat_value = vat_value1
     
+    
+    @api.one
+    def _get_locked_status(self):
+        
+        if self.cost_sheet_id and self.cost_sheet_id.price_fixed and self.cost_sheet_id.state not in ('draft','design_ready','committed','submitted','returned_by_pmo'):
+            self.locked = True
+    
     cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet',ondelete='cascade',)
     sheet_id = fields.Many2one('od.cost.sheet',string="sheet")
     item = fields.Char(string='Item')
@@ -7164,7 +7230,7 @@ class od_cost_bmn_it_remedial_line(models.Model):
     temp_unit_price = fields.Float(string="Temp Unit Price",digits=dp.get_precision('Account'))
     new_unit_price = fields.Float(string="Fixed Unit Sale",digits=dp.get_precision('Account'))
     fixed = fields.Boolean(string="Price Fix")
-    locked = fields.Boolean(string="Locked",)
+    locked = fields.Boolean(string="Locked",compute='_get_locked_status')
     
     line_price = fields.Float(string='Line Price',compute='compute_calc',digits=dp.get_precision('Account'))
     unit_cost = fields.Float(string='Unit Cost',digits=dp.get_precision('Account'))
