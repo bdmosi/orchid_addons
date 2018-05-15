@@ -5526,6 +5526,7 @@ class od_cost_mat_main_pro_line(models.Model):
         
         if self.cost_sheet_id and self.cost_sheet_id.price_fixed and self.cost_sheet_id.state not in ('draft','design_ready','committed','submitted','returned_by_pmo'):
             self.locked = True
+            self.fixed = True
     
     cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet',ondelete='cascade',)
     check = fields.Boolean(string="Check")
