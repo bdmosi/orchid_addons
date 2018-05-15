@@ -1641,7 +1641,7 @@ class od_cost_sheet(models.Model):
 
     @api.one
     def btn_waiting_po(self):
-        self.update_cost_sheet()
+#         self.update_cost_sheet()
         self.date_log_history_line = [{'name':'Waiting PO','date':str(datetime.now())}]
         self.state = 'waiting_po'
 
@@ -1652,7 +1652,7 @@ class od_cost_sheet(models.Model):
         self.state = 'handover'
     @api.one
     def btn_process(self):
-        self.update_cost_sheet()
+#         self.update_cost_sheet()
         self.check_rev_exist()
         self.processed_date = str(datetime.now())
         self.check_process_min_docs()
@@ -1669,7 +1669,7 @@ class od_cost_sheet(models.Model):
         self.state = 'change_processed'
     @api.one
     def btn_process_waiting_po(self):
-        self.update_cost_sheet()
+#         self.update_cost_sheet()
         self.check_rev_exist()
         self.check_process_min_docs()
         self.od_send_mail('cst_sheet_process_mail')
