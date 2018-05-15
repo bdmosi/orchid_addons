@@ -1709,6 +1709,7 @@ class od_cost_sheet(models.Model):
     def btn_approved(self):
 #         self.od_send_mail('cst_sheet_approve_mail')
 # this mail wiil be sent when assign an accountant
+        self.od_send_mail('cst_sheet_approve_mail')
         appr_date =str(datetime.now())
         if not self.approved_date:
             self.approved_date =appr_date
@@ -1721,6 +1722,7 @@ class od_cost_sheet(models.Model):
         # self.status = 'baseline'
         self.generate_sale_order()
         self.update_opp_stage()
+        
         # self.state = 'approved'
 
     @api.one
