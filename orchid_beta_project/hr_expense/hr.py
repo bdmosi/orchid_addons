@@ -1348,7 +1348,7 @@ class hr_employee(models.Model):
             #cost control score
             if proj.state == 'close':
                 gp_value = proj.od_project_amend_profit 
-                actual_gp = proj.od_project_cost
+                actual_gp = proj.od_project_profit
                 tot_gp += gp_value
                 cost_control_score = proj.cost_control_score 
                 cost_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':cost_control_score,'form_wt':20.0,'actual_gp':actual_gp})
