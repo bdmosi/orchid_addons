@@ -419,7 +419,7 @@
 									<tree editable="bottom" create="false" delete="false">
 										<field name="name" readonly="1"/>
 										<field name="weight" readonly="1"/>
-										<field name="score" readonly="1" invisible="1"/>
+										<field name="score" readonly="1" />
 										<field name="final_score" readonly="1"/>
 									</tree>
 								</field>
@@ -452,7 +452,7 @@
 									<tree editable="bottom" create="false" delete="false">
 										<field name="name" readonly="1"/>
 										<field name="weight" readonly="1"/>
-										<field name="score" readonly="1"/>
+										<field name="score" readonly="1" invisible="1"/>
 										<field name="final_score" readonly="1"/>
 									</tree>
 								</field>
