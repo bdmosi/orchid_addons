@@ -1347,10 +1347,11 @@ class hr_employee(models.Model):
                 day_score_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':dayscore,'cost_sheet_id':proj.od_cost_sheet_id.id,'form_wt':10.0})
             #cost control score
             if proj.state == 'close':
-                gp_value = proj.od_amended_profit 
+                gp_value = proj.od_project_amend_profit 
+                actual_gp = proj.od_project_cost
                 tot_gp += gp_value
                 cost_control_score = proj.cost_control_score 
-                cost_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':cost_control_score,'form_wt':20.0})
+                cost_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':cost_control_score,'form_wt':20.0,'actual_gp':actual_gp})
             #invoice Schedule Score
 #             inv_sch_dates = [a.date for a in proj.od_project_invoice_schedule_line]
 #             check = self.check_inv_sch_dates(inv_sch_dates,aud_date_start,aud_date_end)
@@ -1370,12 +1371,12 @@ class hr_employee(models.Model):
                 closed_date = proj.od_project_closing 
                 if closed_date <= project_planned_end:
                     sc_scr =30.0
-                    gp_value = proj.od_amended_profit 
+                    gp_value = proj.od_project_amend_profit 
                     sch_gp += gp_value
                     schedule_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':sc_scr,'form_wt':30.0})
                 else:
                     sc_scr =0.0
-                    gp_value = proj.od_amended_profit 
+                    gp_value = proj.od_project_amend_profit 
                     sch_gp += gp_value
                     schedule_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':sc_scr,'form_wt':30.0})
                     

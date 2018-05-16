@@ -224,6 +224,7 @@
 									<tree editable="bottom" create="false" delete="false">
 										<field name="analytic_id" readonly="1"/>
 										<button name="btn_open" type="object" icon="STOCK_FIND" string="Open" />
+										<field name="actual_gp" readonly="1" sum="Total"/>
 										<field name="score" readonly="1" />
 										<field name="form_wt" readonly="1" />
 										<field name="gp_value" readonly="1" sum="Total"/>
