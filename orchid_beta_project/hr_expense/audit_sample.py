@@ -370,6 +370,7 @@ class cost_control_line(models.Model):
     analytic_id = fields.Many2one('account.analytic.account',string="Analytic/Project")
     score = fields.Float("Score From Project")
     actual_gp = fields.Float(string="Actual Gp")
+    original_gp = fields.Float(string="Original Gp")
     gp_value = fields.Float(string="Amended Gp (For Weight Calculation)")
     gp_value_percent = fields.Float("%GP Value")
     weight = fields.Float(string="Weight")
