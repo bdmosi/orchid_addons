@@ -1449,7 +1449,7 @@
 											<field name="bim_log_price"/>
 										</td>
 										<td>
-											<field name="bim_log_price_fixed" attrs="{'readonly':[('price_fixed','=',False)]}"/>
+											<field name="bim_log_price_fixed" readonly="1"/>
 										</td>
 										<td>
 											<field name="bim_tax_id"/>
