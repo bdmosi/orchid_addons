@@ -1349,9 +1349,10 @@ class hr_employee(models.Model):
             if proj.state == 'close':
                 gp_value = proj.od_project_amend_profit 
                 actual_gp = proj.od_project_profit
+                original_gp = proj.od_project_original_profit
                 tot_gp += gp_value
                 cost_control_score = proj.cost_control_score 
-                cost_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':cost_control_score,'form_wt':20.0,'actual_gp':actual_gp})
+                cost_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':cost_control_score,'form_wt':20.0,'actual_gp':actual_gp,'original_gp':original_gp})
             #invoice Schedule Score
 #             inv_sch_dates = [a.date for a in proj.od_project_invoice_schedule_line]
 #             check = self.check_inv_sch_dates(inv_sch_dates,aud_date_start,aud_date_end)
