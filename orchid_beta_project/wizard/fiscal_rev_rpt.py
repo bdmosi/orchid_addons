@@ -128,33 +128,98 @@ class fiscal_rpt_wiz(models.TransientModel):
             contract_start_date = data.date_start
             contract_end_date = data.date 
             closing_date = data.od_project_closing
-            result.append((0,0,{
-                                'wiz_id':wiz_id,
-                                'cost_sheet_id':od_cost_sheet_id, 
-                                'sam_id':sam_id ,
-                                'partner_id':partner_id,
-                                'company_id':company_id,
-                                'branch_id':branch_id,
-                                'pm_id':pm_id,
-                                'project_id':project_id,
-                                'original_sale':data.od_project_original_sale,
-                                'original_cost':data.od_project_original_cost,
-                                'original_profit':data.od_project_original_profit,
-                                'amended_sale':data.od_project_amend_sale,
-                                'amended_cost':data.od_project_amend_cost,
-                                'amended_profit':data.od_project_amend_profit,
-                                'actual_sale':data.od_project_sale,
-                                'actual_cost':data.od_project_cost,
-                                'actual_profit':data.od_project_profit,
-                                'status':data.od_project_status,
-                                'date_start':data.od_project_start,
-                                'date_end':data.od_project_end, 
-                                'po_status':po_status,
-                                'contract_status':contract_status,
-                                'contract_start_date':contract_start_date,
-                                'contract_end_date':contract_end_date,
-                                'closing_date':closing_date
-                                }))
+            
+            project_type = data.od_type_of_project 
+            if project_type == 'amc':
+                result.append((0,0,{
+                                    'wiz_id':wiz_id,
+                                    'cost_sheet_id':od_cost_sheet_id, 
+                                    'sam_id':sam_id ,
+                                    'partner_id':partner_id,
+                                    'company_id':company_id,
+                                    'branch_id':branch_id,
+                                    'pm_id':pm_id,
+                                    'project_id':project_id,
+                                    'original_sale':data.od_amc_original_sale,
+                                    'original_cost':data.od_amc_original_cost,
+                                    'original_profit':data.od_amc_original_profit,
+                                    'amended_sale':data.od_amc_amend_sale,
+                                    'amended_cost':data.od_amc_amend_cost,
+                                    'amended_profit':data.od_amc_amend_profit,
+                                    'actual_sale':data.od_amc_sale,
+                                    'actual_cost':data.od_amc_cost,
+                                    'actual_profit':data.od_amc_profit,
+                                    'status':data.od_amc_status,
+                                    'date_start':data.od_amc_start,
+                                    'date_end':data.od_amc_end, 
+                                    'po_status':po_status,
+                                    'contract_status':contract_status,
+                                    'contract_start_date':contract_start_date,
+                                    'contract_end_date':contract_end_date,
+                                    'closing_date':closing_date,
+                                    'project_type':'amc'
+                                    }))
+            
+            else:
+            
+                result.append((0,0,{
+                                    'wiz_id':wiz_id,
+                                    'cost_sheet_id':od_cost_sheet_id, 
+                                    'sam_id':sam_id ,
+                                    'partner_id':partner_id,
+                                    'company_id':company_id,
+                                    'branch_id':branch_id,
+                                    'pm_id':pm_id,
+                                    'project_id':project_id,
+                                    'original_sale':data.od_project_original_sale,
+                                    'original_cost':data.od_project_original_cost,
+                                    'original_profit':data.od_project_original_profit,
+                                    'amended_sale':data.od_project_amend_sale,
+                                    'amended_cost':data.od_project_amend_cost,
+                                    'amended_profit':data.od_project_amend_profit,
+                                    'actual_sale':data.od_project_sale,
+                                    'actual_cost':data.od_project_cost,
+                                    'actual_profit':data.od_project_profit,
+                                    'status':data.od_project_status,
+                                    'date_start':data.od_project_start,
+                                    'date_end':data.od_project_end, 
+                                    'po_status':po_status,
+                                    'contract_status':contract_status,
+                                    'contract_start_date':contract_start_date,
+                                    'contract_end_date':contract_end_date,
+                                    'closing_date':closing_date,
+                                    'project_type':'project'
+                                    }))
+                if data.od_amc_amend_sale:
+                    result.append((0,0,{
+                                    'wiz_id':wiz_id,
+                                    'cost_sheet_id':od_cost_sheet_id, 
+                                    'sam_id':sam_id ,
+                                    'partner_id':partner_id,
+                                    'company_id':company_id,
+                                    'branch_id':branch_id,
+                                    'pm_id':pm_id,
+                                    'project_id':project_id,
+                                    'original_sale':data.od_amc_original_sale,
+                                    'original_cost':data.od_amc_original_cost,
+                                    'original_profit':data.od_amc_original_profit,
+                                    'amended_sale':data.od_amc_amend_sale,
+                                    'amended_cost':data.od_amc_amend_cost,
+                                    'amended_profit':data.od_amc_amend_profit,
+                                    'actual_sale':data.od_amc_sale,
+                                    'actual_cost':data.od_amc_cost,
+                                    'actual_profit':data.od_amc_profit,
+                                    'status':data.od_amc_status,
+                                    'date_start':data.od_amc_start,
+                                    'date_end':data.od_amc_end, 
+                                    'po_status':po_status,
+                                    'contract_status':contract_status,
+                                    'contract_start_date':contract_start_date,
+                                    'contract_end_date':contract_end_date,
+                                    'closing_date':closing_date,
+                                    'project_type':'amc'
+                                    }))
+                    
                         
         self.wiz_line.unlink()
         self.write({'wiz_line':result})
@@ -198,7 +263,7 @@ class fiscal_rev_rpt_data(models.TransientModel):
     contract_status = fields.Selection([('template','Template'),('draft','New'),('open','In Progress'),('pending','To Renew'),('close','Closed'),('cancelled','Cancelled')],string="Contract Status")
     contract_start_date =  fields.Date(string="Contract Start Date")
     contract_end_date =  fields.Date(string="Contract End Date")
-    
+    status = fields.Selection([('amc','AMC'),('project','Project')],string="Type")
     status = fields.Selection([('active','Active'),('inactive','Inactive'),('close','Closed')],string="Status")
     po_status = fields.Selection([('waiting_po','Waiting P.O'),('special_approval','Special Approval From GM'),('available','Available'),('credit','Customer Credit')],'Customer PO Status')
 
