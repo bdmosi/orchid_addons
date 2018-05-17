@@ -102,15 +102,11 @@
 			    <field name="status" />
 			    <field name="closing_date" />
 			     <field name="po_status" />  
-				<field name="original_sale" sum="Total" />
-				<field name="original_cost" sum="Total" invisible="1"/>
-				<field name="original_profit" sum="Total" />
+				<field name="project_type" />  
 				
 				<field name="amended_sale" sum="Total" />
 				<field name="amended_cost" sum="Total" invisible="1"/>
 				<field name="amended_profit" sum="Total" />
-				
-				<field name="actual_sale" sum="Total" />
 				<field name="actual_cost" sum="Total" invisible="1"/>
 				<field name="actual_profit" sum="Total" />
 				
@@ -136,6 +132,7 @@
                        
                         <filter string="Company" domain="[]" context="{'group_by':'company_id'}"/>
                         <filter string="Branch" domain="[]" context="{'group_by':'branch_id'}"/>
+                        <filter string="Type" domain="[]" context="{'group_by':'project_type'}"/>
                         <filter string="Status" domain="[]" context="{'group_by':'status'}"/>
                         <filter string="Customer" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Cost Sheet" domain="[]" context="{'group_by':'cost_sheet_id'}"/>

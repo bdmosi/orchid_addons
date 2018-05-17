@@ -263,7 +263,7 @@ class fiscal_rev_rpt_data(models.TransientModel):
     contract_status = fields.Selection([('template','Template'),('draft','New'),('open','In Progress'),('pending','To Renew'),('close','Closed'),('cancelled','Cancelled')],string="Contract Status")
     contract_start_date =  fields.Date(string="Contract Start Date")
     contract_end_date =  fields.Date(string="Contract End Date")
-    status = fields.Selection([('amc','AMC'),('project','Project')],string="Type")
+    project_type = fields.Selection([('amc','AMC'),('project','Project')],string="Type")
     status = fields.Selection([('active','Active'),('inactive','Inactive'),('close','Closed')],string="Status")
     po_status = fields.Selection([('waiting_po','Waiting P.O'),('special_approval','Special Approval From GM'),('available','Available'),('credit','Customer Credit')],'Customer PO Status')
 
