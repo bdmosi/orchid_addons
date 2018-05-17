@@ -1529,13 +1529,32 @@ class od_cost_sheet(models.Model):
         self.refresh()
         return self.print_cost_sheet()
 
+    def update_opp_stage_from_cm_pip(self):
+        if self.status =='active':
+            pipe_stage_id =12
+            self.lead_id.write({'stage_id':pipe_stage_id})
+    
+    
     @api.multi 
     def btn_commit(self):
+        if not self.status =='active':
+            raise Warning("Only Active Costsheet Can be Committed")
         self.update_cost_sheet()
+        
         date_now =str(datetime.now())
         self.date_log_history_line = [{'name':'Commit','date':date_now}]
         self.update_opp_stage_committed()
         self.write({'state':'commit'})
+        
+    @api.multi 
+    def btn_return_pipeline(self):
+        
+        self.update_cost_sheet()
+        
+        date_now =str(datetime.now())
+        self.date_log_history_line = [{'name':'Return to Pipeline','date':date_now}]
+        self.update_opp_stage_from_cm_pip()
+        self.write({'state':'submitted'})
         
     
     @api.multi
