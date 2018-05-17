@@ -1359,9 +1359,10 @@ class hr_employee(models.Model):
             check2,inv_score = self.get_inv_sch_score(proj,aud_date_start,aud_date_end)
             if check2:
                 invoice_sc_score = inv_score
-                sale_val = proj.od_project_sale
-                tot_sal_inv  += sale_val
-                invoice_schedule_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':invoice_sc_score,'form_wt':30.0})
+#                 sale_val = proj.od_project_sale
+                planned_inv_amt = sum([px.amount for px in proj.od_project_invoice_schedule_line])
+                tot_sal_inv  += planned_inv_amt
+                invoice_schedule_vals.append({'analytic_id':proj.id,'sale_value':planned_inv_amt,'score':invoice_sc_score,'form_wt':30.0})
             if proj.start_project_comp:
                 compliance_score = proj.compliance_score
                 sale_val = proj.od_project_sale

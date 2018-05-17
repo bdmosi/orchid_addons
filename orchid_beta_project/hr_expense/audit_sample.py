@@ -344,8 +344,8 @@ class invoice_schedule_line(models.Model):
     sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
     analytic_id = fields.Many2one('account.analytic.account',string="Analytic/Project")
     score = fields.Float("Score From Project")
-    sale_value = fields.Float(string="Sale Value")
-    sale_value_percent = fields.Float("%Sale Value")
+    sale_value = fields.Float(string="Invoice Value")
+    sale_value_percent = fields.Float("%Invoice Value")
     weight = fields.Float(string="Weight")
     form_wt = fields.Float(string="Form Weight")
     
