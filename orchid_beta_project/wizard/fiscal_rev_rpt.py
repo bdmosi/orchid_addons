@@ -190,7 +190,7 @@ class fiscal_rpt_wiz(models.TransientModel):
                                     'closing_date':closing_date,
                                     'project_type':'project'
                                     }))
-                if data.od_amc_amend_sale:
+                if data.od_amc_amend_sale or data.od_amc_profit:
                     result.append((0,0,{
                                     'wiz_id':wiz_id,
                                     'cost_sheet_id':od_cost_sheet_id, 
