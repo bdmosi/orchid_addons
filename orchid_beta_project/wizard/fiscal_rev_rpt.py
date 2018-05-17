@@ -77,7 +77,7 @@ class fiscal_rpt_wiz(models.TransientModel):
             domain += [('partner_id','in',partner_ids)]
         
         if prj_states:
-            domain+=[('od_project_status','in',prj_states)]
+            domain+=['|',('od_project_status','in',prj_states),('od_amc_status','in',prj_states)]
         if branch_ids:
             domain += [('od_branch_id','in',branch_ids)]
         if cost_centre_ids:
