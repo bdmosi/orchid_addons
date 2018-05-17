@@ -96,15 +96,15 @@ class fiscal_rpt_wiz(models.TransientModel):
             
         
         if date_start_from:
-            domain += [('od_project_start','>=',date_start_from)]
+            domain += [('date_start','>=',date_start_from)]
         if date_start_to:
-            domain += [('od_project_start','<=',date_start_to)]
+            domain += [('date_start','<=',date_start_to)]
         
         if date_end_from:
-            domain += [('od_project_end','>=',date_end_from)]
+            domain += [('date','>=',date_end_from)]
         
         if date_end_to:
-            domain += [('od_project_end','<=',date_end_to)]
+            domain += [('date','<=',date_end_to)]
             
         if closing_date_from:
             domain += [('od_project_closing','>=',closing_date_from)]
