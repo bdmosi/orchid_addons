@@ -753,7 +753,7 @@ class account_analytic_account(models.Model):
             for line in sale_order.order_line:
                 actual_sale += line.price_subtotal
                 
-                if line.product_id.id in amc_products:
+                if (line.product_id.id in amc_products) or (line.od_tab_type == 'amc'):
                     amc_sale += line.price_subtotal
                     amc_original_sale += line.od_original_line_price
                     amc_original_cost += line.od_original_line_cost
