@@ -88,28 +88,19 @@
 				<field name="partner_id" />
 				<field name="project_id" />
 				<button name="btn_open_project" type="object" icon="STOCK_FIND" string="Open" />
-				
-				<field name="pm_id" />
-				<field name="sam_id" />
 				<field name="cost_sheet_id" />
 				<button name="btn_open_cost" type="object" icon="STOCK_FIND" string="Open" />
-				<field name="branch_id" />
-				<field name="date_start" />
-				<field name="date_end" />
-			    <field name="status" />
+			    
 			    <field name="closing_date" />
-			     <field name="po_status" />  
-				<field name="project_type" />  
+			     
 				
-				<field name="amended_sale" sum="Total" />
-				<field name="amended_cost" sum="Total" invisible="1"/>
-				<field name="amended_profit" sum="Total" />
-				<field name="actual_cost" sum="Total" invisible="1"/>
-				<field name="actual_profit" sum="Total" />
+				<field name="amended_sale" string="Sale" sum="Total" />
+				<field name="amended_profit" string="Planned GP" sum="Total" />
+				<field name="actual_profit" string="Actual GP" sum="Total" />
 				
-				 <field name="contract_status" /> 
-				 <field name="contract_start_date" /> 
-				 <field name="contract_end_date" /> 
+				 <field name="date_end" /> 
+				 <field name="closing_date" /> 
+				
 				
 			</tree>
 		</field>
