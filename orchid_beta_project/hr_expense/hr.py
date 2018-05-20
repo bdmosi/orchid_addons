@@ -357,8 +357,7 @@ class hr_employee(models.Model):
             else:
                 result = result *9 
                 result = result - hours
-        if days-lv_days <0:
-            result =1.0
+        
         if not result:
             result =1.0
         
