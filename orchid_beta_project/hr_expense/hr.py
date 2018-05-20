@@ -323,14 +323,43 @@ class hr_employee(models.Model):
         todate_str = datetime.strftime(todate,DEFAULT_SERVER_DATE_FORMAT)
         lv_days,hours = self.get_no_of_leave(employee_id,aud_date_start,todate_str)
         print "leave>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", lv_days,hours
-        result = days 
-        result = result *9
+        result = days
+        #ramadan month less utilization almost 6 hours
+        if aud_date_start =='2018-05-01':
+            if days >12:
+                sdays = days-12
+                if self.company_id.id ==6:
+                    print "company id in get availabel time function>>>>>>>>>>>>>>>>>>",self.company_id.id
+                    sdays_hrs = sdays *6
+                    rm_hrs = 12*9
+                    result = sdays_hrs + rm_hrs 
+                else:
+                    sdays_hrs = sdays *6.5
+                    rm_hrs = 12*9
+                    result = sdays_hrs + rm_hrs 
+        else: 
+            result = result *9
         if (days -lv_days)> lv_days:
             result = days -lv_days 
-            result = result *9 
-            result = result - hours
+            if aud_date_start =='2018-05-01':
+                if result >12:
+                    sdays = result-12
+                    if self.company_id.id ==6:
+                        print "company id in get availabel time function>>>>>>>>>>>>>>>>>>",self.company_id.id
+                        sdays_hrs = sdays *6
+                        rm_hrs = 12*9
+                        result = sdays_hrs + rm_hrs 
+                    else:
+                        sdays_hrs = sdays *6.5
+                        rm_hrs = 12*9
+                        result = sdays_hrs + rm_hrs 
+                        
+            else:
+                result = result *9 
+                result = result - hours
         if not result:
             result =1.0
+        
         return result
     
     def get_cancelled_activities(self,user_id,aud_date_start,aud_date_end,engineer_task_count):
