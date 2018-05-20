@@ -23,17 +23,17 @@
             <field name="arch" type="xml">
                 <form string="Report">
                     <group>
-                      <group>
-                        	<field name="date_start_from" />
-                        	<field name="date_start_to" />
-                        
-                        
-                        </group>
+                 
                         
                         <group>
                         	<field name="date_end_from" />
                         	<field name="date_end_to" />
                         </group>
+                        <group>
+                        	<field name="closing_date_from"/>
+                        	<field name="closing_date_to"/>
+                        </group>
+                        
                        </group>
                         <group>
                            <field name="branch_ids" widget="many2many_tags"/>
@@ -65,10 +65,7 @@
                         <field name="closed"/>
                         <field name="inactive"/>
                         </group>
-                        <group>
-                        	<field name="closing_date_from"/>
-                        	<field name="closing_date_to"/>
-                        </group>
+                        
                       </group>
                        
                       
@@ -113,32 +110,18 @@
 				<field name="partner_id" />
 				<field name="project_id" />
 				<button name="btn_open_project" type="object" icon="STOCK_FIND" string="Open" />
-				
-				<field name="pm_id" />
-				<field name="sam_id" />
 				<field name="cost_sheet_id" />
 				<button name="btn_open_cost" type="object" icon="STOCK_FIND" string="Open" />
-				<field name="branch_id" />
-				<field name="date_start" />
-				<field name="date_end" />
-			    <field name="status" /> 
-			    <field name="closing_date" />
-			     <field name="po_status" /> 
-				<field name="original_sale" sum="Total" />
-				<field name="original_cost" sum="Total" invisible="1"/>
-				<field name="original_profit" sum="Total" />
+			    
+			 
+			     
 				
-				<field name="amended_sale" sum="Total" />
-				<field name="amended_cost" sum="Total" invisible="1"/>
-				<field name="amended_profit" sum="Total" />
+				<field name="amended_sale" string="Sale" sum="Total" />
+				<field name="amended_profit" string="Planned GP" sum="Total" />
+				<field name="actual_profit" string="Actual GP" sum="Total" />
 				
-				<field name="actual_sale" sum="Total" />
-				<field name="actual_cost" sum="Total" invisible="1"/>
-				<field name="actual_profit" sum="Total" />
-				
-				 <field name="contract_status" /> 
-				 <field name="contract_start_date" /> 
-				 <field name="contract_end_date" /> 
+				 <field name="date_end" string="Planned Closing Date"/> 
+				 <field name="closing_date" />
 			</tree>
 		</field>
 	</record>
