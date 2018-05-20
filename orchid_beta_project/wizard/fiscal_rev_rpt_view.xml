@@ -91,14 +91,14 @@
 				<field name="cost_sheet_id" />
 				<button name="btn_open_cost" type="object" icon="STOCK_FIND" string="Open" />
 			    
-			    <field name="closing_date" />
+			 
 			     
 				
 				<field name="amended_sale" string="Sale" sum="Total" />
 				<field name="amended_profit" string="Planned GP" sum="Total" />
 				<field name="actual_profit" string="Actual GP" sum="Total" />
 				
-				 <field name="date_end" /> 
+				 <field name="date_end" string="Planned Closing Date"/> 
 				 <field name="closing_date" /> 
 				
 				
