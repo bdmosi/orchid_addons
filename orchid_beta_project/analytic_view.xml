@@ -171,7 +171,7 @@
     					<td><field name="od_project_profit"/></td>
     					<td><field name="od_project_status" readonly="1"/></td>
     					<td><button name="btn_activate_project" string="Activate" class="oe_highlight" type="object"  attrs="{'invisible':[('od_project_status','!=','inactive')]}"/></td>
-    					<td><field name="od_project_closing"/></td>
+    					<td><field name="od_project_closing" readonly="1"/></td>
     					 <td><button name="btn_close_project" string="Close" class="oe_highlight" type="object"  attrs="{'invisible':[('od_project_status','!=','active')]}"/></td>
     					
     				</tr>
@@ -192,7 +192,7 @@
     					<td><field name="od_amc_profit"/></td>
     					<td><field name="od_amc_status" readonly="1"/></td>
     					<td><button name="btn_activate_amc" string="Activate" class="oe_highlight" type="object"  attrs="{'invisible':[('od_amc_status','!=','inactive')]}"/></td>
-    					<td><field name="od_amc_closing"/></td>
+    					<td><field name="od_amc_closing" readonly="1"/></td>
     					 <td><button name="btn_close_amc" string="Close" class="oe_highlight" type="object"  attrs="{'invisible':[('od_amc_status','!=','active')]}"/></td>
     					
     				</tr>
