@@ -1602,6 +1602,7 @@ class od_cost_sheet(models.Model):
         price_fixed = self.price_fixed 
         
         if not price_fixed:
+            self.bim_log_price_fixed = self.bim_log_price
             self.price_fix_line(self.mat_main_pro_line)
             self.price_fix_line(self.mat_extra_expense_line,2)
             self.price_fix_line(self.mat_optional_item_line )
