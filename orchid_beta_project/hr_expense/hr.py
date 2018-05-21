@@ -1845,6 +1845,13 @@ class hr_employee(models.Model):
         total_paid =0.0
         timesheet_pool = self.env['hr.analytic.timesheet']
         for project in open_project_ids:
+            project_type = project.od_type_of_project
+            if project_type == 'amc':
+                if project.od_amc_status != 'active':
+                    continue
+            else:
+                if project.od_project_status != 'active':
+                    continue
             sale = sale_pool.search([('project_id','=',project.id),('state','!=','cancel')],limit=1)
             amount_total = sale.amount_total or 0.0
             discount = abs(sale.od_discount) or 0.0
