@@ -11,7 +11,7 @@ from openerp.tools import amount_to_text_en
 from . import amount_to_ar
 from pprint import pprint
 from openerp import tools
-
+from itertools import groupby
 
 
 
@@ -21,6 +21,22 @@ from openerp import tools
 
 class account_invoice(models.Model):
     _inherit = "account.invoice"
+    
+    
+    
+    def get_gov_section(self):
+        res = []
+        for line in self.gov_alternate_line:
+            res.append({'name':line.name,'section':line.section2 or 'Uncategorized','quantity':line.quantity,'total_bf_tax':line.total_bf_tax,'tax_rate':line.tax_rate,'tax_amount':line.tax_amount,'total_amount':line.total_amount})
+        result = self.od_categorize(res)
+        print "result>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",result
+        return res
+    def od_categorize(self,res):
+        result =[]
+        for k,v in groupby(res,key=lambda x:x['section']):
+            print k, list(v) 
+            result.append({'categ':k,'data':list(v)})
+        return result
     @api.multi    
     def amount_to_text_en(self, amount, currency):
         convert_amount_in_words = amount_to_text_en.amount_to_text(amount, lang='en', currency=currency)        
