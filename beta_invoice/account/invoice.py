@@ -27,7 +27,7 @@ class account_invoice(models.Model):
     def get_gov_section(self):
         res = []
         for line in self.gov_alternate_line:
-            res.append({'name':line.name,'section':line.section2 or 'Uncategorized','quantity':line.quantity,'unit_price':line.price_unit,'total_bf_tax':line.total_bf_tax,'tax_rate':line.tax_rate,'tax_amount':line.tax_amount,'total_amount':line.total_amount})
+            res.append({'name':line.name,'section':line.section2 or 'Uncategorized','quantity':line.quantity,'unit_price':line.unit_price,'total_bf_tax':line.total_bf_tax,'tax_rate':line.tax_rate,'tax_amount':line.tax_amount,'total_amount':line.total_amount})
         result = self.od_categorize(res)
         print "result>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",result
         return result
