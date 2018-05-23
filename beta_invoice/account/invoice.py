@@ -33,9 +33,12 @@ class account_invoice(models.Model):
         return result
     def od_categorize(self,res):
         result =[]
-        for k,v in groupby(res,key=lambda x:x['section']):
-            print k, list(v) 
-            result.append({'categ':k,'data':list(v)})
+        for k,vals in groupby(res,key=lambda x:x['section']):
+            data_list =[]
+            for val in vals:
+                print "val>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",val
+                data_list.append(val)
+            result.append({'categ':k,'data':data_list})
         print "resut here>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",result
         return result
     @api.multi    
