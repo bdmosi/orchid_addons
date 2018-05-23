@@ -330,8 +330,8 @@ class account_analytic_account(models.Model):
         if amended_price:
             amended_profit_perc = (amended_profit/amended_price) * 100
         
-        bim_cost = self.od_cost_sheet_id and self.od_cost_sheet_id.a_bim_cost 
-        bmn_cost  =self.od_cost_sheet_id and self.od_cost_sheet_id.a_bmn_cost 
+        bim_cost = self.od_cost_sheet_id and self.od_cost_sheet_id.a_bim_cost or 0.0
+        bmn_cost  =self.od_cost_sheet_id and self.od_cost_sheet_id.a_bmn_cost or 0.0
         
         self.od_original_sale_price = original_price
         self.od_original_sale_cost = original_cost
@@ -768,8 +768,8 @@ class account_analytic_account(models.Model):
                     project_original_cost += line.od_original_line_cost
                     project_amend_cost += line.od_amended_line_cost
         
-        bim_cost = self.od_cost_sheet_id and self.od_cost_sheet_id.a_bim_cost 
-        bmn_cost  =self.od_cost_sheet_id and self.od_cost_sheet_id.a_bmn_cost 
+        bim_cost = self.od_cost_sheet_id and self.od_cost_sheet_id.a_bim_cost or 0.0
+        bmn_cost  =self.od_cost_sheet_id and self.od_cost_sheet_id.a_bmn_cost or 0.0
         self.od_actual_sale = actual_sale
         self.od_amc_sale = amc_sale 
         self.od_project_sale = project_sale
@@ -800,8 +800,8 @@ class account_analytic_account(models.Model):
             actual_profit_percent = (actual_profit/float(actual_sale))*100.0
             self.od_actual_profit_percent = actual_profit_percent
         
-        bim_cost = self.od_cost_sheet_id and self.od_cost_sheet_id.a_bim_cost 
-        bmn_cost  =self.od_cost_sheet_id and self.od_cost_sheet_id.a_bmn_cost 
+        bim_cost = self.od_cost_sheet_id and self.od_cost_sheet_id.a_bim_cost or 0.0
+        bmn_cost  =self.od_cost_sheet_id and self.od_cost_sheet_id.a_bmn_cost or 0.0
         
         self.od_actual_profit = actual_profit + bim_cost + bmn_cost
         self.od_project_profit = bim_cost + self.od_project_sale - self.od_project_cost 
