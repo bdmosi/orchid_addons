@@ -286,6 +286,7 @@ class invoice_alternate_line(models.Model):
     invoice_id = fields.Many2one('account.invoice',string="Invoice",ondelete='cascade')
     name = fields.Text(string="Description Arabic")
     name2 = fields.Text(string="Description English")
+    section = fields.Char(string="Section")
     quantity = fields.Float(string="Quantity")
     unit_price = fields.Float(string="Unit Price",digits=dp.get_precision('Gov'))
     total_bf_discount = fields.Float(string="Total Before Discount",compute="_compute_calc",digits=dp.get_precision('Gov'))
