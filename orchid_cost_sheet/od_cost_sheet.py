@@ -1600,8 +1600,8 @@ class od_cost_sheet(models.Model):
     def update_price_fix(self):
         
         price_fixed = self.price_fixed 
-        
         if not price_fixed:
+            
             self.bim_log_price_fixed = self.bim_log_price
             self.price_fix_line(self.mat_main_pro_line)
             self.price_fix_line(self.mat_extra_expense_line,2)
@@ -1624,7 +1624,11 @@ class od_cost_sheet(models.Model):
             self.price_fix_line(self.om_residenteng_line)
             self.price_fix_line(self.om_eqpmentreq_line)
             self.price_fix_line(self.om_extra_line)
+            self.price_fix_line(self.imp_tech_line)
+            self.price_fix_line(self.amc_tech_line)
+            self.price_fix_line(self.om_tech_line)
             self.write({'price_fixed':True})
+            
     
     
     
