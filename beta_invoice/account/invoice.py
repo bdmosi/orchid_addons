@@ -30,12 +30,13 @@ class account_invoice(models.Model):
             res.append({'name':line.name,'section':line.section2 or 'Uncategorized','quantity':line.quantity,'total_bf_tax':line.total_bf_tax,'tax_rate':line.tax_rate,'tax_amount':line.tax_amount,'total_amount':line.total_amount})
         result = self.od_categorize(res)
         print "result>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",result
-        return res
+        return result
     def od_categorize(self,res):
         result =[]
         for k,v in groupby(res,key=lambda x:x['section']):
             print k, list(v) 
             result.append({'categ':k,'data':list(v)})
+        print "resut here>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",result
         return result
     @api.multi    
     def amount_to_text_en(self, amount, currency):
