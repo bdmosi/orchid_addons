@@ -18,6 +18,9 @@
 								<field name="annual_target" />
 							</group>
 						</group>
+						<group>
+							<field name="hr_subt" invisible="0"/>
+						</group>
 						<!-- start1 -->
 						<separator string="January" />
 						<table style="width:100%" class="table table-striped">

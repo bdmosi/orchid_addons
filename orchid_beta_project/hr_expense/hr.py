@@ -9,6 +9,7 @@ class hr_employee(models.Model):
     _inherit ="hr.employee"
     
     
+    hr_subt = fields.Float(string="Hour Subtract")
     mgr_score_selection =[(x, x) for x in range(1,11)]
     #audit fileds
     audit_temp_id = fields.Many2one('audit.template',string="Audit Template")
@@ -302,6 +303,11 @@ class hr_employee(models.Model):
         days = days+1
         return days  
     
+    
+    def get_hr_subt(self,employee_id,aud_date_start,aud_date_end):
+        emp_data = self.browse(employee_id)
+        hr = emp_data and emp_data.hr_subt or 0.0
+        return hr
     def get_no_of_leave(self,employee_id,aud_date_start,aud_date_end):
         holi = self.env['hr.holidays']
         holi_ids =holi.search([('employee_id','=',employee_id),('date_from','>=',aud_date_start),('date_from','<=',aud_date_end),('state','not in',('draft','cancel','refuse','confirm')),('holiday_status_id','!=',5)])
@@ -362,7 +368,8 @@ class hr_employee(models.Model):
             result = abs((30 - lv_days) *9.0)
         if not result:
             result =1.0
-        
+        subt = self.get_hr_subt(employee_id, aud_date_start, aud_date_end)
+        result = result - subt
         return result
     
     def get_cancelled_activities(self,user_id,aud_date_start,aud_date_end,engineer_task_count):
