@@ -19,7 +19,7 @@
 							</group>
 						</group>
 						<group>
-							<field name="hr_subt" invisible="0"/>
+							<field name="hr_subt" invisible="1"/>
 						</group>
 						<!-- start1 -->
 						<separator string="January" />

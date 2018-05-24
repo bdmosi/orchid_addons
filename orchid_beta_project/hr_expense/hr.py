@@ -369,7 +369,8 @@ class hr_employee(models.Model):
         if not result:
             result =1.0
         subt = self.get_hr_subt(employee_id, aud_date_start, aud_date_end)
-        result = result - subt
+        if aud_date_start =='2018-05-01':
+            result = result - subt
         return result
     
     def get_cancelled_activities(self,user_id,aud_date_start,aud_date_end,engineer_task_count):
