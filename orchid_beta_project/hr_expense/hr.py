@@ -1400,19 +1400,39 @@ class hr_employee(models.Model):
                 sale_val = proj.od_project_sale
                 tot_sal_comp  += sale_val 
                 compliance_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':compliance_score,'form_wt':10.0})
-            if proj.od_project_status == 'close':
-                project_planned_end = proj.od_project_end 
-                closed_date = proj.od_project_closing 
-                if closed_date <= project_planned_end:
-                    sc_scr =30.0
-                    gp_value = proj.od_project_amend_profit 
-                    sch_gp += gp_value
-                    schedule_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':sc_scr,'form_wt':30.0})
+            
+            
+            #schedule control score
+            current_day = str(dt.today())
+            project_planned_end = proj.od_project_end 
+            closed_date = proj.od_project_closing 
+            if current_day >=project_planned_end:
+                if proj.od_project_status == 'close':
+                    if aud_date_start <= closed_date <=aud_date_end:
+                        sc_scr =30.0
+                        gp_value = proj.od_project_amend_profit 
+                        sch_gp += gp_value
+                        schedule_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':sc_scr,'form_wt':30.0})
+                        
                 else:
                     sc_scr =0.0
                     gp_value = proj.od_project_amend_profit 
                     sch_gp += gp_value
                     schedule_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':sc_scr,'form_wt':30.0})
+                
+#             if proj.od_project_status == 'close':
+#                 project_planned_end = proj.od_project_end 
+#                 closed_date = proj.od_project_closing 
+#                 if closed_date <= project_planned_end:
+#                     sc_scr =30.0
+#                     gp_value = proj.od_project_amend_profit 
+#                     sch_gp += gp_value
+#                     schedule_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':sc_scr,'form_wt':30.0})
+#                 else:
+#                     sc_scr =0.0
+#                     gp_value = proj.od_project_amend_profit 
+#                     sch_gp += gp_value
+#                     schedule_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':sc_scr,'form_wt':30.0})
                     
         max_day_sore = 10 * len(day_score_vals)
         for data in day_score_vals:
