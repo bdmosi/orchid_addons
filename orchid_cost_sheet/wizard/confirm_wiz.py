@@ -13,5 +13,7 @@ class confirm_wiz(models.TransientModel):
             cost_sheet_obj.btn_reset_submit()
         elif action == 'btn_reset_handover':
             cost_sheet_obj.btn_reset_handover()
+        elif action == 'btn_reset_change':
+            cost_sheet_obj.btn_reset_change()
         # cost_sheet_obj.od_send_mail('cst_sheet_owner_assigned')
         return True

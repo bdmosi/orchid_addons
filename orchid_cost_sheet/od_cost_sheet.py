@@ -1715,6 +1715,13 @@ class od_cost_sheet(models.Model):
         self.od_send_mail('cst_sheet_reset_handover_mail')
         self.date_log_history_line = [{'name':'Return By Finance','date':str(datetime.now())}]
         self.state = 'returned_by_fin'
+        
+    
+    @api.one
+    def btn_reset_change(self):
+        
+        self.date_log_history_line = [{'name':'Return to Change','date':str(datetime.now())}]
+        self.state = 'change'
     
     
     def update_opp_stage(self):

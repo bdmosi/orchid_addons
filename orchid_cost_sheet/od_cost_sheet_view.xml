@@ -143,6 +143,7 @@
 						<!-- <button name="btn_reset_submit" string="Return" type='object' 
 							class='oe_highlight' states="handover" groups="orchid_beta.group_od_project_manager,orchid_beta.group_od_project_user"/> -->
 						<button name="1224" context="{'action':'btn_reset_submit'}" string="Return" type="action" class="oe_highlight" states="handover,returned_by_fin" groups="orchid_beta.group_od_project_manager,orchid_beta.group_od_project_user,orchid_beta.group_executive_management_beta_1"/>
+						<button name="1224" context="{'action':'btn_reset_change'}" string="Return" type="action" class="oe_highlight" states="change_processed" groups="orchid_beta.group_od_project_manager,orchid_beta.group_od_project_user,orchid_beta.group_executive_management_beta_1"/>
 						
 						<button name="btn_approved" string="Approve" type="object" class="oe_highlight" states="processed,modify,change_processed,waiting_po_processed,redistribution_processed" groups="orchid_beta.group_beta_finance_manger_acc,account.group_account_user,account.group_account_manager,orchid_beta.group_executive_management_beta_1"/>
 						<button name="btn_allow_change" string="Allow Change" type="object" class="oe_highlight" states="done" invisible="1" groups="orchid_beta.group_beta_finance_manger_acc,account.group_account_user,account.group_account_manager,orchid_beta.group_executive_management_beta_1"/>
