@@ -137,8 +137,10 @@ class account_analytic_account(models.Model):
         #need to update to acutal cost from jv
         today = str(dt.today())
         closing_date = today 
+        project_end = self.od_project_end
         self.od_project_closing = today
-        
+        if closing_date < project_end:
+            self.od_project_end = closing_date
         self.od_project_status = 'close'
     
     
