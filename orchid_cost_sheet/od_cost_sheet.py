@@ -4736,7 +4736,24 @@ class od_cost_sheet(models.Model):
                 customs_list.append({'group_id':group.id,'customs':customs})
                 stock_provision_list.append({'group_id':group.id,'stock_provision':stock_provision})
                 conting_provision_list.append({'group_id':group.id,'conting_provision':conting_provision})
+        
+        for material in self.bmn_spareparts_beta_it_maintenance_line:
+            unit_amount = material.discounted_unit_supplier_currency * material.qty
+            for group in material.group:
+                ex_rate =group.currency_exchange_factor
+                base_factor = unit_amount * ex_rate
+                currency_fluct = base_factor * group.currency_fluctation_provision/100
+                shipping = base_factor * group.shipping/100
+                customs = base_factor * group.customs/100
+                stock_provision = base_factor * group.stock_provision/100
+                conting_provision = base_factor * group.conting_provision/100
+                curr_fluct.append({'group_id':group.id,'currency_fluct':currency_fluct})
+                shipping_list.append({'group_id':group.id,'shipping':shipping})
+                customs_list.append({'group_id':group.id,'customs':customs})
+                stock_provision_list.append({'group_id':group.id,'stock_provision':stock_provision})
+                conting_provision_list.append({'group_id':group.id,'conting_provision':conting_provision})
 
+        
         # computing currency_fluct value
         c = defaultdict(int)
         for d in curr_fluct:
