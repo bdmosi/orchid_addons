@@ -1348,7 +1348,7 @@ class hr_employee(models.Model):
         
         analytic_pool = self.env['account.analytic.account']
         analytic_ids = analytic_pool.search([('od_project_owner_id','=',user_id),('od_type_of_project','not in',('amc','o_m','credit')),('state','not in',('close','cancelled'))])
-        project_closed_on_audit = analytic_pool.search([('od_project_owner_id','=',user_id),('od_type_of_project','not in',('amc','o_m','credit')),('od_project_status','=','close'),('od_project_end','>=',aud_date_start),('od_project_end','<=',aud_date_end)])
+        project_closed_on_audit = analytic_pool.search([('od_project_owner_id','=',user_id),('od_type_of_project','not in',('amc','o_m','credit')),('state','=','close'),('od_project_end','>=',aud_date_start),('od_project_end','<=',aud_date_end)])
         sample_project_ids = analytic_ids + project_closed_on_audit
         
         day_score_vals  =[]
