@@ -4027,6 +4027,8 @@ class od_cost_sheet(models.Model):
                                'od_project_owner_id':self.reviewed_id and self.reviewed_id.id,
                                'od_amc_owner_id':self.reviewed_id and self.reviewed_id.id,
                                'od_om_owner_id':self.reviewed_id and self.reviewed_id.id,
+                               'bim_profit':self.a_bim_cost or 0.0,
+                               'bmn_profit':self.a_bmn_cost or 0.0
                                })
             
             order_line = []

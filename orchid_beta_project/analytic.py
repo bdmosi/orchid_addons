@@ -298,6 +298,9 @@ class account_analytic_account(models.Model):
         analytic_id = self.id
         domain =[('project_id','=',analytic_id),('state','!=','cancel')]
         sales = sale_order.search(domain,limit=1)
+        bim_profit = self.bim_profit 
+        bmn_profit = self.bmn_profit
+        mp_profit = bim_profit + bmn_profit
 #         total = sum([sal.amount_total for sal in sales])
         original_price = 0.0
         original_cost = 0.0
@@ -337,7 +340,7 @@ class account_analytic_account(models.Model):
         
         self.od_original_sale_price = original_price
         self.od_original_sale_cost = original_cost
-        self.od_original_sale_profit = original_profit
+        self.od_original_sale_profit = mp_profit + original_profit
         self.od_original_sale_profit_perc = original_profit_perc
         self.od_amended_sale_price = amended_price
         self.od_amended_sale_cost = amended_cost
@@ -772,6 +775,9 @@ class account_analytic_account(models.Model):
         
         bim_cost = self.od_cost_sheet_id and self.od_cost_sheet_id.a_bim_cost or 0.0
         bmn_cost  =self.od_cost_sheet_id and self.od_cost_sheet_id.a_bmn_cost or 0.0
+        
+        original_bim_profit = self.bim_profit 
+        original_bmn_profit = self.bmn_profit
         self.od_actual_sale = actual_sale
         self.od_amc_sale = amc_sale 
         self.od_project_sale = project_sale
@@ -785,11 +791,11 @@ class account_analytic_account(models.Model):
         
         self.od_project_original_sale = project_original_sale 
         self.od_project_original_cost = project_original_cost 
-        self.od_project_original_profit = project_original_sale -project_original_cost
+        self.od_project_original_profit = original_bim_profit + project_original_sale -project_original_cost
         
         self.od_amc_original_sale = amc_original_sale 
         self.od_amc_original_cost = amc_original_cost 
-        self.od_amc_original_profit = amc_original_sale - amc_original_cost
+        self.od_amc_original_profit = original_bmn_profit + amc_original_sale - amc_original_cost
         
         
     
@@ -823,6 +829,9 @@ class account_analytic_account(models.Model):
         final_list  =  stat_list + amc_list +[('om','O&M')]
         return final_list
     
+    
+    bim_profit = fields.Float(string="BIM Profit")
+    bmn_profit = fields.Float(string="BMN Profit")
     od_actual_cost = fields.Float(string="Actual Cost",compute="_get_cost_from_jv")
     od_actual_sale = fields.Float(string="Actual Sale",compute="_get_sale_value")
     od_actual_profit = fields.Float(string="Actual Profit",compute="_get_actual_profit")
