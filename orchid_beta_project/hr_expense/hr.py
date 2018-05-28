@@ -2306,8 +2306,10 @@ class hr_employee(models.Model):
         
         audit_temp_id = self.audit_temp_id
         aud_date_start = False
-        aud_date_end = False 
-        if audit_temp_id:
+        aud_date_end = False
+        active = self.active
+        print "active>>>>>>>>>>>>>>>>>>>>",active 
+        if audit_temp_id and active:
             type = audit_temp_id.type 
             ex_num = self.get_execution_number()
             ex_num = str(ex_num)
