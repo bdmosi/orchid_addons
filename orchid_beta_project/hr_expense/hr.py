@@ -1348,7 +1348,7 @@ class hr_employee(models.Model):
         
         analytic_pool = self.env['account.analytic.account']
         analytic_ids = analytic_pool.search([('od_project_owner_id','=',user_id),('od_type_of_project','not in',('amc','o_m','credit')),('state','not in',('close','cancelled'))])
-        project_closed_on_audit = analytic_pool.search([('od_project_owner_id','=',user_id),('od_type_of_project','not in',('amc','o_m','credit')),('state','=','close'),('date','>=',aud_date_start),('date','<=',aud_date_end)])
+        project_closed_on_audit = analytic_pool.search([('od_project_owner_id','=',user_id),('od_type_of_project','not in',('amc','o_m','credit')),('state','=','close'),('od_project_closing','>=',aud_date_start),('od_project_closing','<=',aud_date_end)])
         sample_project_ids = analytic_ids + project_closed_on_audit
         
         day_score_vals  =[]
@@ -1416,10 +1416,17 @@ class hr_employee(models.Model):
             closed_date = proj.od_project_closing 
             if proj.od_project_status == 'close':
                 if aud_date_start <= closed_date <=aud_date_end:
-                    sc_scr =30.0
-                    gp_value = proj.od_project_amend_profit 
-                    sch_gp += gp_value
-                    schedule_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':sc_scr,'form_wt':30.0})
+                    if closed_date <= project_planned_end:
+                        sc_scr =30.0
+                        gp_value = proj.od_project_amend_profit 
+                        sch_gp += gp_value
+                        schedule_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':sc_scr,'form_wt':30.0})
+                    else:
+                        sc_scr =0.0
+                        gp_value = proj.od_project_amend_profit 
+                        sch_gp += gp_value
+                        schedule_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':sc_scr,'form_wt':30.0})
+                        
             else:
                 if current_day >=project_planned_end:
                     sc_scr =0.0
