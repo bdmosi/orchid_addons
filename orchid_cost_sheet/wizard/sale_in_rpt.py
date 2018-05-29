@@ -11,7 +11,7 @@ class opp_rev_sale_in_wiz(models.TransientModel):
     
     def get_product_grp(self):
         result =[]
-        company_id = self.env.user.company_id
+        company_id = self.env.user.company_id.id
         if company_id ==6:
             result =[(6,0,[1,2,3,21])]
         return result
