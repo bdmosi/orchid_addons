@@ -700,12 +700,26 @@ class account_analytic_account(models.Model):
         if company_id ==1:
             account_ids =[3488,3489]
         return account_ids
+    
+    
+    def get_wip_account_id(self):
+        company_id = self.company_id and self.company_id.id 
+        account_ids = []
+        if company_id ==6:
+            account_ids = [5732,5212,5213,5214]
+        if company_id ==1:
+            account_ids =[2128,2129]
+        return account_ids
+    
+    
+    
     @api.one
     def _get_cost_from_jv(self):
         analytic_id = self.id
         move_line_pool = self.env['account.move.line']
         exclude_journal_ids = self.get_exclude_journal_ids()
-        domain = [('analytic_account_id','=',analytic_id),('journal_id','not in',exclude_journal_ids),('account_id','=',2128)]
+        wip_account_ids = self.get_wip_account_id()
+        domain = [('analytic_account_id','=',analytic_id),('journal_id','not in',exclude_journal_ids),('account_id','in',wip_account_ids)]
         move_line_ids = move_line_pool.search(domain)
         actual_cost = sum([(mvl.debit -mvl.credit)  for mvl in move_line_ids if mvl.od_state =='posted'])
         
