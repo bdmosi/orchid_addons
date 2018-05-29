@@ -705,22 +705,22 @@ class account_analytic_account(models.Model):
         analytic_id = self.id
         move_line_pool = self.env['account.move.line']
         exclude_journal_ids = self.get_exclude_journal_ids()
-        domain = [('analytic_account_id','=',analytic_id),('journal_id','not in',exclude_journal_ids)]
+        domain = [('analytic_account_id','=',analytic_id),('journal_id','not in',exclude_journal_ids),('account_id','=',2128)]
         move_line_ids = move_line_pool.search(domain)
-        actual_cost = sum([mvl.debit for mvl in move_line_ids if mvl.od_state =='posted'])
+        actual_cost = sum([(mvl.debit -mvl.credit)  for mvl in move_line_ids if mvl.od_state =='posted'])
         
             
         project_cost =0.0
         amc_cost =0.0
         if self.od_project_closing:
             closing_date = self.od_project_closing 
-            project_cost = sum([mvl.debit for mvl in move_line_ids if mvl.date <= closing_date and mvl.od_state =='posted'])
+            project_cost = sum([(mvl.debit -mvl.credit) for mvl in move_line_ids if mvl.date <= closing_date and mvl.od_state =='posted'])
         if self.od_amc_closing:
             if self.od_project_closing:
                 closing_date = self.od_project_closing 
-                amc_cost = sum([mvl.debit for mvl in move_line_ids if mvl.date > closing_date and mvl.od_state =='posted'])
+                amc_cost = sum([(mvl.debit -mvl.credit) for mvl in move_line_ids if mvl.date > closing_date and mvl.od_state =='posted'])
             else:
-                amc_cost = sum([mvl.debit for mvl in move_line_ids if mvl.od_state =='posted'])
+                amc_cost = sum([(mvl.debit -mvl.credit) for mvl in move_line_ids if mvl.od_state =='posted'])
         
         if self.state == 'close':
             cost_of_sale_account_ids = self.get_cost_of_sale_account()
@@ -811,9 +811,9 @@ class account_analytic_account(models.Model):
         bim_cost = self.od_cost_sheet_id and self.od_cost_sheet_id.a_bim_cost or 0.0
         bmn_cost  =self.od_cost_sheet_id and self.od_cost_sheet_id.a_bmn_cost or 0.0
         
-        self.od_actual_profit = actual_profit + bim_cost + bmn_cost
-        self.od_project_profit = bim_cost + self.od_project_sale - self.od_project_cost 
-        self.od_amc_profit = bmn_cost + self.od_amc_sale - self.od_amc_cost 
+        self.od_actual_profit = actual_profit 
+        self.od_project_profit =  self.od_project_sale - self.od_project_cost 
+        self.od_amc_profit =  self.od_amc_sale - self.od_amc_cost 
     
    
     
