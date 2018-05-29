@@ -966,7 +966,13 @@ class account_analytic_account(models.Model):
         invoice_pool = self.env['account.invoice']
         domain = [('od_analytic_account','=',analytic_id),('type','=','in_invoice'),('state','not in',('draft','cancel'))]
         inv_ids = invoice_pool.search(domain)
-        amount_total = sum([inv.amount_total for inv in inv_ids])
+        amount_total =0.0
+        for inv in inv_ids:
+            currency = inv.currency_id
+            company_currency = inv.company_id.currency_id
+            amount = currency.compute(inv.amount_total,company_currency,round=False)
+            amount_total += amount
+        
         self.od_sup_inv_amt = amount_total
        
     
