@@ -110,116 +110,171 @@
           <attribute name="invisible">True</attribute>
     </xpath>
     		<xpath expr="//group[@name='contract']" position="after">
-    			<table style="width:100%" class="table table-striped">
-    			<thead>
-    				<th></th>
-    			    <th>Type</th>
-    			    <th>Linked Table</th>
-    			    <th>Date Start</th>
-    			    <th>Date End</th>
-    			    <th>Owner</th>
-    			    <th>Original Sale</th>
-    			    <th>Original Cost</th>
-    			    <th>Original Profit</th>
-    			    <th>Amended Sale</th>
-    			    <th>Amended Cost</th>
-    			    <th>Amended Profit</th>
-    			    <th>Actual Cost</th>
-    			    <th>Actual Profit</th>
-    			    <th>Status</th>
-    			    <th>Activation</th>
-    			    <th>Closing Date</th>
-    			    <th>Close</th>
-    			    
-    			</thead>
-    			<tbody>
-    				<tr>
-    				   <td>Analytic</td>
-    					<td></td>
-    					<td><field name="od_analytic_linked_table"  /></td>
-    					<td><field name="date_start"  /></td>
-    					<td><field name="date"  /></td>
-    					<td><field name="od_owner_id"  /></td>
-    					<td><field name="od_original_sale_price"  /></td>
-    					<td><field name="od_original_sale_cost"  /></td>
-    					<td><field name="od_original_sale_profit"  /></td>
-    					<td><field name="od_amended_sale_price"  /></td>
-    					<td><field name="od_amended_sale_cost"  /></td>
-    					<td><field name="od_amended_profit"  /></td>
-    					<td><field name="od_actual_cost"  /></td>
-    					<td><field name="od_actual_profit"  /></td>
-    					<td></td>
-    					<td></td>
-    					<td></td>
-    					<td></td>
-    					
-    				</tr>
-    				<tr>
-    				   <td>Project</td>
-    					<td><field name="od_project_type"  /></td>
-    					<td><field name="od_project_linked_table"  /></td>
-    					<td><field name="od_project_start"  /></td>
-    					<td><field name="od_project_end"  /></td>
-    					<td><field name="od_project_owner_id"  /></td>
-    					<td><field name="od_project_original_sale"  /></td>
-    					<td><field name="od_project_original_cost"  /></td>
-    					<td><field name="od_project_original_profit"  /></td>
-    					<td><field name="od_project_amend_sale"  /></td>
-    					<td><field name="od_project_amend_cost"  /></td>
-    					<td><field name="od_project_amend_profit"  /></td>
-    					<td><field name="od_project_cost"/></td>
-    					<td><field name="od_project_profit"/></td>
-    					<td><field name="od_project_status" readonly="1"/></td>
-    					<td><button name="btn_activate_project" string="Activate" class="oe_highlight" type="object"  attrs="{'invisible':[('od_project_status','!=','inactive')]}"/></td>
-    					<td><field name="od_project_closing" readonly="1"/></td>
-    					 <td><button name="btn_close_project" string="Close" class="oe_highlight" type="object"  attrs="{'invisible':[('od_project_status','!=','active')]}"/></td>
-    					
-    				</tr>
-    				<tr>
-    				   <td>AMC</td>
-    					<td><field name="od_amc_type"  /></td>
-    					<td><field name="od_amc_linked_table"  /></td>
-    					<td><field name="od_amc_start"  /></td>
-    					<td><field name="od_amc_end"  /></td>
-    					<td><field name="od_amc_owner_id"  /></td>
-    					<td><field name="od_amc_original_sale"  /></td>
-    					<td><field name="od_amc_original_cost"  /></td>
-    					<td><field name="od_amc_original_profit"  /></td>
-    					<td><field name="od_amc_amend_sale"  /></td>
-    					<td><field name="od_amc_amend_cost"  /></td>
-    					<td><field name="od_amc_amend_profit"  /></td>
-    					<td><field name="od_amc_cost"/></td>
-    					<td><field name="od_amc_profit"/></td>
-    					<td><field name="od_amc_status" readonly="1"/></td>
-    					<td><button name="btn_activate_amc" string="Activate" class="oe_highlight" type="object"  attrs="{'invisible':[('od_amc_status','!=','inactive')]}"/></td>
-    					<td><field name="od_amc_closing" readonly="1"/></td>
-    					 <td><button name="btn_close_amc" string="Close" class="oe_highlight" type="object"  attrs="{'invisible':[('od_amc_status','!=','active')]}"/></td>
-    					
-    				</tr>
-    				
-    				<tr>
- 				    <td></td>
-    					<td></td>
-    					<td></td>
-    					<td></td>
-    					<td></td>
-    					<td></td>
-    					<td></td>
-    					<td></td>
-    					<td></td>
-    					<td></td>
-    					<td></td>
-    					<td></td>
-    					<td></td>
-    					<td></td>
-    					<td></td>
-    					<td></td>
-    					<td></td>
-    					<td></td>   				
-    				</tr>
-    				
-    			</tbody>
-    			</table>
+    				<table style="width:100%" class="table table-striped">
+                   <thead>
+                       <th></th>
+                       <th>Analytic</th>
+                       <th>Project</th>
+                       <th>AMC</th>
+                       <th>O&amp;M</th>
+                      
+                    </thead>
+                    <tbody>
+                    <tr>
+                    <td><strong>Date Start</strong></td>
+                    <td><field name="date_start" /></td>
+                    <td><field name="od_project_start" attrs="{'readonly':[('od_project_status','!=','inactive')]}" /></td>
+                    <td><field name="od_amc_start" attrs="{'readonly':[('od_amc_status','!=','inactive')]}"/></td>
+                    <td><field name="od_om_start" attrs="{'readonly':[('od_amc_status','=','inactive')]}"/></td>
+                    
+                    
+                    
+                    </tr>
+                    <tr>
+                    <td><strong>Date End</strong></td>
+                    <td><field name="date" /></td>
+                    <td><field name="od_project_end" attrs="{'readonly':[('od_project_status','!=','inactive')]}"/></td>
+                    <td><field name="od_amc_end" attrs="{'readonly':[('od_amc_status','!=','inactive')]}"/></td>
+                    <td><field name="od_om_end" attrs="{'readonly':[('od_amc_status','!=','inactive')]}"/></td>
+                    </tr>
+                   
+                     <tr>
+                   <td><strong>Owner</strong></td>
+                   <td></td>
+                   <td><field name="od_project_owner_id" readonly="0"/></td>
+                   <td><field name="od_amc_owner_id" readonly="0"/></td>
+                   <td><field name="od_om_owner_id" readonly="0"/></td>
+                    </tr>
+                    
+                    
+                   
+                   
+                   <tr>
+                   <td><strong>Original Sale</strong></td>
+                   <td></td>
+                   <td><field name="od_original_sale_price" /></td>
+                   <td></td>
+                   <td></td>
+                    </tr>
+                    
+                   <tr>
+                   <td><strong>Original Cost</strong></td>
+                   <td></td>
+                   <td><field name="od_original_sale_cost" /></td>
+                   <td></td>
+                   <td></td>
+                    </tr>
+                   
+                   
+                   <tr>
+                   <td><strong>Original Profit</strong></td>
+                   <td></td>
+                   <td><field name="od_original_sale_profit" /></td>
+                   <td></td>
+                   <td></td>
+                    </tr>
+                   
+                   
+                   
+                     <tr>
+                   <td><strong>Amended Sale</strong></td>
+                   <td></td>
+                   <td><field name="od_amended_sale_price" /></td>
+                   <td></td>
+                   <td></td>
+                    </tr>
+                    
+                   <tr>
+                   <td><strong>Amended Cost</strong></td>
+                   <td></td>
+                   <td><field name="od_amended_sale_cost" /></td>
+                   <td></td>
+                   <td></td>
+                    </tr>
+                   
+                   
+                   <tr>
+                   <td><strong>Amended Profit</strong></td>
+                   <td></td>
+                   <td><field name="od_amended_profit" /></td>
+                   <td></td>
+                   <td></td>
+                    </tr>
+                   
+                   
+                   
+                   
+                   
+                   <tr>
+                   <td><strong>Actual Sale</strong></td>
+                   <td></td>
+                   <td><field name="od_project_sale" /></td>
+                   <td><field name="od_amc_sale" /></td>
+                   <td><field name="od_om_sale" readonly="1"/></td>
+                    </tr>
+                    
+                     <tr>
+                   <td><strong>Actual Cost</strong></td>
+                   <td></td>
+                   <td><field name="od_project_cost" /></td>
+                   <td><field name="od_amc_cost" /></td>
+                   <td><field name="od_om_cost" readonly="1"/></td>
+                    </tr>
+                   
+                    <tr>
+                   <td><strong>Actual Profit</strong></td>
+                   <td></td>
+                   <td><field name="od_project_profit" /></td>
+                   <td><field name="od_amc_profit" /></td>
+                   <td><field name="od_om_profit" readonly="1"/></td>
+                    </tr>
+                   
+                   
+                    <tr>
+                   <td><strong>Status</strong></td>
+                   <td></td>
+                   <td><field name="od_project_status" readonly="1"/></td>
+                   <td><field name="od_amc_status" readonly="1"/></td>
+                   <td><field name="od_om_status" readonly="1"/></td>
+                    </tr>
+                    
+                     
+                    
+                    <tr>
+                    <td><strong>Activation</strong></td>
+                    <td></td>
+                    <td><button name="btn_activate_project" string="Activate" class="oe_highlight" type="object"  attrs="{'invisible':[('od_project_status','!=','inactive')]}"/></td>
+                    <td><button name="btn_activate_amc" string="Activate" class="oe_highlight" type="object" attrs="{'invisible':[('od_amc_status','!=','inactive')]}"/></td>
+                    <td><button name="btn_activate_om" string="Activate" class="oe_highlight" type="object" attrs="{'invisible':[('od_om_status','!=','inactive')]}" /></td>
+                    
+                    </tr>
+                    
+                    
+                    <tr>
+                   <td><strong>Closing Date</strong></td>
+                   <td></td>
+                   <td><field name="od_project_closing" attrs="{'readonly':[('od_project_status','=','close')]}"/></td>
+                   <td><field name="od_amc_closing" attrs="{'readonly':[('od_amc_status','=','close')]}" /></td>
+                   <td><field name="od_om_closing"  attrs="{'readonly':[('od_om_status','=','close')]}" /></td>
+                    </tr>
+                   
+                   
+                   
+                   
+                    <tr>
+                    <td><strong>Close</strong></td>
+                    <td></td>
+                    <td><button name="btn_close_project" string="Close" class="oe_highlight" type="object"  attrs="{'invisible':[('od_project_status','!=','active')]}"/></td>
+                    <td><button name="btn_close_amc" string="Close" class="oe_highlight" type="object" attrs="{'invisible':[('od_amc_status','!=','active')]}"/></td>
+                    <td><button name="btn_close_om" string="Close" class="oe_highlight" type="object" attrs="{'invisible':[('od_om_status','!=','active')]}" /></td>
+                    
+                    </tr>
+                    
+                    
+                    </tbody>
+                    
+                    
+               </table>
     			
     			
     		<!-- 	
