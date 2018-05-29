@@ -8,9 +8,15 @@ class opp_rev_sale_in_wiz(models.TransientModel):
     _name = 'opp.sale.in.rpt.wiz'
     
     
-  
+    
+    def get_product_grp(self):
+        result =[]
+        company_id = self.env.user.company_id
+        if company_id ==6:
+            result =[(6,0,[1,2,3,21])]
+        return result
     created_by_ids = fields.Many2many('res.users',string="Created By")
-    product_group_ids = fields.Many2many('od.product.group',string="Technolgoy Unit",domain=[('code','in',('1','2','3','4'))],default=[(6,0,[1,2,3,21])])
+    product_group_ids = fields.Many2many('od.product.group',string="Technology Unit",domain=[('code','in',('1','2','3','4'))],default=get_product_grp)
     
     
     branch_ids= fields.Many2many('od.cost.branch',string="Branch")

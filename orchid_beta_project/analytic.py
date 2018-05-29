@@ -1086,13 +1086,23 @@ class account_analytic_account(models.Model):
                         score_board.append(score)
         avg_score = self.get_avg_score(score_board)
         return avg_score
+#     def get_cost_control_score(self):
+#         result =0.0
+#         actual_profit = self.od_project_profit
+#         original_profit = self.od_project_original_profit 
+#         if original_profit:
+#             result = (actual_profit/original_profit) * 100 
+#         if original_profit <=0.0 and actual_profit >0.0:
+#             result =100.0
+#         return result
+    
     def get_cost_control_score(self):
         result =0.0
-        actual_profit = self.od_project_profit
-        original_profit = self.od_project_original_profit 
-        if original_profit:
-            result = (actual_profit/original_profit) * 100 
-        if original_profit <=0.0 and actual_profit >0.0:
+        original_cost = self.od_project_original_cost
+        actual_cost = self.od_project_cost
+        if actual_cost:
+            result = (original_cost/actual_cost) * 100 
+        else:
             result =100.0
         return result
     
