@@ -606,12 +606,13 @@ class account_analytic_account(models.Model):
         account_move_line = self.env['account.move.line']
         analytic_id = self.id
         exclude_journal_ids = self.get_exclude_journal_ids()
-        domain = [('analytic_account_id','=',analytic_id),('journal_id','not in',exclude_journal_ids),('od_state','=','posted')]
+        wip_account_ids = self.get_wip_account_id()
+        domain = [('analytic_account_id','=',analytic_id),('journal_id','not in',exclude_journal_ids),('account_id','in',wip_account_ids),('od_state','=','posted')]
         if self.state == 'close':
             cost_of_account_ids = self.get_cost_of_sale_account()
             domain = [('analytic_account_id','=',analytic_id),('account_id','in',cost_of_account_ids),('od_state','=','posted')]
         journal_lines = account_move_line.search(domain)
-        amount = sum([mvl.debit for mvl in journal_lines])
+        amount = sum([(mvl.debit - mvl.credit) for mvl in journal_lines])
         self.od_journal_amount = amount
 
     @api.multi
