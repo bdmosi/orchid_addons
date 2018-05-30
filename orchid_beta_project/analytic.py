@@ -801,11 +801,21 @@ class account_analytic_account(models.Model):
                     project_original_cost += line.od_original_line_cost
                     project_amend_cost += line.od_amended_line_cost
         
-        bim_cost = self.od_cost_sheet_id and self.od_cost_sheet_id.a_bim_cost or 0.0
-        bmn_cost  =self.od_cost_sheet_id and self.od_cost_sheet_id.a_bmn_cost or 0.0
         
-        original_bim_profit = self.bim_profit 
-        original_bmn_profit = self.bmn_profit
+        bim_cost=0.0
+        bmn_cost =0.0
+        original_bim_profit =0.0
+        original_bmn_profit =0.0
+        
+        project_bmn = self.od_cost_sheet_id and self.od_cost_sheet_id.project_bmn and self.od_cost_sheet_id.project_bmn.id
+        project_bim = self.od_cost_sheet_id and self.od_cost_sheet_id.project_bmn and self.od_cost_sheet_id.project_bim.id
+        if analytic_id == project_bmn:
+            bmn_cost  =self.od_cost_sheet_id and self.od_cost_sheet_id.a_bmn_cost or 0.0
+            original_bmn_profit = self.bmn_profit
+        if analytic_id == project_bim:
+            bim_cost = self.od_cost_sheet_id and self.od_cost_sheet_id.a_bim_cost or 0.0
+            original_bim_profit = self.bim_profit 
+        
         self.od_actual_sale = actual_sale
         self.od_amc_sale = amc_sale 
         self.od_project_sale = project_sale
