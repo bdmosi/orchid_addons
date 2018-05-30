@@ -300,7 +300,7 @@ class account_analytic_account(models.Model):
         sales = sale_order.search(domain,limit=1)
         bim_profit = self.bim_profit 
         bmn_profit = self.bmn_profit
-        mp_profit = bim_profit + bmn_profit
+#         mp_profit = bim_profit + bmn_profit
 #         total = sum([sal.amount_total for sal in sales])
         original_price = 0.0
         original_cost = 0.0
@@ -338,13 +338,26 @@ class account_analytic_account(models.Model):
         bim_cost = self.od_cost_sheet_id and self.od_cost_sheet_id.a_bim_cost or 0.0
         bmn_cost  =self.od_cost_sheet_id and self.od_cost_sheet_id.a_bmn_cost or 0.0
         
+        rt_profit =0.0
+        mp_profit =0.0
+        project_bmn = self.od_cost_sheet_id and self.od_cost_sheet_id.project_bmn and self.od_cost_sheet_id.project_bmn.id
+        project_bim = self.od_cost_sheet_id and self.od_cost_sheet_id.project_bmn and self.od_cost_sheet_id.project_bim.id
+        if analytic_id == project_bmn:
+            rt_profit +=bmn_cost
+            mp_profit += bmn_profit
+        
+        if analytic_id == project_bim:
+            rt_profit += bim_cost
+            mp_profit += bim_profit
+        
+        
         self.od_original_sale_price = original_price
         self.od_original_sale_cost = original_cost
         self.od_original_sale_profit = mp_profit + original_profit
         self.od_original_sale_profit_perc = original_profit_perc
         self.od_amended_sale_price = amended_price
         self.od_amended_sale_cost = amended_cost
-        self.od_amended_profit = amended_profit + bim_cost + bmn_cost
+        self.od_amended_profit = amended_profit + rt_profit
         self.od_amended_profit_perc = amended_profit_perc
         self.od_planned_timesheet_cost = planned_timesheet_cost
     
