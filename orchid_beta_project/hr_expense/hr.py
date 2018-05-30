@@ -1302,6 +1302,46 @@ class hr_employee(models.Model):
             if date <=aud_date_end:
                 return True
         return False
+#     def get_inv_sch_score(self,proj,aud_date_start,aud_date_end):
+#         project_start_date = proj.od_project_start
+#         if not project_start_date:
+#             raise Warning("Project Date Start Not Set in Project : %s"%proj.name) 
+#         score_board = []
+#         check = False
+#         for line in proj.od_project_invoice_schedule_line:
+#             planned_date = line.date
+#             if not planned_date:
+#                 raise Warning("Planning Date not In Project : %s"%proj.name) 
+#             pl_dt = self.get_x_days(project_start_date, planned_date)
+#             today = str(dt.today())
+#             td_dt =self.get_x_days(project_start_date, today)
+#             if td_dt>=pl_dt:
+#                 invoice = line.invoice_id
+#                 if aud_date_start<=planned_date <= aud_date_end:
+#                     check =True
+#                     planned_amount = line.amount
+#                     invoice_amount = line.invoice_amount
+#                     diff =  invoice_amount -planned_amount
+#                     diff = diff +1
+#                     if diff <0.0:
+#                         score =0.0
+#                         check =True
+#                     else:
+#                         score =30.0
+#                         score_board.append(score)
+#                         continue
+#                 if invoice and invoice.state in ('open','paid','accept'):
+#                     cust_date = invoice.cust_date 
+#                     if aud_date_start<=cust_date <= aud_date_end:
+#                         check = True
+#                         score = 0.0
+#                         if cust_date <= planned_date:
+#                             score = 30.0
+#                         score_board.append(score)
+#         avg_score = self.get_avg_score(score_board)
+#         return check,avg_score
+    
+    
     def get_inv_sch_score(self,proj,aud_date_start,aud_date_end):
         project_start_date = proj.od_project_start
         if not project_start_date:
@@ -1317,27 +1357,17 @@ class hr_employee(models.Model):
             td_dt =self.get_x_days(project_start_date, today)
             if td_dt>=pl_dt:
                 invoice = line.invoice_id
-                if aud_date_start<=planned_date <= aud_date_end:
-                    check =True
-                    planned_amount = line.amount
-                    invoice_amount = line.invoice_amount
-                    diff =  invoice_amount -planned_amount
-                    diff = diff +1
-                    if diff <0.0:
-                        score =0.0
-                        check =True
-                    else:
+                invoice_state = invoice.state
+                if invoice and invoice_state in ('open','paid','accept'):
+                    cust_date = invoice.cust_date
+                    if cust_date and  aud_date_start<=cust_date <= aud_date_end:
                         score =30.0
                         score_board.append(score)
-                        continue
-                if invoice and invoice.state in ('open','paid','accept'):
-                    cust_date = invoice.cust_date 
-                    if aud_date_start<=cust_date <= aud_date_end:
-                        check = True
-                        score = 0.0
-                        if cust_date <= planned_date:
-                            score = 30.0
-                        score_board.append(score)
+                else:
+                    check = True
+                    score =0.0
+                    score_board.append(score)
+                
         avg_score = self.get_avg_score(score_board)
         return check,avg_score
                         
