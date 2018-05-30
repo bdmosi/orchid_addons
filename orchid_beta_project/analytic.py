@@ -712,7 +712,7 @@ class account_analytic_account(models.Model):
         if company_id ==6:
             account_ids = [5417,5423,5428,5418]
         if company_id ==1:
-            account_ids =[3488,3489]
+            account_ids =[3488,3489,3972]
         return account_ids
     
     
