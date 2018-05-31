@@ -755,12 +755,14 @@ class account_analytic_account(models.Model):
             print "cost of sale account ids>>>>>>>>>>>>>>",cost_of_sale_account_ids
             domain = [('analytic_account_id','=',analytic_id),('account_id','in',cost_of_sale_account_ids)]
             move_line_ids = move_line_pool.search(domain)
-            actual_cost = sum([mvl.debit for mvl in move_line_ids if mvl.od_state =='posted'])
-            project_cost = actual_cost
-            print "actual cost in>>>>>>>>>>>>>>>>>>>>>from cost of cost salesssssssssssss",actual_cost
-        
+            actual_cost = sum([(mvl.debit - mvl.credit) for mvl in move_line_ids if mvl.od_state =='posted'])
+            closing_date = self.od_project_closing 
+            if self.od_project_status =='close':
+                project_cost = sum([(mvl.debit - mvl.credit) for mvl in move_line_ids if mvl.date <= closing_date and mvl.od_state =='posted'])
+            if self.od_amc_status == 'close':
+                amc_cost = sum([(mvl.debit - mvl.credit) for mvl in move_line_ids if mvl.date > closing_date and mvl.od_state =='posted'])
         self.od_actual_cost = actual_cost
-        self.od_project_cost = project_cost 
+        self.od_project_cost = project_cost
         self.od_amc_cost = amc_cost
         
     

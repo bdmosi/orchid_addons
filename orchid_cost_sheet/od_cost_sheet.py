@@ -828,6 +828,9 @@ class od_cost_sheet(models.Model):
 
     
 
+    analytic_a0 = fields.Many2one('account.anlytic.account',string="Analytic A0")
+    
+    
     mat_select_all = fields.Boolean(string="Select All")
     mat_opt_select_all = fields.Boolean(string="Select All")
     mat_ext_sel = fields.Boolean(string="Select All")
