@@ -1423,7 +1423,7 @@ class hr_employee(models.Model):
                 dayscore = proj.day_process_score
                 day_score_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':dayscore,'cost_sheet_id':proj.od_cost_sheet_id.id,'form_wt':10.0})
             #cost control score
-            if proj.state == 'close':
+            if proj.od_porject_status == 'close':
                 gp_value = proj.od_project_amend_profit 
                 actual_gp = proj.od_project_profit
                 original_gp = proj.od_project_original_profit
