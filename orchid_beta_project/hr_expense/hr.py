@@ -1361,12 +1361,13 @@ class hr_employee(models.Model):
                 if invoice and invoice_state in ('open','paid','accept'):
                     cust_date = invoice.cust_date
                     if cust_date and  aud_date_start<=cust_date <= aud_date_end:
+                        check = True
                         score =30.0
                         score_board.append(score)
                 else:
                     check = True
                     score =0.0
-                    score_board.append(score)
+                    return check,score
                 
         avg_score = self.get_avg_score(score_board)
         return check,avg_score
