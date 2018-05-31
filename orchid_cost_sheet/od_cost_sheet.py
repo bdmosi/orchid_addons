@@ -828,26 +828,26 @@ class od_cost_sheet(models.Model):
 
     
     # Revenue Structure
-    analytic_a0 = fields.Many2one('account.anlytic.account',string="Analytic A0")
-    analytic_a1 = fields.Many2one('account.anlytic.account',string="Analytic A1")
-    analytic_a2 = fields.Many2one('account.anlytic.account',string="Analytic A2")
-    analytic_a3 = fields.Many2one('account.anlytic.account',string="Analytic A3")
-    analytic_a4 = fields.Many2one('account.anlytic.account',string="Analytic A4")
-    analytic_a5 = fields.Many2one('account.anlytic.account',string="Analytic A5")
-    
-    date_start_a0 = fields.Date(string="Date Start A0")
-    date_start_a1 = fields.Date(string="Date Start A1")
-    date_start_a2 = fields.Date(string="Date Start A2")
-    date_start_a3 = fields.Date(string="Date Start A3")
-    date_start_a4 = fields.Date(string="Date Start A4")
-    date_start_a5 = fields.Date(string="Date Start A5")
-    
-    date_end_a0 = fields.Date(string="Date End A0")
-    date_end_a1 = fields.Date(string="Date End A1")
-    date_end_a2 = fields.Date(string="Date End A2")
-    date_end_a3 = fields.Date(string="Date End A3")
-    date_end_a4 = fields.Date(string="Date End A4")
-    date_end_a5 = fields.Date(string="Date End A5")
+#     analytic_a0 = fields.Many2one('account.anlytic.account',string="Analytic A0")
+#     analytic_a1 = fields.Many2one('account.anlytic.account',string="Analytic A1")
+#     analytic_a2 = fields.Many2one('account.anlytic.account',string="Analytic A2")
+#     analytic_a3 = fields.Many2one('account.anlytic.account',string="Analytic A3")
+#     analytic_a4 = fields.Many2one('account.anlytic.account',string="Analytic A4")
+#     analytic_a5 = fields.Many2one('account.anlytic.account',string="Analytic A5")
+#     
+#     date_start_a0 = fields.Date(string="Date Start A0")
+#     date_start_a1 = fields.Date(string="Date Start A1")
+#     date_start_a2 = fields.Date(string="Date Start A2")
+#     date_start_a3 = fields.Date(string="Date Start A3")
+#     date_start_a4 = fields.Date(string="Date Start A4")
+#     date_start_a5 = fields.Date(string="Date Start A5")
+#     
+#     date_end_a0 = fields.Date(string="Date End A0")
+#     date_end_a1 = fields.Date(string="Date End A1")
+#     date_end_a2 = fields.Date(string="Date End A2")
+#     date_end_a3 = fields.Date(string="Date End A3")
+#     date_end_a4 = fields.Date(string="Date End A4")
+#     date_end_a5 = fields.Date(string="Date End A5")
     
     
     
