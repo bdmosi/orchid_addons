@@ -1437,13 +1437,41 @@ class hr_employee(models.Model):
             #invoice Schedule Score
 #             inv_sch_dates = [a.date for a in proj.od_project_invoice_schedule_line]
 #             check = self.check_inv_sch_dates(inv_sch_dates,aud_date_start,aud_date_end)
-            check2,inv_score,plan_amount = self.get_inv_sch_score(proj,aud_date_start,aud_date_end)
-            if check2:
-                invoice_sc_score = inv_score
-#                 sale_val = proj.od_project_sale
-#                 planned_inv_amt = sum([px.amount for px in proj.od_project_invoice_schedule_line])
-                tot_sal_inv  += plan_amount
-                invoice_schedule_vals.append({'analytic_id':proj.id,'sale_value':plan_amount,'score':invoice_sc_score,'form_wt':30.0})
+#             check2,inv_score,plan_amount = self.get_inv_sch_score(proj,aud_date_start,aud_date_end)
+#             if check2:
+#                 invoice_sc_score = inv_score
+#                 tot_sal_inv  += plan_amount
+#                 invoice_schedule_vals.append({'analytic_id':proj.id,'sale_value':plan_amount,'score':invoice_sc_score,'form_wt':30.0})
+            
+            for inv_line in proj.od_project_invoice_schedule_line:
+                today = str(dt.today())
+                planned_date = inv_line.date
+                if today >= planned_date:
+                    invoice = inv_line.invoice_id
+                    invoice_state = invoice.state
+                    if invoice and invoice_state in ('open','paid','accept'):
+                        cust_date = invoice.cust_date
+                        if cust_date and  aud_date_start<=cust_date <= aud_date_end:
+                            if cust_date <= planned_date:
+                                score =30.0
+                                plan_amount = inv_line.amount
+                                tot_sal_inv  += plan_amount
+                                invoice_schedule_vals.append({'analytic_id':proj.id,'sale_value':plan_amount,'score':score,'form_wt':30.0})
+                            else:
+                                score =0.0
+                                plan_amount = inv_line.amount
+                                tot_sal_inv  += plan_amount
+                                invoice_schedule_vals.append({'analytic_id':proj.id,'sale_value':plan_amount,'score':score,'form_wt':30.0})
+                    else:
+                        score =0.0
+                        plan_amount = inv_line.amount
+                        tot_sal_inv  += plan_amount
+                        invoice_schedule_vals.append({'analytic_id':proj.id,'sale_value':plan_amount,'score':score,'form_wt':30.0})
+                        
+                    
+            
+                    
+            
             if proj.start_project_comp:
                 compliance_score = proj.compliance_score
                 sale_val = proj.od_project_sale
