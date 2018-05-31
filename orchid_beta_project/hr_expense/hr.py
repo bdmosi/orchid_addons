@@ -1348,6 +1348,7 @@ class hr_employee(models.Model):
             raise Warning("Project Date Start Not Set in Project : %s"%proj.name) 
         score_board = []
         check = False
+        planned_amount = 0.0
         for line in proj.od_project_invoice_schedule_line:
             planned_date = line.date
             if not planned_date:
@@ -1365,18 +1366,21 @@ class hr_employee(models.Model):
                             check = True
                             score =30.0
                             score_board.append(score)
+                            planned_amount +=line.amount
                         else:
                             check = True
                             score =0.0
                             score_board.append(score)
+                            planned_amount +=line.amount
                             
                 else:
                     check = True
                     score =0.0
-                    return check,score
+                    score_board.append(score)
+                    planned_amount +=line.amount
                 
         avg_score = self.get_avg_score(score_board)
-        return check,avg_score
+        return check,avg_score,planned_amount
                         
                 
         
@@ -1433,13 +1437,13 @@ class hr_employee(models.Model):
             #invoice Schedule Score
 #             inv_sch_dates = [a.date for a in proj.od_project_invoice_schedule_line]
 #             check = self.check_inv_sch_dates(inv_sch_dates,aud_date_start,aud_date_end)
-            check2,inv_score = self.get_inv_sch_score(proj,aud_date_start,aud_date_end)
+            check2,inv_score,plan_amount = self.get_inv_sch_score(proj,aud_date_start,aud_date_end)
             if check2:
                 invoice_sc_score = inv_score
 #                 sale_val = proj.od_project_sale
-                planned_inv_amt = sum([px.amount for px in proj.od_project_invoice_schedule_line])
-                tot_sal_inv  += planned_inv_amt
-                invoice_schedule_vals.append({'analytic_id':proj.id,'sale_value':planned_inv_amt,'score':invoice_sc_score,'form_wt':30.0})
+#                 planned_inv_amt = sum([px.amount for px in proj.od_project_invoice_schedule_line])
+                tot_sal_inv  += plan_amount
+                invoice_schedule_vals.append({'analytic_id':proj.id,'sale_value':plan_amount,'score':invoice_sc_score,'form_wt':30.0})
             if proj.start_project_comp:
                 compliance_score = proj.compliance_score
                 sale_val = proj.od_project_sale
