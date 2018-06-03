@@ -350,12 +350,17 @@ class hr_employee(models.Model):
                 if self.company_id.id ==6:
                     print "company id in get availabel time function>>>>>>>>>>>>>>>>>>",self.company_id.id
                     sdays_hrs = sdays *9
-                    rm_hrs = days*6
+                    rm_hrs = 10*6
                     result = sdays_hrs + rm_hrs 
                 else:
                     sdays_hrs = sdays *9
-                    rm_hrs = days*6.5
+                    rm_hrs = 10*6.5
                     result = sdays_hrs + rm_hrs 
+            else:
+                if self.company_id.id ==6:
+                    result = days *6.0
+                else:
+                    result =days *6.5
         else: 
             result = result *9
             
@@ -382,12 +387,17 @@ class hr_employee(models.Model):
                     if self.company_id.id ==6:
                         print "company id in get availabel time function>>>>>>>>>>>>>>>>>>",self.company_id.id
                         sdays_hrs = sdays *9
-                        rm_hrs = days*6
+                        rm_hrs = 10*6.0
                         result = sdays_hrs + rm_hrs 
                     else:
                         sdays_hrs = sdays *9
-                        rm_hrs = days*6.5
+                        rm_hrs = 10*6.5
                         result = sdays_hrs + rm_hrs 
+                else:
+                    if self.company_id.id ==6:
+                        result = days *6.0
+                    else:
+                        result =days *6.5
                         
             else:
                 result = result *9 
