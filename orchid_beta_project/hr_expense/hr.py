@@ -343,8 +343,25 @@ class hr_employee(models.Model):
                     sdays_hrs = sdays *6.5
                     rm_hrs = 12*9
                     result = sdays_hrs + rm_hrs 
+        
+        elif aud_date_start == '2018-06-01':
+            if days >10:
+                sdays = days-10
+                if self.company_id.id ==6:
+                    print "company id in get availabel time function>>>>>>>>>>>>>>>>>>",self.company_id.id
+                    sdays_hrs = sdays *9
+                    rm_hrs = days*6
+                    result = sdays_hrs + rm_hrs 
+                else:
+                    sdays_hrs = sdays *9
+                    rm_hrs = days*6.5
+                    result = sdays_hrs + rm_hrs 
         else: 
             result = result *9
+            
+        
+        
+        
         if (days -lv_days)> lv_days:
             result = days -lv_days 
             if aud_date_start =='2018-05-01':
@@ -358,6 +375,18 @@ class hr_employee(models.Model):
                     else:
                         sdays_hrs = sdays *6.5
                         rm_hrs = 12*9
+                        result = sdays_hrs + rm_hrs 
+            elif aud_date_start == '2018-06-01':
+                if days >10:
+                    sdays = days-10
+                    if self.company_id.id ==6:
+                        print "company id in get availabel time function>>>>>>>>>>>>>>>>>>",self.company_id.id
+                        sdays_hrs = sdays *9
+                        rm_hrs = days*6
+                        result = sdays_hrs + rm_hrs 
+                    else:
+                        sdays_hrs = sdays *9
+                        rm_hrs = days*6.5
                         result = sdays_hrs + rm_hrs 
                         
             else:
@@ -1361,17 +1390,23 @@ class hr_employee(models.Model):
                 invoice_state = invoice.state
                 if invoice and invoice_state in ('open','paid','accept'):
                     cust_date = invoice.cust_date
-                    if cust_date and  aud_date_start<=cust_date <= aud_date_end:
-                        if cust_date <= planned_date:
-                            check = True
-                            score =30.0
-                            score_board.append(score)
-                            planned_amount +=line.amount
-                        else:
-                            check = True
-                            score =0.0
-                            score_board.append(score)
-                            planned_amount +=line.amount
+                    if cust_date:
+                        if aud_date_start<=cust_date <= aud_date_end:
+                            if cust_date <= planned_date:
+                                check = True
+                                score =30.0
+                                score_board.append(score)
+                                planned_amount +=line.amount
+                            else:
+                                check = True
+                                score =0.0
+                                score_board.append(score)
+                                planned_amount +=line.amount
+                    else:
+                        check = True
+                        score =0.0
+                        score_board.append(score)
+                        planned_amount +=line.amount
                             
                 else:
                     check = True
