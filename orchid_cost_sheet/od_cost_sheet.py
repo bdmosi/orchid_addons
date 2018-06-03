@@ -828,26 +828,58 @@ class od_cost_sheet(models.Model):
 
     
     # Revenue Structure
-#     analytic_a0 = fields.Many2one('account.anlytic.account',string="Analytic A0")
-#     analytic_a1 = fields.Many2one('account.anlytic.account',string="Analytic A1")
-#     analytic_a2 = fields.Many2one('account.anlytic.account',string="Analytic A2")
-#     analytic_a3 = fields.Many2one('account.anlytic.account',string="Analytic A3")
-#     analytic_a4 = fields.Many2one('account.anlytic.account',string="Analytic A4")
-#     analytic_a5 = fields.Many2one('account.anlytic.account',string="Analytic A5")
-#     
-#     date_start_a0 = fields.Date(string="Date Start A0")
-#     date_start_a1 = fields.Date(string="Date Start A1")
-#     date_start_a2 = fields.Date(string="Date Start A2")
-#     date_start_a3 = fields.Date(string="Date Start A3")
-#     date_start_a4 = fields.Date(string="Date Start A4")
-#     date_start_a5 = fields.Date(string="Date Start A5")
-#     
-#     date_end_a0 = fields.Date(string="Date End A0")
-#     date_end_a1 = fields.Date(string="Date End A1")
-#     date_end_a2 = fields.Date(string="Date End A2")
-#     date_end_a3 = fields.Date(string="Date End A3")
-#     date_end_a4 = fields.Date(string="Date End A4")
-#     date_end_a5 = fields.Date(string="Date End A5")
+    analytic_a0 = fields.Many2one('account.anlytic.account',string="Analytic A0")
+    analytic_a1 = fields.Many2one('account.anlytic.account',string="Analytic A1")
+    analytic_a2 = fields.Many2one('account.anlytic.account',string="Analytic A2")
+    analytic_a3 = fields.Many2one('account.anlytic.account',string="Analytic A3")
+    analytic_a4 = fields.Many2one('account.anlytic.account',string="Analytic A4")
+    analytic_a5 = fields.Many2one('account.anlytic.account',string="Analytic A5")
+     
+    date_start_a0 = fields.Date(string="Date Start A0")
+    date_start_a1 = fields.Date(string="Date Start A1")
+    date_start_a2 = fields.Date(string="Date Start A2")
+    date_start_a3 = fields.Date(string="Date Start A3")
+    date_start_a4 = fields.Date(string="Date Start A4")
+    date_start_a5 = fields.Date(string="Date Start A5")
+     
+    date_end_a0 = fields.Date(string="Date End A0")
+    date_end_a1 = fields.Date(string="Date End A1")
+    date_end_a2 = fields.Date(string="Date End A2")
+    date_end_a3 = fields.Date(string="Date End A3")
+    date_end_a4 = fields.Date(string="Date End A4")
+    date_end_a5 = fields.Date(string="Date End A5")
+    
+    name_a0 = fields.Char(string="Name of Analytic A0")
+    name_a1 = fields.Char(string="Name of Analytic A1")
+    name_a2 = fields.Char(string="Name of Analytic A2")
+    name_a3 = fields.Char(string="Name of Analytic A3")
+    name_a4 = fields.Char(string="Name of Analytic A4")
+    name_a5 = fields.Char(string="Name of Analytic A5")
+    
+    owner_id_a0 = fields.Many2one('res.users',string="Owner A0")
+    owner_id_a1 = fields.Many2one('res.users',string="Owner A1")
+    owner_id_a2 = fields.Many2one('res.users',string="Owner A2")
+    owner_id_a3 = fields.Many2one('res.users',string="Owner A3")
+    owner_id_a4 = fields.Many2one('res.users',string="Owner A4")
+    owner_id_a5 = fields.Many2one('res.users',string="Owner A5")
+    DOMAIN = [('credit','Credit'),('sup','Supply'),('imp','Implementation'),('sup_imp','Supply & Implementation'),('amc','AMC'),('o_m','O&M'),('poc','(POC,Presales)'), ('comp_gen','Company General -(Training,Labs,Trips,etc.)')]
+    
+    type_of_project_a0 = fields.Selection(DOMAIN,string="Type Of Project A0")
+    type_of_project_a1 = fields.Selection(DOMAIN,string="Type Of Project A1")
+    type_of_project_a2 = fields.Selection(DOMAIN,string="Type Of Project A2")
+    type_of_project_a3 = fields.Selection(DOMAIN,string="Type Of Project A3")
+    type_of_project_a4 = fields.Selection(DOMAIN,string="Type Of Project A4")
+    type_of_project_a5 = fields.Selection(DOMAIN,string="Type Of Project A5")
+    
+    select_a0 = fields.Boolean(string="Select A0")
+    select_a1 = fields.Boolean(string="Select A1")
+    select_a2 = fields.Boolean(string="Select A2")
+    select_a3 = fields.Boolean(string="Select A3")
+    select_a4 = fields.Boolean(string="Select A4")
+    select_a5 = fields.Boolean(string="Select A5")
+    
+    
+    
     
     
     

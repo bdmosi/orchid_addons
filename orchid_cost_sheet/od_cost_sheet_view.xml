@@ -2826,6 +2826,195 @@
 							</table>
 					</page>
 					
+					
+					<page string="Revenue Structure">
+					
+					     <table style="width:100%" class="table table-striped">
+								<thead>
+									
+									<th>Select</th>
+									<th>Analytic</th>
+									<th>Date Start</th>
+									<th>Date End</th>
+									<th>Name of the Analytic</th>
+									<th>Owner</th>
+									<th>Type of the Project</th>
+								</thead>
+								<tbody>
+									<tr>
+										<td>
+											<field name="select_a0"/>
+										</td>
+										<td>
+										A0
+										</td>
+										<td>
+											<field name="date_start_a0"/>
+										</td>
+										<td>
+											<field name="date_end_a0"/>
+										</td>
+										
+										<td>
+											<field name="name_a0"/>
+										</td>
+										
+										<td>
+											<field name="owner_id_a0"/>
+										</td>
+										
+										<td>
+											<field name="type_of_project_a0"/>
+										</td>
+										
+									</tr>
+									
+									<tr>
+										<td>
+											<field name="select_a1"/>
+										</td>
+										<td>
+										A1
+										</td>
+										<td>
+											<field name="date_start_a1"/>
+										</td>
+										<td>
+											<field name="date_end_a1"/>
+										</td>
+										
+										<td>
+											<field name="name_a1"/>
+										</td>
+										
+										<td>
+											<field name="owner_id_a1"/>
+										</td>
+										
+										<td>
+											<field name="type_of_project_a1"/>
+										</td>
+										
+									</tr>
+									
+									<tr>
+										<td>
+											<field name="select_a2"/>
+										</td>
+										<td>
+										A2
+										</td>
+										<td>
+											<field name="date_start_a2"/>
+										</td>
+										<td>
+											<field name="date_end_a2"/>
+										</td>
+										
+										<td>
+											<field name="name_a2"/>
+										</td>
+										
+										<td>
+											<field name="owner_id_a2"/>
+										</td>
+										
+										<td>
+											<field name="type_of_project_a2"/>
+										</td>
+										
+									</tr>
+									
+									<tr>
+										<td>
+											<field name="select_a3"/>
+										</td>
+										<td>
+										A3
+										</td>
+										<td>
+											<field name="date_start_a3"/>
+										</td>
+										<td>
+											<field name="date_end_a3"/>
+										</td>
+										
+										<td>
+											<field name="name_a3"/>
+										</td>
+										
+										<td>
+											<field name="owner_id_a3"/>
+										</td>
+										
+										<td>
+											<field name="type_of_project_a3"/>
+										</td>
+										
+									</tr>
+									
+									
+									<tr>
+										<td>
+											<field name="select_a4"/>
+										</td>
+										<td>
+										A4
+										</td>
+										<td>
+											<field name="date_start_a4"/>
+										</td>
+										<td>
+											<field name="date_end_a4"/>
+										</td>
+										
+										<td>
+											<field name="name_a4"/>
+										</td>
+										
+										<td>
+											<field name="owner_id_a4"/>
+										</td>
+										
+										<td>
+											<field name="type_of_project_a4"/>
+										</td>
+										
+									</tr>
+									
+									
+									<tr>
+										<td>
+											<field name="select_a5"/>
+										</td>
+										<td>
+										A5
+										</td>
+										<td>
+											<field name="date_start_a5"/>
+										</td>
+										<td>
+											<field name="date_end_a5"/>
+										</td>
+										
+										<td>
+											<field name="name_a5"/>
+										</td>
+										
+										<td>
+											<field name="owner_id_a5"/>
+										</td>
+										
+										<td>
+											<field name="type_of_project_a5"/>
+										</td>
+										
+									</tr>
+								</tbody>
+							</table>
+					
+					</page>
+					
 					<page string="Revenue">
 						<!-- 	<table style="width:100%" class="table table-striped">
 								<thead>
