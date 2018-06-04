@@ -2827,7 +2827,7 @@
 					</page>
 					
 					
-					<page string="Revenue Structure">
+					<page string="Revenue Structure" invisible="1">
 					
 					     <table style="width:100%" class="table table-striped">
 								<thead>
