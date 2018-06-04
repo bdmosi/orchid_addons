@@ -2862,7 +2862,7 @@
 										</td>
 										
 										<td>
-											<field name="owner_id_a0"/>
+											
 										</td>
 										
 										<td>
@@ -2878,7 +2878,7 @@
 										<td>
 										A1
 										</td>
-										<td><field name="tabs_a1" wiget="many2many_tags"/></td>
+										<td><field name="tabs_a1" widget="many2many_tags"/></td>
 										<td>
 											<field name="date_start_a1"/>
 										</td>
@@ -2907,7 +2907,7 @@
 										<td>
 										A2
 										</td>
-										<td></td>
+										<td><field name="tabs_a2" widget="many2many_tags"/></td>
 										<td>
 											<field name="date_start_a2"/>
 										</td>
@@ -2936,7 +2936,7 @@
 										<td>
 										A3
 										</td>
-										<td></td>
+										<td><field name="tabs_a3" widget="many2many_tags"/></td>
 										<td>
 											<field name="date_start_a3"/>
 										</td>
@@ -2966,7 +2966,7 @@
 										<td>
 										A4
 										</td>
-										<td></td>
+										<td><field name="tabs_a4" widget="many2many_tags"/></td>
 										<td>
 											<field name="date_start_a4"/>
 										</td>
@@ -2996,7 +2996,7 @@
 										<td>
 										A5
 										</td>
-										<td></td>
+										<td><field name="tabs_a1" widget="many2many_tags"/></td>
 										<td>
 											<field name="date_start_a5"/>
 										</td>

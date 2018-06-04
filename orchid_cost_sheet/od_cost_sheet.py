@@ -837,7 +837,11 @@ class od_cost_sheet(models.Model):
      
     
     
-    tabs_a1 = fields.Many2many('od.cost.tabs','rel_cost_a1_tabs','cost_id','tab_id')
+    tabs_a1 = fields.Many2many('od.cost.tabs','rel_cost_a1_tabs','cost_id','tab_id',string="Tabs A1")
+    tabs_a2 = fields.Many2many('od.cost.tabs','rel_cost_a2_tabs','cost_id','tab_id',string="Tabs A2")
+    tabs_a3 = fields.Many2many('od.cost.tabs','rel_cost_a3_tabs','cost_id','tab_id',string="Tabs A3")
+    tabs_a4 = fields.Many2many('od.cost.tabs','rel_cost_a4_tabs','cost_id','tab_id',string="Tabs A4")
+    tabs_a5 = fields.Many2many('od.cost.tabs','rel_cost_a5_tabs','cost_id','tab_id',string="Tabs A5")
     
     date_start_a0 = fields.Date(string="Date Start A0")
     date_start_a1 = fields.Date(string="Date Start A1")
@@ -860,7 +864,7 @@ class od_cost_sheet(models.Model):
     name_a4 = fields.Char(string="Name of Analytic A4")
     name_a5 = fields.Char(string="Name of Analytic A5")
     
-    owner_id_a0 = fields.Many2one('res.users',string="Owner A0")
+#     owner_id_a0 = fields.Many2one('res.users',string="Owner A0")
     owner_id_a1 = fields.Many2one('res.users',string="Owner A1")
     owner_id_a2 = fields.Many2one('res.users',string="Owner A2")
     owner_id_a3 = fields.Many2one('res.users',string="Owner A3")
