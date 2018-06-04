@@ -2827,7 +2827,7 @@
 					</page>
 					
 					
-					<page string="Revenue Structure" invisible="1">
+					<page string="Revenue Structure" invisible="0">
 					
 					     <table style="width:100%" class="table table-striped">
 								<thead>
@@ -2878,7 +2878,7 @@
 										<td>
 										A1
 										</td>
-										<td><field name="tab_a1" /></td>
+										<td><field name="tabs_a1" /></td>
 										<td>
 											<field name="date_start_a1"/>
 										</td>
