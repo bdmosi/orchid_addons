@@ -846,7 +846,7 @@ class hr_employee(models.Model):
         result =[]
         total_gp = 0.0
         domain = [('sales_acc_manager','=',user_id),('status','=','active')]
-        domain.extend([('op_expected_booking','>=',aud_date_start),('op_expected_booking','<=',aud_date_end)])
+        domain.extend([('approved_date','>=',aud_date_start),('approved_date','<=',aud_date_end)])
         domain1 = domain + [('state','in',('approved','done','modify','change','analytic_change','change_processed','redistribution_processed',))]
         sheet_ids =self.env['od.cost.sheet'].search(domain1)
         for sheet in sheet_ids:
