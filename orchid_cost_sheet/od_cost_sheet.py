@@ -837,7 +837,7 @@ class od_cost_sheet(models.Model):
      
     
     
-    tabs_a1 = fields.Many2many('od.cost.tab','rel_cost_a1_tabs','cost_id','tab_id')
+    tabs_a1 = fields.Many2many('od.cost.tabs','rel_cost_a1_tabs','cost_id','tab_id')
     
     date_start_a0 = fields.Date(string="Date Start A0")
     date_start_a1 = fields.Date(string="Date Start A1")
