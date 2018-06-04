@@ -835,6 +835,10 @@ class od_cost_sheet(models.Model):
     analytic_a4 = fields.Many2one('account.anlytic.account',string="Analytic A4")
     analytic_a5 = fields.Many2one('account.anlytic.account',string="Analytic A5")
      
+    
+    tab_dom =[('mat','MAT'),('trn','TRN'),('imp','IMP'),('amc','AMC'),('o_m','O&M')]
+    tab_a1 = fields.Selection(tab_dom,string="Tab Selection A1")
+    
     date_start_a0 = fields.Date(string="Date Start A0")
     date_start_a1 = fields.Date(string="Date Start A1")
     date_start_a2 = fields.Date(string="Date Start A2")
