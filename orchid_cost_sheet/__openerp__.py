@@ -16,6 +16,7 @@
               
                 ],
     "data" : [  'security/ir.model.access.csv',
+              'utl/tabs_data.xml',
                 'scheduler.xml',
                 'layout.xml',
                 'confirm/confirm_view.xml',

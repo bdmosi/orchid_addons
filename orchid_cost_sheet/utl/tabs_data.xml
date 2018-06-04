@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+     
+        <record id="tab_mat" model="od.cost.tab">
+            <field name="name">MAT</field>
+            <field name="code">mat</field>
+        </record>
+         <record id="tab_trn" model="od.cost.tab">
+            <field name="name">TRN</field>
+            <field name="code">trn</field>
+        </record>
+         <record id="tab_imp" model="od.cost.tab">
+            <field name="name">IMP</field>
+            <field name="code">imp</field>
+        </record>
+         <record id="tab_amc" model="od.cost.tab">
+            <field name="name">AMC</field>
+            <field name="code">amc</field>
+        </record>
+         <record id="tab_o_m" model="od.cost.tab">
+            <field name="name">O&amp;M</field>
+            <field name="code">o_m</field>
+        </record>
+        
+       
+
+       
+    </data>
+</openerp>
