@@ -2834,12 +2834,13 @@
 									
 									<th>Select</th>
 									<th>Analytic</th>
-									<th>Tabs</th>
+									
 									<th>Date Start</th>
 									<th>Date End</th>
 									<th>Name of the Analytic</th>
 									<th>Owner</th>
-									<th>Type of the Project</th>
+									<th>Type</th>
+									<th>Tabs Included</th>
 								</thead>
 								<tbody>
 									<tr>
@@ -2849,7 +2850,7 @@
 										<td>
 										A0
 										</td>
-										<td></td>
+										
 										<td>
 											<field name="date_start_a0"/>
 										</td>
@@ -2868,7 +2869,7 @@
 										<td>
 											<field name="type_of_project_a0"/>
 										</td>
-										
+										<td></td>
 									</tr>
 									
 									<tr>
@@ -2878,7 +2879,7 @@
 										<td>
 										A1
 										</td>
-										<td><field name="tabs_a1" widget="many2many_tags"/></td>
+										
 										<td>
 											<field name="date_start_a1"/>
 										</td>
@@ -2897,7 +2898,7 @@
 										<td>
 											<field name="type_of_project_a1"/>
 										</td>
-										
+										<td><field name="tabs_a1" widget="many2many_tags"/></td>
 									</tr>
 									
 									<tr>
@@ -2907,7 +2908,7 @@
 										<td>
 										A2
 										</td>
-										<td><field name="tabs_a2" widget="many2many_tags"/></td>
+										
 										<td>
 											<field name="date_start_a2"/>
 										</td>
@@ -2926,7 +2927,7 @@
 										<td>
 											<field name="type_of_project_a2"/>
 										</td>
-										
+										<td><field name="tabs_a2" widget="many2many_tags"/></td>
 									</tr>
 									
 									<tr>
@@ -2936,7 +2937,7 @@
 										<td>
 										A3
 										</td>
-										<td><field name="tabs_a3" widget="many2many_tags"/></td>
+										
 										<td>
 											<field name="date_start_a3"/>
 										</td>
@@ -2955,7 +2956,7 @@
 										<td>
 											<field name="type_of_project_a3"/>
 										</td>
-										
+										<td><field name="tabs_a3" widget="many2many_tags"/></td>
 									</tr>
 									
 									
@@ -2966,7 +2967,7 @@
 										<td>
 										A4
 										</td>
-										<td><field name="tabs_a4" widget="many2many_tags"/></td>
+										
 										<td>
 											<field name="date_start_a4"/>
 										</td>
@@ -2985,7 +2986,7 @@
 										<td>
 											<field name="type_of_project_a4"/>
 										</td>
-										
+										<td><field name="tabs_a4" widget="many2many_tags"/></td>
 									</tr>
 									
 									
@@ -2996,7 +2997,7 @@
 										<td>
 										A5
 										</td>
-										<td><field name="tabs_a1" widget="many2many_tags"/></td>
+										
 										<td>
 											<field name="date_start_a5"/>
 										</td>
@@ -3015,7 +3016,7 @@
 										<td>
 											<field name="type_of_project_a5"/>
 										</td>
-										
+										<td><field name="tabs_a5" widget="many2many_tags"/></td>
 									</tr>
 								</tbody>
 							</table>
