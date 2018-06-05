@@ -388,7 +388,7 @@ class od_cost_sheet(models.Model):
         result = []
         tech_sale,tech_cost,tech_profit = self.get_tot_sale_cost(self.amc_tech_line)
         if (self.bmn_tot_sale1 != 0.0 or self.bmn_tot_cost1 != 0.0):
-            result.append({'sale':self.bmn_tot_sale1 -tech_sale,'cost':self.bmn_tot_cost1 - tech_cost,'profit':self.bmn_profit1 -tech_profit,'tab':'bmn'})
+            result.append({'sale':self.bmn_tot_sale1 -tech_sale,'cost':self.bmn_tot_cost1 - tech_cost,'profit':self.bmn_profit1 - tech_profit,'tab':'bmn'})
         if (self.omn_tot_sale1 != 0.0 or self.omn_tot_cost1 != 0.0):
             result.append({'sale':self.omn_tot_sale1,'cost':self.omn_tot_cost1,'profit':self.omn_profit1,'tab':'omn'})
         return result

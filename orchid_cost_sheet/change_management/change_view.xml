@@ -61,11 +61,11 @@
                         </h1>
                         <group>
                             <group>
-                                 <field name="so_id"/>
-                                 <field name="cost_sheet_id"/>
+                                 <field name="so_id" required="1"/>
+                                 <field name="cost_sheet_id" required="1"/>
                             </group>
                             <group>
-                                 <field name="project_id"/>
+                                 <field name="project_id" required="1"/>
                                  <field name="change_type_id"/>
                                  <field name="change_method"/>
                             </group>

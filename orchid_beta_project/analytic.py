@@ -736,7 +736,7 @@ class account_analytic_account(models.Model):
         wip_account_ids = self.get_wip_account_id()
         domain = [('analytic_account_id','=',analytic_id),('journal_id','not in',exclude_journal_ids),('account_id','in',wip_account_ids)]
         move_line_ids = move_line_pool.search(domain)
-        actual_cost = sum([(mvl.debit -mvl.credit)  for mvl in move_line_ids if mvl.od_state =='posted'])
+        actual_cost = sum([(mvl.debit - mvl.credit)  for mvl in move_line_ids if mvl.od_state =='posted'])
         
             
         project_cost =0.0
