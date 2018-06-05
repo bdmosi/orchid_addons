@@ -618,6 +618,14 @@
                     <td><field name="od_amc_end" readonly="1"/></td>
                     <!-- <td><field name="od_om_end" readonly="1"/></td> -->
                     </tr>
+                    
+                     <tr>
+                    <td><strong>PMO Expected Closing</strong></td>
+                    <td><field name="od_analytic_pmo_closing" readonly="0"/></td>
+                    <td><field name="od_project_pmo_closing"  readonly="0"/></td>
+                    <td><field name="od_amc_pmo_closing"  readonly="0"/></td>
+                   
+                    </tr>
                    
                      <tr>
                    <td><strong>Owner</strong></td>
