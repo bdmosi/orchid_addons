@@ -116,7 +116,7 @@
                        <th>Analytic</th>
                        <th>Project</th>
                        <th>AMC</th>
-                       <th>O&amp;M</th>
+                       <!-- <th>O&amp;M</th> -->
                       
                     </thead>
                     <tbody>
@@ -125,7 +125,7 @@
                     <td><field name="date_start" /></td>
                     <td><field name="od_project_start" attrs="{'readonly':[('od_project_status','!=','inactive')]}" /></td>
                     <td><field name="od_amc_start" attrs="{'readonly':[('od_amc_status','!=','inactive')]}"/></td>
-                    <td><field name="od_om_start" attrs="{'readonly':[('od_amc_status','=','inactive')]}"/></td>
+                  
                     
                     
                     
@@ -135,15 +135,25 @@
                     <td><field name="date" /></td>
                     <td><field name="od_project_end" attrs="{'readonly':[('od_project_status','!=','inactive')]}"/></td>
                     <td><field name="od_amc_end" attrs="{'readonly':[('od_amc_status','!=','inactive')]}"/></td>
-                    <td><field name="od_om_end" attrs="{'readonly':[('od_amc_status','!=','inactive')]}"/></td>
+                   
                     </tr>
+                   
+                    <tr>
+                    <td><strong>PMO Expected Closing</strong></td>
+                    <td><field name="od_analytic_pmo_closing" /></td>
+                    <td><field name="od_project_pmo_closing" attrs="{'readonly':[('od_project_status','!=','inactive')]}"/></td>
+                    <td><field name="od_amc_pmo_closing" attrs="{'readonly':[('od_amc_status','!=','inactive')]}"/></td>
+                   
+                    </tr>
+                   
+                   
                    
                      <tr>
                    <td><strong>Owner</strong></td>
-                   <td></td>
+                   <td><field name="od_owner_id" readonly="0"/></td>
                    <td><field name="od_project_owner_id" readonly="0"/></td>
                    <td><field name="od_amc_owner_id" readonly="0"/></td>
-                   <td><field name="od_om_owner_id" readonly="0"/></td>
+                   
                     </tr>
                     
                     
@@ -154,7 +164,7 @@
                    <td><field name="od_original_sale_price" /></td>
                    <td><field name="od_project_original_sale" /></td>
                    <td><field name="od_amc_original_sale" /></td>
-                   <td></td>
+                   
                     </tr>
                     
                    <tr>
@@ -162,7 +172,7 @@
                    <td><field name="od_original_sale_cost" /></td>
                    <td><field name="od_project_original_cost" /></td>
                    <td><field name="od_amc_original_cost" /></td>
-                   <td></td>
+                 
                     </tr>
                    
                    
@@ -171,7 +181,7 @@
                    <td><field name="od_original_sale_profit" /></td>
                    <td><field name="od_project_original_profit" /></td>
                    <td><field name="od_amc_original_profit" /></td>
-                   <td></td>
+                  
                     </tr>
                    
                    
@@ -181,7 +191,7 @@
                    <td><field name="od_amended_sale_price" /></td>
                    <td><field name="od_project_amend_sale" /></td>
                    <td><field name="od_amc_amend_sale" /></td>
-                   <td></td>
+                   
                     </tr>
                     
                    <tr>
@@ -189,7 +199,7 @@
                    <td><field name="od_amended_sale_cost" /></td>
                    <td><field name="od_project_amend_cost" /></td>
                    <td><field name="od_amc_amend_cost" /></td>
-                   <td></td>
+                   
                     </tr>
                    
                    
@@ -198,7 +208,7 @@
                    <td><field name="od_amended_profit" /></td>
                    <td><field name="od_project_amend_profit" /></td>
                    <td><field name="od_amc_amend_profit" /></td>
-                   <td></td>
+                  
                     </tr>
                    
                    
@@ -210,7 +220,7 @@
                    <td><field name="od_actual_sale" /></td>
                    <td><field name="od_project_sale" /></td>
                    <td><field name="od_amc_sale" /></td>
-                   <td><field name="od_om_sale" readonly="1"/></td>
+                   
                     </tr>
                     
                      <tr>
@@ -218,7 +228,7 @@
                    <td><field name="od_actual_cost" /></td>
                    <td><field name="od_project_cost" /></td>
                    <td><field name="od_amc_cost" /></td>
-                   <td><field name="od_om_cost" readonly="1"/></td>
+                  
                     </tr>
                    
                     <tr>
@@ -226,7 +236,7 @@
                    <td><field name="od_actual_profit" /></td>
                    <td><field name="od_project_profit" /></td>
                    <td><field name="od_amc_profit" /></td>
-                   <td><field name="od_om_profit" readonly="1"/></td>
+                 
                     </tr>
                    
                    
@@ -235,7 +245,7 @@
                    <td></td>
                    <td><field name="od_project_status" readonly="1"/></td>
                    <td><field name="od_amc_status" readonly="1"/></td>
-                   <td><field name="od_om_status" readonly="1"/></td>
+                   
                     </tr>
                     
                      
@@ -245,8 +255,8 @@
                     <td></td>
                     <td><button name="btn_activate_project" string="Activate" class="oe_highlight" type="object"  attrs="{'invisible':[('od_project_status','!=','inactive')]}"/></td>
                     <td><button name="btn_activate_amc" string="Activate" class="oe_highlight" type="object" attrs="{'invisible':[('od_amc_status','!=','inactive')]}"/></td>
-                    <td><button name="btn_activate_om" string="Activate" class="oe_highlight" type="object" attrs="{'invisible':[('od_om_status','!=','inactive')]}" /></td>
-                    
+                   <!--  <td><button name="btn_activate_om" string="Activate" class="oe_highlight" type="object" attrs="{'invisible':[('od_om_status','!=','inactive')]}" /></td>
+                     -->
                     </tr>
                     
                     
@@ -255,7 +265,7 @@
                    <td></td>
                    <td><field name="od_project_closing" attrs="{'readonly':[('od_project_status','=','close')]}"/></td>
                    <td><field name="od_amc_closing" attrs="{'readonly':[('od_amc_status','=','close')]}" /></td>
-                   <td><field name="od_om_closing"  attrs="{'readonly':[('od_om_status','=','close')]}" /></td>
+                  <!--  <td><field name="od_om_closing"  attrs="{'readonly':[('od_om_status','=','close')]}" /></td> -->
                     </tr>
                    
                    
@@ -266,8 +276,8 @@
                     <td></td>
                     <td><button name="btn_close_project" string="Close" class="oe_highlight" type="object"  attrs="{'invisible':[('od_project_status','!=','active')]}"/></td>
                     <td><button name="btn_close_amc" string="Close" class="oe_highlight" type="object" attrs="{'invisible':[('od_amc_status','!=','active')]}"/></td>
-                    <td><button name="btn_close_om" string="Close" class="oe_highlight" type="object" attrs="{'invisible':[('od_om_status','!=','active')]}" /></td>
-                    
+<!--                     <td><button name="btn_close_om" string="Close" class="oe_highlight" type="object" attrs="{'invisible':[('od_om_status','!=','active')]}" /></td>
+ -->                    
                     </tr>
                     
                     
