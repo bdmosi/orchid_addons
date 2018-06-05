@@ -28,6 +28,7 @@ class sale_order(models.Model):
         ctx = {}
         ctx['default_so_id'] = self.id
         ctx['default_cost_sheet_id'] = self.od_cost_sheet_id and self.od_cost_sheet_id.id or False
+        ctx['default_project_id'] = self.project_id and self.project_id.id or False
 #         ctx['default_manager_id']= self.get_manager_id()
         
         value = {
