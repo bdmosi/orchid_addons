@@ -284,6 +284,18 @@ class invoice_alternate_line(models.Model):
         bt_pay_perc = self.bt_pay_perc
         discount = self.discount
         disc_amount = self.disc_amount
+        tax_rate = self.tax_rate /100.0
+        
+        original_total_bf_discount = total_bf_discount 
+        original_total_bf_tax = original_total_bf_discount - disc_amount
+        original_tax_amount = original_total_bf_tax * tax_rate
+        original_total_amount = original_total_bf_tax + original_tax_amount
+        
+        self.original_total_bf_discount = original_total_bf_discount 
+        self.original_total_bf_tax = original_total_bf_tax 
+        self.original_tax_amount = original_tax_amount 
+        self.original_total_amount = original_total_amount 
+        
         if bt_pay_perc:
             total_bf_tax = total_bf_tax * (bt_pay_perc/100.0)
             total_bf_discount =total_bf_discount  * (bt_pay_perc/100.0)
@@ -313,6 +325,13 @@ class invoice_alternate_line(models.Model):
     total_bf_discount = fields.Float(string="Total Before Discount",compute="_compute_calc",digits=dp.get_precision('Gov'))
     total_bf_tax = fields.Float(string="Total After Discount",compute="_compute_calc",digits=dp.get_precision('Gov'))
     tax_rate =fields.Float(string="Tax Rate(%)")
+    
+    original_total_bf_discount = fields.Float(string="Original Total Before Discount",compute="_compute_calc",digits=dp.get_precision('Gov'))
+    original_total_bf_tax = fields.Float(string="Original Total After Discount",compute="_compute_calc",digits=dp.get_precision('Gov'))
+    original_tax_rate =fields.Float(string="Original Tax Rate(%)")
+    original_tax_amount =fields.Float(string="Tax Amount",compute="_compute_calc",digits=dp.get_precision('Gov'))
+    original_total_amount= fields.Float(string="Total Amount",compute="_compute_calc",digits=dp.get_precision('Gov'))
+    
     tax_amount =fields.Float(string="Tax Amount",compute="_compute_calc",digits=dp.get_precision('Gov'))
     total_amount= fields.Float(string="Total Amount",compute="_compute_calc",digits=dp.get_precision('Gov'))
     bt_enable = fields.Boolean(string="Enable Pay %")
