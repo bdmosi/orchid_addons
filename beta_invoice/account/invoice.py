@@ -147,6 +147,10 @@ class account_invoice(models.Model):
         for line in self.invoice_line:
             line.bt_enable = bt_enable 
             line.bt_pay_perc = bt_pay_perc
+        
+        for line in self.gov_alternate_line:
+            line.bt_enable = bt_enable 
+            line.bt_pay_perc = bt_pay_perc
             
     
     
