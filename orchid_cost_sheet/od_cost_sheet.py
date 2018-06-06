@@ -1947,7 +1947,7 @@ class od_cost_sheet(models.Model):
         self.a_om_sale = sale 
         self.a_om_profit = profit 
         self.a_om_profit_percentage = profit_per
-        self.o_m_vat = vat
+#         self.o_m_vat = vat
         return {'cost':cost,'sale':sale,'vat':vat}
     def calculate_bim_analy(self):
         result =[]
