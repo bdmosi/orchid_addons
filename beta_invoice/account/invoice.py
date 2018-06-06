@@ -328,7 +328,7 @@ class invoice_alternate_line(models.Model):
     
     original_total_bf_discount = fields.Float(string="Original Total Before Discount",compute="_compute_calc",digits=dp.get_precision('Gov'))
     original_total_bf_tax = fields.Float(string="Original Total After Discount",compute="_compute_calc",digits=dp.get_precision('Gov'))
-    original_tax_rate =fields.Float(string="Original Tax Rate(%)")
+    
     original_tax_amount =fields.Float(string="Tax Amount",compute="_compute_calc",digits=dp.get_precision('Gov'))
     original_total_amount= fields.Float(string="Total Amount",compute="_compute_calc",digits=dp.get_precision('Gov'))
     

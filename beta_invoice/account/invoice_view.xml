@@ -69,6 +69,13 @@
                 	<field name="tax_rate" required="1"/>
                 	<field name="tax_amount" sum="Total" />
                 	<field name="total_amount" sum="Total"/>
+                	
+                	
+                	 <field name="original_total_bf_discount" sum="Total" />
+                	<field name="original_total_bf_tax" sum="Total" />
+              
+                	<field name="original_tax_amount" sum="Total" />
+                	<field name="original_total_amount" sum="Total"/>
                 
                 </tree>
                 </field>
