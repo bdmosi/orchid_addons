@@ -71,11 +71,11 @@
                 	<field name="total_amount" sum="Total"/>
                 	
                 	
-                	 <field name="original_total_bf_discount" sum="Total" />
-                	<field name="original_total_bf_tax" sum="Total" />
+                	 <field name="original_total_bf_discount" sum="Total" invisible="1"/>
+                	<field name="original_total_bf_tax" sum="Total" invisible="1"/>
               
-                	<field name="original_tax_amount" sum="Total" />
-                	<field name="original_total_amount" sum="Total"/>
+                	<field name="original_tax_amount" sum="Total" invisible="1"/>
+                	<field name="original_total_amount" sum="Total" invisible="1"/>
                 
                 </tree>
                 </field>
