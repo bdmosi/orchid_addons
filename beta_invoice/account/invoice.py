@@ -287,6 +287,7 @@ class invoice_alternate_line(models.Model):
         if bt_pay_perc:
             total_bf_tax = total_bf_tax * (bt_pay_perc/100.0)
             total_bf_discount =total_bf_discount  * (bt_pay_perc/100.0)
+            disc_amount = disc_amount * (bt_pay_perc/100.0)
         if discount:
             total_bf_tax = total_bf_tax * (1 - (discount or 0.0) / 100.0)
         
