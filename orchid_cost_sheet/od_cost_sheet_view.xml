@@ -2828,7 +2828,7 @@
 					
 					
 					<page string="Revenue Structure" invisible="0">
-					
+					      <separator string="Level 0" />
 					     <table style="width:100%" class="table table-striped">
 								<thead>
 									
@@ -2838,9 +2838,7 @@
 									<th>Date Start</th>
 									<th>Date End</th>
 									<th>Name of the Analytic</th>
-									<th>Owner</th>
-									<th>Type</th>
-									<th>Tabs Included</th>
+								
 								</thead>
 								<tbody>
 									<tr>
@@ -2861,16 +2859,29 @@
 										<td>
 											<field name="name_a0"/>
 										</td>
-										
-										<td>
-											
-										</td>
-										
-										<td>
-											<field name="type_of_project_a0"/>
-										</td>
-										<td></td>
+									
 									</tr>
+									
+						
+								</tbody>
+							</table>
+							
+							<separator string="Level 1" />
+					     <table style="width:100%" class="table table-striped">
+								<thead>
+									
+									<th>Select</th>
+									<th>Analytic</th>
+									
+									<th>Date Start</th>
+									<th>Date End</th>
+									<th>Name of the Analytic</th>
+									<th>Owner</th>
+									<th>Type</th>
+									<th>Tabs Included</th>
+								</thead>
+								<tbody>
+					
 									
 									<tr>
 										<td>
@@ -3020,6 +3031,7 @@
 									</tr>
 								</tbody>
 							</table>
+							
 					
 					</page>
 					
