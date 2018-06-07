@@ -128,9 +128,9 @@
                         <filter string="Project Start Month" context="{'group_by':'date_start:month'}"/>
                         <filter string="Project Start Quarter" context="{'group_by':'date_start:quarter'}"/>
                          <filter string="Actual Closing Date" context="{'group_by':'closing_date:month'}"/>
-                         <filter string="Project End Year" context="{'group_by':'date_end:year'}" name="Year"/>
-                        <filter string="Project End Month" context="{'group_by':'date_end:month'}"/>
-                        <filter string="Project End Quarter" context="{'group_by':'date_end:quarter'}"/>
+                         <filter string="PMO Expected Closing Year" context="{'group_by':'date_end:year'}" name="Year"/>
+                        <filter string="PMO Expected Closing Month" context="{'group_by':'date_end:month'}"/>
+                        <filter string="PMO Expected Closing Quarter" context="{'group_by':'date_end:quarter'}"/>
                        
                         <filter string="Sale Account Manager" domain="[]" context="{'group_by':'sam_id'}"/>
                         <filter string="Project Manager" domain="[]" context="{'group_by':'pm_id'}"/>

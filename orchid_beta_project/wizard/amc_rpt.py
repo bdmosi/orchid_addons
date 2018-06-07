@@ -19,8 +19,8 @@ class amc_rpt_wiz(models.TransientModel):
     date_start_from = fields.Date(string="SLA Planned Starting Date From")
     date_start_to = fields.Date(string="SLA Planned Starting Date To")
     
-    date_end_from = fields.Date(string="SLA Ending Date From")
-    date_end_to = fields.Date(string="SLA Ending Date To")
+    date_end_from = fields.Date(string="PMO Expected Closing Date From")
+    date_end_to = fields.Date(string="PMO Expected Closing  Date To")
     
     
     closing_date_from = fields.Date(string="SLA Actual Closing  From")
@@ -104,10 +104,10 @@ class amc_rpt_wiz(models.TransientModel):
             domain += [('od_amc_start','<=',date_start_to)]
         
         if date_end_from:
-            domain += [('od_amc_end','>=',date_end_from)]
+            domain += [('od_amc_pmo_closing','>=',date_end_from)]
         
         if date_end_to:
-            domain += [('od_amc_end','<=',date_end_to)]
+            domain += [('od_amc_pmo_closing','<=',date_end_to)]
         
           
         if closing_date_from:
@@ -198,7 +198,7 @@ class wiz_amc_rpt_data(models.TransientModel):
     actual_cost = fields.Float(string="Actual Cost",digits=dp.get_precision('Account'))
     actual_profit = fields.Float(string="Actual Profit",digits=dp.get_precision('Account'))
     date_start = fields.Date(string="Planned Date Start")
-    date_end = fields.Date(string="Planned Date End")
+    date_end = fields.Date(string="PMO Expected Closing")
     closing_date = fields.Date(string="Actual Closing Date")
     contract_status = fields.Selection([('template','Template'),('draft','New'),('open','In Progress'),('pending','To Renew'),('close','Closed'),('cancelled','Cancelled')],string="Contract Status")
     contract_start_date =  fields.Date(string="Contract Start Date")
