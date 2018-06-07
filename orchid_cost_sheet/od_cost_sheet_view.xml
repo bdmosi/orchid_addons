@@ -2860,6 +2860,7 @@
 											<field name="name_a0"/>
 										</td>
 									
+									
 									</tr>
 									
 						
@@ -3032,6 +3033,26 @@
 								</tbody>
 							</table>
 							
+							<separator string="Level 2 (AMC) " />
+					     <table style="width:100%" class="table table-striped">
+								<thead>
+									
+							
+									
+									<th>Periodicity</th>
+									<th>Start Date</th>
+									<th>No.Of L2 Accounts</th>
+									
+								</thead>
+								<tbody>
+								<tr>
+									<td><field name="periodicity"/></td>
+									<td><field name="l2_start_date"/></td>
+									<td><field name="no_of_l2_accounts"/></td>
+										
+								</tr>
+								</tbody>
+								</table>
 					
 					</page>
 					
