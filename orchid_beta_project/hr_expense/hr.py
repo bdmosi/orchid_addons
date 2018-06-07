@@ -1988,7 +1988,7 @@ class hr_employee(models.Model):
         analytic_pool = self.env['account.analytic.account']
         company_id = self.company_id and self.company_id.id
         open_project_ids = analytic_pool.search([('company_id','=',company_id),('od_type_of_project','not in',('o_m','credit','comp_gen','poc')),('state','not in',('close','cancelled'))])
-        closed_project_ids = analytic_pool.search([('company_id','=',company_id),('od_type_of_project','not in',('o_m','credit','comp_gen','poc')),('state','=','close')])
+        closed_project_ids = analytic_pool.search([('company_id','=',company_id),('od_type_of_project','not in',('o_m','credit','comp_gen','poc'))])
         sale_pool = self.env['sale.order']
         invoice_pool = self.env['account.invoice']
         total_collected =0.0
@@ -2026,6 +2026,15 @@ class hr_employee(models.Model):
             open_projects.append((0,0,{'analytic_id':project.id,'project_value':project_value,'collected':collected,'paid':paid,'manpower_cost':manpower_cost,'general_cost':general_cost}))
             
         for project in closed_project_ids:
+            
+            project_type = project.od_type_of_project
+            if project.state != 'close':
+                if project_type == 'amc':
+                    if project.od_amc_status != 'close':
+                        continue
+                else:
+                    if project.od_project_status != 'close':
+                        continue
             sale = sale_pool.search([('project_id','=',project.id),('state','!=','cancel')],limit=1)
             amount_total = sale.amount_total or 0.0
             discount = abs(sale.od_discount) or 0.0
