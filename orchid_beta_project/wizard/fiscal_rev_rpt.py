@@ -37,8 +37,133 @@ class fiscal_rpt_wiz(models.TransientModel):
     def od_get_company_id(self):
         return self.env.user.company_id
     company_id = fields.Many2one('res.company', string='Company',default=od_get_company_id)
-    @api.multi 
-    def export_rpt(self):
+    
+    
+    
+    def get_amc_vals(self):
+        branch_ids = [pr.id for pr in self.branch_ids]
+        cost_centre_ids = [pr.id for pr in self.cost_centre_ids]
+        division_ids = [pr.id for pr in self.division_ids]
+        pm_ids =[pr.id for pr in self.pm_ids]
+        sam_ids =[pr.id for pr in self.sam_ids]
+        sale_team_ids =[pr.id for pr in self.sale_team_ids]
+        territory_ids =[pr.id for pr in self.territory_ids]
+        partner_ids =[pr.id for pr in self.partner_ids]
+        wiz_id = self.id
+        wip = self.wip 
+        closed = self.closed 
+        inactive= self.inactive
+            
+        date_start_from = self.date_start_from
+        date_start_to = self.date_start_to
+        date_end_from = self.date_end_from
+        date_end_to = self.date_end_to
+        
+        closing_date_from =self.closing_date_from
+        closing_date_to =self.closing_date_to
+        
+        prj_states = []
+        if wip:
+            prj_states += ['active']
+        if closed:
+            prj_states += ['close']
+        if inactive:
+            prj_states += ['inactive']
+            
+        company_id = self.company_id and self.company_id.id 
+        domain = [('od_type_of_project','in',('amc','o_m')),('state','!=','cancelled')]
+        if company_id:
+            domain += [('company_id','=',company_id)]
+        
+        if partner_ids:
+            domain += [('partner_id','in',partner_ids)]
+        
+        if prj_states:
+            domain+=[('od_amc_status','in',prj_states)]
+        if branch_ids:
+            domain += [('od_branch_id','in',branch_ids)]
+        if cost_centre_ids:
+            domain += [('od_cost_centre_id','in',cost_centre_ids)]
+        if division_ids:
+            domain += [('od_division_id','in',division_ids)]
+        
+        if pm_ids:
+            domain += [('od_amc_owner_id','in',pm_ids)]
+        if sam_ids:
+            domain += [('manager_id','in',sam_ids)]
+        if sale_team_ids:
+            domain += [('od_section_id','in',sale_team_ids)]
+        if territory_ids:
+            domain += [('od_territory_id','in',territory_ids)]
+        
+        
+        if date_start_from:
+            domain += [('od_amc_start','>=',date_start_from)]
+        if date_start_to:
+            domain += [('od_amc_start','<=',date_start_to)]
+        
+        if date_end_from:
+            domain += [('od_amc_pmo_closing','>=',date_end_from)]
+        
+        if date_end_to:
+            domain += [('od_amc_pmo_closing','<=',date_end_to)]
+        
+          
+        if closing_date_from:
+            domain += [('od_amc_closing','>=',closing_date_from)]
+        
+        if closing_date_to:
+            domain += [('od_amc_closing','<=',closing_date_to)]
+    
+            
+        project_data = self.env['project.project'].search(domain) 
+        result =[]
+        for data in project_data:
+            project_id = data.id
+            sam_id = data.manager_id and data.manager_id.id
+            pm_id = data.od_amc_owner_id and data.od_amc_owner_id.id 
+            partner_id = data.partner_id and data.partner_id.id 
+            company_id = data.company_id and data.company_id.id 
+            branch_id = data.od_branch_id and data.od_branch_id.id
+            od_cost_sheet_id = data.od_cost_sheet_id and data.od_cost_sheet_id.id
+            po_status = data.od_cost_sheet_id and data.od_cost_sheet_id and data.od_cost_sheet_id.po_status
+            
+            contract_status = data.state 
+            contract_start_date = data.date_start
+            contract_end_date = data.date 
+            closing_date = data.od_amc_closing
+            result.append((0,0,{
+                                'wiz_id':wiz_id,
+                                'cost_sheet_id':od_cost_sheet_id, 
+                                'sam_id':sam_id ,
+                                'partner_id':partner_id,
+                                'company_id':company_id,
+                                'branch_id':branch_id,
+                                'pm_id':pm_id,
+                                'project_id':project_id,
+                                'original_sale':data.od_amc_original_sale,
+                                'original_cost':data.od_amc_original_cost,
+                                'original_profit':data.od_amc_original_profit,
+                                'amended_sale':data.od_amc_amend_sale,
+                                'amended_cost':data.od_amc_amend_cost,
+                                'amended_profit':data.od_amc_amend_cost,
+                                'actual_sale':data.od_amc_sale,
+                                'actual_cost':data.od_amc_cost,
+                                'actual_profit':data.od_amc_profit,
+                                'status':data.od_amc_status,
+                                'date_start':data.od_amc_start,
+                                'date_end':data.od_amc_end, 
+                                'po_status':po_status,
+                                 'contract_status':contract_status,
+                                'contract_start_date':contract_start_date,
+                                'contract_end_date':contract_end_date,
+                                'closing_date':closing_date ,
+                                'project_type':'amc'
+                                }))
+        return result
+    
+    
+    def get_project_vals(self):
         branch_ids = [pr.id for pr in self.branch_ids]
         cost_centre_ids = [pr.id for pr in self.cost_centre_ids]
         division_ids = [pr.id for pr in self.division_ids]
@@ -70,14 +195,14 @@ class fiscal_rpt_wiz(models.TransientModel):
             prj_states += ['inactive']
             
         company_id = self.company_id and self.company_id.id 
-        domain = [('od_type_of_project','in',('credit','sup','imp','sup_imp','amc','o_m')),('state','!=','cancelled')]
+        domain = [('od_type_of_project','in',('credit','sup','imp','sup_imp','o_m')),('state','!=','cancelled')]
         if company_id:
             domain += [('company_id','=',company_id)]
         if partner_ids:
             domain += [('partner_id','in',partner_ids)]
         
         if prj_states:
-            domain+=['|',('od_project_status','in',prj_states),('od_amc_status','in',prj_states)]
+            domain+=[('od_project_status','in',prj_states)]
         if branch_ids:
             domain += [('od_branch_id','in',branch_ids)]
         if cost_centre_ids:
@@ -96,15 +221,15 @@ class fiscal_rpt_wiz(models.TransientModel):
             
         
         if date_start_from:
-            domain += [('date_start','>=',date_start_from)]
+            domain += [('od_project_start','>=',date_start_from)]
         if date_start_to:
-            domain += [('date_start','<=',date_start_to)]
+            domain += [('od_project_start','<=',date_start_to)]
         
         if date_end_from:
-            domain += [('od_analytic_pmo_closing','>=',date_end_from)]
+            domain += [('od_project_pmo_closing','>=',date_end_from)]
         
         if date_end_to:
-            domain += [('od_analytic_pmo_closing','<=',date_end_to)]
+            domain += [('od_project_pmo_closing','<=',date_end_to)]
             
         if closing_date_from:
             domain += [('od_project_closing','>=',closing_date_from)]
@@ -128,103 +253,47 @@ class fiscal_rpt_wiz(models.TransientModel):
             contract_start_date = data.date_start
             contract_end_date = data.date 
             closing_date = data.od_project_closing
-            
-            project_type = data.od_type_of_project 
-            if project_type == 'amc':
-                result.append((0,0,{
-                                    'wiz_id':wiz_id,
-                                    'cost_sheet_id':od_cost_sheet_id, 
-                                    'sam_id':sam_id ,
-                                    'partner_id':partner_id,
-                                    'company_id':company_id,
-                                    'branch_id':branch_id,
-                                    'pm_id':pm_id,
-                                    'project_id':project_id,
-                                    'original_sale':data.od_amc_original_sale,
-                                    'original_cost':data.od_amc_original_cost,
-                                    'original_profit':data.od_amc_original_profit,
-                                    'amended_sale':data.od_amc_amend_sale,
-                                    'amended_cost':data.od_amc_amend_cost,
-                                    'amended_profit':data.od_amc_amend_profit,
-                                    'actual_sale':data.od_amc_sale,
-                                    'actual_cost':data.od_amc_cost,
-                                    'actual_profit':data.od_amc_profit,
-                                    'status':data.od_amc_status,
-                                    'date_start':data.od_amc_start,
-                                    'date_end':data.od_amc_pmo_closing, 
-                                    'po_status':po_status,
-                                    'contract_status':contract_status,
-                                    'contract_start_date':contract_start_date,
-                                    'contract_end_date':contract_end_date,
-                                    'closing_date':closing_date,
-                                    'project_type':'amc'
-                                    }))
-            
-            else:
-            
-                result.append((0,0,{
-                                    'wiz_id':wiz_id,
-                                    'cost_sheet_id':od_cost_sheet_id, 
-                                    'sam_id':sam_id ,
-                                    'partner_id':partner_id,
-                                    'company_id':company_id,
-                                    'branch_id':branch_id,
-                                    'pm_id':pm_id,
-                                    'project_id':project_id,
-                                    'original_sale':data.od_project_original_sale,
-                                    'original_cost':data.od_project_original_cost,
-                                    'original_profit':data.od_project_original_profit,
-                                    'amended_sale':data.od_project_amend_sale,
-                                    'amended_cost':data.od_project_amend_cost,
-                                    'amended_profit':data.od_project_amend_profit,
-                                    'actual_sale':data.od_project_sale,
-                                    'actual_cost':data.od_project_cost,
-                                    'actual_profit':data.od_project_profit,
-                                    'status':data.od_project_status,
-                                    'date_start':data.od_project_start,
-                                    'date_end':data.od_project_pmo_closing, 
-                                    'po_status':po_status,
-                                    'contract_status':contract_status,
-                                    'contract_start_date':contract_start_date,
-                                    'contract_end_date':contract_end_date,
-                                    'closing_date':closing_date,
-                                    'project_type':'project'
-                                    }))
-                if data.od_amc_amend_sale or data.od_amc_profit:
-                    result.append((0,0,{
-                                    'wiz_id':wiz_id,
-                                    'cost_sheet_id':od_cost_sheet_id, 
-                                    'sam_id':sam_id ,
-                                    'partner_id':partner_id,
-                                    'company_id':company_id,
-                                    'branch_id':branch_id,
-                                    'pm_id':pm_id,
-                                    'project_id':project_id,
-                                    'original_sale':data.od_amc_original_sale,
-                                    'original_cost':data.od_amc_original_cost,
-                                    'original_profit':data.od_amc_original_profit,
-                                    'amended_sale':data.od_amc_amend_sale,
-                                    'amended_cost':data.od_amc_amend_cost,
-                                    'amended_profit':data.od_amc_amend_profit,
-                                    'actual_sale':data.od_amc_sale,
-                                    'actual_cost':data.od_amc_cost,
-                                    'actual_profit':data.od_amc_profit,
-                                    'status':data.od_amc_status,
-                                    'date_start':data.od_amc_start,
-                                    'date_end':data.od_amc_pmo_closing, 
-                                    'po_status':po_status,
-                                    'contract_status':contract_status,
-                                    'contract_start_date':contract_start_date,
-                                    'contract_end_date':contract_end_date,
-                                    'closing_date':closing_date,
-                                    'project_type':'amc'
-                                    }))
-                    
-                        
+            result.append((0,0,{
+                                'wiz_id':wiz_id,
+                                'cost_sheet_id':od_cost_sheet_id, 
+                                'sam_id':sam_id ,
+                                'partner_id':partner_id,
+                                'company_id':company_id,
+                                'branch_id':branch_id,
+                                'pm_id':pm_id,
+                                'project_id':project_id,
+                                'original_sale':data.od_project_original_sale,
+                                'original_cost':data.od_project_original_cost,
+                                'original_profit':data.od_project_original_profit,
+                                'amended_sale':data.od_project_amend_sale,
+                                'amended_cost':data.od_project_amend_cost,
+                                'amended_profit':data.od_project_amend_profit,
+                                'actual_sale':data.od_project_sale,
+                                'actual_cost':data.od_project_cost,
+                                'actual_profit':data.od_project_profit,
+                                'status':data.od_project_status,
+                                'date_start':data.od_project_start,
+                                'date_end':data.od_project_pmo_closing, 
+                                'po_status':po_status,
+                                'contract_status':contract_status,
+                                'contract_start_date':contract_start_date,
+                                'contract_end_date':contract_end_date,
+                                'closing_date':closing_date,
+                                 'project_type':'project'
+                                }))
+        
+        return result
+    
+    
+    @api.multi 
+    def export_rpt(self):
+        project_vals = self.get_project_vals()
+        amc_vals = self.get_amc_vals()
+        result = project_vals + amc_vals
         self.wiz_line.unlink()
         self.write({'wiz_line':result})
         return {
-            'domain': [('wiz_id','=',wiz_id)],
+            'domain': [('wiz_id','=',self.id)],
             'name': 'Revenue Report',
             'view_type': 'form',
             'view_mode': 'tree',
