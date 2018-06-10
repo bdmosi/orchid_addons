@@ -111,7 +111,7 @@
 				<field name="amended_profit" string="Planned GP" sum="Total" />
 				<field name="actual_profit" string="Actual GP" sum="Total" />
 				
-				 <field name="date_end" string="Planned Closing Date"/> 
+				 <field name="date_end" string="PMO Expected Closing Date"/> 
 				 <field name="closing_date" />
 				
 			</tree>
