@@ -830,12 +830,12 @@ class od_cost_sheet(models.Model):
 
     
     # Revenue Structure
-    analytic_a0 = fields.Many2one('account.anlytic.account',string="Analytic A0")
-    analytic_a1 = fields.Many2one('account.anlytic.account',string="Analytic A1")
-    analytic_a2 = fields.Many2one('account.anlytic.account',string="Analytic A2")
-    analytic_a3 = fields.Many2one('account.anlytic.account',string="Analytic A3")
-    analytic_a4 = fields.Many2one('account.anlytic.account',string="Analytic A4")
-    analytic_a5 = fields.Many2one('account.anlytic.account',string="Analytic A5")
+    analytic_a0 = fields.Many2one('account.analytic.account',string="Analytic A0")
+    analytic_a1 = fields.Many2one('account.analytic.account',string="Analytic A1")
+    analytic_a2 = fields.Many2one('account.analytic.account',string="Analytic A2")
+    analytic_a3 = fields.Many2one('account.analytic.account',string="Analytic A3")
+    analytic_a4 = fields.Many2one('account.analytic.account',string="Analytic A4")
+    analytic_a5 = fields.Many2one('account.analytic.account',string="Analytic A5")
      
     
     
