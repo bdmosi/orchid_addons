@@ -2879,7 +2879,7 @@
 									
 									<th>Select</th>
 									<th>Analytic</th>
-									<th>Tabs Included</th>
+									<th width="30%">Tabs Included</th>
 									<th>Date Start</th>
 									<th>Date End</th>
 									<th>Name of the Analytic</th>
