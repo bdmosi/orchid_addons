@@ -4214,18 +4214,36 @@ class od_cost_sheet(models.Model):
         type_project_a0= 'parent_level0'
         analytic_level = 'level0'
         owner_id = self.reviewed_id and self.reviewed_id.id or False
-        analytic_a0 = self.env['account.analytic.account'].create({
+        analytic_a0_id =self.analytic_a0  and self.analytic_a0.id 
+        analytic_id = False
+        if not analytic_a0_id:
+            analytic_a0 = self.env['account.analytic.account'].create({
+                    'name':name_a0,
+                    'date_start':date_start_a0,
+                    'date':date_end_a0,
+                    'type':'contract',
+                    'company_id':company_id,
+                    'od_owner_id':owner_id,
+                    'od_type_of_project':type_project_a0,
+                    'od_analytic_level':analytic_level
+                    
+                    })
+            analytic_id = analytic_a0.id
+        else:
+            analytic_id = analytic_a0_id
+            analytic_ob =self.env['account.analytic.account'].browse(analytic_id)
+            analytic_ob.write({
                 'name':name_a0,
-                'date_start':date_start_a0,
-                'date':date_end_a0,
-                'type':'contract',
-                'company_id':company_id,
-                'od_owner_id':owner_id,
-                'od_type_of_project':type_project_a0,
-                'od_analytic_level':analytic_level
-                
+                    'date_start':date_start_a0,
+                    'date':date_end_a0,
+                    'type':'contract',
+                    'company_id':company_id,
+                    'od_owner_id':owner_id,
+                    'od_type_of_project':type_project_a0,
+                    'od_analytic_level':analytic_level
                 })
-        return analytic_a0.id
+            
+        return analytic_id
     
     
     def create_analytic_level1_template(self,parent_id,seq):
@@ -4234,26 +4252,44 @@ class od_cost_sheet(models.Model):
         select_seq = eval('self.'+'select_a'+ str(seq))
         analytic_seq = eval('self.'+'analytic_a'+ str(seq))
         analytic_seq_id = analytic_seq and analytic_seq.id or False
-        if select_seq and not analytic_seq_id:
+        if select_seq:
+            analytic_id = False
             name= eval('self.'+'name_a'+ str(seq))
             date_start = eval('self.'+'date_start_a'+ str(seq))
             date_end = eval('self.'+'date_end_a'+ str(seq))
             type_project= eval('self.'+'type_of_project_a'+ str(seq))
             analytic_level = 'level1'
             owner_id = eval('self.'+'owner_id_a'+ str(seq))
-            analytic = self.env['account.analytic.account'].create({
-                'name':name,
-                'date_start':date_start,
-                'date':date_end,
-                'type':'normal',
-                'company_id':company_id,
-                'od_owner_id':owner_id and owner_id.id or False,
-                'od_type_of_project':type_project,
-                'od_analytic_level':analytic_level,
-                'parent_id':parent_id
+            if not analytic_seq_id:
+                analytic = self.env['account.analytic.account'].create({
+                    'name':name,
+                    'date_start':date_start,
+                    'date':date_end,
+                    'type':'normal',
+                    'company_id':company_id,
+                    'od_owner_id':owner_id and owner_id.id or False,
+                    'od_type_of_project':type_project,
+                    'od_analytic_level':analytic_level,
+                    'parent_id':parent_id
+                    
+                    })
+                analytic_id = analytic.id
+            else:
+                analytic_id = analytic_seq_id
+                analytic_ob =self.env['account.analytic.account'].browse(analytic_id)
+                analytic = analytic_ob.write({
+                    'name':name,
+                    'date_start':date_start,
+                    'date':date_end,
+                    'type':'normal',
+                    'company_id':company_id,
+                    'od_owner_id':owner_id and owner_id.id or False,
+                    'od_type_of_project':type_project,
+                    'od_analytic_level':analytic_level,
+                    'parent_id':parent_id
+                    
+                    })
                 
-                })
-            analytic_id = analytic.id
             a_field = 'analytic_a' + str(seq)
             self.write({a_field:analytic_id})
     
