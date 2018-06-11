@@ -4232,7 +4232,9 @@ class od_cost_sheet(models.Model):
         
         company_id = self.company_id and self.company_id.id or False
         select_seq = eval('self.'+'select_a'+ str(seq))
-        if select_seq:
+        analytic_seq = eval('self.'+'analytic_a'+ str(seq))
+        analytic_seq_id = analytic_seq and analytic_seq.id or False
+        if select_seq and not analytic_seq_id:
             name= eval('self.'+'name_a'+ str(seq))
             date_start = eval('self.'+'date_start_a'+ str(seq))
             date_end = eval('self.'+'date_end_a'+ str(seq))

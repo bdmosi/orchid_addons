@@ -2863,7 +2863,7 @@
 											<field name="name_a0"/>
 										</td>
 										<td>
-											<field name="analytic_a0"/>
+											<field name="analytic_a0" readonly="1"/>
 										</td>
 									
 									
@@ -2918,7 +2918,7 @@
 											<field name="type_of_project_a1"/>
 										</td>
 										<td>
-											<field name="analytic_a1"/>
+											<field name="analytic_a1" readonly="1"/>
 										</td>
 									</tr>
 									
@@ -2950,7 +2950,7 @@
 										</td>
 										
 										<td>
-											<field name="analytic_a2"/>
+											<field name="analytic_a2" readonly="1"/>
 										</td>
 										
 									</tr>
@@ -2982,7 +2982,7 @@
 											<field name="type_of_project_a3"/>
 										</td>
 										<td>
-											<field name="analytic_a3"/>
+											<field name="analytic_a3" readonly="1"/>
 										</td>
 									</tr>
 									
@@ -3014,7 +3014,7 @@
 											<field name="type_of_project_a4"/>
 										</td>
 										<td>
-											<field name="analytic_a4"/>
+											<field name="analytic_a4" readonly="1"/>
 										</td>
 										
 									</tr>
@@ -3047,7 +3047,7 @@
 											<field name="type_of_project_a5"/>
 										</td>
 										<td>
-											<field name="analytic_a5"/>
+											<field name="analytic_a5" readonly="1"/>
 										</td>
 										
 									</tr>
