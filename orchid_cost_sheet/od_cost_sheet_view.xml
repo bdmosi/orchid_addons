@@ -121,6 +121,8 @@
 							string="Un-Freeze" type='object' class='oe_highlight' attrs="{'invisible':[('freeze','!=',True)]}" 
 							/> -->
 						
+						<button name="create_analytic" string="Create Analytic" type="object" class="oe_highlight"  />
+						
 						<button name="update_vat" string="Link VAT" type="object" class="oe_highlight" states="draft,design_ready,submitted,returned_by_pmo" />
 						<button name="btn_freez_price" string="Freeze Selling" type="object" class="oe_highlight" attrs="{'invisible':[('price_fixed','=',True)]}"  />
 						<button name="btn_unfreez_price" string="Un-Freeze Selling" type="object" class="oe_highlight" attrs="{'invisible':['|',('price_fixed','=',False),('state','not in',('draft','design_ready','submitted','commit','returned_by_pmo'))]}"  />
@@ -2838,6 +2840,7 @@
 									<th>Date Start</th>
 									<th>Date End</th>
 									<th>Name of the Analytic</th>
+									<th>AA</th>
 								
 								</thead>
 								<tbody>
@@ -2859,6 +2862,9 @@
 										<td>
 											<field name="name_a0"/>
 										</td>
+										<td>
+											<field name="analytic_a0"/>
+										</td>
 									
 									
 									</tr>
@@ -2879,6 +2885,7 @@
 									<th>Name of the Analytic</th>
 									<th>Owner</th>
 									<th>Type</th>
+									<th>AA</th>
 									
 								</thead>
 								<tbody>
@@ -2910,7 +2917,9 @@
 										<td>
 											<field name="type_of_project_a1"/>
 										</td>
-										
+										<td>
+											<field name="analytic_a1"/>
+										</td>
 									</tr>
 									
 									<tr>
@@ -2938,6 +2947,10 @@
 										
 										<td>
 											<field name="type_of_project_a2"/>
+										</td>
+										
+										<td>
+											<field name="analytic_a2"/>
 										</td>
 										
 									</tr>
@@ -2968,7 +2981,9 @@
 										<td>
 											<field name="type_of_project_a3"/>
 										</td>
-										
+										<td>
+											<field name="analytic_a3"/>
+										</td>
 									</tr>
 									
 									
@@ -2997,6 +3012,9 @@
 										
 										<td>
 											<field name="type_of_project_a4"/>
+										</td>
+										<td>
+											<field name="analytic_a4"/>
 										</td>
 										
 									</tr>
@@ -3027,6 +3045,9 @@
 										
 										<td>
 											<field name="type_of_project_a5"/>
+										</td>
+										<td>
+											<field name="analytic_a5"/>
 										</td>
 										
 									</tr>

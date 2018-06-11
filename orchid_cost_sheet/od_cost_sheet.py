@@ -379,9 +379,11 @@ class od_cost_sheet(models.Model):
         result = []
         if (self.bim_tot_sale1 != 0.0 or self.bim_tot_cost1 != 0.0):
             tech_sale,tech_cost,tech_profit = self.get_tot_sale_cost(self.imp_tech_line)
-            result.append({'sale':self.bim_tot_sale1 - tech_sale,'cost':self.bim_tot_cost1 - tech_cost,'profit':self.bim_profit1 - tech_profit,'tab':'bim'})
+            result.append({'sale':self.bim_tot_sale1 - tech_sale,
+                           'cost':self.bim_tot_cost1 - tech_cost,'profit':self.bim_profit1 - tech_profit,'tab':'bim'})
         if (self.oim_tot_sale1 != 0.0 or self.oim_tot_cost1 != 0.0):
-            result.append({'sale':self.oim_tot_sale1,'cost':self.oim_tot_cost1,'profit':self.oim_profit1,'tab':'oim'})
+            result.append({'sale':self.oim_tot_sale1,
+                           'cost':self.oim_tot_cost1,'profit':self.oim_profit1,'tab':'oim'})
         return result
     
     def get_amc_vals(self):
@@ -4203,6 +4205,69 @@ class od_cost_sheet(models.Model):
         return so_line_map
 
 
+    
+    def create_analyti_a0(self):
+        company_id = self.company_id and self.company_id.id or False
+        name_a0= self.name_a0 
+        date_start_a0 = self.date_start_a0 
+        date_end_a0 = self.date_end_a0
+        type_project_a0= 'parent_level0'
+        analytic_level = 'level0'
+        owner_id = self.reviewed_id and self.reviewed_id.id or False
+        analytic_a0 = self.env['account.analytic.account'].create({
+                'name':name_a0,
+                'date_start':date_start_a0,
+                'date':date_end_a0,
+                'type':'contract',
+                'company_id':company_id,
+                'od_owner_id':owner_id,
+                'od_type_of_project':type_project_a0,
+                'od_analytic_level':analytic_level
+                
+                })
+        return analytic_a0.id
+    
+    
+    def create_analytic_level1_template(self,parent_id,seq):
+        
+        company_id = self.company_id and self.company_id.id or False
+        select_seq = eval('self.'+'select_a'+ str(seq))
+        if select_seq:
+            name= eval('self.'+'name_a'+ str(seq))
+            date_start = eval('self.'+'date_start_a'+ str(seq))
+            date_end = eval('self.'+'date_end_a'+ str(seq))
+            type_project= eval('self.'+'type_of_project_a'+ str(seq))
+            analytic_level = 'level1'
+            owner_id = eval('self.'+'owner_id_a'+ str(seq))
+            analytic = self.env['account.analytic.account'].create({
+                'name':name,
+                'date_start':date_start,
+                'date':date_end,
+                'type':'normal',
+                'company_id':company_id,
+                'od_owner_id':owner_id,
+                'od_type_of_project':type_project,
+                'od_analytic_level':analytic_level,
+                'parent_id':parent_id
+                
+                })
+            analytic_id = analytic.id
+            a_field = 'analytic_a' + str(seq)
+            self.write({a_field:analytic_id})
+    
+    def create_analytic_level1(self,parent_id):
+        for seq in range(1,6):
+            self.create_analytic_level1_template(parent_id, seq)
+            
+    
+    @api.one
+    def create_analytic(self):
+        if self.select_a0:
+            analytic_a0_id =self.create_analyti_a0()
+            self.write({'analytic_a0':analytic_a0_id})
+            self.create_analytic_level1(analytic_a0_id)
+    
+    
     @api.one
     def generate_sale_order(self):
         # self.check_order_type()
