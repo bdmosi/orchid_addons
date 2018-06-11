@@ -4216,6 +4216,13 @@ class od_cost_sheet(models.Model):
         owner_id = self.reviewed_id and self.reviewed_id.id or False
         analytic_a0_id =self.analytic_a0  and self.analytic_a0.id 
         analytic_id = False
+        
+        account_manager = self.sales_acc_manager and self.sales_acc_manager.id
+        partner_id = self.od_customer_id and self.od_customer_id.id
+        
+        od_cost_centre_id = self.od_cost_centre_id and self.od_cost_centre_id.id or False
+        od_branch_id = self.od_branch_id and self.od_branch_id.id or False
+        od_division_id = self.od_division_id and self.od_division_id.id or False
         if not analytic_a0_id:
             analytic_a0 = self.env['account.analytic.account'].create({
                     'name':name_a0,
@@ -4225,7 +4232,13 @@ class od_cost_sheet(models.Model):
                     'company_id':company_id,
                     'od_owner_id':owner_id,
                     'od_type_of_project':type_project_a0,
-                    'od_analytic_level':analytic_level
+                    'od_analytic_level':analytic_level,
+                    'manager_id':account_manager,
+                    'partner_id':partner_id,
+                    'od_cost_sheet_id':self.id,
+                    'od_cost_centre_id':od_cost_centre_id,
+                    'od_branch_id':od_branch_id,
+                    'od_division_id':od_division_id
                     
                     })
             analytic_id = analytic_a0.id
@@ -4240,7 +4253,13 @@ class od_cost_sheet(models.Model):
                     'company_id':company_id,
                     'od_owner_id':owner_id,
                     'od_type_of_project':type_project_a0,
-                    'od_analytic_level':analytic_level
+                    'od_analytic_level':analytic_level,
+                    'manager_id':account_manager,
+                    'partner_id':partner_id,
+                    'od_cost_sheet_id':self.id,
+                    'od_cost_centre_id':od_cost_centre_id,
+                    'od_branch_id':od_branch_id,
+                    'od_division_id':od_division_id
                 })
             
         return analytic_id
@@ -4249,6 +4268,13 @@ class od_cost_sheet(models.Model):
     def create_analytic_level1_template(self,parent_id,seq):
         
         company_id = self.company_id and self.company_id.id or False
+        
+        account_manager = self.sales_acc_manager and self.sales_acc_manager.id
+        partner_id = self.od_customer_id and self.od_customer_id.id
+        
+        od_cost_centre_id = self.od_cost_centre_id and self.od_cost_centre_id.id or False
+        od_branch_id = self.od_branch_id and self.od_branch_id.id or False
+        od_division_id = self.od_division_id and self.od_division_id.id or False
         select_seq = eval('self.'+'select_a'+ str(seq))
         analytic_seq = eval('self.'+'analytic_a'+ str(seq))
         analytic_seq_id = analytic_seq and analytic_seq.id or False
@@ -4270,7 +4296,13 @@ class od_cost_sheet(models.Model):
                     'od_owner_id':owner_id and owner_id.id or False,
                     'od_type_of_project':type_project,
                     'od_analytic_level':analytic_level,
-                    'parent_id':parent_id
+                    'parent_id':parent_id,
+                    'manager_id':account_manager,
+                    'partner_id':partner_id,
+                    'od_cost_sheet_id':self.id,
+                    'od_cost_centre_id':od_cost_centre_id,
+                    'od_branch_id':od_branch_id,
+                    'od_division_id':od_division_id,
                     
                     })
                 analytic_id = analytic.id
@@ -4286,7 +4318,13 @@ class od_cost_sheet(models.Model):
                     'od_owner_id':owner_id and owner_id.id or False,
                     'od_type_of_project':type_project,
                     'od_analytic_level':analytic_level,
-                    'parent_id':parent_id
+                    'parent_id':parent_id,
+                    'manager_id':account_manager,
+                    'partner_id':partner_id,
+                    'od_cost_sheet_id':self.id,
+                    'od_cost_centre_id':od_cost_centre_id,
+                    'od_branch_id':od_branch_id,
+                    'od_division_id':od_division_id,
                     
                     })
                 

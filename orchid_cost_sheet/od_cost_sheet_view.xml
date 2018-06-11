@@ -2896,7 +2896,7 @@
 											<field name="select_a1"/>
 										</td>
 										<td>
-										A1
+										  A1
 										</td>
 										<td><field name="tabs_a1" widget="many2many_tags"/></td>
 										<td>
