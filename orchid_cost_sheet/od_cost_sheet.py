@@ -4339,7 +4339,29 @@ class od_cost_sheet(models.Model):
     def check_duplicate_tabs(self,rev_tabs):
         result =[item for item, count in Counter(rev_tabs).items() if count > 1]
         if result:
-            raise Warning("Duplicate Tabs Found linked in Multiple Analytic ")
+            raise Warning("Duplicate Tabs Found linked in Multiple Analytic in Revenue Structure ")
+    
+    def match_tabs(self,rev_tabs):
+        tabs_inclued = []
+        model_data = self.env['ir.model.data']
+        tab_mat =model_data.get_object_reference('orchid_cost_sheet', 'tab_mat')[1]
+        tab_trn =model_data.get_object_reference('orchid_cost_sheet', 'tab_trn')[1]
+        tab_imp =model_data.get_object_reference('orchid_cost_sheet', 'tab_imp')[1]
+        tab_amc =model_data.get_object_reference('orchid_cost_sheet', 'tab_amc')[1]
+        tab_o_m =model_data.get_object_reference('orchid_cost_sheet', 'tab_o_m')[1]
+        if self.included_in_quotation:
+            tabs_inclued.append(tab_mat)
+        if self.included_trn_in_quotation:
+            tabs_inclued.append(tab_trn)
+        if self.included_bim_in_quotation:
+            tabs_inclued.append(tab_imp)
+        if self.included_bmn_in_quotation:
+            tabs_inclued.append(tab_amc)
+        if self.included_om_in_quotation:
+            tabs_inclued.append(tab_o_m)
+        if not (sorted(tabs_inclued) == sorted(rev_tabs)):
+            raise Warning("Tabs Included in the Costsheet and Revenue Structure Linked Tabs are Not Matching ,Kindly Check it")
+        
     def tab_validations(self):
         rev_tabs =[]
         for seq in range(1,6):
@@ -4348,7 +4370,8 @@ class od_cost_sheet(models.Model):
                 tabs_ids = eval('self.'+'tabs_a'+ str(seq))
                 tabs = [tab.id for tab in tabs_ids]
                 rev_tabs += tabs
-        self.check_duplicate_tabs(rev_tabs)    
+        self.check_duplicate_tabs(rev_tabs)
+        self.match_tabs(rev_tabs)    
     @api.one
     def create_analytic(self):
         if self.select_a0:
