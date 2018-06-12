@@ -6,7 +6,7 @@ from openerp.exceptions import except_orm, Warning, RedirectWarning
 import dateutil.relativedelta
 from datetime import date, timedelta,datetime
 import openerp.addons.decimal_precision as dp
-from collections import defaultdict
+from collections import defaultdict,Counter
 from math import exp,log10
 from pprint import pprint
 from openerp.osv import expression
@@ -4336,9 +4336,23 @@ class od_cost_sheet(models.Model):
             self.create_analytic_level1_template(parent_id, seq)
             
     
+    def check_duplicate_tabs(self,rev_tabs):
+        result =[item for item, count in Counter(rev_tabs).items() if count > 1]
+        if result:
+            raise Warning("Duplicate Tabs Found linked in Multiple Analytic ")
+    def tab_validations(self):
+        rev_tabs =[]
+        for seq in range(1,6):
+            select_seq = eval('self.'+'select_a'+ str(seq))
+            if select_seq:
+                tabs_ids = eval('self.'+'tabs_a'+ str(seq))
+                tabs = [tab.id for tab in tabs_ids]
+                rev_tabs += tabs
+        self.check_duplicate_tabs(rev_tabs)    
     @api.one
     def create_analytic(self):
         if self.select_a0:
+            self.tab_validations()
             analytic_a0_id =self.create_analyti_a0()
             self.write({'analytic_a0':analytic_a0_id})
             self.create_analytic_level1(analytic_a0_id)
