@@ -881,8 +881,8 @@ class od_cost_sheet(models.Model):
     type_of_project_a4 = fields.Selection(DOMAIN,string="Type Of Project A4")
     type_of_project_a5 = fields.Selection(DOMAIN,string="Type Of Project A5")
     
-    select_a0 = fields.Boolean(string="Select A0")
-#     select_a0 = fields.Boolean(string="Select A0",default=True)
+#     select_a0 = fields.Boolean(string="Select A0")
+    select_a0 = fields.Boolean(string="Select A0",default=True)
     select_a1 = fields.Boolean(string="Select A1")
     select_a2 = fields.Boolean(string="Select A2")
     select_a3 = fields.Boolean(string="Select A3")
@@ -4458,8 +4458,8 @@ class od_cost_sheet(models.Model):
         bm_lines = []
 
         anal_dict = {'mat':project_mat,'imp':project_bim,'oim':project_oim,'omn':project_omn,'o_m':project_o_m,'trn':project_trn,'amc':project_bmn}
-#         if self.select_a0:
-#             anal_dict = self.get_analytic_dict()
+        if self.select_a0:
+            anal_dict = self.get_analytic_dict()
         #mat sales
         if self.included_in_quotation:
             if not project_mat:

@@ -121,7 +121,7 @@
 							string="Un-Freeze" type='object' class='oe_highlight' attrs="{'invisible':[('freeze','!=',True)]}" 
 							/> -->
 						
-						<button name="create_analytic" string="Create Analytic" type="object" class="oe_highlight" invisible="1"  />
+						<button name="create_analytic" string="Create Analytic" type="object" class="oe_highlight" invisible="0"  />
 						
 						<button name="update_vat" string="Link VAT" type="object" class="oe_highlight" states="draft,design_ready,submitted,returned_by_pmo" />
 						<button name="btn_freez_price" string="Freeze Selling" type="object" class="oe_highlight" attrs="{'invisible':[('price_fixed','=',True)]}"  />
