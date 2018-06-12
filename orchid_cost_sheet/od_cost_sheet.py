@@ -882,6 +882,7 @@ class od_cost_sheet(models.Model):
     type_of_project_a5 = fields.Selection(DOMAIN,string="Type Of Project A5")
     
     select_a0 = fields.Boolean(string="Select A0")
+#     select_a0 = fields.Boolean(string="Select A0",default=True)
     select_a1 = fields.Boolean(string="Select A1")
     select_a2 = fields.Boolean(string="Select A2")
     select_a3 = fields.Boolean(string="Select A3")
@@ -4381,6 +4382,37 @@ class od_cost_sheet(models.Model):
             self.create_analytic_level1(analytic_a0_id)
     
     
+    def get_analytic_dict(self):
+        res = {}
+        model_data = self.env['ir.model.data']
+        tab_mat =model_data.get_object_reference('orchid_cost_sheet', 'tab_mat')[1]
+        tab_trn =model_data.get_object_reference('orchid_cost_sheet', 'tab_trn')[1]
+        tab_imp =model_data.get_object_reference('orchid_cost_sheet', 'tab_imp')[1]
+        tab_amc =model_data.get_object_reference('orchid_cost_sheet', 'tab_amc')[1]
+        tab_o_m =model_data.get_object_reference('orchid_cost_sheet', 'tab_o_m')[1]
+        
+        
+        for seq in range(1,6):
+            select_seq = eval('self.'+'select_a'+ str(seq))
+            analytic =eval('self.'+'analytic_a'+ str(seq))
+            analytic_id = analytic and analytic.id or False
+            if select_seq:
+                tabs_ids = eval('self.'+'tabs_a'+ str(seq))
+                for tab in tabs_ids:
+                    if tab.id == tab_mat:
+                        res['mat'] = analytic_id 
+                    if tab.id == tab_trn:
+                        res['trn'] = analytic_id
+                    if tab.id == tab_imp:
+                        res['imp'] = analytic_id  
+                    if tab.id == tab_amc:
+                        res['amc'] = analytic_id
+                    if tab.id == tab_o_m:
+                        res['o_m'] = analytic_id
+                        
+        return res    
+        
+    
     @api.one
     def generate_sale_order(self):
         # self.check_order_type()
@@ -4426,7 +4458,8 @@ class od_cost_sheet(models.Model):
         bm_lines = []
 
         anal_dict = {'mat':project_mat,'imp':project_bim,'oim':project_oim,'omn':project_omn,'o_m':project_o_m,'trn':project_trn,'amc':project_bmn}
-
+#         if self.select_a0:
+#             anal_dict = self.get_analytic_dict()
         #mat sales
         if self.included_in_quotation:
             if not project_mat:
@@ -4491,20 +4524,20 @@ class od_cost_sheet(models.Model):
                     raise Warning("Analytic Account Not Selected In TRN Tab, Which is Enabled Included In Quotation,Please Select It")
                 trn_lines.append((0,0,{
                                             'od_manufacture_id':line.manufacture_id and line.manufacture_id.id or False,
-                                             'product_id':line.part_no.id,
-                                               'name':line.part_no.description_sale or line.part_no.name,
-                                              'od_original_qty':line.qty,
-                                              'od_original_price':line.new_unit_price if line.locked else line.unit_price,
-                                              'od_original_unit_cost':line.unit_cost_local,
-                                              'purchase_price':line.unit_cost_local,
-                                              'product_uom_qty':line.qty,
-                                              'price_unit':line.new_unit_price if line.locked else line.unit_price,
-                                               'od_cost_sheet_id':self.id,
-                                                'od_tab_type':'trn',
-                                              'od_analytic_acc_id':project_trn,
-                                              'tax_id':[[6,False,[line.tax_id.id]]],
-                                               'od_sup_unit_cost':line.discounted_unit_supplier_currency,
-                                             'od_sup_line_cost':line.discounted_total_supplier_currency,
+                                            'product_id':line.part_no.id,
+                                            'name':line.part_no.description_sale or line.part_no.name,
+                                            'od_original_qty':line.qty,
+                                            'od_original_price':line.new_unit_price if line.locked else line.unit_price,
+                                            'od_original_unit_cost':line.unit_cost_local,
+                                            'purchase_price':line.unit_cost_local,
+                                            'product_uom_qty':line.qty,
+                                            'price_unit':line.new_unit_price if line.locked else line.unit_price,
+                                            'od_cost_sheet_id':self.id,
+                                            'od_tab_type':'trn',
+                                            'od_analytic_acc_id':project_trn,
+                                            'tax_id':[[6,False,[line.tax_id.id]]],
+                                            'od_sup_unit_cost':line.discounted_unit_supplier_currency,
+                                            'od_sup_line_cost':line.discounted_total_supplier_currency,
                                              }))
             for line in self.trn_customer_training_extra_expense_line:
                 trn_expense += line.qty * line.unit_cost_local
@@ -4515,14 +4548,14 @@ class od_cost_sheet(models.Model):
                                     'od_manufacture_id':self.get_product_brand(trn_exp_product_id),
                                     'product_id':trn_exp_product_id,
                                     'product_uom_qty':1,
-                                     'od_original_qty':1,
-                                     'od_original_price':trn_extra_sale,
-                                     'od_original_unit_cost':trn_expense,
-                                     'purchase_price':trn_expense,
+                                    'od_original_qty':1,
+                                    'od_original_price':trn_extra_sale,
+                                    'od_original_unit_cost':trn_expense,
+                                    'purchase_price':trn_expense,
                                     'price_unit':trn_extra_sale,
-                                     'od_cost_sheet_id':self.id,
-                                     'od_tab_type':'trn',
-                                      'tax_id':tsvat,
+                                    'od_cost_sheet_id':self.id,
+                                    'od_tab_type':'trn',
+                                    'tax_id':tsvat,
 #                                      'tax_id':[[6,False,[line.tax_id.id]]],
                                     'od_analytic_acc_id':project_trn,
                                     'od_sup_unit_cost':0,
