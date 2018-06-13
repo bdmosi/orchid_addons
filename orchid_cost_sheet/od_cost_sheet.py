@@ -3826,13 +3826,18 @@ class od_cost_sheet(models.Model):
     @api.model
     def create(self,vals):
         lead_id = self.env.context.get('default_lead_id')
+        costsheets = self.search([('lead_id','=',lead_id)])
+        lead_obj = self.env['crm.lead'].browse(lead_id)
+        lead_number = lead_obj.od_number
+        cst_sheet_count = len(costsheets) + 1
         if lead_id:
             if vals.get('status') == 'active':
                 old_cost_sheets = self.search([('status','=','active'),('lead_id','=',lead_id)])
                 if len(old_cost_sheets) > 0:
                     raise Warning('Active Cost Sheet for Each Lead Must Be Unique')
         if vals.get('number','/')=='/':
-            vals['number'] = self.env['ir.sequence'].get('od.cost.sheet') or '/'
+#             vals['number'] = self.env['ir.sequence'].get('od.cost.sheet') or '/'
+            vals['number'] = lead_number + '-' + str(cst_sheet_count)
 
         return super(od_cost_sheet, self).create( vals)
 
