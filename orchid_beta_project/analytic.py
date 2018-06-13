@@ -33,7 +33,7 @@ class account_analytic_account(models.Model):
     od_amc_invoice_schedule_line  = fields.One2many('od.amc.invoice.schedule','analytic_id',string="AMC Invoice Schedule")
     od_om_invoice_schedule_line  = fields.One2many('od.om.invoice.schedule','analytic_id',string="Operation Invoice Schedule")
     
-    od_analytic_level = fields.Selection([('level0','Level 0'),('level1','Level 1'),('level2','Level 2')],string="Analytic Level")
+    od_analytic_level = fields.Selection([('level_old','Level OLD'),('level0','Level 0'),('level1','Level 1'),('level2','Level 2')],string="Analytic Level")
     
     
     

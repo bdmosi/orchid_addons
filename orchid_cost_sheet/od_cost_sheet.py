@@ -890,13 +890,13 @@ class od_cost_sheet(models.Model):
     select_a5 = fields.Boolean(string="Select A5")
     
     
-    periodicity_amc = fields.Selection([('monthly','Monthly'),('quarterly','Quarterly'),('yearly','Yearly')],string="Periodicity")
+    periodicity_amc = fields.Selection([('weekly','Weekly'),('monthly','Monthly'),('quarterly','Quarterly'),('yearly','Yearly')],string="Periodicity")
     no_of_l2_accounts_amc = fields.Integer(string="No.of L2 Accounts")
     l2_start_date_amc = fields.Date(string="Start Date")
     
     
     
-    periodicity_om = fields.Selection([('monthly','Monthly'),('quarterly','Quarterly'),('yearly','Yearly')],string="Periodicity")
+    periodicity_om = fields.Selection([('weekly','Weekly'),('monthly','Monthly'),('quarterly','Quarterly'),('yearly','Yearly')],string="Periodicity")
     no_of_l2_accounts_om = fields.Integer(string="No.of L2 Accounts")
     l2_start_date_om = fields.Date(string="Start Date")
     
