@@ -4229,12 +4229,14 @@ class od_cost_sheet(models.Model):
         od_cost_centre_id = self.od_cost_centre_id and self.od_cost_centre_id.id or False
         od_branch_id = self.od_branch_id and self.od_branch_id.id or False
         od_division_id = self.od_division_id and self.od_division_id.id or False
+        code = self.number + '-' + 'A0'
         if not analytic_a0_id:
             analytic_a0 = self.env['account.analytic.account'].create({
                     'name':name_a0,
                     'date_start':date_start_a0,
                     'date':date_end_a0,
-                    'type':'contract',
+                    'type':'view',
+                    'code':code,
                     'company_id':company_id,
                     'od_owner_id':owner_id,
                     'od_type_of_project':type_project_a0,
@@ -4255,7 +4257,7 @@ class od_cost_sheet(models.Model):
                 'name':name_a0,
                     'date_start':date_start_a0,
                     'date':date_end_a0,
-                    'type':'contract',
+                    
                     'company_id':company_id,
                     'od_owner_id':owner_id,
                     'od_type_of_project':type_project_a0,
@@ -4292,11 +4294,13 @@ class od_cost_sheet(models.Model):
             type_project= eval('self.'+'type_of_project_a'+ str(seq))
             analytic_level = 'level1'
             owner_id = eval('self.'+'owner_id_a'+ str(seq))
+            code = self.number + '-' + 'A'+ str(seq)
             if not analytic_seq_id:
                 analytic = self.env['account.analytic.account'].create({
                     'name':name,
                     'date_start':date_start,
                     'date':date_end,
+                    'code':code,
                     'type':'normal',
                     'company_id':company_id,
                     'od_owner_id':owner_id and owner_id.id or False,
@@ -4998,11 +5002,13 @@ class od_cost_sheet(models.Model):
     @api.one
     def recreate_sale(self):
         pass
+    
     @api.one
     def unlink(self):
         if self.state != 'draft':
             raise Warning("You Can Only Delete Draft Cost Sheet")
         return super(od_cost_sheet,self).unlink()
+    
     @api.one
     def compute_value(self):
         curr_fluct = []

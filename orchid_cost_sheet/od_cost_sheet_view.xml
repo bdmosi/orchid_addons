@@ -2992,7 +2992,7 @@
 											<field name="select_a4"/>
 										</td>
 										<td>
-										A4
+										A4 (AMC)
 										</td>
 										<td><field name="tabs_a4" widget="many2many_tags"/></td>
 										<td>
@@ -3025,7 +3025,7 @@
 											<field name="select_a5"/>
 										</td>
 										<td>
-										A5
+										A5 (O&amp;M)
 										</td>
 										<td><field name="tabs_a5" widget="many2many_tags"/></td>
 										<td>
