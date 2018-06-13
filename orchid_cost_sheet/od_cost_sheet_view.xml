@@ -3054,7 +3054,7 @@
 								</tbody>
 							</table>
 							
-							<separator string="Level 2 (AMC) " />
+					   <separator string="Level 2 (AMC) " />
 					     <table style="width:100%" class="table table-striped">
 								<thead>
 									
@@ -3067,9 +3067,30 @@
 								</thead>
 								<tbody>
 								<tr>
-									<td><field name="periodicity"/></td>
-									<td><field name="l2_start_date"/></td>
-									<td><field name="no_of_l2_accounts"/></td>
+									<td><field name="periodicity_amc"/></td>
+									<td><field name="l2_start_date_amc"/></td>
+									<td><field name="no_of_l2_accounts_amc"/></td>
+										
+								</tr>
+								</tbody>
+								</table>
+						
+						 <separator string="Level 2 (O&amp;M) " />
+					     <table style="width:100%" class="table table-striped">
+								<thead>
+									
+							
+									
+									<th>Periodicity</th>
+									<th>Start Date</th>
+									<th>No.Of L2 Accounts</th>
+									
+								</thead>
+								<tbody>
+								<tr>
+									<td><field name="periodicity_om"/></td>
+									<td><field name="l2_start_date_om"/></td>
+									<td><field name="no_of_l2_accounts_om"/></td>
 										
 								</tr>
 								</tbody>
