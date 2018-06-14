@@ -4428,7 +4428,7 @@ class od_cost_sheet(models.Model):
                     })
             analytic_id = analytic.id
             vals.append({'start_date':start_date,'end_date':date_end,'analytic_id':analytic_id})
-            start_date = date_end + timedelta(days=1)
+            start_date = date_end 
             
         if group =='amc':
             self.amc_analytic_line = vals
