@@ -3,7 +3,7 @@ from openerp.tools.translate import _
 from openerp.tools import float_round, float_is_zero, float_compare
 from openerp import models, fields, api, _
 from openerp.exceptions import except_orm, Warning, RedirectWarning
-import dateutil.relativedelta
+import dateutil.relativedelta as relativedelta
 from datetime import date, timedelta,datetime
 import openerp.addons.decimal_precision as dp
 from collections import defaultdict,Counter
@@ -4400,13 +4400,13 @@ class od_cost_sheet(models.Model):
         for i in range(no_of_l2):
             
             if periodicity =='weekly':
-                date_end = start_date + timedelta(weeks=1)
+                date_end = start_date + relativedelta(weeks=+1)
             if periodicity =='monthly':
-                date_end = start_date + timedelta(months=1)
+                date_end = start_date + relativedelta(months=+1)
             if periodicity =='quarterly':
-                date_end = start_date + timedelta(months=3)
+                date_end = start_date + relativedelta(months=+3)
             if periodicity =='yearly':
-                date_end = start_date + timedelta(years=1)
+                date_end = start_date + relativedelta(years=+1)
             analytic=self.env['account.analytic.account'].create({
                     'name':name +'-' +str(i+1),
                     'date_start':str(start_date),
