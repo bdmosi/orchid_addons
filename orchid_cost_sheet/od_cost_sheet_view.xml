@@ -605,6 +605,32 @@
 									</thead>
 								</table>
 							</div>
+							
+							
+							<separator string="Beta IT Manpower Analysis "/>
+							<table style="width:100%" class="table table-striped">
+								<thead>
+									<tr>
+										<td>Returned MP</td>
+										<td>Total GP</td>
+										
+
+									</tr>
+									<tbody>
+										<tr>
+											<td>
+												<field name="returned_mp"/>
+											</td>
+											<td>
+												<field name="total_gp"/>
+											</td>
+											
+										</tr>
+									</tbody>
+								</thead>
+								</table>
+							
+							
 							<group>
 								<field name="summary_tot_cost" invisible="1"/>
 							</group>
@@ -647,28 +673,7 @@
 							</table>
 							
 							
-							<separator string="Beta IT Manpower Analysis خدمات بيتا بدون المصاريف الإضافية"/>
-							<table style="width:100%" class="table table-striped">
-								<thead>
-									<tr>
-										<td>Returned MP</td>
-										<td>Total GP</td>
-										
-
-									</tr>
-									<tbody>
-										<tr>
-											<td>
-												<field name="returned_mp"/>
-											</td>
-											<td>
-												<field name="total_gp"/>
-											</td>
-											
-										</tr>
-									</tbody>
-								</thead>
-								</table>
+							
 										
 							
 							<!-- <table style="width:100%" class="table table-striped">
