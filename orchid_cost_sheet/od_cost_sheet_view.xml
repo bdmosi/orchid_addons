@@ -3053,14 +3053,7 @@
 									</tr>
 								</tbody>
 							</table>
-							<separtor string="Details" />
-							<field name="amc_analytic_line">
-								<tree editable="bottom">
-									<field name="start_date" />
-									<field name="end_date" />
-									<field name="analytic_id" />
-								</tree>
-							</field>
+							
 							
 					   <separator string="Level 2 (AMC) " />
 					     <table style="width:100%" class="table table-striped">
@@ -3082,7 +3075,15 @@
 								</tr>
 								</tbody>
 								</table>
-						
+						<separtor string="Details" />
+							<field name="amc_analytic_line">
+								<tree editable="bottom">
+									<field name="start_date" />
+									<field name="end_date" />
+									<field name="analytic_id" />
+								</tree>
+							</field>
+							
 						 <separator string="Level 2 (O&amp;M) " />
 					     <table style="width:100%" class="table table-striped">
 								<thead>
