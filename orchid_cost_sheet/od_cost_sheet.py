@@ -3646,6 +3646,10 @@ class od_cost_sheet(models.Model):
 
     
     mat_extra_expense_line = fields.One2many('od.cost.mat.extra.expense.line','cost_sheet_id',string='Mat Extra Expense Line',states={'draft':[('readonly',False)],'design_ready':[('readonly',False)],'submitted':[('readonly',False)],'commit':[('readonly',False)],'returned_by_pmo':[('readonly',False)],'returned_by_fin':[('readonly',False)],'handover':[('readonly',False)],'waiting_po':[('readonly',False)],'change':[('readonly',False)],'modify':[('readonly',False)]},readonly=True,copy=True)
+    
+    amc_analytic_line = fields.One2many('od.amc.analytic.lines','cost_sheet_id',string='AMC Analytic Lines',readonly=True)
+    om_analytic_line = fields.One2many('od.om.analytic.lines','cost_sheet_id',string='AMC Analytic Lines',readonly=True)
+    
     show_to_customer_main_proposal = fields.Boolean(string='Show to Customer',default=True)
     show_to_opt = fields.Boolean(string='Show to Customer',default=False)
     show_mat_ext_exp =fields.Boolean(string='Show to Customer',default=False)
@@ -4301,13 +4305,16 @@ class od_cost_sheet(models.Model):
             analytic_level = 'level1'
             owner_id = eval('self.'+'owner_id_a'+ str(seq))
             code = self.number + '-' + 'A'+ str(seq)
+            type = 'normal'
+            if seq in (4,5):
+                type ='view'
             if not analytic_seq_id:
                 analytic = self.env['account.analytic.account'].create({
                     'name':name,
                     'date_start':date_start,
                     'date':date_end,
                     'code':code,
-                    'type':'normal',
+                    'type':type,
                     'company_id':company_id,
                     'od_owner_id':owner_id and owner_id.id or False,
                     'od_type_of_project':type_project,
@@ -4329,7 +4336,6 @@ class od_cost_sheet(models.Model):
                     'name':name,
                     'date_start':date_start,
                     'date':date_end,
-                    'type':'normal',
                     'company_id':company_id,
                     'od_owner_id':owner_id and owner_id.id or False,
                     'od_type_of_project':type_project,
@@ -4351,6 +4357,83 @@ class od_cost_sheet(models.Model):
         for seq in range(1,6):
             self.create_analytic_level1_template(parent_id, seq)
             
+    
+    
+    def create_analytic_level2(self,parent_id,group='amc'):
+        if group== 'amc' and self.amc_analytic_line:
+            return True 
+        if group== 'om' and self.om_analytic_line:
+            return True 
+        company_id = self.company_id and self.company_id.id or False
+        
+        account_manager = self.sales_acc_manager and self.sales_acc_manager.id
+        partner_id = self.od_customer_id and self.od_customer_id.id
+        
+        od_cost_centre_id = self.od_cost_centre_id and self.od_cost_centre_id.id or False
+        od_branch_id = self.od_branch_id and self.od_branch_id.id or False
+        od_division_id = self.od_division_id and self.od_division_id.id or False
+        
+        periodicity = self.periodicity_amc 
+        start_date = self.l2_start_date_amc
+        no_of_l2 = self.no_of_l2_accounts_amc 
+        name = parent_id.name + '-AMC'
+        code =parent_id.code + '-AMC'
+        owner_id = parent_id.od_owner_id and parent_id.od_owner_id.id or False
+        type_project ='amc'
+        type ='normal'
+        analytic_level ='level2'
+        date_end = False
+        if group == 'om':
+            periodicity = self.periodicity_om 
+            start_date = self.l2_start_date_om
+            no_of_l2 = self.no_of_l2_accounts_om 
+            name = parent_id.name + '-O&M'
+            code = parent_id.code + '-O&M'
+            type_project ='o_m'
+       
+        
+        
+        start_date =datetime.strptime(start_date,'%Y-%m-%d') 
+                
+        vals =[]
+        
+        for i in range(no_of_l2):
+            
+            if periodicity =='weekly':
+                date_end = start_date + timedelta(weeks=1)
+            if periodicity =='monthly':
+                date_end = start_date + timedelta(months=1)
+            if periodicity =='quarterly':
+                date_end = start_date + timedelta(months=3)
+            if periodicity =='yearly':
+                date_end = start_date + timedelta(years=1)
+            analytic=self.env['account.analytic.account'].create({
+                    'name':name +'-' +str(i+1),
+                    'date_start':str(start_date),
+                    'date':str(date_end),
+                    'code':code+'-' +str(i+1),
+                    'type':type,
+                    'company_id':company_id,
+                    'od_owner_id':owner_id and owner_id.id or False,
+                    'od_type_of_project':type_project,
+                    'od_analytic_level':analytic_level,
+                    'parent_id':parent_id,
+                    'manager_id':account_manager,
+                    'partner_id':partner_id,
+                    'od_cost_sheet_id':self.id,
+                    'od_cost_centre_id':od_cost_centre_id,
+                    'od_branch_id':od_branch_id,
+                    'od_division_id':od_division_id,
+                    
+                    })
+            analytic_id = analytic.id
+            vals.append({'start_date':start_date,'end_date':date_end,'analytic_id':analytic_id})
+            start_date = date_end + timedelta(days=1)
+            
+        if group =='amc':
+            self.amc_analytic_line = vals
+        if group == 'om':
+            self.om_analytic_line = vals
     
     def check_duplicate_tabs(self,rev_tabs):
         result =[item for item, count in Counter(rev_tabs).items() if count > 1]
@@ -4395,6 +4478,11 @@ class od_cost_sheet(models.Model):
             analytic_a0_id =self.create_analyti_a0()
             self.write({'analytic_a0':analytic_a0_id})
             self.create_analytic_level1(analytic_a0_id)
+        if self.select_a4 and self.analytic_a4:
+            self.create_analytic_level2(self.analytic_a4, 'amc')
+        
+        if self.select_a5 and self.analytic_a5:
+            self.create_analytic_level2(self.analytic_a5, 'om')
     
     
     def get_analytic_dict(self):
@@ -5193,6 +5281,24 @@ class od_cost_sheet(models.Model):
             group_obj = group_pool.browse(group_id)
             group_obj.conting_provision_value = conting_amnt
     # completed
+
+
+class od_amc_analytic_lines(models.Model):
+    _name = 'od.amc.analytic.lines'
+    cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet')
+    
+    start_date = fields.Datetime(string="Start Date")
+    end_date = fields.Datetime(string="End Date")
+    analytic_id = fields.Many2one('account.analytic.account',string="Analytic Account")
+
+class od_om_analytic_lines(models.Model):
+    _name = 'od.om.analytic.lines'
+    cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet')
+    
+    start_date = fields.Datetime(string="Start Date")
+    end_date = fields.Datetime(string="End Date")
+    analytic_id = fields.Many2one('account.analytic.account',string="Analytic Account")
+
 
 class od_date_log_history(models.Model):
     _name = 'od.date.log.history'
