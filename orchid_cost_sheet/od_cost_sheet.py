@@ -4414,7 +4414,7 @@ class od_cost_sheet(models.Model):
                     'code':code+'-' +str(i+1),
                     'type':type,
                     'company_id':company_id,
-                    'od_owner_id':owner_id and owner_id.id or False,
+                    'od_owner_id':owner_id ,
                     'od_type_of_project':type_project,
                     'od_analytic_level':analytic_level,
                     'parent_id':parent_id,
