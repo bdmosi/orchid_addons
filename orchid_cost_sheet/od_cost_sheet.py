@@ -3067,12 +3067,13 @@ class od_cost_sheet(models.Model):
     def _get_total_gp(self):
         tech_cost = self.get_tech_cost()
         self.total_gp = self.sum_profit + self.a_bim_cost + self.a_bmn_cost + tech_cost
-    
+        self.returned_mp =self.a_bim_cost + self.a_bmn_cost + tech_cost
     summary_tot_cost = fields.Float(string='Total Cost',compute='_get_sum_total_cost',store=True,digits=dp.get_precision('Account'))
     sum_tot_sale = fields.Float(string="Total Sale",compute="_get_total_summary",store=True,digits=dp.get_precision('Account'))
     sum_tot_cost = fields.Float(string='Total Cost',compute="_get_total_summary",store=True,digits=dp.get_precision('Account'))
     sum_profit = fields.Float(string="Total Profit",compute="_get_total_summary",store=True,digits=dp.get_precision('Account'))
     total_gp = fields.Float(string="Total GP",compute="_get_total_gp",store=True,digits=dp.get_precision('Account'))
+    returned_mp =fields.Float(string="Returned MP",compute="_get_total_gp",store=True,digits=dp.get_precision('Account'))
 #     sum_od_new_profit = fields.Float(string="New Profit",compute="_get_total_summary",store=True)
     sum_profit_per = fields.Float(string="Total Profit Percentage",compute="_get_total_summary",store=True,digits=dp.get_precision('Account'))
     sum_total_weight = fields.Float(string="Total Weight",compute="_get_total_summary",store=True,digits=dp.get_precision('Account'))
@@ -5287,16 +5288,16 @@ class od_amc_analytic_lines(models.Model):
     _name = 'od.amc.analytic.lines'
     cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet')
     
-    start_date = fields.Datetime(string="Start Date")
-    end_date = fields.Datetime(string="End Date")
+    start_date = fields.Date(string="Start Date")
+    end_date = fields.Date(string="End Date")
     analytic_id = fields.Many2one('account.analytic.account',string="Analytic Account")
 
 class od_om_analytic_lines(models.Model):
     _name = 'od.om.analytic.lines'
     cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet')
     
-    start_date = fields.Datetime(string="Start Date")
-    end_date = fields.Datetime(string="End Date")
+    start_date = fields.Date(string="Start Date")
+    end_date = fields.Date(string="End Date")
     analytic_id = fields.Many2one('account.analytic.account',string="Analytic Account")
 
 

@@ -188,7 +188,7 @@ class opp_rev_sale_in_wiz(models.TransientModel):
                                 'manpower_cost':sheet.a_total_manpower_cost,
                                  'mp_sales':sheet.a_total_manpower_sale,
                                  'sam_id':sam_id,
-                                'total_gp':sheet.sum_profit + sheet.a_total_manpower_cost,
+                                'total_gp':sheet.total_gp,
                                  'po_status':po_status,
                                 }))
                         

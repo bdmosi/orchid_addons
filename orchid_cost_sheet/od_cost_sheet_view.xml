@@ -651,6 +651,29 @@
 							<table style="width:100%" class="table table-striped">
 								<thead>
 									<tr>
+										<td>Returned MP</td>
+										<td>Total GP</td>
+										
+
+									</tr>
+									<tbody>
+										<tr>
+											<td>
+												<field name="returned_mp"/>
+											</td>
+											<td>
+												<field name="total_gp"/>
+											</td>
+											
+										</tr>
+									</tbody>
+								</thead>
+								</table>
+										
+							
+							<!-- <table style="width:100%" class="table table-striped">
+								<thead>
+									<tr>
 										<td>Name</td>
 										<td>Sales Value البيع</td>
 										<td>VAT</td>
@@ -771,12 +794,12 @@
 										
 									</tbody>
 								</thead>
-							</table>
+							</table> -->
 							
 							
-							<group>
+							<!-- <group>
 								<field name="total_gp" />
-							</group>
+							</group> -->
 							<separator string="Technology MP Products"/>
 							<field name="mp_tech_summary_line">
 								<tree>
