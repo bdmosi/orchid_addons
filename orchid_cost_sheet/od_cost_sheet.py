@@ -3,7 +3,7 @@ from openerp.tools.translate import _
 from openerp.tools import float_round, float_is_zero, float_compare
 from openerp import models, fields, api, _
 from openerp.exceptions import except_orm, Warning, RedirectWarning
-import dateutil.relativedelta as relativedelta
+from dateutil.relativedelta import relativedelta
 from datetime import date, timedelta,datetime
 import openerp.addons.decimal_precision as dp
 from collections import defaultdict,Counter
