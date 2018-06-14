@@ -4417,7 +4417,7 @@ class od_cost_sheet(models.Model):
                     'od_owner_id':owner_id ,
                     'od_type_of_project':type_project,
                     'od_analytic_level':analytic_level,
-                    'parent_id':parent_id,
+                    'parent_id':parent_id and parent_id.id or False,
                     'manager_id':account_manager,
                     'partner_id':partner_id,
                     'od_cost_sheet_id':self.id,
