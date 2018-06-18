@@ -4651,7 +4651,7 @@ class od_cost_sheet(models.Model):
             trn_expense = 0.0
             trn_extra_sale = 0.0
             for line in self.trn_customer_training_line:
-                if not project_trn:
+                if not (project_trn or self.select_a0):
                     raise Warning("Analytic Account Not Selected In TRN Tab, Which is Enabled Included In Quotation,Please Select It")
                 trn_lines.append((0,0,{
                                             'od_manufacture_id':line.manufacture_id and line.manufacture_id.id or False,
@@ -4710,7 +4710,7 @@ class od_cost_sheet(models.Model):
             bim_price = self.bim_log_price
             bim_cost = self.bim_log_cost
         if self.included_bim_in_quotation:
-            if not project_bim:
+            if not (project_bim or self.select_a0):
                 raise Warning("Analytic Account Not Selected In IMP Tab, Which is Enabled Included In Quotation,Please Select It")
 
             
@@ -4862,7 +4862,7 @@ class od_cost_sheet(models.Model):
             
             
             
-            if not project_bmn:
+            if not (project_bmn or self.select_a0):
                 raise Warning("Analytic Account Not Selected In AMC Tab, Which is Enabled Included In Quotation,Please Select It")
             for omn_line in self.omn_out_preventive_maintenance_line:
                 omn_price += omn_line.qty * (omn_line.new_unit_price if omn_line.locked else omn_line.unit_price)
@@ -5003,7 +5003,7 @@ class od_cost_sheet(models.Model):
         om_exp = 0.0
         om_exp_cost = 0.0
         if self.included_om_in_quotation:
-            if not project_o_m:
+            if not (project_o_m or self.select_a0):
                 raise Warning("Analytic Account Not Selected In O&amp;M Tab, Which is Enabled Included In Quotation,Please Select It")
             
             

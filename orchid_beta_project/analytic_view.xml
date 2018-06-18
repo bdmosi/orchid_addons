@@ -514,6 +514,11 @@
     		
     
         <page string="Contract Information" position="after">
+            
+            <page string="Child Data" attrs="{'invisible':[('type','!=','view;)]}">
+            		<field name="od_child_data" />
+            </page>
+            
             <page string="Project Compliance">
             <separator string="Initiation" />
             <field name="od_comp_initiation_line" readonly="1">

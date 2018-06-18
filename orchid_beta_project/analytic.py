@@ -36,6 +36,10 @@ class account_analytic_account(models.Model):
     od_analytic_level = fields.Selection([('level_old','Level OLD'),('level0','Level 0'),('level1','Level 1'),('level2','Level 2')],string="Analytic Level")
     
     
+    od_child_data = fields.One2many('account.analytic.account','parent_id',string="Children Account")
+    
+    
+    
     
     def get_product_id_from_param(self,product_param):
         parameter_obj = self.env['ir.config_parameter']
