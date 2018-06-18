@@ -1851,6 +1851,7 @@ class od_cost_sheet(models.Model):
 #             self.approved_date = str(datetime.now())
         self.date_log_history_line = [{'name':'Button Approved Log Date','date':appr_date}]
         # self.status = 'baseline'
+        self.create_analytic()
         self.generate_sale_order()
         self.update_opp_stage()
         
