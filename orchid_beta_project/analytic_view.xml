@@ -250,6 +250,10 @@
                    
                     </tr> 
                     
+                     <tr>
+                   <td><strong>Closing Date</strong></td>
+                   <td><field name="od_closing_date" readonly="0"/></td>
+                    
                      
                     
                    <!--  <tr>

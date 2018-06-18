@@ -43,9 +43,7 @@
     <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
     <field name="arch" type="xml">
         <field name="code" position="after">
-            <field name="od_closing_date"         
-            attrs="{'invisible':[('state','!=','close')]}"/>
-        </field>
+           
     
         <page string="Contract Information" position="after">
             <page string="Cost Sheet">

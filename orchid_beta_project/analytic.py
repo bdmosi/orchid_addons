@@ -39,7 +39,7 @@ class account_analytic_account(models.Model):
     
     od_child_data = fields.One2many('account.analytic.account','parent_id',string="Children Account")
     od_grandchild_data = fields.One2many('account.analytic.account','grand_parent_id',string="Grand Children Account")
-    
+    od_closing_date = fields.Date(string="Closing Date")
     
     
     

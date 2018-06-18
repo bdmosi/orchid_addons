@@ -867,7 +867,7 @@ class od_cost_sheet(models.Model):
     
     tabs_a1 = fields.Many2many('od.cost.tabs','rel_cost_a1_tabs','cost_id','tab_id',string="Tabs A1",domain=[('id','not in',(4,5))])
     tabs_a2 = fields.Many2many('od.cost.tabs','rel_cost_a2_tabs','cost_id','tab_id',string="Tabs A2",domain=[('id','not in',(4,5))])
-    tabs_a3 = fields.Many2many('od.cost.tabs','rel_cost_a3_tabs','cost_id','tab_id',string="Tabs A3",domain=[('id','not in',(4,5))])
+    tabs_a3 = fields.Many2many('od.cost.tabs','rel_cost_a3_tabs','cost_id','tab_id',string="Tabs A3",domain=[('id','not in',(4,5))] )
     tabs_a4 = fields.Many2many('od.cost.tabs','rel_cost_a4_tabs','cost_id','tab_id',string="Tabs A4",domain=[('id','=',4)])
     tabs_a5 = fields.Many2many('od.cost.tabs','rel_cost_a5_tabs','cost_id','tab_id',string="Tabs A5",domain=[('id','=',5)])
     
