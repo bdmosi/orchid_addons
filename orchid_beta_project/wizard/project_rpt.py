@@ -52,8 +52,7 @@ class project_rpt_wiz(models.TransientModel):
         closed = self.closed 
         inactive= self.inactive
         
-        date_start_from = self.date_start_from
-        date_start_to = self.date_start_to
+       
         date_end_from = self.date_end_from
         date_end_to = self.date_end_to
         
@@ -95,10 +94,6 @@ class project_rpt_wiz(models.TransientModel):
             domain += [('od_territory_id','in',territory_ids)]
             
         
-        if date_start_from:
-            domain += [('od_project_start','>=',date_start_from)]
-        if date_start_to:
-            domain += [('od_project_start','<=',date_start_to)]
         
         if date_end_from:
             domain += [('od_project_pmo_closing','>=',date_end_from)]
