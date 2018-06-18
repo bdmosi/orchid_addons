@@ -4593,7 +4593,7 @@ class od_cost_sheet(models.Model):
             anal_dict = self.get_analytic_dict()
         #mat sales
         if self.included_in_quotation:
-            if not (project_mat and self.select_a0):
+            if not (project_mat or self.select_a0):
                 raise Warning("Analytic Account Not Selected In MAT Tab, Which is Enabled Included In Quotation,Please Select It")
             material_lines =[]
             mat_expense = 0.0
