@@ -266,7 +266,7 @@
                    <td><field name="od_closing_date" readonly="0"/></td>
                    <td invisible="1"><field name="od_project_closing" attrs="{'readonly':[('od_project_status','=','close')]}"/></td>
                    <td invisible="1"><field name="od_amc_closing" attrs="{'readonly':[('od_amc_status','=','close')]}" /></td>
-                   <td invisible="1"><field name="od_om_closing"  attrs="{'readonly':[('od_om_status','=','close')]}" /></td>
+                  
                     </tr>
                    
                   
