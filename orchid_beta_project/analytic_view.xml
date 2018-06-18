@@ -515,7 +515,7 @@
     
         <page string="Contract Information" position="after">
             
-            <page string="Child Data" attrs="{'invisible':[('type','!=','view;)]}">
+            <page string="Child Data">
             		<field name="od_child_data" />
             </page>
             
