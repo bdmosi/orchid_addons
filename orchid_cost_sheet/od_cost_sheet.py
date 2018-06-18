@@ -4387,7 +4387,7 @@ class od_cost_sheet(models.Model):
             
     
     
-    def create_analytic_level2(self,parent_id,group='amc'):
+    def create_analytic_level2(self,grand_parent_id,parent_id,group='amc'):
         if group== 'amc' and self.amc_analytic_line:
             return True 
         if group== 'om' and self.om_analytic_line:
@@ -4446,6 +4446,7 @@ class od_cost_sheet(models.Model):
                     'od_type_of_project':type_project,
                     'od_analytic_level':analytic_level,
                     'parent_id':parent_id and parent_id.id or False,
+                    'grand_parent_id':grand_parent_id,
                     'manager_id':account_manager,
                     'partner_id':partner_id,
                     'od_cost_sheet_id':self.id,
@@ -4507,10 +4508,10 @@ class od_cost_sheet(models.Model):
             self.write({'analytic_a0':analytic_a0_id})
             self.create_analytic_level1(analytic_a0_id)
         if self.select_a4 and self.analytic_a4:
-            self.create_analytic_level2(self.analytic_a4, 'amc')
+            self.create_analytic_level2(analytic_a0_id,self.analytic_a4, 'amc')
         
         if self.select_a5 and self.analytic_a5:
-            self.create_analytic_level2(self.analytic_a5, 'om')
+            self.create_analytic_level2(analytic_a0_id,self.analytic_a5, 'om')
     
     
     def get_analytic_dict(self):

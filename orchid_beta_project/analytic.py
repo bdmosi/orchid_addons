@@ -10,6 +10,7 @@ class account_invoice(models.Model):
     _inherit = 'account.invoice'
     cust_date = fields.Date(string="Customer Accepted Date")
     state = fields.Selection([('draft','Draft'),('proforma','Pro-forma'),('proforma2','Pro-forma'),('open','Open'),('accept','Accepted By Customer'),('paid','Paid'),('cancel','Cancelled'),('asset_done','Asset Done'),('manual','Manually Settled')],string="Invoice Status")
+    
     @api.multi
     def od_accept(self):
         dt_today = str(dt.today())
@@ -34,9 +35,10 @@ class account_analytic_account(models.Model):
     od_om_invoice_schedule_line  = fields.One2many('od.om.invoice.schedule','analytic_id',string="Operation Invoice Schedule")
     
     od_analytic_level = fields.Selection([('level_old','Level OLD'),('level0','Level 0'),('level1','Level 1'),('level2','Level 2')],string="Analytic Level")
-    
+    grand_parent_id = fields.Many2one('account.analytic.account',string="Grand Parent Account")
     
     od_child_data = fields.One2many('account.analytic.account','parent_id',string="Children Account")
+    od_grandchild_data = fields.One2many('account.analytic.account','grand_parent_id',string="Grand Children Account")
     
     
     

@@ -515,8 +515,48 @@
     
         <page string="Contract Information" position="after">
             
-            <page string="Child Data">
-            		<field name="od_child_data" />
+            <page string="Child Information">
+            <separator string="Child Data" />
+            		<field name="od_child_data" >
+            			<tree>
+            				<field name="name" />
+            				<field name="code" />
+            				<field name="od_original_sale_price" sum="Total"/>
+            				<field name="od_original_sale_cost" sum="Total"/>
+            				<field name="od_original_sale_profit" sum="Total"/>
+            				<field name="od_amended_sale_price" sum="Total"/>
+            				<field name="od_amended_sale_cost" sum="Total"/>
+            				<field name="od_amended_profit" sum="Total"/>
+            				<field name="od_actual_sale" sum="Total"/>
+            				<field name="od_actual_cost" sum="Total"/>
+            				<field name="od_actual_profit" sum="Total"/>
+            				<field name="state" />
+            				
+            				
+            				
+            			</tree>
+            		</field>
+            		
+            		 <separator string="Grand Child Data" />
+            		<field name="od_grandchild_data" >
+            			<tree>
+            				<field name="name" />
+            				<field name="code" />
+            				<field name="od_original_sale_price" sum="Total"/>
+            				<field name="od_original_sale_cost" sum="Total"/>
+            				<field name="od_original_sale_profit" sum="Total"/>
+            				<field name="od_amended_sale_price" sum="Total"/>
+            				<field name="od_amended_sale_cost" sum="Total"/>
+            				<field name="od_amended_profit" sum="Total"/>
+            				<field name="od_actual_sale" sum="Total"/>
+            				<field name="od_actual_cost" sum="Total"/>
+            				<field name="od_actual_profit" sum="Total"/>
+            				<field name="state" />
+            				
+            				
+            				
+            			</tree>
+            		</field>
             </page>
             
             <page string="Project Compliance">
