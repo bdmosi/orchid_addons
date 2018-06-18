@@ -242,13 +242,13 @@
                     </tr>
                    
                    
-              <!--       <tr>
-                   <td><strong>Status</strong></td>
-                   <td></td>
-                   <td><field name="od_project_status" readonly="1"/></td>
-                   <td><field name="od_amc_status" readonly="1"/></td>
+                    <tr invisible="1">
+                   <td invisible="1"><strong>Status</strong></td>
+                   <td invisible="1"></td>
+                   <td invisible="1"><field name="od_project_status" readonly="1"/></td>
+                   <td invisible="1"><field name="od_amc_status" readonly="1"/></td>
                    
-                    </tr> -->
+                    </tr> 
                     
                      
                     
