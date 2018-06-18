@@ -833,6 +833,28 @@ class od_cost_sheet(models.Model):
         self.delete_general_line(self.trn_customer_training_extra_expense_line)
 
     
+    @api.onchange('included_bmn_in_quotation')
+    def onchange_included_amc(self):
+        amc_include = self.included_bmn_in_quotation 
+        if amc_include:
+            self.select_a4 = True
+            self.tabs_a4 = [[(6,0,[4])]]
+        else:
+            self.select_a4 = False
+            self.tabs_a4 = [[(3,0,[4])]]
+            
+    
+    @api.onchange('included_om_in_quotation')
+    def onchange_included_om(self):
+        amc_include = self.included_om_in_quotation 
+        if amc_include:
+            self.select_a5 = True
+            self.tabs_a5 = [[(6,0,[5])]]
+        else:
+            self.select_a5 = False
+            self.tabs_a5 = [[(3,0,[5])]]
+    
+    
     # Revenue Structure
     analytic_a0 = fields.Many2one('account.analytic.account',string="Analytic A0")
     analytic_a1 = fields.Many2one('account.analytic.account',string="Analytic A1")
