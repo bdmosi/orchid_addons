@@ -72,7 +72,7 @@ class amc_rpt_wiz(models.TransientModel):
             prj_states += ['inactive']
             
         company_id = self.company_id and self.company_id.id 
-        domain = [('od_type_of_project','in',('amc')),('state','!=','cancelled'),('type','!=','view')]
+        domain = [('od_type_of_project','in',('amc')),('state','!=','cancelled'),('type','!=','view'),('od_analytic_level','=','level_old')]
         if company_id:
             domain += [('company_id','=',company_id)]
         
@@ -115,11 +115,111 @@ class amc_rpt_wiz(models.TransientModel):
         
         if closing_date_to:
             domain += [('od_amc_closing','<=',closing_date_to)]
-    
             
-        project_data = self.env['project.project'].search(domain) 
+        
+        
+        
+        
+        domain2 = [('od_type_of_project','in',('amc')),('state','!=','cancelled'),('type','!=','view'),('od_analytic_level','!=','level_old')]
+        if company_id:
+            domain2 += [('company_id','=',company_id)]
+        
+        if partner_ids:
+            domain2 += [('partner_id','in',partner_ids)]
+        
+        prj_states = []
+        if wip:
+            prj_states += ['open']
+        if closed:
+            prj_states += ['close']
+        if inactive:
+            prj_states += ['draft']
+        
+        if prj_states:
+            domain2 +=[('state','in',prj_states)]
+        if branch_ids:
+            domain2 += [('od_branch_id','in',branch_ids)]
+        if cost_centre_ids:
+            domain2 += [('od_cost_centre_id','in',cost_centre_ids)]
+        if division_ids:
+            domain2 += [('od_division_id','in',division_ids)]
+        
+        if pm_ids:
+            domain2 += [('od_owner_id','in',pm_ids)]
+        if sam_ids:
+            domain2 += [('manager_id','in',sam_ids)]
+        if sale_team_ids:
+            domain2 += [('od_section_id','in',sale_team_ids)]
+        if territory_ids:
+            domain2 += [('od_territory_id','in',territory_ids)]
+        
+        
+        
+        if date_end_from:
+            domain2 += [('od_analytic_pmo_closing','>=',date_end_from)]
+        
+        if date_end_to:
+            domain2 += [('od_analytic_pmo_closing','<=',date_end_to)]
+        
+          
+        if closing_date_from:
+            domain2 += [('od_closing_date','>=',closing_date_from)]
+        
+        if closing_date_to:
+            domain2 += [('od_closing_date','<=',closing_date_to)]
+    
+        
         result =[]
+       
+        project_data = self.env['project.project'].search(domain) 
+        
         for data in project_data:
+            project_id = data.id
+            sam_id = data.manager_id and data.manager_id.id
+            pm_id = data.od_amc_owner_id and data.od_amc_owner_id.id 
+            partner_id = data.partner_id and data.partner_id.id 
+            company_id = data.company_id and data.company_id.id 
+            branch_id = data.od_branch_id and data.od_branch_id.id
+            od_cost_sheet_id = data.od_cost_sheet_id and data.od_cost_sheet_id.id
+            po_status = data.od_cost_sheet_id and data.od_cost_sheet_id and data.od_cost_sheet_id.po_status
+            
+            contract_status = data.state 
+            contract_start_date = data.date_start
+            contract_end_date = data.date 
+            closing_date = data.od_amc_closing
+            result.append((0,0,{
+                                'wiz_id':wiz_id,
+                                'cost_sheet_id':od_cost_sheet_id, 
+                                'sam_id':sam_id ,
+                                'partner_id':partner_id,
+                                'company_id':company_id,
+                                'branch_id':branch_id,
+                                'pm_id':pm_id,
+                                'project_id':project_id,
+                                'original_sale':data.od_amc_original_sale,
+                                'original_cost':data.od_amc_original_cost,
+                                'original_profit':data.od_amc_original_profit,
+                                'amended_sale':data.od_amc_amend_sale,
+                                'amended_cost':data.od_amc_amend_cost,
+                                'amended_profit':data.od_amc_amend_cost,
+                                'actual_sale':data.od_amc_sale,
+                                'actual_cost':data.od_amc_cost,
+                                'actual_profit':data.od_amc_profit,
+                                'status':data.od_amc_status,
+                                'date_start':data.od_amc_start,
+                                'date_end':data.od_amc_end, 
+                                'po_status':po_status,
+                                 'contract_status':contract_status,
+                                'contract_start_date':contract_start_date,
+                                'contract_end_date':contract_end_date,
+                                'closing_date':closing_date 
+                                }))
+        
+        
+              
+        project_data2 = self.env['project.project'].search(domain2) 
+        
+        for data in project_data2:
             project_id = data.id
             sam_id = data.manager_id and data.manager_id.id
             pm_id = data.od_amc_owner_id and data.od_amc_owner_id.id 
