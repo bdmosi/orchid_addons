@@ -22,6 +22,10 @@ class od_cost_sheet(models.Model):
     _name = 'od.cost.sheet'
     _description = 'Cost Sheet'
     _inherit = ['mail.thread']
+    
+    
+    
+    
     def cron_od_cost_sheet(self, cr, uid, context=None):
         context = dict(context or {})
         remind = []
@@ -842,8 +846,8 @@ class od_cost_sheet(models.Model):
     tabs_a1 = fields.Many2many('od.cost.tabs','rel_cost_a1_tabs','cost_id','tab_id',string="Tabs A1")
     tabs_a2 = fields.Many2many('od.cost.tabs','rel_cost_a2_tabs','cost_id','tab_id',string="Tabs A2")
     tabs_a3 = fields.Many2many('od.cost.tabs','rel_cost_a3_tabs','cost_id','tab_id',string="Tabs A3")
-    tabs_a4 = fields.Many2many('od.cost.tabs','rel_cost_a4_tabs','cost_id','tab_id',string="Tabs A4")
-    tabs_a5 = fields.Many2many('od.cost.tabs','rel_cost_a5_tabs','cost_id','tab_id',string="Tabs A5")
+    tabs_a4 = fields.Many2many('od.cost.tabs','rel_cost_a4_tabs','cost_id','tab_id',string="Tabs A4",domain=[('id','=',4)])
+    tabs_a5 = fields.Many2many('od.cost.tabs','rel_cost_a5_tabs','cost_id','tab_id',string="Tabs A5",domain=[('id','=',5)])
     
     date_start_a0 = fields.Date(string="Date Start A0")
     date_start_a1 = fields.Date(string="Date Start A1")
