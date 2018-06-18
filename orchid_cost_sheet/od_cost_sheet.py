@@ -838,10 +838,10 @@ class od_cost_sheet(models.Model):
         amc_include = self.included_bmn_in_quotation 
         if amc_include:
             self.select_a4 = True
-            self.tabs_a4 = [[(6,0,[4])]]
+            self.tabs_a4 = [[6,False,[4]]]
         else:
             self.select_a4 = False
-            self.tabs_a4 = [[(3,0,[4])]]
+            self.tabs_a4 = [[3,0,[4]]]
             
     
     @api.onchange('included_om_in_quotation')
@@ -849,10 +849,10 @@ class od_cost_sheet(models.Model):
         amc_include = self.included_om_in_quotation 
         if amc_include:
             self.select_a5 = True
-            self.tabs_a5 = [[(6,0,[5])]]
+            self.tabs_a5 = [[6,0,[5]]]
         else:
             self.select_a5 = False
-            self.tabs_a5 = [[(3,0,[5])]]
+            self.tabs_a5 = [[3,0,[5]]]
     
     
     # Revenue Structure
