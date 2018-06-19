@@ -4143,11 +4143,12 @@ class od_cost_sheet(models.Model):
             no_of_l2 = self.no_of_l2_accounts_amc
             order_line = self.divide_order_line(order_line, no_of_l2)
             so_vals['order_line'] =  order_line
-            so_vals['name'] = '/'
+            
             company_id = self.company_id and self.company_id.id
             so_vals['company_id'] =company_id
             for line in self.amc_analytic_line:
-                analytic_id = line.analytic_id and line.analytic_id.id 
+                analytic_id = line.analytic_id and line.analytic_id.id
+                so_vals['name'] = '/' 
                 so_vals['project_id'] = analytic_id
                 so_id = self.env['sale.order'].create(so_vals)
                 so_id.od_action_approve()
