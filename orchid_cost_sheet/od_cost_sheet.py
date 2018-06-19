@@ -856,12 +856,12 @@ class od_cost_sheet(models.Model):
     
     
     # Revenue Structure
-    analytic_a0 = fields.Many2one('account.analytic.account',string="Analytic A0")
-    analytic_a1 = fields.Many2one('account.analytic.account',string="Analytic A1")
-    analytic_a2 = fields.Many2one('account.analytic.account',string="Analytic A2")
-    analytic_a3 = fields.Many2one('account.analytic.account',string="Analytic A3")
-    analytic_a4 = fields.Many2one('account.analytic.account',string="Analytic A4")
-    analytic_a5 = fields.Many2one('account.analytic.account',string="Analytic A5")
+    analytic_a0 = fields.Many2one('account.analytic.account',string="Analytic A0",copy=False)
+    analytic_a1 = fields.Many2one('account.analytic.account',string="Analytic A1",copy=False)
+    analytic_a2 = fields.Many2one('account.analytic.account',string="Analytic A2",copy=False)
+    analytic_a3 = fields.Many2one('account.analytic.account',string="Analytic A3",copy=False)
+    analytic_a4 = fields.Many2one('account.analytic.account',string="Analytic A4",copy=False)
+    analytic_a5 = fields.Many2one('account.analytic.account',string="Analytic A5",copy=False)
      
     
     
@@ -3675,8 +3675,8 @@ class od_cost_sheet(models.Model):
     
     mat_extra_expense_line = fields.One2many('od.cost.mat.extra.expense.line','cost_sheet_id',string='Mat Extra Expense Line',states={'draft':[('readonly',False)],'design_ready':[('readonly',False)],'submitted':[('readonly',False)],'commit':[('readonly',False)],'returned_by_pmo':[('readonly',False)],'returned_by_fin':[('readonly',False)],'handover':[('readonly',False)],'waiting_po':[('readonly',False)],'change':[('readonly',False)],'modify':[('readonly',False)]},readonly=True,copy=True)
     
-    amc_analytic_line = fields.One2many('od.amc.analytic.lines','cost_sheet_id',string='AMC Analytic Lines',readonly=True)
-    om_analytic_line = fields.One2many('od.om.analytic.lines','cost_sheet_id',string='AMC Analytic Lines',readonly=True)
+    amc_analytic_line = fields.One2many('od.amc.analytic.lines','cost_sheet_id',string='AMC Analytic Lines',readonly=True,copy=False)
+    om_analytic_line = fields.One2many('od.om.analytic.lines','cost_sheet_id',string='AMC Analytic Lines',readonly=True,copy=False)
     
     show_to_customer_main_proposal = fields.Boolean(string='Show to Customer',default=True)
     show_to_opt = fields.Boolean(string='Show to Customer',default=False)
@@ -4125,6 +4125,10 @@ class od_cost_sheet(models.Model):
             raise Warning("Zero Level 2 AMC or O&M Accouts Defined ,kindly Check Revenue Structure Tab")
         new_order_line = [ ]
         for _,_,val in order_line:
+            
+            od_original_price = val.get('od_original_price',0.0)
+            val['od_original_price'] = od_original_price/no_of_l2
+            
             price_unit = val.get('price_unit',0.0)
             val['price_unit'] = price_unit/no_of_l2
             
@@ -4158,11 +4162,12 @@ class od_cost_sheet(models.Model):
             no_of_l2 = self.no_of_l2_accounts_om
             order_line = self.divide_order_line(order_line, no_of_l2)
             so_vals['order_line'] =  order_line
-            so_vals['name'] = '/'
+            
             company_id = self.company_id and self.company_id.id
             so_vals['company_id'] =company_id
             for line in self.om_analytic_line:
-                analytic_id = line.analytic_id and line.analytic_id.id 
+                analytic_id = line.analytic_id and line.analytic_id.id
+                so_vals['name'] = '/' 
                 so_vals['project_id'] = analytic_id
                 so_id = self.env['sale.order'].create(so_vals)
                 so_id.od_action_approve()
