@@ -116,8 +116,8 @@
                    <thead>
                        <th></th>
                        <th>Analytic</th>
-                       <th invisible="1">Project</th>
-                       <th invisible="1">AMC</th>
+                       <th attrs="{'invisible':[('od_analytic_level','!=','level_old')]}">Project</th>
+                       <th attrs="{'invisible':[('od_analytic_level','!=','level_old')]}">AMC</th>
                        <!-- <th>O&amp;M</th> -->
                       
                     </thead>
@@ -125,8 +125,8 @@
                     <tr>
                     <td><strong>Date Start</strong></td>
                     <td><field name="date_start" /></td>
-                    <td invisible="1"><field name="od_project_start" attrs="{'readonly':[('od_project_status','!=','inactive')]}" /></td>
-                    <td invisible="1"><field name="od_amc_start" attrs="{'readonly':[('od_amc_status','!=','inactive')]}"/></td>
+                    <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_project_start" attrs="{'readonly':[('od_project_status','!=','inactive')]}" /></td>
+                    <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_amc_start" attrs="{'readonly':[('od_amc_status','!=','inactive')]}"/></td>
                   
                     
                     
@@ -135,16 +135,16 @@
                     <tr>
                     <td><strong>Date End</strong></td>
                     <td><field name="date" /></td>
-                    <td invisible="1"><field name="od_project_end" attrs="{'readonly':[('od_project_status','!=','inactive')]}"/></td>
-                    <td invisible="1"><field name="od_amc_end" attrs="{'readonly':[('od_amc_status','!=','inactive')]}"/></td>
+                    <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_project_end" attrs="{'readonly':[('od_project_status','!=','inactive')]}"/></td>
+                    <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_amc_end" attrs="{'readonly':[('od_amc_status','!=','inactive')]}"/></td>
                    
                     </tr>
                    
                     <tr>
                     <td><strong>PMO Expected Closing</strong></td>
                     <td><field name="od_analytic_pmo_closing" readonly="1"/></td>
-                    <td invisible="1"><field name="od_project_pmo_closing"  readonly="1"/></td>
-                    <td invisible="1"><field name="od_amc_pmo_closing"  readonly="1"/></td>
+                    <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_project_pmo_closing"  readonly="1"/></td>
+                    <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_amc_pmo_closing"  readonly="1"/></td>
                    
                     </tr>
                    
@@ -153,8 +153,8 @@
                      <tr>
                    <td><strong>Owner</strong></td>
                    <td><field name="od_owner_id" readonly="0"/></td>
-                   <td invisible="1"><field name="od_project_owner_id" readonly="0"/></td>
-                   <td invisible="1"><field name="od_amc_owner_id" readonly="0"/></td>
+                   <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_project_owner_id" readonly="0"/></td>
+                   <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_amc_owner_id" readonly="0"/></td>
                    
                     </tr>
                     
@@ -164,16 +164,16 @@
                    <tr>
                    <td><strong>Original Sale</strong></td>
                    <td><field name="od_original_sale_price" /></td>
-                   <td invisible="1"><field name="od_project_original_sale" /></td>
-                   <td invisible="1"><field name="od_amc_original_sale" /></td>
+                   <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_project_original_sale" /></td>
+                   <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_amc_original_sale" /></td>
                    
                     </tr>
                     
                    <tr>
                    <td><strong>Original Cost</strong></td>
                    <td><field name="od_original_sale_cost" /></td>
-                   <td invisible="1"><field name="od_project_original_cost" /></td>
-                   <td invisible="1"><field name="od_amc_original_cost" /></td>
+                   <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_project_original_cost" /></td>
+                   <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_amc_original_cost" /></td>
                  
                     </tr>
                    
@@ -181,8 +181,8 @@
                    <tr>
                    <td><strong>Original Profit</strong></td>
                    <td><field name="od_original_sale_profit" /></td>
-                   <td invisible="1"><field name="od_project_original_profit" /></td>
-                   <td invisible="1"><field name="od_amc_original_profit" /></td>
+                   <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_project_original_profit" /></td>
+                   <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_amc_original_profit" /></td>
                   
                     </tr>
                    
@@ -191,16 +191,16 @@
                      <tr>
                    <td><strong>Amended Sale</strong></td>
                    <td><field name="od_amended_sale_price" /></td>
-                   <td invisible="1"><field name="od_project_amend_sale" /></td>
-                   <td invisible="1"><field name="od_amc_amend_sale" /></td>
+                   <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_project_amend_sale" /></td>
+                   <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_amc_amend_sale" /></td>
                    
                     </tr>
                     
                    <tr>
                    <td><strong>Amended Cost</strong></td>
                    <td><field name="od_amended_sale_cost" /></td>
-                   <td invisible="1"><field name="od_project_amend_cost" /></td>
-                   <td invisible="1"><field name="od_amc_amend_cost" /></td>
+                   <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_project_amend_cost" /></td>
+                   <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_amc_amend_cost" /></td>
                    
                     </tr>
                    
@@ -208,8 +208,8 @@
                    <tr>
                    <td><strong>Amended Profit</strong></td>
                    <td><field name="od_amended_profit" /></td>
-                   <td invisible="1"><field name="od_project_amend_profit" /></td>
-                   <td invisible="1"><field name="od_amc_amend_profit" /></td>
+                   <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_project_amend_profit" /></td>
+                   <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_amc_amend_profit" /></td>
                   
                     </tr>
                    
@@ -220,39 +220,39 @@
                    <tr>
                    <td><strong>Actual Sale</strong></td>
                    <td><field name="od_actual_sale" /></td>
-                   <td invisible="1"><field name="od_project_sale" /></td>
-                   <td invisible="1"><field name="od_amc_sale" /></td>
+                   <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_project_sale" /></td>
+                   <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_amc_sale" /></td>
                    
                     </tr>
                     
                      <tr>
                    <td><strong>Actual Cost</strong></td>
                    <td><field name="od_actual_cost" /></td>
-                   <td invisible="1"><field name="od_project_cost" /></td>
-                   <td invisible="1"><field name="od_amc_cost" /></td>
+                   <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_project_cost" /></td>
+                   <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_amc_cost" /></td>
                   
                     </tr>
                    
                     <tr>
                    <td><strong>Actual Profit</strong></td>
                    <td><field name="od_actual_profit" /></td>
-                   <td invisible="1"><field name="od_project_profit" /></td>
-                   <td invisible="1"><field name="od_amc_profit" /></td>
+                   <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_project_profit" /></td>
+                   <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_amc_profit" /></td>
                  
                     </tr>
                    
                    
-                    <tr invisible="1">
-                   <td invisible="1"><strong>Status</strong></td>
-                   <td invisible="1"></td>
-                   <td invisible="1"><field name="od_project_status" readonly="1"/></td>
-                   <td invisible="1"><field name="od_amc_status" readonly="1"/></td>
+                    <tr attrs="{'invisible':[('od_analytic_level','!=','level_old')]}">
+                   <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><strong>Status</strong></td>
+                   <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"></td>
+                   <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_project_status" readonly="1"/></td>
+                   <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_amc_status" readonly="1"/></td>
                    
                     </tr> 
                     
                     
                     
-                    <tr invisible="1">
+                    <tr attrs="{'invisible':[('od_analytic_level','!=','level_old')]}">
                     <td><strong>Activation</strong></td>
                     <td></td>
                     <td><button name="btn_activate_project" string="Activate" class="oe_highlight" type="object"  attrs="{'invisible':[('od_project_status','!=','inactive')]}"/></td>
@@ -264,15 +264,15 @@
                      <tr>
                    <td><strong>Closing Date</strong></td>
                    <td><field name="od_closing_date" readonly="0"/></td>
-                   <td invisible="1"><field name="od_project_closing" attrs="{'readonly':[('od_project_status','=','close')]}"/></td>
-                   <td invisible="1"><field name="od_amc_closing" attrs="{'readonly':[('od_amc_status','=','close')]}" /></td>
+                   <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_project_closing" attrs="{'readonly':[('od_project_status','=','close')]}"/></td>
+                   <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_amc_closing" attrs="{'readonly':[('od_amc_status','=','close')]}" /></td>
                   
                     </tr>
                    
                   
                    
                    
-                    <tr invisible="1">
+                    <tr attrs="{'invisible':[('od_analytic_level','!=','level_old')]}">
                     <td><strong>Close</strong></td>
                     <td></td>
                     <td><button name="btn_close_project" string="Close" class="oe_highlight" type="object"  attrs="{'invisible':[('od_project_status','!=','active')]}"/></td>
