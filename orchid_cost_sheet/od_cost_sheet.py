@@ -4119,8 +4119,54 @@ class od_cost_sheet(models.Model):
             if new_tab_so_map:
                 self.update_tab_sale_order_link(new_tab_so_map)
 
-
-
+    
+    def divide_order_line(self,order_line,no_of_l2):
+        if not no_of_l2:
+            raise Warning("Zero Level 2 AMC or O&M Accouts Defined ,kindly Check Revenue Structure Tab")
+        new_order_line = [ ]
+        for _,_,val in order_line:
+            price_unit = val.get('price_unit',0.0)
+            val['price_unit'] = price_unit/no_of_l2
+            
+            purchase_price = val.get('purchase_price',0.0)
+            val['purchase_price'] = purchase_price/no_of_l2
+            
+            od_sup_unit_cost = val.get('od_sup_unit_cost',0.0)
+            val['od_sup_unit_cost'] = od_sup_unit_cost/no_of_l2
+            
+            od_sup_line_cost = val.get('od_sup_line_cost',0.0)
+            val['od_sup_line_cost'] = od_sup_line_cost/no_of_l2 
+        return order_line   
+            
+    def create_multiple_level2_so(self,so_vals,order_line,group='amc'):
+        if group =='amc':
+            no_of_l2 = self.no_of_l2_accounts_amc
+            order_line = self.divide_order_line(order_line, no_of_l2)
+            so_vals['order_line'] =  order_line
+            so_vals['name'] = '/'
+            company_id = self.company_id and self.company_id.id
+            so_vals['company_id'] =company_id
+            for line in self.amc_analytic_line:
+                analytic_id = line.analytic_id and line.analytic_id.id 
+                so_vals['project_id'] = analytic_id
+                so_id = self.env['sale.order'].create(so_vals)
+                so_id.od_action_approve()
+                line['so_id'] = so_id.id
+        
+        if group =='om':
+            no_of_l2 = self.no_of_l2_accounts_om
+            order_line = self.divide_order_line(order_line, no_of_l2)
+            so_vals['order_line'] =  order_line
+            so_vals['name'] = '/'
+            company_id = self.company_id and self.company_id.id
+            so_vals['company_id'] =company_id
+            for line in self.om_analytic_line:
+                analytic_id = line.analytic_id and line.analytic_id.id 
+                so_vals['project_id'] = analytic_id
+                so_id = self.env['sale.order'].create(so_vals)
+                so_id.od_action_approve()
+                line['so_id'] = so_id.id
+        
 
     def create_analytic_map_sale_order(self,anal_maped_dict,so_vals,so_line_map):
         od_discount = so_vals.get('x_discount',0)
@@ -4145,7 +4191,18 @@ class od_cost_sheet(models.Model):
             order_line = []
             for tab in tabs:
                 order_line += so_line_map[tab]
+            
             order_line = self.od_deduplicate_pdt(order_line)
+            
+            if not order_line:
+                raise Warning("No Order Line to Create Sale Order")
+            if self.select_a0 and tab == 'amc':
+                self.create_multiple_level2_so(so_vals, order_line, group='amc')
+                continue
+            if self.select_a0 and tab == 'om':
+                self.create_multiple_level2_so(so_vals, order_line, group='om')
+                continue
+            
             # pprint(order_line)
             if not order_line:
                 raise Warning("No Order Line to Create Sale Order")
@@ -5319,6 +5376,7 @@ class od_amc_analytic_lines(models.Model):
     start_date = fields.Date(string="Start Date")
     end_date = fields.Date(string="End Date")
     analytic_id = fields.Many2one('account.analytic.account',string="Analytic Account")
+    so_id = fields.Many2one('sale.order',string="Sales Order")
 
 class od_om_analytic_lines(models.Model):
     _name = 'od.om.analytic.lines'
@@ -5327,7 +5385,7 @@ class od_om_analytic_lines(models.Model):
     start_date = fields.Date(string="Start Date")
     end_date = fields.Date(string="End Date")
     analytic_id = fields.Many2one('account.analytic.account',string="Analytic Account")
-
+    so_id = fields.Many2one('sale.order',string="Sales Order")
 
 class od_date_log_history(models.Model):
     _name = 'od.date.log.history'
