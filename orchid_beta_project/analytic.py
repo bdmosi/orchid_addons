@@ -331,6 +331,8 @@ class account_analytic_account(models.Model):
         amended_price = 0.0
         amended_cost = 0.0
         planned_timesheet_cost = 0.0
+        rt_profit =0.0
+        mp_profit =0.0
 #         for sale in sales:
 #             for line in sale.order_line:
 #                 if line.product_id.id in (211961,208829,208831):
@@ -348,6 +350,14 @@ class account_analytic_account(models.Model):
             
             amended_price = sales.od_amd_total_price
             amended_cost = sales.od_amd_total_cost
+        
+        if self.od_manual_input:
+            original_price = self.man_original_sale 
+            original_cost = self.man_original_cost
+            amended_price = self.man_amended_sale 
+            amended_cost = self.man_amended_cost
+            rt_profit = self.man_mp 
+            mp_profit = self.man_mp
         original_profit = original_price - original_cost
         if original_price:
             original_profit_perc = (original_profit/original_price) *100
@@ -359,8 +369,7 @@ class account_analytic_account(models.Model):
         bim_cost = self.od_cost_sheet_id and self.od_cost_sheet_id.a_bim_cost or 0.0
         bmn_cost  =self.od_cost_sheet_id and self.od_cost_sheet_id.a_bmn_cost or 0.0
         
-        rt_profit =0.0
-        mp_profit =0.0
+        
         project_bmn = self.od_cost_sheet_id and self.od_cost_sheet_id.project_bmn and self.od_cost_sheet_id.project_bmn.id
         project_bim = self.od_cost_sheet_id and self.od_cost_sheet_id.project_bmn and self.od_cost_sheet_id.project_bim.id
         if analytic_id == project_bmn:
@@ -782,6 +791,9 @@ class account_analytic_account(models.Model):
                 project_cost = sum([(mvl.debit - mvl.credit) for mvl in move_line_ids if mvl.date <= closing_date and mvl.od_state =='posted'])
             if self.od_amc_status == 'close':
                 amc_cost = sum([(mvl.debit - mvl.credit) for mvl in move_line_ids if mvl.date > closing_date and mvl.od_state =='posted'])
+        
+        if self.od_manual_cost:
+            actual_cost = self.man_actual_cost
         self.od_actual_cost = actual_cost
         self.od_project_cost = project_cost
         self.od_amc_cost = amc_cost
@@ -843,6 +855,10 @@ class account_analytic_account(models.Model):
         print "analytic id>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",analytic_id
         print "project bim>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",project_bim
         
+        if self.od_manual_input:
+            actual_sale = self.man_actual_sale
+        
+        
         self.od_actual_sale = actual_sale
         self.od_amc_sale = amc_sale 
         self.od_project_sale = project_sale
@@ -872,10 +888,6 @@ class account_analytic_account(models.Model):
         if actual_sale:
             actual_profit_percent = (actual_profit/float(actual_sale))*100.0
             self.od_actual_profit_percent = actual_profit_percent
-        
-        bim_cost = self.od_cost_sheet_id and self.od_cost_sheet_id.a_bim_cost or 0.0
-        bmn_cost  =self.od_cost_sheet_id and self.od_cost_sheet_id.a_bmn_cost or 0.0
-        
         self.od_actual_profit = actual_profit 
         self.od_project_profit =  self.od_project_sale - self.od_project_cost 
         self.od_amc_profit =  self.od_amc_sale - self.od_amc_cost 
