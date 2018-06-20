@@ -222,7 +222,7 @@ class fiscal_rpt_wiz(models.TransientModel):
         for data in project_data2:
             project_id = data.id
             sam_id = data.manager_id and data.manager_id.id
-            pm_id = data.od_amc_owner_id and data.od_amc_owner_id.id 
+            pm_id = data.od_owner_id and data.od_owner_id.id 
             partner_id = data.partner_id and data.partner_id.id 
             company_id = data.company_id and data.company_id.id 
             branch_id = data.od_branch_id and data.od_branch_id.id
@@ -232,7 +232,7 @@ class fiscal_rpt_wiz(models.TransientModel):
             contract_status = data.state 
             contract_start_date = data.date_start
             contract_end_date = data.date 
-            closing_date = data.od_amc_closing
+            closing_date = data.od_closing_date
             result.append((0,0,{
                                 'wiz_id':wiz_id,
                                 'cost_sheet_id':od_cost_sheet_id, 
@@ -242,24 +242,24 @@ class fiscal_rpt_wiz(models.TransientModel):
                                 'branch_id':branch_id,
                                 'pm_id':pm_id,
                                 'project_id':project_id,
-                                'original_sale':data.od_amc_original_sale,
-                                'original_cost':data.od_amc_original_cost,
-                                'original_profit':data.od_amc_original_profit,
-                                'amended_sale':data.od_amc_amend_sale,
-                                'amended_cost':data.od_amc_amend_cost,
-                                'amended_profit':data.od_amc_amend_cost,
-                                'actual_sale':data.od_amc_sale,
-                                'actual_cost':data.od_amc_cost,
-                                'actual_profit':data.od_amc_profit,
-                                'status':data.od_amc_status,
-                                'date_start':data.od_amc_start,
-                                'date_end':data.od_amc_end, 
+                                'original_sale':data.od_original_sale_price,
+                                'original_cost':data.od_original_sale_cost,
+                                'original_profit':data.od_original_sale_profit,
+                                'amended_sale':data.od_amended_sale_price,
+                                'amended_cost':data.od_amended_sale_cost,
+                                'amended_profit':data.od_amended_profit,
+                                'actual_sale':data.od_actual_sale,
+                                'actual_cost':data.od_actual_cost,
+                                'actual_profit':data.od_actual_profit,
+                                'status':data.state,
+                                'date_start':data.date_start,
+                                'date_end':data.date, 
                                 'po_status':po_status,
-                                 'contract_status':contract_status,
+                                'contract_status':contract_status,
                                 'contract_start_date':contract_start_date,
                                 'contract_end_date':contract_end_date,
                                 'closing_date':closing_date,
-                                 'project_type':'amc' 
+                                 'project_type':'amc'
                                 }))
         return result
     
@@ -437,7 +437,7 @@ class fiscal_rpt_wiz(models.TransientModel):
         for data in project_data2:
             project_id = data.id
             sam_id = data.manager_id and data.manager_id.id
-            pm_id = data.od_project_owner_id and data.od_project_owner_id.id 
+            pm_id = data.od_owner_id and data.od_owner_id.id 
             partner_id = data.partner_id and data.partner_id.id 
             company_id = data.company_id and data.company_id.id 
             branch_id = data.od_branch_id and data.od_branch_id.id
@@ -446,7 +446,7 @@ class fiscal_rpt_wiz(models.TransientModel):
             contract_status = data.state 
             contract_start_date = data.date_start
             contract_end_date = data.date 
-            closing_date = data.od_project_closing
+            closing_date = data.od_closing_date
             result.append((0,0,{
                                 'wiz_id':wiz_id,
                                 'cost_sheet_id':od_cost_sheet_id, 
@@ -456,18 +456,18 @@ class fiscal_rpt_wiz(models.TransientModel):
                                 'branch_id':branch_id,
                                 'pm_id':pm_id,
                                 'project_id':project_id,
-                                'original_sale':data.od_project_original_sale,
-                                'original_cost':data.od_project_original_cost,
-                                'original_profit':data.od_project_original_profit,
-                                'amended_sale':data.od_project_amend_sale,
-                                'amended_cost':data.od_project_amend_cost,
-                                'amended_profit':data.od_project_amend_profit,
-                                'actual_sale':data.od_project_sale,
-                                'actual_cost':data.od_project_cost,
-                                'actual_profit':data.od_project_profit,
-                                'status':data.od_project_status,
-                                'date_start':data.od_project_start,
-                                'date_end':data.od_project_pmo_closing, 
+                                'original_sale':data.od_original_sale_price,
+                                'original_cost':data.od_original_sale_cost,
+                                'original_profit':data.od_original_sale_profit,
+                                'amended_sale':data.od_amended_sale_price,
+                                'amended_cost':data.od_amended_sale_cost,
+                                'amended_profit':data.od_amended_profit,
+                                'actual_sale':data.od_actual_sale,
+                                'actual_cost':data.od_actual_cost,
+                                'actual_profit':data.od_actual_profit,
+                                'status':data.state,
+                                'date_start':data.date_start,
+                                'date_end':data.date, 
                                 'po_status':po_status,
                                 'contract_status':contract_status,
                                 'contract_start_date':contract_start_date,
@@ -527,7 +527,7 @@ class fiscal_rev_rpt_data(models.TransientModel):
     contract_start_date =  fields.Date(string="Contract Start Date")
     contract_end_date =  fields.Date(string="Contract End Date")
     project_type = fields.Selection([('amc','AMC'),('project','Project')],string="Type")
-    status = fields.Selection([('active','Active'),('inactive','Inactive'),('close','Closed')],string="Status")
+    status = fields.Selection([('active','Active'),('inactive','Inactive'),('close','Closed'),('draft','New'),('open','In Progress'),('cancelled','Cancelled')],string="Status")
     po_status = fields.Selection([('waiting_po','Waiting P.O'),('special_approval','Special Approval From GM'),('available','Available'),('credit','Customer Credit')],'Customer PO Status')
 
     @api.multi

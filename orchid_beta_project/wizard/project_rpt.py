@@ -208,7 +208,7 @@ class project_rpt_wiz(models.TransientModel):
         
         project_data2 = self.env['project.project'].search(domain2)
         for data in project_data2:
-            project_id = data.id
+           project_id = data.id
             sam_id = data.manager_id and data.manager_id.id
             pm_id = data.od_project_owner_id and data.od_project_owner_id.id 
             partner_id = data.partner_id and data.partner_id.id 
@@ -219,7 +219,7 @@ class project_rpt_wiz(models.TransientModel):
             contract_status = data.state 
             contract_start_date = data.date_start
             contract_end_date = data.date 
-            closing_date = data.od_project_closing
+            closing_date = data.od_closing_date
             result.append((0,0,{
                                 'wiz_id':wiz_id,
                                 'cost_sheet_id':od_cost_sheet_id, 
@@ -229,23 +229,24 @@ class project_rpt_wiz(models.TransientModel):
                                 'branch_id':branch_id,
                                 'pm_id':pm_id,
                                 'project_id':project_id,
-                                'original_sale':data.od_project_original_sale,
-                                'original_cost':data.od_project_original_cost,
-                                'original_profit':data.od_project_original_profit,
-                                'amended_sale':data.od_project_amend_sale,
-                                'amended_cost':data.od_project_amend_cost,
-                                'amended_profit':data.od_project_amend_profit,
-                                'actual_sale':data.od_project_sale,
-                                'actual_cost':data.od_project_cost,
-                                'actual_profit':data.od_project_profit,
-                                'status':data.od_project_status,
-                                'date_start':data.od_project_start,
-                                'date_end':data.od_project_pmo_closing, 
+                                'original_sale':data.od_original_sale_price,
+                                'original_cost':data.od_original_sale_cost,
+                                'original_profit':data.od_original_sale_profit,
+                                'amended_sale':data.od_amended_sale_price,
+                                'amended_cost':data.od_amended_sale_cost,
+                                'amended_profit':data.od_amended_profit,
+                                'actual_sale':data.od_actual_sale,
+                                'actual_cost':data.od_actual_cost,
+                                'actual_profit':data.od_actual_profit,
+                                'status':data.state,
+                                'date_start':data.date_start,
+                                'date_end':data.date, 
                                 'po_status':po_status,
                                 'contract_status':contract_status,
                                 'contract_start_date':contract_start_date,
                                 'contract_end_date':contract_end_date,
-                                'closing_date':closing_date
+                                'closing_date':closing_date,
+                                 
                                 }))
         
                     
