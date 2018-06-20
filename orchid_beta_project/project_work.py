@@ -624,7 +624,7 @@ class project_project(models.Model):
 #     od_type_of_project = fields.Selection(_od_project_types,string="Type Of Project",related="account_analytic_id.od_type_of_project")
     od_profit_percent = fields.Float(string="Profit Percentage",compute="od_get_total_sale_value")
     od_total_sale_value = fields.Float(string="Total Sale Value",compute="od_get_total_sale_value")
-    DOMAIN = [('parent_level0','Parent Level 0'),('credit','Credit'),('sup','Supply'),('imp','Implementation'),
+    DOMAIN = [('parent_level0','Parent Level View'),('amc_view','AMC View'),('o_m_view','O&M View'),('credit','Credit'),('sup','Supply'),('imp','Implementation'),
               ('sup_imp','Supply & Implementation'),('amc','AMC'),
               ('o_m','O&M'),('poc','(POC,Presales)'), ('comp_gen','Company General -(Training,Labs,Trips,etc.)')]
     od_po_status = fields.Selection([('waiting_po','Waiting P.O'),('special_approval','Special Approval From GM'),('available','Available')],'Customer PO Status',compute="od_get_po_status")
