@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from od_default_task_list import od_task_vals
+from od_default_milestone import od_project_vals,od_om_vals,od_amc_vals
 from openerp import models, fields, api,_
 from datetime import datetime,timedelta
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
@@ -176,38 +177,68 @@ class project_project(models.Model):
    
 
 
-    def od_create_default_tasks(self,project):
+#     def od_create_default_tasks(self,project):
+#         task_pool = self.env['project.task']
+#         project_id = project.id
+#         user_id = project.user_id and project.user_id.id
+#         type_of_project = project.od_type_of_project
+#         partner_ids = [(6,0,[user_id])],
+#         date_start = project.date_start
+#         date_end = project.date
+#         task_vals = od_task_vals()
+#         parent_task ={}
+#         for val in task_vals:
+# 
+#             val.update({
+#             'project_id':project_id,
+#             'user_id':user_id,
+#             'partner_ids':partner_ids,
+#             'date_start':date_start,
+#             'date_end':date_end
+#             })
+#             if type_of_project in ('amc','o_m') and not val.get('amc',False):
+#                 continue
+#             if val['od_type'] == 'workpackage':
+#                 od_parent_id = parent_task.get(val['val_parent_id'],False)
+#                 val.update({'od_parent_id':od_parent_id})
+#             val_id = val.pop('val_id')
+#             val.pop('val_parent_id',None)
+#             val.pop('amc',None)
+#             task = task_pool.create(val)
+#             task_id = task.id
+#             parent_task[val_id] = task_id
+# 
+#         return True
+    
+    def create_milestone_tasks(self,project,task_vals):
         task_pool = self.env['project.task']
+        
         project_id = project.id
         user_id = project.user_id and project.user_id.id
-        type_of_project = project.od_type_of_project
-        partner_ids = [(6,0,[user_id])],
-        date_start = project.date_start
+        date_start = project.date_start 
         date_end = project.date
-        task_vals = od_task_vals()
-        parent_task ={}
+        partner_ids = [(6,0,[user_id])],
         for val in task_vals:
-
             val.update({
             'project_id':project_id,
             'user_id':user_id,
             'partner_ids':partner_ids,
             'date_start':date_start,
-            'date_end':date_end
+            'date_end':date_end,
+            'no_delete':True
             })
-            if type_of_project in ('amc','o_m') and not val.get('amc',False):
-                continue
-            if val['od_type'] == 'workpackage':
-                od_parent_id = parent_task.get(val['val_parent_id'],False)
-                val.update({'od_parent_id':od_parent_id})
-            val_id = val.pop('val_id')
-            val.pop('val_parent_id',None)
-            val.pop('amc',None)
             task = task_pool.create(val)
-            task_id = task.id
-            parent_task[val_id] = task_id
-
         return True
+    
+    def od_m_create_tasks(self,project):
+        task_vals = od_project_vals()
+        if self.od_type_of_project =='amc':
+            task_vals = od_amc_vals()
+        if self.od_type_of_project =='o_m':
+            task_vals = od_om_vals()
+        
+        self.create_milestone_tasks(project,task_vals)
+    
 
     @api.model
     def create(self,vals):
@@ -216,13 +247,14 @@ class project_project(models.Model):
             analytic_account_id = vals.get('analytic_account_id')
             analytic_obj = self.env['account.analytic.account']
             analytic = analytic_obj.browse(analytic_account_id)
-            owner_id = analytic.od_project_owner_id and analytic.od_owner_id.id or False
+            owner_id = analytic.od_owner_id and analytic.od_owner_id.id or False
             type_of_project = analytic.od_type_of_project
             quantity_max = analytic.quantity_max
             vals['user_id'] = owner_id
             vals['od_quantity_max'] = quantity_max
             vals['od_type_of_project'] = type_of_project
         project = super(project_project,self).create(vals)
+        self.od_m_create_tasks(project)
 #         self.od_create_default_tasks(project)
         return project
     @api.one
