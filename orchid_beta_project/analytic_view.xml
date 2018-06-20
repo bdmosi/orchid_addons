@@ -680,6 +680,23 @@
             		</tree>
             	</field>
             </page>
+             <page string="Manual Entries">
+             	<group>
+             	  <group>
+             	     <field name="od_manual_input" />
+             	     <field name="man_mp" />
+             	     <field name="man_original_sale" />
+             	     <field name="man_original_cost" />
+             	     <field name="man_amended_sale" />
+             	     <field name="man_amended_cost" />
+             	     <field name="man_actual_sale" />
+             	     <field name="od_manual_cost" />
+             	     <field name="man_actual_cost" />
+             	     
+             	  
+             	  </group>
+             	</group>
+             </page>
             
             <!-- 
             <page string="KPI">

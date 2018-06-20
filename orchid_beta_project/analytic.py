@@ -34,13 +34,23 @@ class account_analytic_account(models.Model):
     od_amc_invoice_schedule_line  = fields.One2many('od.amc.invoice.schedule','analytic_id',string="AMC Invoice Schedule")
     od_om_invoice_schedule_line  = fields.One2many('od.om.invoice.schedule','analytic_id',string="Operation Invoice Schedule")
     
-    od_analytic_level = fields.Selection([('level_old','Level OLD'),('level0','Level 0'),('level1','Level 1'),('level2','Level 2')],string="Analytic Level")
+    od_analytic_level = fields.Selection([('level_old','Level OLD'),('level_manual','Level Manual'),('level0','Level 0'),('level1','Level 1'),('level2','Level 2')],string="Analytic Level")
     grand_parent_id = fields.Many2one('account.analytic.account',string="Grand Parent Account")
     
     od_child_data = fields.One2many('account.analytic.account','parent_id',string="Children Account")
     od_grandchild_data = fields.One2many('account.analytic.account','grand_parent_id',string="Grand Children Account")
     od_closing_date = fields.Date(string="Closing Date")
     
+    od_manual_input= fields.Boolean(string="Manual Input")
+    od_manual_cost = fields.Boolean("Manually Enter Actual Cost?")
+    man_original_sale = fields.Float(string="Original Sale(Manual)")
+    man_original_cost = fields.Float(string="Original Cost(Manual)")
+    man_mp = fields.Float(string="Returned Man Power(Manual)")
+    man_amended_sale = fields.Float(string="Amended Sale(Manual)")
+    man_amended_cost = fields.Float(string="Amended Cost(Manual)")
+    man_actual_sale = fields.Float(string="Actual Sale(Manual)")
+    man_actual_cost = fields.Float(string="Actual Cost(Manual)")
+   
     
     
     def get_product_id_from_param(self,product_param):
