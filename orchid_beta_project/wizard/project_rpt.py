@@ -210,7 +210,7 @@ class project_rpt_wiz(models.TransientModel):
         for data in project_data2:
             project_id = data.id
             sam_id = data.manager_id and data.manager_id.id
-            pm_id = data.od_project_owner_id and data.od_project_owner_id.id 
+            pm_id = data.od_owner_id and data.od_owner_id.id 
             partner_id = data.partner_id and data.partner_id.id 
             company_id = data.company_id and data.company_id.id 
             branch_id = data.od_branch_id and data.od_branch_id.id
