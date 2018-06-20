@@ -4397,8 +4397,12 @@ class od_cost_sheet(models.Model):
             owner_id = eval('self.'+'owner_id_a'+ str(seq))
             code = self.number + '-' + 'A'+ str(seq)
             type = 'normal'
+            use_timesheets = True
+            use_tasks = True
             if seq in (4,5):
                 type ='view'
+                use_timesheets = False
+                use_tasks = False
             if not analytic_seq_id:
                 analytic = self.env['account.analytic.account'].create({
                     'name':name,
@@ -4417,6 +4421,8 @@ class od_cost_sheet(models.Model):
                     'od_cost_centre_id':od_cost_centre_id,
                     'od_branch_id':od_branch_id,
                     'od_division_id':od_division_id,
+                    'use_timesheets':use_timesheets,
+                    'use_tasks':use_tasks
                     
                     })
                 analytic_id = analytic.id
@@ -4438,6 +4444,8 @@ class od_cost_sheet(models.Model):
                     'od_cost_centre_id':od_cost_centre_id,
                     'od_branch_id':od_branch_id,
                     'od_division_id':od_division_id,
+                    'use_timesheets':use_timesheets,
+                    'use_tasks':use_tasks
                     
                     })
                 
@@ -4498,6 +4506,8 @@ class od_cost_sheet(models.Model):
                 date_end = start_date + relativedelta(months=+3)
             if periodicity =='yearly':
                 date_end = start_date + relativedelta(years=+1)
+            use_timesheets = True
+            use_tasks = True
             analytic=self.env['account.analytic.account'].create({
                     'name':name +'-' +str(i+1),
                     'date_start':str(start_date),
@@ -4516,6 +4526,8 @@ class od_cost_sheet(models.Model):
                     'od_cost_centre_id':od_cost_centre_id,
                     'od_branch_id':od_branch_id,
                     'od_division_id':od_division_id,
+                    'use_timesheets':use_timesheets,
+                    'use_tasks':use_tasks,
                     
                     })
             analytic_id = analytic.id
