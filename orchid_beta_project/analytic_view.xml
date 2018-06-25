@@ -690,7 +690,7 @@
              	     <field name="man_amended_sale" attrs="{'invisible':[('od_manual_input','=',False)]}"/>
              	     <field name="man_amended_cost" attrs="{'invisible':[('od_manual_input','=',False)]}"/>
              	     <field name="man_actual_sale" attrs="{'invisible':[('od_manual_input','=',False)]}"/>
-             	     <field name="od_manual_cost" attrs="{'invisible':[('od_manual_input','=',False)]}"/>
+             	     <field name="od_manual_cost" />
              	     <field name="man_actual_cost" attrs="{'invisible':[('od_manual_cost','=',False)]}" />
              	     
              	  

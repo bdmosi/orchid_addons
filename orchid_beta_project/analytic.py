@@ -977,7 +977,7 @@ class account_analytic_account(models.Model):
     od_amended_profit_perc = fields.Float(string="Amended Sale Profit Perc",compute="od_get_total_sale_value",digits=dp.get_precision('Account'))
 
     od_planned_timesheet_cost = fields.Float(string="Planned Timesheet Cost",compute="od_get_total_sale_value")
-    od_po_status = fields.Selection([('waiting_po','Waiting P.O'),('special_approval','Special Approval From GM'),('available','Available')],'Customer PO Status',compute="od_get_po_status")
+    od_po_status = fields.Selection([('credit','Customer Credit'),('waiting_po','Waiting P.O'),('special_approval','Special Approval From GM'),('available','Available')],'Customer PO Status',compute="od_get_po_status")
     od_journal_amount_draft = fields.Float(string="Journal Amount Draft",compute="od_get_analytic_journal_amount_draft",digits=dp.get_precision('Account'))
     od_journal_amount = fields.Float(string="Journal Amount",compute="od_get_analytic_journal_amount",digits=dp.get_precision('Account'))
     od_hr_claim_amount = fields.Float(string="Hr Exp Claim Amount",compute="od_get_hr_exp_claim_amount",digits=dp.get_precision('Account'))
