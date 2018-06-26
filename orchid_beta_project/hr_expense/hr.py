@@ -10,6 +10,18 @@ class hr_employee(models.Model):
     
     
     hr_subt = fields.Float(string="Hour Subtract")
+    hr_subt_1 = fields.Float(string="Hour Subtract")
+    hr_subt_2 = fields.Float(string="Hour Subtract")
+    hr_subt_3 = fields.Float(string="Hour Subtract")
+    hr_subt_4 = fields.Float(string="Hour Subtract")
+    hr_subt_5 = fields.Float(string="Hour Subtract")
+    hr_subt_6 = fields.Float(string="Hour Subtract")
+    hr_subt_7 = fields.Float(string="Hour Subtract")
+    hr_subt_8 = fields.Float(string="Hour Subtract")
+    hr_subt_9 = fields.Float(string="Hour Subtract")
+    hr_subt_10 = fields.Float(string="Hour Subtract")
+    hr_subt_11 = fields.Float(string="Hour Subtract")
+    hr_subt_12 = fields.Float(string="Hour Subtract")
     mgr_score_selection =[(x, x) for x in range(1,11)]
     #audit fileds
     audit_temp_id = fields.Many2one('audit.template',string="Audit Template")
@@ -305,8 +317,13 @@ class hr_employee(models.Model):
     
     
     def get_hr_subt(self,employee_id,aud_date_start,aud_date_end):
+        ex_num = self.get_execution_number()
+        ex_num = str(ex_num)
+        subt='hr_subt_'+ ex_num
         emp_data = self.browse(employee_id)
-        hr = emp_data and emp_data.hr_subt or 0.0
+        eval_str ='emp_data.'+subt
+        hr = eval(eval_str) or 0.0
+        print "subtra data>>>>>>>>>>>>>>>>>>>>>>",hr
         return hr
     def get_no_of_leave(self,employee_id,aud_date_start,aud_date_end):
         holi = self.env['hr.holidays']
@@ -408,8 +425,8 @@ class hr_employee(models.Model):
         if not result:
             result =1.0
         subt = self.get_hr_subt(employee_id, aud_date_start, aud_date_end)
-        if aud_date_start =='2018-05-01':
-            result = result - subt
+        
+        result = result - subt
         return result
     
     def get_cancelled_activities(self,user_id,aud_date_start,aud_date_end,engineer_task_count):
