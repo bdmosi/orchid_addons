@@ -328,7 +328,7 @@ class hr_employee(models.Model):
         days = days+1
         todate_str = datetime.strftime(todate,DEFAULT_SERVER_DATE_FORMAT)
         lv_days,hours = self.get_no_of_leave(employee_id,aud_date_start,todate_str)
-        print "leave>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", lv_days,hours
+        print "leave>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",employee_id, lv_days,hours
         result = days
         #ramadan month less utilization almost 6 hours
         if aud_date_start =='2018-05-01':
