@@ -71,7 +71,7 @@ class fiscal_rpt_wiz(models.TransientModel):
             prj_states += ['inactive']
             
         company_id = self.company_id and self.company_id.id 
-        domain = [('od_type_of_project','=','amc'),('state','!=','cancelled'),('type','!=','view'),('od_analytic_level','=','level_old')]
+        domain = [('od_type_of_project','in',('amc','o_m')),('state','!=','cancelled'),('type','!=','view'),('od_analytic_level','=','level_old')]
         if company_id:
             domain += [('company_id','=',company_id)]
         
@@ -119,7 +119,7 @@ class fiscal_rpt_wiz(models.TransientModel):
         
         
         
-        domain2 = [('od_type_of_project','=','amc'),('state','!=','cancelled'),('type','!=','view'),('od_analytic_level','!=','level_old')]
+        domain2 = [('od_type_of_project','in',('amc','o_m')),('state','!=','cancelled'),('type','!=','view'),('od_analytic_level','!=','level_old')]
         if company_id:
             domain2 += [('company_id','=',company_id)]
         
@@ -295,7 +295,7 @@ class fiscal_rpt_wiz(models.TransientModel):
             prj_states += ['inactive']
             
         company_id = self.company_id and self.company_id.id 
-        domain = [('od_type_of_project','in',('credit','sup','imp','sup_imp','o_m')),('state','!=','cancelled'),('type','!=','view'),('od_analytic_level','=','level_old')]
+        domain = [('od_type_of_project','in',('credit','sup','imp','sup_imp')),('state','!=','cancelled'),('type','!=','view'),('od_analytic_level','=','level_old')]
         if company_id:
             domain += [('company_id','=',company_id)]
         if partner_ids:
@@ -337,7 +337,7 @@ class fiscal_rpt_wiz(models.TransientModel):
         
         
         
-        domain2 = [('od_type_of_project','in',('credit','sup','imp','sup_imp','o_m')),('state','!=','cancelled'),('type','!=','view'),('od_analytic_level','!=','level_old')]
+        domain2 = [('od_type_of_project','in',('credit','sup','imp','sup_imp')),('state','!=','cancelled'),('type','!=','view'),('od_analytic_level','!=','level_old')]
         
         if company_id:
             domain2 += [('company_id','=',company_id)]

@@ -1474,13 +1474,15 @@ class hr_employee(models.Model):
                 day_score_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':dayscore,'cost_sheet_id':proj.od_cost_sheet_id.id,'form_wt':10.0})
             #cost control score
             if proj.od_project_status == 'close':
-                gp_value = proj.od_project_amend_profit 
-                actual_gp = proj.od_project_profit
-                original_gp = proj.od_project_original_profit
-                tot_gp += gp_value
-                cost_control_score = proj.cost_control_score 
-                cost_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':cost_control_score,'form_wt':20.0,'actual_gp':actual_gp,'original_gp':original_gp})
-            #invoice Schedule Score
+                closed_date = proj.od_project_closing or proj.od_closing_date
+                if closed_date and aud_date_start <= closed_date <= aud_date_end:
+                    gp_value = proj.od_project_amend_profit 
+                    actual_gp = proj.od_project_profit
+                    original_gp = proj.od_project_original_profit
+                    tot_gp += gp_value
+                    cost_control_score = proj.cost_control_score 
+                    cost_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':cost_control_score,'form_wt':20.0,'actual_gp':actual_gp,'original_gp':original_gp})
+                #invoice Schedule Score
 #             inv_sch_dates = [a.date for a in proj.od_project_invoice_schedule_line]
 #             check = self.check_inv_sch_dates(inv_sch_dates,aud_date_start,aud_date_end)
 #             check2,inv_score,plan_amount = self.get_inv_sch_score(proj,aud_date_start,aud_date_end)
@@ -1534,7 +1536,7 @@ class hr_employee(models.Model):
             
             #schedule control score
             current_day = str(dt.today())
-            project_planned_end = proj.od_project_end 
+            project_planned_end = proj.od_project_end or proj.date
             closed_date = proj.od_project_closing 
             if current_day >=project_planned_end:
                 if proj.od_project_status == 'close':
