@@ -627,7 +627,7 @@ class project_project(models.Model):
     DOMAIN = [('parent_level0','Parent Level View'),('amc_view','AMC View'),('o_m_view','O&M View'),('credit','Credit'),('sup','Supply'),('imp','Implementation'),
               ('sup_imp','Supply & Implementation'),('amc','AMC'),
               ('o_m','O&M'),('poc','(POC,Presales)'), ('comp_gen','Company General -(Training,Labs,Trips,etc.)')]
-    od_po_status = fields.Selection([('waiting_po','Waiting P.O'),('special_approval','Special Approval From GM'),('available','Available')],'Customer PO Status',compute="od_get_po_status")
+    od_po_status = fields.Selection([('credit','Credit Customer'),('waiting_po','Waiting P.O'),('special_approval','Special Approval From GM'),('available','Available')],'Customer PO Status',compute="od_get_po_status")
     od_type_of_project = fields.Selection(DOMAIN,string="Type Of Project")
     od_journal_amount_draft = fields.Float(string="Journal Amount Draft",compute="od_get_analytic_journal_amount_draft")
 #     od_journal_amount = fields.Float(string="Journal Amount",compute="od_get_analytic_journal_amount")
