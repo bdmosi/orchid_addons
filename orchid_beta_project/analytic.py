@@ -157,9 +157,9 @@ class account_analytic_account(models.Model):
         today = str(dt.today())
         closing_date = today 
         project_end = self.od_project_end
-        self.od_project_closing = today
-        if closing_date < project_end:
-            self.od_project_end = closing_date
+#         self.od_project_closing = today
+#         if closing_date < project_end:
+#             self.od_project_end = closing_date
         self.od_project_status = 'close'
     
     
@@ -172,7 +172,7 @@ class account_analytic_account(models.Model):
         
         if self.od_project_status == 'active':
             raise Warning("Please Close the Project First")
-        self.od_amc_closing = closing_date
+#         self.od_amc_closing = closing_date
         self.od_amc_status = 'close'
     
     @api.multi
@@ -257,7 +257,7 @@ class account_analytic_account(models.Model):
         project_obj = self.od_get_project()
         today = str(dt.today())
         closing_date = today 
-        project_obj.write({'state':'close','od_closing_date':closing_date})
+        project_obj.write({'state':'close'})
         if self.od_project_status == 'active':
             self.btn_close_project()
         if self.od_amc_status == 'active':
