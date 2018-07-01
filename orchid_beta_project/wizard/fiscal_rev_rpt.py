@@ -528,7 +528,7 @@ class fiscal_rev_rpt_data(models.TransientModel):
     date_start = fields.Date(string="Planned Date Start")
     date_end = fields.Date(string="PMO Expected Closing Date")
     closing_date = fields.Date(string="Actual Closing Date")
-    contract_status = fields.Selection([('template','Template'),('draft','New'),('open','In Progress'),('pending','To Renew'),('close','Closed'),('cancelled','Cancelled')],string="Contract Status")
+    contract_status = fields.Selection([('template','Template'),('draft','New'),('open','In Progress'),('pending','To Renew'),('close','Closed'),('cancelled','Cancelled'),('cancel','Cancelled(Component)')],string="Contract Status")
     contract_start_date =  fields.Date(string="Contract Start Date")
     contract_end_date =  fields.Date(string="Contract End Date")
     project_type = fields.Selection([('amc','AMC'),('project','Project')],string="Type")
