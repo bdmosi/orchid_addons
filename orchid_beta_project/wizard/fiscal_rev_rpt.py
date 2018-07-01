@@ -181,7 +181,13 @@ class fiscal_rpt_wiz(models.TransientModel):
             branch_id = data.od_branch_id and data.od_branch_id.id
             od_cost_sheet_id = data.od_cost_sheet_id and data.od_cost_sheet_id.id
             po_status = data.od_cost_sheet_id and data.od_cost_sheet_id and data.od_cost_sheet_id.po_status
-            
+            pstatus = data.od_amc_status 
+            if pstatus =='active':
+                pstatus ='Open'
+            elif pstatus =='close':
+                pstatus = 'Closed'
+            else:
+                pstatus ='Inactive'
             contract_status = data.state 
             contract_start_date = data.date_start
             contract_end_date = data.date 
@@ -205,7 +211,7 @@ class fiscal_rpt_wiz(models.TransientModel):
                                 'actual_sale':data.od_amc_sale,
                                 'actual_cost':data.od_amc_cost,
                                 'actual_profit':data.od_amc_profit,
-                                'status':data.od_amc_status,
+                                'status':pstatus,
                                 'date_start':data.od_amc_start,
                                 'date_end':data.od_amc_end, 
                                 'po_status':po_status,
@@ -229,7 +235,13 @@ class fiscal_rpt_wiz(models.TransientModel):
             branch_id = data.od_branch_id and data.od_branch_id.id
             od_cost_sheet_id = data.od_cost_sheet_id and data.od_cost_sheet_id.id
             po_status = data.od_cost_sheet_id and data.od_cost_sheet_id and data.od_cost_sheet_id.po_status
-            
+            pstatus = data.state 
+            if pstatus in ('open','pending'):
+                pstatus ='Open'
+            elif pstatus =='close':
+                pstatus = 'Closed'
+            else:
+                pstatus ='Inactive'
             contract_status = data.state 
             contract_start_date = data.date_start
             contract_end_date = data.date 
@@ -253,7 +265,7 @@ class fiscal_rpt_wiz(models.TransientModel):
                                 'actual_sale':data.od_actual_sale,
                                 'actual_cost':data.od_actual_cost,
                                 'actual_profit':data.od_actual_profit,
-                                'status':data.state,
+                                'status':pstatus,
                                 'date_start':data.date_start,
                                 'date_end':data.date, 
                                 'po_status':po_status,
@@ -400,6 +412,14 @@ class fiscal_rpt_wiz(models.TransientModel):
             branch_id = data.od_branch_id and data.od_branch_id.id
             od_cost_sheet_id = data.od_cost_sheet_id and data.od_cost_sheet_id.id
             po_status = data.od_cost_sheet_id and data.od_cost_sheet_id and data.od_cost_sheet_id.po_status
+            pstatus = data.od_project_status 
+            if pstatus =='active':
+                pstatus ='Open'
+            elif pstatus =='close':
+                pstatus = 'Closed'
+            else:
+                pstatus ='Inactive'
+            
             contract_status = data.state 
             contract_start_date = data.date_start
             contract_end_date = data.date 
@@ -423,7 +443,7 @@ class fiscal_rpt_wiz(models.TransientModel):
                                 'actual_sale':data.od_project_sale,
                                 'actual_cost':data.od_project_cost,
                                 'actual_profit':data.od_project_profit,
-                                'status':data.od_project_status,
+                                'status':pstatus,
                                 'date_start':data.od_project_start,
                                 'date_end':data.od_project_pmo_closing, 
                                 'po_status':po_status,
@@ -446,6 +466,13 @@ class fiscal_rpt_wiz(models.TransientModel):
             branch_id = data.od_branch_id and data.od_branch_id.id
             od_cost_sheet_id = data.od_cost_sheet_id and data.od_cost_sheet_id.id
             po_status = data.od_cost_sheet_id and data.od_cost_sheet_id and data.od_cost_sheet_id.po_status
+            pstatus = data.state 
+            if pstatus in ('open','pending'):
+                pstatus ='Open'
+            elif pstatus =='close':
+                pstatus = 'Closed'
+            else:
+                pstatus ='Inactive'
             contract_status = data.state 
             contract_start_date = data.date_start
             contract_end_date = data.date 
@@ -469,7 +496,7 @@ class fiscal_rpt_wiz(models.TransientModel):
                                 'actual_sale':data.od_actual_sale,
                                 'actual_cost':data.od_actual_cost,
                                 'actual_profit':data.od_actual_profit,
-                                'status':data.state,
+                                'status':pstatus,
                                 'date_start':data.date_start,
                                 'date_end':data.date, 
                                 'po_status':po_status,
@@ -532,7 +559,7 @@ class fiscal_rev_rpt_data(models.TransientModel):
     contract_start_date =  fields.Date(string="Contract Start Date")
     contract_end_date =  fields.Date(string="Contract End Date")
     project_type = fields.Selection([('amc','AMC'),('project','Project')],string="Type")
-    status = fields.Selection([('active','Active'),('inactive','Inactive'),('close','Closed'),('draft','New'),('open','In Progress'),('cancelled','Cancelled')],string="Status")
+    status = fields.Selection([('Open','Open'),('Inactive','Inactive'),('Closed','Closed')],string="Status")
     po_status = fields.Selection([('waiting_po','Waiting P.O'),('special_approval','Special Approval From GM'),('available','Available'),('credit','Customer Credit')],'Customer PO Status')
 
     @api.multi
