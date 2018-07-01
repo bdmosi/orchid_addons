@@ -351,22 +351,6 @@ class account_analytic_account(models.Model):
             amended_price = sales.od_amd_total_price
             amended_cost = sales.od_amd_total_cost
         
-        if self.od_manual_input:
-            original_price = self.man_original_sale 
-            original_cost = self.man_original_cost
-            amended_price = self.man_amended_sale 
-            amended_cost = self.man_amended_cost
-            rt_profit = self.man_mp 
-            mp_profit = self.man_mp
-            bim_profit =0.0
-            bmn_profit =0.0
-        original_profit = original_price - original_cost
-        if original_price:
-            original_profit_perc = (original_profit/original_price) *100
-        
-        amended_profit = amended_price - amended_cost
-        if amended_price:
-            amended_profit_perc = (amended_profit/amended_price) * 100
         
         bim_cost = self.od_cost_sheet_id and self.od_cost_sheet_id.a_bim_cost or 0.0
         bmn_cost  =self.od_cost_sheet_id and self.od_cost_sheet_id.a_bmn_cost or 0.0
@@ -381,6 +365,27 @@ class account_analytic_account(models.Model):
         if analytic_id == project_bim:
             rt_profit += bim_cost
             mp_profit += bim_profit
+        
+        
+        if self.od_manual_input:
+            original_price = self.man_original_sale 
+            original_cost = self.man_original_cost
+            amended_price = self.man_amended_sale 
+            amended_cost = self.man_amended_cost
+            rt_profit = self.man_mp 
+            mp_profit = self.man_mp
+            bim_profit =0.0
+            bmn_profit =0.0
+            bmn_cost =bim_cost =0.0
+        original_profit = original_price - original_cost
+        if original_price:
+            original_profit_perc = (original_profit/original_price) *100
+        
+        amended_profit = amended_price - amended_cost
+        if amended_price:
+            amended_profit_perc = (amended_profit/amended_price) * 100
+        
+        
         
         
         self.od_original_sale_price = original_price
