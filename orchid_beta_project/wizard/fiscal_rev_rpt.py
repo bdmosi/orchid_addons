@@ -195,6 +195,7 @@ class fiscal_rpt_wiz(models.TransientModel):
                                 'branch_id':branch_id,
                                 'pm_id':pm_id,
                                 'project_id':project_id,
+                                'analytic_account_id':data.analytic_account_id and data.analytic_account_id.id,
                                 'original_sale':data.od_amc_original_sale,
                                 'original_cost':data.od_amc_original_cost,
                                 'original_profit':data.od_amc_original_profit,
@@ -242,6 +243,7 @@ class fiscal_rpt_wiz(models.TransientModel):
                                 'branch_id':branch_id,
                                 'pm_id':pm_id,
                                 'project_id':project_id,
+                                'analytic_account_id':data.analytic_account_id and data.analytic_account_id.id,
                                 'original_sale':data.od_original_sale_price,
                                 'original_cost':data.od_original_sale_cost,
                                 'original_profit':data.od_original_sale_profit,
@@ -411,6 +413,7 @@ class fiscal_rpt_wiz(models.TransientModel):
                                 'branch_id':branch_id,
                                 'pm_id':pm_id,
                                 'project_id':project_id,
+                                'analytic_account_id':data.analytic_account_id and data.analytic_account_id.id,
                                 'original_sale':data.od_project_original_sale,
                                 'original_cost':data.od_project_original_cost,
                                 'original_profit':data.od_project_original_profit,
@@ -456,6 +459,7 @@ class fiscal_rpt_wiz(models.TransientModel):
                                 'branch_id':branch_id,
                                 'pm_id':pm_id,
                                 'project_id':project_id,
+                                'analytic_account_id':data.analytic_account_id and data.analytic_account_id.id,
                                 'original_sale':data.od_original_sale_price,
                                 'original_cost':data.od_original_sale_cost,
                                 'original_profit':data.od_original_sale_profit,
@@ -507,6 +511,7 @@ class fiscal_rev_rpt_data(models.TransientModel):
     company_id = fields.Many2one('res.company',string="Company")
     branch_id = fields.Many2one('od.cost.branch',string="Branch")
     project_id = fields.Many2one('project.project',string='Project')
+    analytic_account_id = fields.Many2one('account.analytic.account',string='Analytic Account')
     sam_id = fields.Many2one('res.users',string="Sale Account Manager")
     pm_id = fields.Many2one('res.users',string="Project Manager")
     original_sale = fields.Float(string="Original Sale",digits=dp.get_precision('Account'))
@@ -538,6 +543,19 @@ class fiscal_rev_rpt_data(models.TransientModel):
                 'view_mode': 'form',
                 'res_model': 'project.project',
                 'res_id':self.project_id and self.project_id.id or False,
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+
+            }
+    
+    @api.multi
+    def btn_open_analytic(self):
+       
+        return {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'account.analytic.account',
+                'res_id':self.analytic_account_id and self.analytic_account_id.id or False,
                 'type': 'ir.actions.act_window',
                 'target': 'new',
 

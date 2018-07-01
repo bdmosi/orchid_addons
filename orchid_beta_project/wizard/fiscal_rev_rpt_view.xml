@@ -86,8 +86,9 @@
 			<field name="company_id" invisible="1" />
 				
 				<field name="partner_id" />
-				<field name="project_id" />
-				<button name="btn_open_project" type="object" icon="STOCK_FIND" string="Open" />
+				<field name="project_id" invisible="1"/>
+				<field name="analytic_account_id" />
+				<button name="btn_open_analytic" type="object" icon="STOCK_FIND" string="Open" />
 				<field name="cost_sheet_id" />
 				<button name="btn_open_cost" type="object" icon="STOCK_FIND" string="Open" />
 			    
