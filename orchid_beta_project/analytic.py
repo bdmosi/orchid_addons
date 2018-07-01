@@ -358,8 +358,8 @@ class account_analytic_account(models.Model):
             amended_cost = self.man_amended_cost
             rt_profit = self.man_mp 
             mp_profit = self.man_mp
-            bim_profit =self.man_mp
-            bmn_profit =self.man_mp
+            bim_profit =0.0
+            bmn_profit =0.0
         original_profit = original_price - original_cost
         if original_price:
             original_profit_perc = (original_profit/original_price) *100
