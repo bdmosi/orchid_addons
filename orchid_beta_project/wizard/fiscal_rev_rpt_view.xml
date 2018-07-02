@@ -116,6 +116,7 @@
 				<field name="sam_id" />
 				<field name="cost_sheet_id" />
 				<field name="project_id" />
+				<field name="analytic_account_id" />
 				<field name="branch_id" />
 			<group expand="1" string="Group By">
                        

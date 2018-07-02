@@ -80,6 +80,7 @@ class od_wip(models.Model):
             income_acc_id = self.income_account_id and self.income_account_id.id
             prov_acc_id = self.provision_account_id and self.provision_account_id.id
             analytic_acc_id = self.project_id and self.project_id.id
+            partner_id = self.project_id and self.project_id.partner_id and self.project_id.partner_id.id or False
             wip_balance = self.wip_account_balance
             cost = self.project_cost
             invoice_amount = self.invoice_amount
@@ -104,6 +105,7 @@ class od_wip(models.Model):
                 'debit':0.0,
                 'account_id': wip_acc_id,
                 'analytic_account_id':analytic_acc_id,
+                'partner_id':partner_id,
                 'date':self.date,
                 'od_cost_centre_id': od_cost_centre_id,
                 'od_branch_id':od_branch_id,
@@ -115,6 +117,7 @@ class od_wip(models.Model):
                 'credit':0.0 ,
                 'account_id': expense_acc_id ,
                 'analytic_account_id':analytic_acc_id,
+                'partner_id':partner_id,
                 'date':self.date,
                 'od_cost_centre_id': od_cost_centre_id,
                 'od_branch_id':od_branch_id,
@@ -126,6 +129,7 @@ class od_wip(models.Model):
                 'credit':0.0 ,
                 'account_id': inv_acc_id ,
                 'analytic_account_id':analytic_acc_id,
+                'partner_id':partner_id,
                 'date':self.date,
                 'od_cost_centre_id': od_cost_centre_id,
                 'od_branch_id':od_branch_id,
@@ -138,6 +142,7 @@ class od_wip(models.Model):
                 'credit':invoice_amount,
                 'account_id': income_acc_id,
                 'analytic_account_id':analytic_acc_id,
+                'partner_id':partner_id,
                 'date':self.date,
                 'od_cost_centre_id': od_cost_centre_id,
                 'od_branch_id':od_branch_id,
@@ -151,6 +156,7 @@ class od_wip(models.Model):
                     'debit':0.0,
                     'account_id':prov_acc_id,
                     'analytic_account_id':analytic_acc_id,
+                    'partner_id':partner_id,
                     'date':self.date,
                     'od_cost_centre_id': od_cost_centre_id,
                     'od_branch_id':od_branch_id,
