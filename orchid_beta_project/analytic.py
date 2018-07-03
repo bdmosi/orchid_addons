@@ -315,14 +315,14 @@ class account_analytic_account(models.Model):
             self.od_po_status = self.od_cost_sheet_id.po_status
 
 
-    
-    @api.onchange('man_original_sale','man_original_cost')
-    def onchange_original_price(self):
-        original_sale = self.man_original_sale
-        original_cost = self.man_original_cost
-        self.man_amended_sale = original_sale 
-        self.man_actual_sale = original_sale 
-        self.man_amended_cost = original_cost
+#     
+#     @api.onchange('man_original_sale','man_original_cost')
+#     def onchange_original_price(self):
+#         original_sale = self.man_original_sale
+#         original_cost = self.man_original_cost
+#         self.man_amended_sale = original_sale 
+#         self.man_actual_sale = original_sale 
+#         self.man_amended_cost = original_cost
         
        
     

@@ -692,7 +692,8 @@
              	     <field name="man_actual_sale" attrs="{'invisible':[('od_manual_input','=',False)]}"/>
              	     <field name="od_manual_cost" />
              	     <field name="man_actual_cost" attrs="{'invisible':[('od_manual_cost','=',False)]}" />
-             	     
+             	     <field name="check_amend_mp" />
+             	      <field name="mp_amend" attrs="{'invisible':[('check_amend_mp','=',False)]}" />
              	  
              	  </group>
              	</group>
