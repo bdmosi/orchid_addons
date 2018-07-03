@@ -46,6 +46,8 @@ class account_analytic_account(models.Model):
     man_original_sale = fields.Float(string="Original Sale(Manual)")
     man_original_cost = fields.Float(string="Original Cost(Manual)")
     man_mp = fields.Float(string="Returned Man Power(Manual)")
+    mp_amend = fields.Float(string="Amended Returned Man Power(Manual)")
+    check_amend_mp = fields.Boolean(string="Amend Return MP?")
     man_amended_sale = fields.Float(string="Amended Sale(Manual)")
     man_amended_cost = fields.Float(string="Amended Cost(Manual)")
     man_actual_sale = fields.Float(string="Actual Sale(Manual)")
@@ -313,6 +315,19 @@ class account_analytic_account(models.Model):
             self.od_po_status = self.od_cost_sheet_id.po_status
 
 
+    
+    @api.onchange('man_original_sale','man_original_cost')
+    def onchange_original_price(self):
+        original_sale = self.man_original_sale
+        original_cost = self.man_original_cost
+        self.man_amended_sale = original_sale 
+        self.man_actual_sale = original_sale 
+        self.man_amended_cost = original_cost
+        
+       
+    
+    
+    
     @api.one
     def od_get_total_sale_value(self):
         sale_order = self.env['sale.order']
@@ -377,6 +392,8 @@ class account_analytic_account(models.Model):
             bim_profit =0.0
             bmn_profit =0.0
             bmn_cost =bim_cost =0.0
+        if self.check_amend_mp:
+            rt_profit = self.mp_amend
         original_profit = original_price - original_cost
         if original_price:
             original_profit_perc = (original_profit/original_price) *100
