@@ -4202,12 +4202,7 @@ class od_cost_sheet(models.Model):
             
             if not order_line:
                 raise Warning("No Order Line to Create Sale Order")
-            if self.select_a0 and tab == 'amc':
-                self.create_multiple_level2_so(so_vals, order_line, group='amc')
-                continue
-            if self.select_a0 and tab == 'om':
-                self.create_multiple_level2_so(so_vals, order_line, group='om')
-                continue
+            
             
             # pprint(order_line)
             if not order_line:
@@ -4237,6 +4232,13 @@ class od_cost_sheet(models.Model):
                 elif tab == 'amc':
                     if not self.od_bmn_sale_id:
                         self.od_bmn_sale_id = so_id.id
+            
+            if self.select_a0 and tab == 'amc':
+                self.create_multiple_level2_so(so_vals, order_line, group='amc')
+                continue
+            if self.select_a0 and tab == 'om':
+                self.create_multiple_level2_so(so_vals, order_line, group='om')
+                continue
         return True
 
     def get_product_id_from_param(self,product_param):

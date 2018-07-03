@@ -142,9 +142,9 @@
                    
                     <tr>
                     <td><strong>PMO Expected Closing</strong></td>
-                    <td><field name="od_analytic_pmo_closing" readonly="1"/></td>
-                    <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_project_pmo_closing"  readonly="1"/></td>
-                    <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_amc_pmo_closing"  readonly="1"/></td>
+                    <td><field name="od_analytic_pmo_closing" readonly="0"/></td>
+                    <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_project_pmo_closing"  readonly="0"/></td>
+                    <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_amc_pmo_closing"  readonly="0"/></td>
                    
                     </tr>
                    
