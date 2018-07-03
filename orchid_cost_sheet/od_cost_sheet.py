@@ -898,14 +898,14 @@ class od_cost_sheet(models.Model):
     owner_id_a3 = fields.Many2one('res.users',string="Owner A3")
     owner_id_a4 = fields.Many2one('res.users',string="Owner A4")
     owner_id_a5 = fields.Many2one('res.users',string="Owner A5")
-    DOMAIN = [('credit','Credit'),('sup','Supply'),('imp','Implementation'),('sup_imp','Supply & Implementation'),('amc','AMC'),('o_m','O&M'),('poc','(POC,Presales)'), ('comp_gen','Company General -(Training,Labs,Trips,etc.)')]
+    DOMAIN = [('credit','Credit'),('sup','Supply'),('imp','Implementation'),('sup_imp','Supply & Implementation'),('amc_view','AMC View'),('o_m_view','O&M View'),('amc','AMC'),('o_m','O&M'),('poc','(POC,Presales)'), ('comp_gen','Company General -(Training,Labs,Trips,etc.)')]
     
     type_of_project_a0 = fields.Selection(DOMAIN,string="Type Of Project A0")
     type_of_project_a1 = fields.Selection(DOMAIN,string="Type Of Project A1")
     type_of_project_a2 = fields.Selection(DOMAIN,string="Type Of Project A2")
     type_of_project_a3 = fields.Selection(DOMAIN,string="Type Of Project A3")
-    type_of_project_a4 = fields.Selection(DOMAIN,string="Type Of Project A4")
-    type_of_project_a5 = fields.Selection(DOMAIN,string="Type Of Project A5")
+    type_of_project_a4 = fields.Selection([('amc_view','AMC View')],string="Type Of Project A4")
+    type_of_project_a5 = fields.Selection([('o_m_view','O&M View'),],string="Type Of Project A5")
     
 #     select_a0 = fields.Boolean(string="Select A0")
     select_a0 = fields.Boolean(string="Select A0",default=True)
