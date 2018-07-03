@@ -3109,6 +3109,7 @@
 									<field name="start_date" />
 									<field name="end_date" />
 									<field name="analytic_id" />
+									<field name="so_id" />
 								</tree>
 							</field>
 							
@@ -3138,6 +3139,7 @@
 									<field name="start_date" />
 									<field name="end_date" />
 									<field name="analytic_id" />
+									<field name="so_id" />
 								</tree>
 							</field>
 					
