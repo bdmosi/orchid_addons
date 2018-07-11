@@ -4389,6 +4389,12 @@ class od_cost_sheet(models.Model):
         select_seq = eval('self.'+'select_a'+ str(seq))
         analytic_seq = eval('self.'+'analytic_a'+ str(seq))
         analytic_seq_id = analytic_seq and analytic_seq.id or False
+        template_id = False
+        if self.is_saudi_comp():
+            template_id = 2451
+        else:
+            template_id = 2449
+        
         if select_seq:
             analytic_id = False
             name= eval('self.'+'name_a'+ str(seq))
@@ -4413,6 +4419,7 @@ class od_cost_sheet(models.Model):
                     'code':code,
                     'type':type,
                     'company_id':company_id,
+                    'template_id':template_id,
                     'od_owner_id':owner_id and owner_id.id or False,
                     'od_type_of_project':type_project,
                     'od_analytic_level':analytic_level,
@@ -4473,6 +4480,11 @@ class od_cost_sheet(models.Model):
         od_cost_centre_id = self.od_cost_centre_id and self.od_cost_centre_id.id or False
         od_branch_id = self.od_branch_id and self.od_branch_id.id or False
         od_division_id = self.od_division_id and self.od_division_id.id or False
+        template_id = False
+        if self.is_saudi_comp():
+            template_id = 2451
+        else:
+            template_id = 2449
         
         periodicity = self.periodicity_amc 
         start_date = self.l2_start_date_amc
@@ -4517,6 +4529,7 @@ class od_cost_sheet(models.Model):
                     'code':code+'-' +str(i+1),
                     'type':type,
                     'company_id':company_id,
+                    'template_id':template_id,
                     'od_owner_id':owner_id ,
                     'od_type_of_project':type_project,
                     'od_analytic_level':analytic_level,
