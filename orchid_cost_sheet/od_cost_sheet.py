@@ -4241,11 +4241,14 @@ class od_cost_sheet(models.Model):
             so_vals['company_id'] =company_id
             # sdfsfsfs
             pprint(so_vals)
-            if self.select_a0 and tab in ('amc','om'):
-                pass
-            else:
-                so_id = self.env['sale.order'].create(so_vals)
-                so_id.od_action_approve()
+            if self.select_a0 and tab == 'amc':
+                self.create_multiple_level2_so(so_vals, order_line, group='amc')
+                continue
+            if self.select_a0 and tab == 'o_m':
+                self.create_multiple_level2_so(so_vals, order_line, group='om')
+                continue
+            so_id = self.env['sale.order'].create(so_vals)
+            so_id.od_action_approve()
             for tab in tabs:
                 if tab == 'mat':
                     if not self.od_mat_sale_id:
@@ -4264,12 +4267,7 @@ class od_cost_sheet(models.Model):
                     if not self.od_bmn_sale_id:
                         self.od_bmn_sale_id = so_id.id
             
-            if self.select_a0 and tab == 'amc':
-                self.create_multiple_level2_so(so_vals, order_line, group='amc')
-                continue
-            if self.select_a0 and tab == 'o_m':
-                self.create_multiple_level2_so(so_vals, order_line, group='om')
-                continue
+            
         return True
 
     def get_product_id_from_param(self,product_param):
