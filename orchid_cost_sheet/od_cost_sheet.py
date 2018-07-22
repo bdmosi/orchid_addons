@@ -4241,8 +4241,11 @@ class od_cost_sheet(models.Model):
             so_vals['company_id'] =company_id
             # sdfsfsfs
             pprint(so_vals)
-            so_id = self.env['sale.order'].create(so_vals)
-            so_id.od_action_approve()
+            if self.select_a0 and tab in ('amc','om'):
+                pass
+            else:
+                so_id = self.env['sale.order'].create(so_vals)
+                so_id.od_action_approve()
             for tab in tabs:
                 if tab == 'mat':
                     if not self.od_mat_sale_id:
