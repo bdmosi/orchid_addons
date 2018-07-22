@@ -372,7 +372,7 @@ class account_analytic_account(models.Model):
         
         
         project_bmn = self.od_cost_sheet_id and self.od_cost_sheet_id.project_bmn and self.od_cost_sheet_id.project_bmn.id
-        project_bim = self.od_cost_sheet_id and self.od_cost_sheet_id.project_bmn and self.od_cost_sheet_id.project_bim.id
+        project_bim = self.od_cost_sheet_id and self.od_cost_sheet_id.project_bim and self.od_cost_sheet_id.project_bim.id
         if analytic_id == project_bmn:
             rt_profit +=bmn_cost
             mp_profit += bmn_profit
@@ -404,7 +404,7 @@ class account_analytic_account(models.Model):
         
         
         
-        
+        print "rt_profit>>>>>>>>>>>>>>>>",rt_profit
         self.od_original_sale_price = original_price
         self.od_original_sale_cost = original_cost
         self.od_original_sale_profit = mp_profit + original_profit

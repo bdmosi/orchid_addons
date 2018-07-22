@@ -1929,8 +1929,9 @@ class od_cost_sheet(models.Model):
             profit_per =0.0 
             if sale:
                 profit_per = (profit/sale) * 100
+        bim_tech_cost = self.get_tech_bim()
         
-        self.a_bim_cost = cost 
+        self.a_bim_cost = cost  + bim_tech_cost
         self.a_bim_sale = sale 
         self.a_bim_profit = profit 
         self.a_bim_profit_percentage = profit_per
@@ -1946,7 +1947,8 @@ class od_cost_sheet(models.Model):
             profit_per =0.0 
             if sale:
                 profit_per = (profit/sale) * 100
-        self.a_bmn_cost = cost 
+        bmn_tech_cost = self.get_tech_bmn()
+        self.a_bmn_cost = cost  + bmn_tech_cost
         self.a_bmn_sale = sale 
         self.a_bmn_profit = profit 
         self.a_bmn_profit_percentage = profit_per
@@ -2063,6 +2065,12 @@ class od_cost_sheet(models.Model):
                 data['sale'] += line.total_sale
                 data['sale_aftr_disc'] += line.sale_aftr_disc 
                 data['cost'] += line.total_cost
+#         if self.bim_log_select and self.bim_log_cost:
+#             data = res.get(False,{})
+#             data['sale'] += self.bim_log_price
+#             data['sale_aftr_disc'] += self.bim_log_price
+#             data['cost'] += self.bim_log_cost
+            
 #         tech_lines = self.get_tech_pdtgrp_vals()
 #        
 #         for tech_dat in tech_lines:
@@ -2132,7 +2140,8 @@ class od_cost_sheet(models.Model):
                 val['total_gp'] = profit
                 
         if total_mat_cost:
-            total_manpower_cost = self.get_imp_cost() + self.get_bmn_cost()
+#             total_manpower_cost = self.get_imp_cost() + self.get_bmn_cost()
+            total_manpower_cost = self.a_bim_cost + self.a_bmn_cost
             print "total manpower cost???????>>>>>>>>>>>>>>>>>>>>>>>>>>>,distribution cost",total_manpower_cost,distribute_cost
             for val in data:
                 pdt_grp_id = val.get('pdt_grp_id')
@@ -2148,7 +2157,8 @@ class od_cost_sheet(models.Model):
                 total_gp = profit + manpower_cost +mp
                 val['total_gp'] = total_gp
         if not data:
-            total_manpower_cost = self.get_imp_cost() + self.get_bmn_cost()
+#             total_manpower_cost = self.get_imp_cost() + self.get_bmn_cost()
+            total_manpower_cost = self.a_bim_cost + self.a_bmn_cost
             if total_manpower_cost:
                 data.append({
                     'manpower_cost':total_manpower_cost,
@@ -3089,10 +3099,25 @@ class od_cost_sheet(models.Model):
         if self.included_bmn_in_quotation:
             cost += sum([line.line_cost_local_currency for line in self.amc_tech_line])
         return cost
+    
+    def get_tech_bim(self):
+        cost =0.0
+        if self.included_bim_in_quotation:
+            cost += sum([line.line_cost_local_currency for line in self.imp_tech_line])
+        
+        return cost
+    def get_tech_bmn(self):
+        cost =0.0
+       
+        if self.included_bmn_in_quotation:
+            cost += sum([line.line_cost_local_currency for line in self.amc_tech_line])
+        return cost
+    
     @api.one 
     @api.depends('sum_profit','a_bim_cost','a_bmn_cost')
     def _get_total_gp(self):
-        tech_cost = self.get_tech_cost()
+        tech_cost =0.0
+#         tech_cost = self.get_tech_cost()
         self.total_gp = self.sum_profit + self.a_bim_cost + self.a_bmn_cost + tech_cost
         self.returned_mp =self.a_bim_cost + self.a_bmn_cost + tech_cost
     summary_tot_cost = fields.Float(string='Total Cost',compute='_get_sum_total_cost',store=True,digits=dp.get_precision('Account'))
