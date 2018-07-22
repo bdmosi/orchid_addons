@@ -4221,6 +4221,9 @@ class od_cost_sheet(models.Model):
             
             order_line = []
             for tab in tabs:
+                if self.select_a0 and tab in ('amc','om'):
+                    continue
+                    
                 order_line += so_line_map[tab]
             
             order_line = self.od_deduplicate_pdt(order_line)
@@ -4261,7 +4264,7 @@ class od_cost_sheet(models.Model):
             if self.select_a0 and tab == 'amc':
                 self.create_multiple_level2_so(so_vals, order_line, group='amc')
                 continue
-            if self.select_a0 and tab == 'om':
+            if self.select_a0 and tab == 'o_m':
                 self.create_multiple_level2_so(so_vals, order_line, group='om')
                 continue
         return True
