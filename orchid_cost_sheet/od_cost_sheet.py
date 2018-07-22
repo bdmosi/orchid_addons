@@ -4221,8 +4221,8 @@ class od_cost_sheet(models.Model):
             
             order_line = []
             for tab in tabs:
-                if self.select_a0 and tab in ('amc','om'):
-                    continue
+#                 if self.select_a0 and tab in ('amc','om'):
+#                     continue
                     
                 order_line += so_line_map[tab]
             
