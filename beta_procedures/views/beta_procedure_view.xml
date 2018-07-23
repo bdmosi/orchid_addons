@@ -36,7 +36,7 @@
  </record>
  
 	<record model="ir.actions.act_window" id="action_od_beta_structures">
-        <field name="name">Structures</field>
+        <field name="name">Structure</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">beta.structures</field>
         <field name="view_type">form</field>
@@ -134,7 +134,7 @@
         </field>
     </record>
     
- <menuitem id="od_menu_beta_structure" name="Structures" action="action_od_beta_structures" parent="beta_procedures.menu_company_sub" sequence="1"/>
+ <menuitem id="od_menu_beta_structure" name="Structure" action="action_od_beta_structures" parent="beta_procedures.menu_company_sub" sequence="1"/>
  <menuitem id="od_menu_role_description" name="Role Description" action="action_od_beta_role_desc" parent="beta_procedures.menu_company_sub" sequence="2"/>
  <menuitem id="od_menu_beta_procedures" name="Procedures" action="action_od_beta_procedures" parent="beta_procedures.menu_company_sub" sequence="3"/>
  

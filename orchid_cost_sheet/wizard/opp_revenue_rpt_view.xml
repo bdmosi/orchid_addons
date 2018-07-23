@@ -114,7 +114,7 @@
 				<field name="pdt_grp_id" />
 				<field name="sale_aftr_disc" string="Sales" sum="Total" />
 				<field name="total_gp" string="Profit With MP" sum="Total" />
-				<field name="mp_sales" string="MP Sales" sum="Total" />
+				<field name="mp_sales" string="MP Sales" sum="Total" invisible="1" />
 				
 				
 				

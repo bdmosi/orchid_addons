@@ -180,6 +180,7 @@ class fiscal_rpt_wiz(models.TransientModel):
             company_id = data.company_id and data.company_id.id 
             branch_id = data.od_branch_id and data.od_branch_id.id
             od_cost_sheet_id = data.od_cost_sheet_id and data.od_cost_sheet_id.id
+            approved_date =data.od_cost_sheet_id and data.od_cost_sheet_id.approved_date
             po_status = data.od_cost_sheet_id and data.od_cost_sheet_id and data.od_cost_sheet_id.po_status
             pstatus = data.od_amc_status 
             if pstatus =='active':
@@ -193,6 +194,7 @@ class fiscal_rpt_wiz(models.TransientModel):
             contract_end_date = data.date 
             closing_date = data.od_amc_closing
             result.append((0,0,{
+                              'approved_date':approved_date,
                                 'wiz_id':wiz_id,
                                 'cost_sheet_id':od_cost_sheet_id, 
                                 'sam_id':sam_id ,
@@ -234,6 +236,7 @@ class fiscal_rpt_wiz(models.TransientModel):
             company_id = data.company_id and data.company_id.id 
             branch_id = data.od_branch_id and data.od_branch_id.id
             od_cost_sheet_id = data.od_cost_sheet_id and data.od_cost_sheet_id.id
+            approved_date =data.od_cost_sheet_id and data.od_cost_sheet_id.approved_date
             po_status = data.od_cost_sheet_id and data.od_cost_sheet_id and data.od_cost_sheet_id.po_status
             pstatus = data.state 
             if pstatus in ('open','pending'):
@@ -247,6 +250,7 @@ class fiscal_rpt_wiz(models.TransientModel):
             contract_end_date = data.date 
             closing_date = data.od_closing_date
             result.append((0,0,{
+                                  'approved_date':approved_date,
                                 'wiz_id':wiz_id,
                                 'cost_sheet_id':od_cost_sheet_id, 
                                 'sam_id':sam_id ,
@@ -411,6 +415,7 @@ class fiscal_rpt_wiz(models.TransientModel):
             company_id = data.company_id and data.company_id.id 
             branch_id = data.od_branch_id and data.od_branch_id.id
             od_cost_sheet_id = data.od_cost_sheet_id and data.od_cost_sheet_id.id
+            approved_date =data.od_cost_sheet_id and data.od_cost_sheet_id.approved_date
             po_status = data.od_cost_sheet_id and data.od_cost_sheet_id and data.od_cost_sheet_id.po_status
             pstatus = data.od_project_status 
             if pstatus =='active':
@@ -425,6 +430,7 @@ class fiscal_rpt_wiz(models.TransientModel):
             contract_end_date = data.date 
             closing_date = data.od_project_closing
             result.append((0,0,{
+                               'approved_date':approved_date,
                                 'wiz_id':wiz_id,
                                 'cost_sheet_id':od_cost_sheet_id, 
                                 'sam_id':sam_id ,
@@ -465,6 +471,7 @@ class fiscal_rpt_wiz(models.TransientModel):
             company_id = data.company_id and data.company_id.id 
             branch_id = data.od_branch_id and data.od_branch_id.id
             od_cost_sheet_id = data.od_cost_sheet_id and data.od_cost_sheet_id.id
+            approved_date =data.od_cost_sheet_id and data.od_cost_sheet_id.approved_date
             po_status = data.od_cost_sheet_id and data.od_cost_sheet_id and data.od_cost_sheet_id.po_status
             pstatus = data.state 
             if pstatus in ('open','pending'):
@@ -478,6 +485,7 @@ class fiscal_rpt_wiz(models.TransientModel):
             contract_end_date = data.date 
             closing_date = data.od_closing_date
             result.append((0,0,{
+                                 'approved_date':approved_date,
                                 'wiz_id':wiz_id,
                                 'cost_sheet_id':od_cost_sheet_id, 
                                 'sam_id':sam_id ,
@@ -534,6 +542,7 @@ class fiscal_rev_rpt_data(models.TransientModel):
     _name = 'fiscal.rev.rpt.data'
     wiz_id = fields.Many2one('fiscal.rev.rpt.wiz',string="Wizard")
     cost_sheet_id = fields.Many2one('od.cost.sheet',string='Cost Sheet')
+    approved_date = fields.Date(string="Approved Date")
     partner_id = fields.Many2one('res.partner',string="Customer")
     company_id = fields.Many2one('res.company',string="Company")
     branch_id = fields.Many2one('od.cost.branch',string="Branch")
