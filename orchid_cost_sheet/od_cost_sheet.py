@@ -2095,24 +2095,23 @@ class od_cost_sheet(models.Model):
         distribute_cost =0.0
         disc  = abs(self.special_discount)
         tech_vals = self.get_tech_pdtgrp_vals()
-        print "result>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",result
-        print "tech valsssssssssssssss>>>>>>>>>>>>>>>>>>>>>>>>>>>>",tech_vals
-        for val in tech_vals:
-            pdt_grp_id = val.get('pdt_grp_id')
-            total_sale1 = val.get('total_sale')
-            total_cost1 = val.get('total_cost')
-            profit = total_sale1 - total_cost1
-            result_data = result.get(pdt_grp_id,{})
-            if result_data:
-                sale =result_data.get('sale',0.0)
-                sale += total_sale1
-                cost = result_data.get('cost',0.0)
-                cost += total_cost1
-                result_data['sale'] = sale 
-                result_data['cost'] = cost 
-                result_data['manpower_cost'] = total_cost1
-            else:
-                result[pdt_grp_id] = {'sale':total_sale1,'cost':total_cost1,'manpower_cost':total_cost1,'no_distribute':True}
+#         
+#         for val in tech_vals:
+#             pdt_grp_id = val.get('pdt_grp_id')
+#             total_sale1 = val.get('total_sale')
+#             total_cost1 = val.get('total_cost')
+#             profit = total_sale1 - total_cost1
+#             result_data = result.get(pdt_grp_id,{})
+#             if result_data:
+#                 sale =result_data.get('sale',0.0)
+#                 sale += total_sale1
+#                 cost = result_data.get('cost',0.0)
+#                 cost += total_cost1
+#                 result_data['sale'] = sale 
+#                 result_data['cost'] = cost 
+#                 result_data['manpower_cost'] = total_cost1
+#             else:
+#                 result[pdt_grp_id] = {'sale':total_sale1,'cost':total_cost1,'manpower_cost':total_cost1,'no_distribute':True}
         for key,val in result.iteritems():
             pdt_grp_id = key 
             sale = val.get('sale')
@@ -2142,7 +2141,7 @@ class od_cost_sheet(models.Model):
         if total_mat_cost:
 #             total_manpower_cost = self.get_imp_cost() + self.get_bmn_cost()
             total_manpower_cost = self.a_bim_cost + self.a_bmn_cost
-            print "total manpower cost???????>>>>>>>>>>>>>>>>>>>>>>>>>>>,distribution cost",total_manpower_cost,distribute_cost
+            
             for val in data:
                 pdt_grp_id = val.get('pdt_grp_id')
                 manpower_cost =0.0
