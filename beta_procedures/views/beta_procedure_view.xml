@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+    <menuitem id="menu_company" name="Company" sequence="0"/>
+    <menuitem id="menu_company_sub" name="Company" parent="menu_company" sequence="100"/>
+            
+    <record model="ir.ui.view" id="od_beta_structures_tree">
+        <field name="name">beta.structures.tree</field>
+        <field name="model">beta.structures</field>
+        <field name="arch" type="xml">
+            <tree>
+            	<field name="name"/>
+            </tree>
+       </field>
+    </record>
+
+  <record model="ir.ui.view" id="od_beta_structures_form">
+        <field name="name">beta.structures.form</field>
+        <field name="model">beta.structures</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+	                <group>
+	                   <label for="name"/>
+	                   <h2><field name="name"/></h2>
+	                   <field name="company_id" />
+	                </group>
+                  	<field name="image" widget="image" nolabel="1"/>
+                  	<group string="Description" >
+                		<field name="description" widget="html" nolabel="1"/>
+                  	</group>
+       			</sheet>
+    		</form>
+  </field>
+ </record>
+ 
+	<record model="ir.actions.act_window" id="action_od_beta_structures">
+        <field name="name">Structures</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">beta.structures</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+         <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to add new Structure. 
+          </p>
+        </field>
+    </record>
+    
+     <record model="ir.ui.view" id="od_beta_role_desc_tree">
+        <field name="name">role.description.tree</field>
+        <field name="model">role.description</field>
+        <field name="arch" type="xml">
+            <tree>
+            	<field name="name"/>
+            </tree>
+       </field>
+    </record>
+
+  <record model="ir.ui.view" id="od_beta_role_desc_form">
+        <field name="name">role.description.form</field>
+        <field name="model">role.description</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+	                <group>
+	                   <label for="name"/>
+	                   <h2><field name="name"/></h2>
+	                   <field name="company_id" />
+	                </group>
+                  	<field name="image" widget="image" nolabel="1"/>
+                  	<group string="Description" >
+                		<field name="description" widget="html" nolabel="1"/>
+                  	</group>
+       			</sheet>
+    		</form>
+  </field>
+ </record>
+ 
+	<record model="ir.actions.act_window" id="action_od_beta_role_desc">
+        <field name="name">Role Description</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">role.description</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+         <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to add new Role Description. 
+          </p>
+        </field>
+    </record>
+    
+     <record model="ir.ui.view" id="od_beta_procedures_tree">
+        <field name="name">beta.procedures.tree</field>
+        <field name="model">beta.procedures</field>
+        <field name="arch" type="xml">
+            <tree>
+            	<field name="name"/>
+            </tree>
+       </field>
+    </record>
+
+  <record model="ir.ui.view" id="od_beta_procedures_form">
+        <field name="name">beta.procedures.form</field>
+        <field name="model">beta.procedures</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+	                <group>
+	                   <label for="name"/>
+	                   <h2><field name="name"/></h2>
+	                   <field name="company_id" />
+	                </group>
+                  	<field name="image" widget="image" nolabel="1"/>
+                  	<group string="Description" >
+                		<field name="description" widget="html" nolabel="1"/>
+                  	</group>
+       			</sheet>
+    		</form>
+  </field>
+ </record>
+ 
+	<record model="ir.actions.act_window" id="action_od_beta_procedures">
+        <field name="name">Procedures</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">beta.procedures</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+         <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to add new Procedure. 
+          </p>
+        </field>
+    </record>
+    
+ <menuitem id="od_menu_beta_structure" name="Structures" action="action_od_beta_structures" parent="beta_procedures.menu_company_sub" sequence="1"/>
+ <menuitem id="od_menu_role_description" name="Role Description" action="action_od_beta_role_desc" parent="beta_procedures.menu_company_sub" sequence="2"/>
+ <menuitem id="od_menu_beta_procedures" name="Procedures" action="action_od_beta_procedures" parent="beta_procedures.menu_company_sub" sequence="3"/>
+ 
+ </data>
+</openerp>
