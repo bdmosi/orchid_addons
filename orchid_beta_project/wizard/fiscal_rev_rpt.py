@@ -180,7 +180,7 @@ class fiscal_rpt_wiz(models.TransientModel):
             company_id = data.company_id and data.company_id.id 
             branch_id = data.od_branch_id and data.od_branch_id.id
             od_cost_sheet_id = data.od_cost_sheet_id and data.od_cost_sheet_id.id
-            approved_date =data.od_cost_sheet_id and data.od_cost_sheet_id.approved_date
+            approved_date =data.od_cost_sheet_id and data.od_cost_sheet_id.approved_date or False
             po_status = data.od_cost_sheet_id and data.od_cost_sheet_id and data.od_cost_sheet_id.po_status
             pstatus = data.od_amc_status 
             if pstatus =='active':
@@ -236,7 +236,7 @@ class fiscal_rpt_wiz(models.TransientModel):
             company_id = data.company_id and data.company_id.id 
             branch_id = data.od_branch_id and data.od_branch_id.id
             od_cost_sheet_id = data.od_cost_sheet_id and data.od_cost_sheet_id.id
-            approved_date =data.od_cost_sheet_id and data.od_cost_sheet_id.approved_date
+            approved_date =data.od_cost_sheet_id and data.od_cost_sheet_id.approved_date or False
             po_status = data.od_cost_sheet_id and data.od_cost_sheet_id and data.od_cost_sheet_id.po_status
             pstatus = data.state 
             if pstatus in ('open','pending'):
@@ -415,7 +415,7 @@ class fiscal_rpt_wiz(models.TransientModel):
             company_id = data.company_id and data.company_id.id 
             branch_id = data.od_branch_id and data.od_branch_id.id
             od_cost_sheet_id = data.od_cost_sheet_id and data.od_cost_sheet_id.id
-            approved_date =data.od_cost_sheet_id and data.od_cost_sheet_id.approved_date
+            approved_date =data.od_cost_sheet_id and data.od_cost_sheet_id.approved_date or False
             po_status = data.od_cost_sheet_id and data.od_cost_sheet_id and data.od_cost_sheet_id.po_status
             pstatus = data.od_project_status 
             if pstatus =='active':
@@ -471,7 +471,7 @@ class fiscal_rpt_wiz(models.TransientModel):
             company_id = data.company_id and data.company_id.id 
             branch_id = data.od_branch_id and data.od_branch_id.id
             od_cost_sheet_id = data.od_cost_sheet_id and data.od_cost_sheet_id.id
-            approved_date =data.od_cost_sheet_id and data.od_cost_sheet_id.approved_date
+            approved_date =data.od_cost_sheet_id and data.od_cost_sheet_id.approved_date or False
             po_status = data.od_cost_sheet_id and data.od_cost_sheet_id and data.od_cost_sheet_id.po_status
             pstatus = data.state 
             if pstatus in ('open','pending'):
