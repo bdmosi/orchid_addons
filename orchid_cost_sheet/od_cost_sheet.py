@@ -2095,7 +2095,14 @@ class od_cost_sheet(models.Model):
         distribute_cost =0.0
         disc  = abs(self.special_discount)
         tech_vals = self.get_tech_pdtgrp_vals()
-         
+        tech_sale = sum([val.get('total_sale') for val in tech_vals])
+        tech_cost = sum([val.get('total_cost') for val in tech_vals])
+        if not result:
+            sale = self.sum_total_sale - tech_sale 
+            cost = self.sum_tot_cost -tech_cost 
+            total_manpower_cost = self.get_imp_cost() + self.get_bmn_cost()
+            result[21]= {'sale':sale,'cost':cost,'manpower_cost':total_manpower_cost,}
+            
         for val in tech_vals:
             pdt_grp_id = val.get('pdt_grp_id')
             total_sale1 = val.get('total_sale')
@@ -2152,11 +2159,17 @@ class od_cost_sheet(models.Model):
                 profit = val.get('profit')
                 total_gp = profit + manpower_cost +mp
                 val['total_gp'] = total_gp
+        for val in data:
+            mp = val.get('manpower_cost',0.0)
+            profit = val.get('profit')
+            total_gp = profit  +mp
+            val['total_gp'] = total_gp
         if not data:
-            total_manpower_cost = self.get_imp_cost() + self.get_bmn_cost()
-#             total_manpower_cost = self.a_bim_cost + self.a_bmn_cost
+#             total_manpower_cost = self.get_imp_cost() + self.get_bmn_cost()
+            total_manpower_cost = self.a_bim_cost + self.a_bmn_cost
             if total_manpower_cost:
                 data.append({
+                    'pdt_grp_id':21,
                     'manpower_cost':total_manpower_cost,
                     'total_gp':total_manpower_cost,
                     })
