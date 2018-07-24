@@ -38,3 +38,16 @@ class RoleDescription(models.Model):
     image = fields.Binary(string='Attached Image')
     description = fields.Text()
     company_id = fields.Many2one('res.company', string='Company',default=od_get_company_id)
+    
+class BetaKPI(models.Model):
+    
+    _name = 'beta.kpi'
+    
+    def od_get_company_id(self):
+        return self.env.user.company_id
+    
+    name = fields.Char('Name')
+    image = fields.Binary(string='Attached Image')
+    description = fields.Text()
+    company_id = fields.Many2one('res.company', string='Company',default=od_get_company_id)
+    

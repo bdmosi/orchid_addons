@@ -2,3 +2,4 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_beta_procedures,beta.procudures.user,model_beta_procedures,,1,1,1,1
 access_beta_structures,beta.structures.user,model_beta_structures,,1,1,1,1
 access_role_description,role.description.user,model_role_description,,1,1,1,1
+access_beta_kpis,beta.kpis.user,model_beta_kpi,,1,1,1,1

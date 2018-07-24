@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>        
+                        
+		<record model="ir.ui.view" id="crm_case_form_view_lead_inherit">
+            <field name="name">crm.lead.inherit</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_form_view_leads"/>
+            <field name="arch" type="xml">
+            <xpath expr="//button[@name='135']" position="after">
+	            <button class="oe_inline oe_stat_button" type="object"
+	                    context="{'partner_id': partner_id}"
+	                    name="action_schedule_meeting_lead" icon="fa-calendar">
+	                    <field string="Meetings" name="meeting_count_lead" widget="statinfo"/>
+	            </button>
+            </xpath>
+            </field>
+         </record>
+         
+        <record id="view_crm_lead_meeting_search" model="ir.ui.view">
+	        <field name="name">CRM - Meetings Search</field>
+	        <field name="model">calendar.event</field>
+	        <field name="inherit_id" ref="calendar.view_calendar_event_search"/>
+	        <field name="arch" type="xml">
+	            <xpath expr="//field[@name='user_id']" position="after">
+	                <field name="lead_id"/>
+	            </xpath>
+	        </field>
+    	</record>
+    
+	</data>
+</openerp>
