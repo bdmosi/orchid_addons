@@ -1710,14 +1710,14 @@ class hr_employee(models.Model):
             owner_id = proj.od_cost_sheet_id and proj.od_cost_sheet_id.reviewed_id and  proj.od_cost_sheet_id.reviewed_id.id or False 
             if user_id == owner_id:
                 if processed_date and aud_date_start <= processed_date <= aud_date_end:
-                    sale_val = proj.od_amc_sale
+                    sale_val = proj.od_amc_sale or proj.od_amended_sale_price
                     tot_sale_day += sale_val
                     dayscore = proj.day_process_score
                     day_score_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':dayscore,'cost_sheet_id':proj.od_cost_sheet_id.id,'form_wt':20.0})
             
             if proj.start_amc_comp:
                 compliance_score = proj.compliance_score
-                sale_val = proj.od_amc_sale
+                sale_val = proj.od_amc_sale or proj.od_amended_sale_price
                 tot_sal_comp  += sale_val 
                 compliance_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':compliance_score,'form_wt':10.0})
         
