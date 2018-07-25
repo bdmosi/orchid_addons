@@ -30,7 +30,7 @@ class audit_sample(models.Model):
                              ('pre_sales_mgr','Pre-Sales Manager'),('sales_acc_mgr','Sales Account Manager'),
                              ('service_sale_spl','Service Sale Specialist'),
                              ('sm','Sales Manager'),
-                             ('bdm','BDM'), ('bdm_sec','BDM-SEC'),('bdm_net','BDM-NET-DC'),('ttl','Technical Team Leader'),
+                             ('bdm','BDM'), ('bdm_sec','BDM-SEC'),('bdm_net','BDM-NET-DC'),('bdm_dc','BDM-DC'),('ttl','Technical Team Leader'),
                              ('pm','Project Manager'),('pmo','PMO Director'),('pdm','Project Department Manager'),
                              ('tc','Technology Consultant'),('sde','Service Desk Engineer'),('sdm','Service Desk Manager'),
                              ('hoo','Head Of Operation'),
@@ -68,8 +68,11 @@ class audit_sample(models.Model):
     bdm_sec_sample_line = fields.One2many('bdm.sec.sample.line','sample_id',string="Details")
     bdm_net_sample_line = fields.One2many('bdm.net.sample.line','sample_id',string="Details")
     
+    bdm_dc_sample_line = fields.One2many('bdm.dc.sample.line','sample_id',string="Details")
+    
     bdm_sec_pip_sample_line = fields.One2many('bdm.sec.pip.sample.line','sample_id',string="Details")
     bdm_net_pip_sample_line = fields.One2many('bdm.net.pip.sample.line','sample_id',string="Details")
+    bdm_dc_pip_sample_line = fields.One2many('bdm.dc.pip.sample.line','sample_id',string="Details")
 
     pmo_open_project_line = fields.One2many('pmo.open.project.sample','sample_id',string="Details")
     pmo_closed_project_line = fields.One2many('pmo.closed.project.sample','sample_id',string="Details")
@@ -269,6 +272,61 @@ class BdmNetwrokSample(models.Model):
 
 class BdmNetwrokPipSample(models.Model):
     _name ='bdm.net.pip.sample.line'
+    sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
+    cost_sheet_id = fields.Many2one('od.cost.sheet',string="Cost Sheet")
+    product_group_id = fields.Many2one('od.product.group',string="Product Group")
+    sales = fields.Float(string="Sales")
+    sales_aftr_disc = fields.Float(string="Sales After Discount")
+    cost = fields.Float(string="Cost")
+    profit = fields.Float(string="Profit")
+    profit_percent = fields.Float(string="Profit Percentage")
+    manpower_cost = fields.Float("Manpower Cost")
+    gp = fields.Float(string="GP")
+     
+    @api.multi
+    def btn_open(self):
+       
+        return {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'od.cost.sheet',
+                'res_id':self.cost_sheet_id and self.cost_sheet_id.id or False,
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+
+            }
+
+
+class BdmDCSample(models.Model):
+    _name ='bdm.dc.sample.line'
+    sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
+    cost_sheet_id = fields.Many2one('od.cost.sheet',string="Cost Sheet")
+    product_group_id = fields.Many2one('od.product.group',string="Product Group")
+    sales = fields.Float(string="Sales")
+    sales_aftr_disc = fields.Float(string="Sales After Discount")
+    cost = fields.Float(string="Cost")
+    profit = fields.Float(string="Profit")
+    profit_percent = fields.Float(string="Profit Percentage")
+    manpower_cost = fields.Float("Manpower Cost")
+    gp = fields.Float(string="GP")
+    
+     
+    @api.multi
+    def btn_open(self):
+       
+        return {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'od.cost.sheet',
+                'res_id':self.cost_sheet_id and self.cost_sheet_id.id or False,
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+
+            }
+    
+
+class BdmDcPipSample(models.Model):
+    _name ='bdm.dc.pip.sample.line'
     sample_id = fields.Many2one('audit.sample',string="Sample",ondelete="cascade")
     cost_sheet_id = fields.Many2one('od.cost.sheet',string="Cost Sheet")
     product_group_id = fields.Many2one('od.product.group',string="Product Group")
