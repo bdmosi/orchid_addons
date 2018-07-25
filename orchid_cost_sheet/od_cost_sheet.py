@@ -408,7 +408,7 @@ class od_cost_sheet(models.Model):
             cost += cost2 
             profit += profit2
             result.append({'sale':sale,'cost':cost,'profit':profit,'tab':'om'})
-        
+        print "om vals>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",result
         return result
     
     def get_extra_vals(self):
@@ -497,6 +497,7 @@ class od_cost_sheet(models.Model):
         if self.included_om_in_quotation:
             vals = self.get_pdtgrp_vals()
             imp_vals = self.get_om_vals()
+            
             disc =0.0
     #         disc = abs(self.sp_disc_percentage)
             for imp_val in imp_vals:
