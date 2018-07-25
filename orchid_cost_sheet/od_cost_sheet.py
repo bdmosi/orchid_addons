@@ -227,7 +227,7 @@ class od_cost_sheet(models.Model):
         self.mat_brand_weight_line = vals
         
         
-    def grouped_prdgrp_weight(self,res,all_group_cost):
+    def grouped_prdgrp_weight(self,res,all_group_cost,all_group_sale=0.0):
         result = []
         for item in res :
             check = False
@@ -244,6 +244,7 @@ class od_cost_sheet(models.Model):
                   
             if check == False :
                 item['all_group_cost'] = all_group_cost
+                item['all_group_sale'] = all_group_sale
                 result.append( item )
         return result
     
@@ -273,6 +274,7 @@ class od_cost_sheet(models.Model):
     def get_pdtgrp_vals(self):
         res = []
         all_group_cost = 0.0
+        all_group_sale = 0.0
         disc = 0.0
 #         disc =abs(self.sp_disc_percentage)
         if self.included_in_quotation:
@@ -283,6 +285,7 @@ class od_cost_sheet(models.Model):
                     'total_cost': line.line_cost_local_currency,
                     })
                 all_group_cost += line.line_cost_local_currency
+                all_group_sale +=line.line_price
         if self.included_trn_in_quotation:
             for line in self.trn_customer_training_line:
                 res.append({'pdt_grp_id':line.part_no and line.part_no.od_pdt_group_id and line.part_no.od_pdt_group_id.id,
@@ -290,6 +293,7 @@ class od_cost_sheet(models.Model):
                     'total_cost': line.line_cost_local_currency,
                     })
                 all_group_cost += line.line_cost_local_currency
+                all_group_sale +=line.line_price
         
         if self.included_om_in_quotation:
             for line in self.om_tech_line:
@@ -298,16 +302,17 @@ class od_cost_sheet(models.Model):
                     'total_cost': line.line_cost_local_currency,
                     })
                 all_group_cost += line.line_cost_local_currency
-            
+                all_group_sale +=line.line_price
             for line in self.om_eqpmentreq_line:
                 res.append({'pdt_grp_id':line.part_no and line.part_no.od_pdt_group_id and line.part_no.od_pdt_group_id.id,
                     'total_sale':line.line_price,
                     'total_cost': line.line_cost_local_currency,
                     })
                 all_group_cost += line.line_cost_local_currency
+                all_group_sale +=line.line_price
             
             
-        result = self.grouped_prdgrp_weight(res,all_group_cost)
+        result = self.grouped_prdgrp_weight(res,all_group_cost,all_group_sale)
         for val in result:
             val['disc'] = disc
             sale = val.get('total_sale')
@@ -508,6 +513,8 @@ class od_cost_sheet(models.Model):
                 for val in vals:
                     weight = val.get('total_cost')/(val.get('all_group_cost',1.0) or 1.0)
                     print "weight>>>>>>>>>>>>>>>",weight,val.get('total_cost'),val.get('all_group_cost',1.0)
+                    if not weight:
+                        weight = val.get('total_sale')/(val.get('all_group_sale',1.0) or 1.0)
                     pdt_grp_id = val.get('pdt_grp_id')
                     total_sale = sale * weight 
                     total_cost =  cost * weight 
