@@ -497,7 +497,7 @@ class od_cost_sheet(models.Model):
         if self.included_om_in_quotation:
             vals = self.get_pdtgrp_vals()
             imp_vals = self.get_om_vals()
-            
+            print "pdt grop vals>>>>>>>>>>>>>>>>>>>>>>>>>",vals
             disc =0.0
     #         disc = abs(self.sp_disc_percentage)
             for imp_val in imp_vals:
