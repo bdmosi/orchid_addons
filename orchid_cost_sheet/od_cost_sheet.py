@@ -507,6 +507,7 @@ class od_cost_sheet(models.Model):
                 profit = imp_val.get('profit')
                 for val in vals:
                     weight = val.get('total_cost')/(val.get('all_group_cost',1.0) or 1.0)
+                    print "weight>>>>>>>>>>>>>>>",weight
                     pdt_grp_id = val.get('pdt_grp_id')
                     total_sale = sale * weight 
                     total_cost =  cost * weight 
