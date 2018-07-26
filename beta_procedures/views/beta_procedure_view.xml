@@ -10,6 +10,7 @@
         <field name="model">beta.structures</field>
         <field name="arch" type="xml">
             <tree>
+            	<field name="sequence" widget="handle"/>
             	<field name="name"/>
             </tree>
        </field>
@@ -53,6 +54,7 @@
         <field name="model">role.description</field>
         <field name="arch" type="xml">
             <tree>
+            	<field name="sequence" widget="handle"/>
             	<field name="name"/>
             </tree>
        </field>
@@ -96,6 +98,7 @@
         <field name="model">beta.procedures</field>
         <field name="arch" type="xml">
             <tree>
+            	<field name="sequence" widget="handle"/>
             	<field name="name"/>
             </tree>
        </field>
@@ -139,6 +142,7 @@
         <field name="model">beta.kpi</field>
         <field name="arch" type="xml">
             <tree>
+            	<field name="sequence" widget="handle"/>
             	<field name="name"/>
             </tree>
        </field>
@@ -180,7 +184,7 @@
  <menuitem id="od_menu_beta_structure" name="Structure" action="action_od_beta_structures" parent="beta_procedures.menu_company_sub" sequence="1"/>
  <menuitem id="od_menu_role_description" name="Role Description" action="action_od_beta_role_desc" parent="beta_procedures.menu_company_sub" sequence="2"/>
  <menuitem id="od_menu_beta_procedures" name="Procedures" action="action_od_beta_procedures" parent="beta_procedures.menu_company_sub" sequence="3"/>
-  <menuitem id="od_menu_beta_kpis" name="KPIs" action="action_od_beta_kpis" parent="beta_procedures.menu_company_sub" sequence="4"/>
+ <menuitem id="od_menu_beta_kpis" name="KPIs" action="action_od_beta_kpis" parent="beta_procedures.menu_company_sub" sequence="4"/>
  
  </data>
 </openerp>
