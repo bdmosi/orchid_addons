@@ -2107,7 +2107,7 @@ class od_cost_sheet(models.Model):
         tech_sale = sum([val.get('total_sale') for val in tech_vals])
         tech_cost = sum([val.get('total_cost') for val in tech_vals])
         if not result:
-            sale = self.sum_total_sale - tech_sale 
+            sale = self.sum_tot_sale - tech_sale 
             cost = self.sum_tot_cost -tech_cost 
             total_manpower_cost = self.get_imp_cost() + self.get_bmn_cost()
             result[21]= {'sale':sale,'cost':cost,'manpower_cost':total_manpower_cost,}
