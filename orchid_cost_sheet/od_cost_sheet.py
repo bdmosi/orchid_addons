@@ -2102,7 +2102,7 @@ class od_cost_sheet(models.Model):
         total_cost =0.0
         total_sale =0.0
         distribute_cost =0.0
-        disc  = abs(self.special_discount)
+        disc  = (self.special_discount)
         tech_vals = self.get_tech_pdtgrp_vals()
         tech_sale = sum([val.get('total_sale') for val in tech_vals])
         tech_cost = sum([val.get('total_cost') for val in tech_vals])
@@ -2147,7 +2147,8 @@ class od_cost_sheet(models.Model):
             for val in data:
                 sale = val.get('total_sale')
                 discount = disc *(sale/total_sale)
-                sale_aftr_disc = sale - discount
+                discount = -1 * discount
+                sale_aftr_disc = sale - (discount)
                 cost = val.get('total_cost')
                 profit = sale_aftr_disc- cost
                 val['sale_aftr_disc'] = sale_aftr_disc
