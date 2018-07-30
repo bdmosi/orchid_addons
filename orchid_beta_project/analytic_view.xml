@@ -690,7 +690,7 @@
             		</tree>
             	</field>
             </page>
-             <page string="Manual Entries" attrs="{'invisible':[('od_analytic_level','!=','level_manual')]}">
+             <page string="Manual Entries" >
              	<group>
              	  <group>
              	     <field name="od_manual_input" />
