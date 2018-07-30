@@ -133,6 +133,14 @@
                     
                     </tr>
                     <tr>
+                    <td><strong>Original Date End</strong></td>
+                    <td><field name="od_date_end_original" readonly="1" /></td>
+                      <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"></td>
+                       <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"></td>
+                   
+                    </tr>
+                   
+                   <tr>
                     <td><strong>Date End</strong></td>
                     <td><field name="date" /></td>
                     <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_project_end" attrs="{'readonly':[('od_project_status','!=','inactive')]}"/></td>

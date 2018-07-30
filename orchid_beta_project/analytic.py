@@ -944,6 +944,7 @@ class account_analytic_account(models.Model):
     od_project_linked_table = fields.Char(string="Project Linked Table")
     od_project_start = fields.Date(string="Project Start")
     od_project_end = fields.Date(string="Project End")
+    od_date_end_original = fields.Date(string="Date End Original")
     od_project_pmo_closing = fields.Date(string="Project PMO Expected To Close")
     od_project_status = fields.Selection([('active','Active'),('inactive','Inactive'),('close','Closed'),('cancel','Cancelled')],string="Project Status",default='inactive',copy=False)
     od_project_owner_id = fields.Many2one('res.users',string="Project Owner")
