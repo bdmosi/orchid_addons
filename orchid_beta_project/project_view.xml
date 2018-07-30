@@ -620,6 +620,14 @@
                     <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"><field name="od_amc_end" readonly="1"/></td>
                    
                     </tr>
+                    
+                     <tr>
+                    <td><strong>Original Date End</strong></td>
+                    <td><field name="od_date_end_original" readonly="1" /></td>
+                      <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"></td>
+                       <td attrs="{'invisible':[('od_analytic_level','!=','level_old')]}"></td>
+                   
+                    </tr>
                    
                     <tr>
                     <td><strong>PMO Expected Closing</strong></td>

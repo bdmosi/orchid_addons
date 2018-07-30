@@ -4386,6 +4386,7 @@ class od_cost_sheet(models.Model):
                     'name':name_a0,
                     'date_start':date_start_a0,
                     'date':date_end_a0,
+                    'od_date_end_original':date_end_a0,
                     'type':'view',
                     'code':code,
                     'company_id':company_id,
@@ -4408,7 +4409,7 @@ class od_cost_sheet(models.Model):
                 'name':name_a0,
                     'date_start':date_start_a0,
                     'date':date_end_a0,
-                    
+                    'od_date_end_original':date_end_a0,
                     'company_id':company_id,
                     'od_owner_id':owner_id,
                     'od_type_of_project':type_project_a0,
@@ -4455,15 +4456,22 @@ class od_cost_sheet(models.Model):
             type = 'normal'
             use_timesheets = True
             use_tasks = True
+            tabs = eval('self.'+'tabs_a'+ str(seq))
+            
             if seq in (4,5):
                 type ='view'
                 use_timesheets = False
                 use_tasks = False
             if not analytic_seq_id:
+                
+                
+                        
+                
                 analytic = self.env['account.analytic.account'].create({
                     'name':name,
                     'date_start':date_start,
                     'date':date_end,
+                    'od_date_end_original':date_end,
                     'code':code,
                     'type':type,
                     'company_id':company_id,
@@ -4483,6 +4491,12 @@ class od_cost_sheet(models.Model):
                     
                     })
                 analytic_id = analytic.id
+                for tab in tabs:
+                    if tab.id==3:
+                        analytic.write({
+                            'check_amend_mp':True,
+                            'mp_amend':self.a_bim_cost,
+                            })
             else:
                 analytic_id = analytic_seq_id
                 analytic_ob =self.env['account.analytic.account'].browse(analytic_id)
@@ -4490,6 +4504,7 @@ class od_cost_sheet(models.Model):
                     'name':name,
                     'date_start':date_start,
                     'date':date_end,
+                    'od_date_end_original':date_end,
                     'company_id':company_id,
                     'od_owner_id':owner_id and owner_id.id or False,
                     'od_type_of_project':type_project,
@@ -4516,6 +4531,8 @@ class od_cost_sheet(models.Model):
     
     
     def create_analytic_level2(self,grand_parent_id,parent_id,group='amc'):
+        mp =0.0
+        
         if group== 'amc' and self.amc_analytic_line:
             return True 
         if group== 'om' and self.om_analytic_line:
@@ -4536,7 +4553,9 @@ class od_cost_sheet(models.Model):
         
         periodicity = self.periodicity_amc 
         start_date = self.l2_start_date_amc
-        no_of_l2 = self.no_of_l2_accounts_amc 
+        no_of_l2 = self.no_of_l2_accounts_amc
+        if group =='amc':
+            mp = self.a_bmn_cost/no_of_l2 
         name = parent_id.name + '-AMC'
         code =parent_id.code + '-AMC'
         owner_id = parent_id.od_owner_id and parent_id.od_owner_id.id or False
@@ -4574,6 +4593,7 @@ class od_cost_sheet(models.Model):
                     'name':name +'-' +str(i+1),
                     'date_start':str(start_date),
                     'date':str(date_end),
+                    'od_date_end_original':str(date_end),
                     'code':code+'-' +str(i+1),
                     'type':type,
                     'company_id':company_id,
@@ -4594,6 +4614,11 @@ class od_cost_sheet(models.Model):
                     
                     })
             analytic_id = analytic.id
+            if group =='amc' and mp:
+                analytic.write({
+                     'check_amend_mp':True,
+                            'mp_amend':mp,
+                    })
             vals.append({'start_date':start_date,'end_date':date_end,'analytic_id':analytic_id})
             start_date = date_end 
             
