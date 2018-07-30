@@ -12,6 +12,7 @@
             <tree>
             	<field name="sequence" widget="handle"/>
             	<field name="name"/>
+            	<field name="company_id" />
             </tree>
        </field>
     </record>
@@ -56,6 +57,7 @@
             <tree>
             	<field name="sequence" widget="handle"/>
             	<field name="name"/>
+            	<field name="company_id" />
             </tree>
        </field>
     </record>
@@ -100,6 +102,7 @@
             <tree>
             	<field name="sequence" widget="handle"/>
             	<field name="name"/>
+            	<field name="company_id" />
             </tree>
        </field>
     </record>
@@ -144,6 +147,7 @@
             <tree>
             	<field name="sequence" widget="handle"/>
             	<field name="name"/>
+            	<field name="company_id" />
             </tree>
        </field>
     </record>
