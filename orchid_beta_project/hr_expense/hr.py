@@ -2057,20 +2057,20 @@ class hr_employee(models.Model):
         analytic_pool = self.env['account.analytic.account']
         company_id = self.company_id and self.company_id.id
         open_project_ids = analytic_pool.search([('company_id','=',company_id),('od_type_of_project','not in',('o_m','credit','comp_gen','poc','amc_view','o_m_view','parent_level0')),('state','not in',('close','cancelled'))])
-        closed_project_ids = analytic_pool.search([('company_id','=',company_id),('od_type_of_project','not in',('o_m','credit','comp_gen','poc','amc_view','o_m_view','parent_level0'))])
+        closed_project_ids = analytic_pool.search([('company_id','=',company_id),('od_type_of_project','not in',('o_m','credit','comp_gen','poc','amc_view','o_m_view','parent_level0')),('state','=','close')])
         sale_pool = self.env['sale.order']
         invoice_pool = self.env['account.invoice']
         total_collected =0.0
         total_paid =0.0
         timesheet_pool = self.env['hr.analytic.timesheet']
         for project in open_project_ids:
-            project_type = project.od_type_of_project
-            if project_type == 'amc':
-                if project.od_amc_status != 'active':
-                    continue
-            else:
-                if project.od_project_status != 'active':
-                    continue
+#             project_type = project.od_type_of_project
+#             if project_type == 'amc':
+#                 if project.od_amc_status != 'active':
+#                     continue
+#             else:
+#                 if project.od_project_status != 'active':
+#                     continue
             sale = sale_pool.search([('project_id','=',project.id),('state','!=','cancel')],limit=1)
             amount_total = sale.amount_total or 0.0
             discount = abs(sale.od_discount) or 0.0
@@ -2096,14 +2096,14 @@ class hr_employee(models.Model):
             
         for project in closed_project_ids:
             
-            project_type = project.od_type_of_project
-            if project.state != 'close':
-                if project_type == 'amc':
-                    if project.od_amc_status != 'close':
-                        continue
-                else:
-                    if project.od_project_status != 'close':
-                        continue
+#             project_type = project.od_type_of_project
+#             if project.state != 'close':
+#                 if project_type == 'amc':
+#                     if project.od_amc_status != 'close':
+#                         continue
+#                 else:
+#                     if project.od_project_status != 'close':
+#                         continue
             sale = sale_pool.search([('project_id','=',project.id),('state','!=','cancel')],limit=1)
             amount_total = sale.amount_total or 0.0
             discount = abs(sale.od_discount) or 0.0
