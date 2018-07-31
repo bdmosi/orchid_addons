@@ -1491,12 +1491,12 @@ class hr_employee(models.Model):
                 dayscore = proj.day_process_score
                 day_score_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':dayscore,'cost_sheet_id':proj.od_cost_sheet_id.id,'form_wt':10.0})
             #cost control score
-            if proj.od_project_status == 'close':
-                closed_date = proj.od_project_closing or proj.od_closing_date
+            if proj.state == 'close':
+                closed_date = proj.od_closing_date
                 if closed_date and aud_date_start <= closed_date <= aud_date_end:
-                    gp_value = proj.od_project_amend_profit 
-                    actual_gp = proj.od_project_profit
-                    original_gp = proj.od_project_original_profit
+                    gp_value = proj.od_amended_profit 
+                    actual_gp = proj.od_actual_profit
+                    original_gp = proj.od_original_sale_profit
                     tot_gp += gp_value
                     cost_control_score = proj.cost_control_score 
                     cost_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':cost_control_score,'form_wt':20.0,'actual_gp':actual_gp,'original_gp':original_gp})
