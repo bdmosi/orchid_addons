@@ -59,7 +59,7 @@ class project_inv_sch_wiz(models.TransientModel):
         
         
         if pm_ids:
-            domain += [('user_id','in',pm_ids)]
+            domain += [('od_owner_id','in',pm_ids)]
         
         if analytic_ids:
             domain +=[('id','in',analytic_ids)]
@@ -87,7 +87,7 @@ class project_inv_sch_wiz(models.TransientModel):
         result =[]
         for data in sch_data:
             an_id = data.analytic_id and data.analytic_id.id 
-            pm_id = data.analytic_id and data.analytic_id.user_id and data.analytic_id.user_id.id
+            pm_id = data.analytic_id and data.analytic_id.od_owner_id and data.analytic_id.od_owner_id.id
             partner_id = data.analytic_id and data.analytic_id.partner_id and data.analytic_id.partner_id.id 
             company_id = data.analytic_id and  data.analytic_id.company_id and data.analytic_id.company_id.id 
             branch_id = data.analytic_id.od_branch_id and data.analytic_id.od_branch_id.id

@@ -2056,8 +2056,8 @@ class hr_employee(models.Model):
         closed_projects =[]
         analytic_pool = self.env['account.analytic.account']
         company_id = self.company_id and self.company_id.id
-        open_project_ids = analytic_pool.search([('company_id','=',company_id),('od_type_of_project','not in',('o_m','credit','comp_gen','poc','amc_view','o_m_view','parent_level0')),('state','not in',('close','cancelled'))])
-        closed_project_ids = analytic_pool.search([('company_id','=',company_id),('od_type_of_project','not in',('o_m','credit','comp_gen','poc','amc_view','o_m_view','parent_level0')),('state','=','close')])
+        open_project_ids = analytic_pool.search([('company_id','=',company_id),('od_type_of_project','not in',('credit','comp_gen','poc','amc_view','o_m_view','parent_level0')),('state','not in',('close','cancelled'))])
+        closed_project_ids = analytic_pool.search([('company_id','=',company_id),('od_type_of_project','not in',('credit','comp_gen','poc','amc_view','o_m_view','parent_level0')),('state','=','close')])
         sale_pool = self.env['sale.order']
         invoice_pool = self.env['account.invoice']
         total_collected =0.0
@@ -2072,7 +2072,7 @@ class hr_employee(models.Model):
 #                 if project.od_project_status != 'active':
 #                     continue
             sale = sale_pool.search([('project_id','=',project.id),('state','!=','cancel')],limit=1)
-            amount_total = sale.amount_total or 0.0
+            amount_total = project.od_amended_sale_price
             discount = abs(sale.od_discount) or 0.0
             project_value = amount_total 
             customer_invoice = invoice_pool.search([('od_analytic_account','=',project.id),('type','=','out_invoice'),('state','not in',('draft','cancel'))])
@@ -2105,7 +2105,7 @@ class hr_employee(models.Model):
 #                     if project.od_project_status != 'close':
 #                         continue
             sale = sale_pool.search([('project_id','=',project.id),('state','!=','cancel')],limit=1)
-            amount_total = sale.amount_total or 0.0
+            amount_total = project.od_amended_sale_price
             discount = abs(sale.od_discount) or 0.0
             project_value = amount_total 
             customer_invoice = invoice_pool.search([('od_analytic_account','=',project.id),('type','=','out_invoice'),('state','not in',('draft','cancel'))])
