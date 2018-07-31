@@ -1555,7 +1555,7 @@ class hr_employee(models.Model):
             #schedule control score
             current_day = str(dt.today())
 #             project_planned_end = proj.od_project_end or proj.date
-            project_planned_end = proj.date
+            project_planned_end = proj.od_date_end_original
             closed_date = proj.od_project_closing 
             if current_day >=project_planned_end:
                 if proj.od_project_status == 'close':
