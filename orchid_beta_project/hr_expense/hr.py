@@ -1556,18 +1556,18 @@ class hr_employee(models.Model):
             current_day = str(dt.today())
 #             project_planned_end = proj.od_project_end or proj.date
             project_planned_end = proj.od_date_end_original
-            closed_date = proj.od_project_closing 
+            closed_date = proj.od_closing_date 
             if current_day >=project_planned_end:
-                if proj.od_project_status == 'close':
+                if proj.state == 'close':
                     if aud_date_start <= closed_date <=aud_date_end:
                         sc_scr =30.0
-                        gp_value = proj.od_project_amend_profit 
+                        gp_value = proj.od_amended_profit 
                         sch_gp += gp_value
                         schedule_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':sc_scr,'form_wt':30.0})
                         
                 else:
                     sc_scr =0.0
-                    gp_value = proj.od_project_amend_profit 
+                    gp_value = proj.od_amended_profit 
                     sch_gp += gp_value
                     schedule_control_vals.append({'analytic_id':proj.id,'gp_value':gp_value,'score':sc_scr,'form_wt':30.0})
                 
