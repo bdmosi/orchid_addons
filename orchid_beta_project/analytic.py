@@ -259,7 +259,7 @@ class account_analytic_account(models.Model):
         project_obj = self.od_get_project()
         today = str(dt.today())
         closing_date = today 
-        project_obj.write({'state':'close'})
+        project_obj.write({'state':'close','od_closing_date':closing_date})
         if self.od_project_status == 'active':
             self.btn_close_project()
         if self.od_amc_status == 'active':
