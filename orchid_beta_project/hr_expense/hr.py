@@ -1486,7 +1486,7 @@ class hr_employee(models.Model):
         for proj in sample_project_ids:
             processed_date = proj.od_cost_sheet_id and proj.od_cost_sheet_id.processed_date 
             if processed_date and aud_date_start <= processed_date <= aud_date_end:
-                sale_val = proj.od_project_sale
+                sale_val = proj.od_project_sale or 1.0
                 tot_sale_day += sale_val
                 dayscore = proj.day_process_score
                 day_score_vals.append({'analytic_id':proj.id,'sale_value':sale_val,'score':dayscore,'cost_sheet_id':proj.od_cost_sheet_id.id,'form_wt':10.0})
@@ -1589,8 +1589,7 @@ class hr_employee(models.Model):
         for data in day_score_vals:
             sal_val_percent =0.0
             sale_value  = data.get('sale_value')
-            if not sale_value:
-                sale_value =1
+            
             if tot_sale_day:
                 sal_val_percent = sale_value/float(tot_sale_day)
             dayscore = data.get('score')
