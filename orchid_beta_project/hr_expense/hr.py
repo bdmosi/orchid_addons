@@ -1589,6 +1589,8 @@ class hr_employee(models.Model):
         for data in day_score_vals:
             sal_val_percent =0.0
             sale_value  = data.get('sale_value')
+            if not sale_value:
+                sale_value =1
             if tot_sale_day:
                 sal_val_percent = sale_value/float(tot_sale_day)
             dayscore = data.get('score')
