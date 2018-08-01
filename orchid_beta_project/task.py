@@ -181,7 +181,7 @@ class task(models.Model):
         print "od_type>>>>>>>>>>>>>>>>>>>>>>",od_type,vals
         if state in ('cancelled','close'):
             raise Warning("This Project Either Cancelled or Closed,You Cant Create a task for this Project")
-        meeting_id =self.od_create_calendar_event(vals)
+        meeting_id =self.sudo().od_create_calendar_event(vals)
         vals['od_meeting_id'] = meeting_id
         if not vals.get('od_duplicate',False):
             vals['od_block_start'] = True
