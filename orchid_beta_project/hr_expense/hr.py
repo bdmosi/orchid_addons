@@ -1453,7 +1453,7 @@ class hr_employee(models.Model):
         analytic_pool = self.env['account.analytic.account']
         analytic_ids = analytic_pool.search([('od_owner_id','=',user_id),('od_type_of_project','in',('sup','imp','sup_imp')),('state','not in',('close','cancelled'))])
         project_closed_on_audit_old_type = analytic_pool.search([('od_owner_id','=',user_id),('od_type_of_project','in',('sup','imp','sup_imp')),('state','=','close'),('od_analytic_level','=','level_old'),('od_project_end','>=',aud_date_start),('od_project_end','<=',aud_date_end)])
-        project_closed_on_audit = analytic_pool.search([('od_owner_id','=',user_id),('od_type_of_project','in',('sup','imp','sup_imp')),('state','=','close'),('od_analytic_level','!=','level_old'),('date','>=',aud_date_start),('date','<=',aud_date_end)])
+        project_closed_on_audit = analytic_pool.search([('od_owner_id','=',user_id),('od_type_of_project','in',('sup','imp','sup_imp')),('state','=','close'),('od_analytic_level','!=','level_old'),('od_date_end_original','>=',aud_date_start),('od_date_end_original','<=',aud_date_end)])
         sample_project_ids = analytic_ids + project_closed_on_audit + project_closed_on_audit_old_type
         
         day_score_vals  =[]
