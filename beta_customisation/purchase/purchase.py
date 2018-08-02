@@ -19,8 +19,21 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-import crm
-import project
-import purchase
 
+from openerp import models, fields, api
+from openerp.tools.translate import _
+
+class purchase_order(models.Model):
+    _inherit ='purchase.order'
+    
+    od_tax_id = fields.Many2one('account.tax','Tax to be Applied')
+    
+    @api.one
+    def apply_tax_all(self):
+        tax_id = self.od_tax_id or False
+        if tax_id:
+            for line in self.order_line:
+                line.write({'taxes_id': [(6, 0, [tax_id.id])]})
+        return True
+    
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

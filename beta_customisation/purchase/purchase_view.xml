@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="orchid_purchase_form_jinherit_view" model="ir.ui.view">
+          <field name="name">orchid.purchase.form.view1</field>
+          <field name="model">purchase.order</field>
+          <field name="inherit_id" ref="purchase.purchase_order_form" />
+          <field name="arch" type="xml">
+	          <xpath expr="//field[@name='od_customer_id']" position="after">
+		          <field name="od_tax_id" attrs="{'invisible':[('state','!=','draft', 'bid')]}"/>
+		          <button string="Apply" type="object" name="apply_tax_all" attrs="{'invisible':['|',('state','!=','draft', 'bid'), ('od_tax_id','=', False)]}"/>
+	          </xpath>
+          </field>
+        </record>
+ 	</data>
+ </openerp>

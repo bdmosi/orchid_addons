@@ -174,5 +174,6 @@ class od_wip(models.Model):
             })
             self.move = move
             self.state = 'done'
+            self.project_id.set_close()
             return self.write({})
         

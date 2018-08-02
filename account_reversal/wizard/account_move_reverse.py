@@ -81,7 +81,7 @@ class account_move_reversal(orm.TransientModel):
     _defaults = {
         'date': _next_period_first_date,
         'move_line_prefix': 'REV -',
-        'reconcile': True,
+        'reconcile': False,
     }
 
     def action_reverse(self, cr, uid, ids, context=None):
