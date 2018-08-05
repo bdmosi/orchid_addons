@@ -79,7 +79,7 @@
 										<field name="manpower_cost" readonly="1"  sum="Total" />
 										<field name="general_cost" readonly="1"  sum="Total" />
 										<field name="collected" readonly="1"  sum="Total" />
-										<field name="project_value" readonly="1"  sum="Total"/>
+										<field name="project_value" readonly="1"  sum="Total" string="Total Contract Value(Ref Only)"/>
 									</tree>
 								</field>
 							</page>
@@ -94,7 +94,7 @@
 										<field name="general_cost" readonly="1"  sum="Total" />
 										<field name="collected" readonly="1"  sum="Total" />
 										
-										<field name="project_value" readonly="1"  sum="Total" />
+										<field name="project_value" readonly="1"  sum="Total" string="Total Contract Value(Ref Only)"/>
 									</tree>
 								</field>
 							</page>
