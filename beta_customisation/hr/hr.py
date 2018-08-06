@@ -122,14 +122,14 @@ class BetaJoiningForm(models.Model):
         field_list = user_pool.fields_get_keys()
         default_vals = user_pool.default_get(field_list) #This One need for default values needed for create user
         
-        name_list = self.name.split()
-        first_name = name_list[0] or ''
-        last_name = name_list[-1] or ''
+#         name_list = self.name.split()
+#         first_name = name_list[0] or ''
+#         last_name = name_list[-1] or ''
         groups = self.job_id and self.job_id.groups_id
-        groups_ids  = [(0,0,{dat}) for dat in groups]
-        vals = {'name' : first_name.capitalize() + ' ' + last_name.capitalize(),
+        groups_ids  =[group.id for group in groups]
+        vals = {'name' : self.name,
                 'login' : self.work_email,
-                'groups_ids':groups_ids
+                'groups_ids':[6,0,groups]
             }
         default_vals.update(vals)
         user_id = user_pool.create(default_vals)
