@@ -51,9 +51,7 @@ class BetaJoiningForm(models.Model):
     manager2_id = fields.Many2one('res.users', string='Second Approval Manager(Leaves)')
     audit_temp_id = fields.Many2one('audit.template', string='Audit Template')
     
-    @api.model 
-    def create_employee(self):
-        employee_pool = self.env['hr.employee']
+    def get_emp_vals(self):
         vals = { 'name' : self.name,
                 'work_email': self.work_email,
                 'department_id': self.department_id and self.department_id.id or False,
@@ -73,6 +71,15 @@ class BetaJoiningForm(models.Model):
                 'od_first_manager_id': self.manager1_id and self.manager1_id.id or False,
                 'od_second_manager_id': self.manager2_id and self.manager2_id.id or False,
             }
+        return vals
+        
+        
+    
+    
+    @api.model 
+    def create_employee(self):
+        employee_pool = self.env['hr.employee']
+        vals = self.get_emp_vals()
         emp_id = employee_pool.create(vals)
         return emp_id
     

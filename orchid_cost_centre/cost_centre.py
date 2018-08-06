@@ -60,6 +60,8 @@ class od_cost_branch(osv.osv):
         'manager_id':fields.many2one('hr.employee',string="Manager"),
         'branch_manager_id':fields.many2one('res.users',string="Branch Manager"),
         'pmo_manager_id':fields.many2one('res.users',string="PMO Manager"),
+        'tech_consult_id':fields.many2one('res.users',string="Technology Consultant"),
+        'unit_alias':fields.char(string='Unit Alias'),
         'email':fields.char(string='E-mail'),
     }
     _sql_constraints = [
