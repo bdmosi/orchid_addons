@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+	    <record model="ir.ui.view" id="view_beta_joining_tree_view">
+	        <field name="name">od.beta.joining.form.tree</field>
+	        <field name="model">od.beta.joining.form</field>
+	        <field name="arch" type="xml">
+	            <tree>
+	            	<field name="name"/>
+	            	<field name="job_id" />
+	            </tree>
+	       </field>
+	    </record>
+	    
+        <record id="view_beta_joining_form_view" model="ir.ui.view">
+            <field name="name">od.beta.joining.form.form</field>
+            <field name="model">od.beta.joining.form</field>
+            <field name="arch" type="xml">
+            <form string="Employee Joining Form" version="7.0">
+            <header>
+				<button name="confirm_emp" type="object" class="oe_highlight" string="Confirm Employee" attrs="{'invisible':[('state', 'in', ['cancel','confirm'])]}"/>
+                <button name="cancel_emp" type="object" class="oe_highlight" string="Terminate Employee" attrs="{'invisible':[('state', 'in', ['draft','cancel'])]}"/>
+                <field name="state" widget="statusbar" statusbar_visible="draft,cancel,confirm" statusbar_colors='{"confirm":"blue"}'/>
+            </header>
+            <sheet>
+                <group>
+	                <group string="Profile">
+		                <label for="name"/>
+		             	<h2><field name="name" required="1"/></h2>
+		                <field name="work_email" required="1"/>
+	                </group>
+	               <group string="Public Information">
+	                   <field name="department_id" required="1"/>
+	                   <field name="job_id" required="1"/>
+	                   <field name="manager_id" required="1"/>
+	                   <field name="coach_id" required="1"/>
+	               </group>
+	               <group string="HR Settings">
+	                   <field name="joining_date" required="1"/>
+	                   <field name="branch_id" required="1"/>
+	                   <field name="tech_dept_id" required="1"/>
+	                   <field name="pay_salary_during_annual_leave"/>
+	                   <field name="cost_centre_id" required="1"/>
+	                   <field name="manager1_id" required="1"/>
+	                   <field name="manager2_id" required="1"/>
+	               </group>
+	               <group string="Personal Information">
+	                   <field name="nationality" required="1"/>
+	                   <field name="dob" required="1"/>
+	                   <field name="gender" required="1"/>
+	               </group>
+	               
+	               <group string="Contract Information">
+	                   <field name="type_id" required="1"/>
+	                   <field name="mode_of_pay_id" required="1"/>
+	                   <field name="total_wage" required="1"/>
+	                   <field name="basic_wage" required="1"/>
+	                   <field name="allowance_rule_line_ids" nolabel="1" colspan="2">
+		                    <tree editable="bottom">
+		                        <field name="rule_type" on_change="onchange_rule_type(rule_type)" required="1" domain="[('category_id.code','in',('ALW','DED'))]" />
+		                        <field name="code"/>
+		                        <field name="amt"/>
+		                    </tree>
+            </field>
+	                   <field name="work_sched" required="1"/>
+	                   <field name="salary_struct" required="1"/>
+	                   <field name="work_hrs" required="1"/>
+	                   <field name="schedule_pay" required="1"/>
+	                   <field name="journal_id" required="1"/>
+	                   <field name="audit_temp_id" />
+	               </group>
+                </group>
+
+
+<!--                 <notebook> -->
+<!--                     <page string='Documents'> -->
+<!--                         <field name='joining_document_line'> -->
+<!--                             <tree editable='top'> -->
+<!--                                 <field name="document_type_id"/> -->
+<!--                                 <field name="recieved"/> -->
+<!--                                 <field name="recieved_date"/> -->
+<!--                             </tree> -->
+<!--                         </field> -->
+<!--                     </page> -->
+<!--                 </notebook> -->
+                
+               </sheet>
+            	<div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+                </form>
+            </field>
+            
+         </record>
+         
+         <record model="ir.actions.act_window" id="action_od_beta_joining_form">
+        <field name="name">Joining Form</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">od.beta.joining.form</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+         <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to add new Employee. 
+          </p>
+        </field>
+    </record>
+    
+     <menuitem id="od_menu_beta_joining_form" name="Beta Joining Form" action="action_od_beta_joining_form" parent="orchid_hrms.menu_od_hr_documents" sequence="1"/>
+    
+    
+    </data>
+</openerp>

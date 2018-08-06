@@ -6,7 +6,7 @@ class account_analytic_account(models.Model):
     
     od_cust_lpo_ref = fields.Char(string="Customer LPO Reference")
     od_cust_name = fields.Many2one('res.partner', string="Customer Name")
-    od_proj_manager = fields.Many2one('res.users', string="Customer Name")
+    od_proj_manager = fields.Many2one('res.users', string="Beta IT Project Manager")
     od_sales_ord_no = fields.Many2one('sale.order', string="Beta Sales Order Number")
     od_proj_desc = fields.Text(string="Project Description")
     od_gp_cm = fields.Text(string="Good Practices")
