@@ -163,5 +163,6 @@ class allowance_rule_line(models.Model):
 
 class hr_job(models.Model):
     _inherit = 'hr.job'
-    groups_id =fields.Many2many('res.groups', 'job_res_groups_users_rel', 'uid', 'gid', string='Groups'),
+    groups_id =fields.Many2many('res.groups', 'job_res_groups_users_rel', 'uid', 'gid', string='Groups')
+    
     
