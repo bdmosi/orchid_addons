@@ -1856,7 +1856,7 @@
 								<field name="show_bmn_it_preventive_line"/>
 							</group>
 							<field name="bmn_it_preventive_line">
-								<tree editable="bottom">
+								<tree editable="bottom" create="false">
 									<field name="item_int"/>
 									<field name="item" invisible="0"/>
 									<field name="description"/>
@@ -1878,7 +1878,7 @@
 								<field name="show_bmn_it_remedial_line"/>
 							</group>
 							<field name="bmn_it_remedial_line">
-								<tree editable="bottom">
+								<tree editable="bottom" create="false">
 									<field name="item_int"/>
 									<field name="item"/>
 									<field name="name"/>
