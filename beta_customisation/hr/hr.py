@@ -56,6 +56,7 @@ class BetaJoiningForm(models.Model):
                 'work_email': self.work_email,
                 'department_id': self.department_id and self.department_id.id or False,
                 'job_id': self.job_id and self.job_id.id or False,
+                'audit_temp_id':self.job_id and self.job_id.audit_temp_id and self.job_id.audit_temp_id.id or False,
                 'parent_id': self.manager_id and self.manager_id.id or False,
                 'coach_id': self.coach_id and self.coach_id.id or False,
                 'country_id': self.nationality and self.nationality.id or False,
@@ -124,8 +125,11 @@ class BetaJoiningForm(models.Model):
         name_list = self.name.split()
         first_name = name_list[0] or ''
         last_name = name_list[-1] or ''
+        groups = self.job_id and self.job_id.groups_id
+        groups_ids  = [(0,0,{dat}) for dat in groups]
         vals = {'name' : first_name.capitalize() + ' ' + last_name.capitalize(),
                 'login' : self.work_email,
+                'groups_ids':groups_ids
             }
         default_vals.update(vals)
         user_id = user_pool.create(default_vals)
