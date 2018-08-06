@@ -19,6 +19,17 @@
         	    </xpath>
         </field>
         </record>
+        
+        
+        <record id="job_user_groups_view" model="ir.ui.view">
+            <field name="name">hr.job.groups.beta</field>
+            <field name="model">hr.job</field>
+            <field name="inherit_id" ref="od_hr_job_beta"/>
+            <field name="arch" type="xml">
+                <!-- dummy, will be modified by groups -->
+                <field name="groups_id" position="after"/>
+            </field>
+        </record>
     
        
     
