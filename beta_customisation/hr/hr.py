@@ -154,13 +154,14 @@ class BetaJoiningForm(models.Model):
 
 class allowance_rule_line(models.Model):
     _inherit = 'allowance.rule.line'
-    
     joining_id = fields.Many2one('od.beta.joining.form', string='Joining ID', ondelete='cascade')
     
-    
-class hr_payroll_structure(models.Model):
-    _inherit = 'hr.payroll.structure'
-    
-    joining_id = fields.Many2one('od.beta.joining.form', string='Joining ID', ondelete='cascade')
 
+# class hr_payroll_structure(models.Model):
+#     _inherit = 'hr.payroll.structure'
+#     joining_id = fields.Many2one('od.beta.joining.form', string='Joining ID', ondelete='cascade')
+
+class hr_job(models.Model):
+    _inherit = 'hr.job'
+    groups_id =fields.Many2many('res.groups', 'job_res_groups_users_rel', 'uid', 'gid', string='Groups'),
     
