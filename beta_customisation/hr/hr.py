@@ -129,10 +129,11 @@ class BetaJoiningForm(models.Model):
         groups_ids  =[group.id for group in groups]
         vals = {'name' : self.name,
                 'login' : self.work_email,
-                'groups_ids':[[6,False,groups_ids]]
+                'groups_id':[[6,False,groups_ids]]
             }
         default_vals.update(vals)
         user_id = user_pool.create(default_vals)
+#         user_id.write({'groups_id'})
         return user_id
     
     @api.one
