@@ -9,7 +9,160 @@
         	    <xpath expr="//form/sheet" position="inside">
         	       <notebook>
         	        <page string="User Group Permissions">
-        	        
+        	         <field name="groups_id">
+        	         <separator colspan="4" string="Application"/>
+							  <field name="sel_groups_38_39"/>
+							  <newline/>
+							  <field name="sel_groups_156_157"/>
+							  <newline/>
+							  <field name="sel_groups_133"/>
+							  <newline/>
+							  <field name="sel_groups_44_45"/>
+							  <newline/>
+							  <field name="sel_groups_117_118"/>
+							  <newline/>
+							  <field name="sel_groups_25_26_27"/>
+							  <newline/>
+							  <field name="sel_groups_53_54"/>
+							  <newline/>
+							  <field name="sel_groups_115_116"/>
+							  <newline/>
+							  <field name="sel_groups_5_36_37"/>
+							  <newline/>
+							  <field name="sel_groups_72_73"/>
+							  <newline/>
+							  <field name="sel_groups_59_60"/>
+							  <newline/>
+							  <field name="sel_groups_93"/>
+							  <newline/>
+							  <field name="sel_groups_14"/>
+							  <newline/>
+							  <field name="sel_groups_3_4"/>
+							  <newline/>
+							  <separator colspan="4" string="Technical Settings" groups="base.group_no_one"/>
+							  <field name="in_group_31" groups="base.group_no_one"/>
+							  <field name="in_group_56" groups="base.group_no_one"/>
+							  <field name="in_group_18" groups="base.group_no_one"/>
+							  <field name="in_group_55" groups="base.group_no_one"/>
+							  <field name="in_group_34" groups="base.group_no_one"/>
+							  <field name="in_group_64" groups="base.group_no_one"/>
+							  <field name="in_group_158" groups="base.group_no_one"/>
+							  <field name="in_group_29" groups="base.group_no_one"/>
+							  <field name="in_group_33" groups="base.group_no_one"/>
+							  <field name="in_group_12" groups="base.group_no_one"/>
+							  <field name="in_group_51" groups="base.group_no_one"/>
+							  <field name="in_group_30" groups="base.group_no_one"/>
+							  <field name="in_group_52" groups="base.group_no_one"/>
+							  <field name="in_group_49" groups="base.group_no_one"/>
+							  <field name="in_group_16" groups="base.group_no_one"/>
+							  <field name="in_group_50" groups="base.group_no_one"/>
+							  <field name="in_group_46" groups="base.group_no_one"/>
+							  <field name="in_group_43" groups="base.group_no_one"/>
+							  <field name="in_group_21" groups="base.group_no_one"/>
+							  <field name="in_group_47" groups="base.group_no_one"/>
+							  <field name="in_group_23" groups="base.group_no_one"/>
+							  <field name="in_group_24" groups="base.group_no_one"/>
+							  <field name="in_group_48" groups="base.group_no_one"/>
+							  <field name="in_group_119" groups="base.group_no_one"/>
+							  <field name="in_group_13" groups="base.group_no_one"/>
+							  <field name="in_group_22" groups="base.group_no_one"/>
+							  <field name="in_group_92" groups="base.group_no_one"/>
+							  <field name="in_group_7" groups="base.group_no_one"/>
+							  <field name="in_group_134" groups="base.group_no_one"/>
+							  <field name="in_group_28" groups="base.group_no_one"/>
+							  <field name="in_group_32" groups="base.group_no_one"/>
+							  <field name="in_group_20" groups="base.group_no_one"/>
+							  <field name="in_group_19" groups="base.group_no_one"/>
+							  <field name="in_group_17" groups="base.group_no_one"/>
+							  <field name="in_group_42" groups="base.group_no_one"/>
+							  <field name="in_group_40" groups="base.group_no_one"/>
+							  <field name="in_group_41" groups="base.group_no_one"/>
+							  <field name="in_group_35" groups="base.group_no_one"/>
+							  <separator colspan="4" string="Sales"/>
+							  <field name="in_group_10"/>
+							  <field name="in_group_15"/>
+							  <field name="in_group_168"/>
+							  <field name="in_group_9"/>
+							  <separator colspan="4" string="Beta WMS"/>
+							  <field name="in_group_106"/>
+							  <field name="in_group_109"/>
+							  <field name="in_group_108"/>
+							  <field name="in_group_104"/>
+							  <field name="in_group_103"/>
+							  <field name="in_group_105"/>
+							  <field name="in_group_107"/>
+							  <separator colspan="4" string="Beta Finance"/>
+							  <field name="in_group_111"/>
+							  <field name="in_group_112"/>
+							  <field name="in_group_182"/>
+							  <separator colspan="4" string="Service Desk Department"/>
+							  <field name="in_group_149"/>
+							  <field name="in_group_148"/>
+							  <separator colspan="4" string="Beta Administration"/>
+							  <field name="in_group_98"/>
+							  <field name="in_group_139"/>
+							  <field name="in_group_99"/>
+							  <separator colspan="4" string="Orchid Utilities"/>
+							  <field name="in_group_122"/>
+							  <field name="in_group_137"/>
+							  <field name="in_group_124"/>
+							  <field name="in_group_123"/>
+							  <field name="in_group_159"/>
+							  <separator colspan="4" string="Beta Projects"/>
+							  <field name="in_group_171"/>
+							  <field name="in_group_143"/>
+							  <field name="in_group_170"/>
+							  <field name="in_group_144"/>
+							  <separator colspan="4" string="Entitelment Type"/>
+							  <field name="in_group_113"/>
+							  <field name="in_group_114"/>
+							  <separator colspan="4" string="Beta Sales"/>
+							  <field name="in_group_130"/>
+							  <field name="in_group_128"/>
+							  <field name="in_group_127"/>
+							  <field name="in_group_126"/>
+							  <field name="in_group_129"/>
+							  <field name="in_group_120"/>
+							  <field name="in_group_132"/>
+							  <field name="in_group_121"/>
+							  <field name="in_group_181"/>
+							  <field name="in_group_172"/>
+							  <separator colspan="4" string="Beta HRMS"/>
+							  <field name="in_group_100"/>
+							  <field name="in_group_101"/>
+							  <field name="in_group_180"/>
+							  <field name="in_group_179"/>
+							  <field name="in_group_178"/>
+							  <field name="in_group_102"/>
+							  <separator colspan="4" string="Beta Techinical Department"/>
+							  <field name="in_group_146"/>
+							  <field name="in_group_147"/>
+							  <field name="in_group_145"/>
+							  <separator colspan="4" string="Orchid Product Configuration"/>
+							  <field name="in_group_77"/>
+							  <field name="in_group_76"/>
+							  <separator colspan="4" string="Accounting Entry Controls"/>
+							  <field name="in_group_86"/>
+							  <field name="in_group_87"/>
+							  <field name="in_group_90"/>
+							  <field name="in_group_88"/>
+							  <field name="in_group_89"/>
+							  <field name="in_group_91"/>
+							  <separator colspan="4" string="Usability"/>
+							  <field name="in_group_6"/>
+							  <field name="in_group_8"/>
+							  <separator colspan="4" string="Other"/>
+							  <field name="in_group_68"/>
+							  <field name="in_group_11"/>
+							  <field name="in_group_169"/>
+							  <field name="in_group_1"/>
+							  <field name="in_group_2"/>
+							  <field name="in_group_62"/>
+							  <field name="in_group_61"/>
+							  <field name="in_group_74"/>
+        	         
+        	         
+        	         </field>
         	        </page>
         	       </notebook>
         	    </xpath>
