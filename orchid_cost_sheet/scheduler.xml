@@ -14,6 +14,7 @@
                 % macro costsheet_table(values):
                 <table cellspacing="1" border="1" cellpadding="4">
                 <tr>
+                    <th>Branch</th>
                     <th>Costsheet</th>
                     <th>Number</th>
                     <th>Customer</th>
@@ -23,6 +24,7 @@
                 </tr>
                         % for costsheet in values:
                     <tr>
+                         <td>${costsheet.get('branch','')}</td>
                         <td>${costsheet.get('name','')}</td>
                         <td>${costsheet.get('number','')}</td>
                         <td>${costsheet.get('customer','')}</td>
@@ -62,7 +64,8 @@
 
                 % macro costsheet_table(values):
                 <table cellspacing="1" border="1" cellpadding="4">
-                <tr>
+                <tr> 
+                   <th>Branch</th>
                     <th>Costsheet</th>
                     <th>Number</th>
                     <th>Customer</th>
@@ -72,6 +75,7 @@
                 </tr>
                         % for costsheet in values:
                     <tr>
+                         <td>${costsheet.get('branch','')}</td>
                         <td>${costsheet.get('name','')}</td>
                         <td>${costsheet.get('number','')}</td>
                         <td>${costsheet.get('customer','')}</td>

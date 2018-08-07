@@ -35,23 +35,33 @@ class od_cost_sheet(models.Model):
             base_domain = []
             base_domain.extend(domain)
             cost_sheet_ids = self.search(cr, uid, base_domain, context=context)
+            
             for costsheet in self.browse(cr,uid,cost_sheet_ids,context=context):
                 if costsheet.state not in ('cancel','draft','submitted','design_ready'):
                     val = {'name':costsheet.name,'number':costsheet.number,
+                           'branch':costsheet.od_branch_id and costsheet.od_branch_id.name or '',
                         'customer':costsheet.od_customer_id and costsheet.od_customer_id.name or '',
                         'po_status':costsheet.po_status,'sale_person':costsheet.sales_acc_manager and costsheet.sales_acc_manager.name or '',
                         'owner':costsheet.reviewed_id and costsheet.reviewed_id.name or ''
                         }
+                    br_email = costsheet.od_branch_id and costsheet.od_branch_id.email
+                    if br_email:
+                        branch_managers.append(br_email)
                     remind.append(val)
+                    
 
         for company_id in [1,6]:
             remind = []
+            branch_managers =[]
             fill_remind([('po_status', '!=', 'available'),('company_id','=',company_id),('state','not in',('draft','submitted','cancel','design_ready'))])
             template = 'od_cost_sheet_cron_email_template'
             if company_id == 6:
                 template = template + '_saudi'
             template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'orchid_cost_sheet', template)[1]
-            print "remind data>>>>>>>>>>>>>>>>>>>>>>",remind
+            branch_managers = list(set(branch_managers))
+            br_emails = ','.join(branch_managers)
+            context['branch_managers'] = br_emails
+            remind = sorted(remind, key=lambda k: k['branch']) 
             context["data"] = remind
             if remind:
                 self.pool.get('email.template').send_mail(cr, uid, template_id, uid, force_send=True, context=context)
