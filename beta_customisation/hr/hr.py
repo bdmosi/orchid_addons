@@ -1,10 +1,9 @@
 import time
-import datetime
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from openerp import models, fields, api, _
-
-
+ 
 class BetaJoiningForm(models.Model):
     _name = 'od.beta.joining.form'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
@@ -88,7 +87,7 @@ class BetaJoiningForm(models.Model):
     def create_contract(self, emp_id):
         contract_pool = self.env['hr.contract']
         date_start_dt = fields.Datetime.from_string(self.joining_date)
-        company_id = self.env.user.company_id or False
+        company_id = self.env.user.company_id.id or False
         journal_id = False
         if company_id == 6:
             dt = date_start_dt + relativedelta(months=3)

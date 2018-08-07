@@ -19,7 +19,26 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
+import datetime
+
 from openerp.osv import fields, osv
+
+
+
+class hr_employee(osv.osv):
+    _inherit = 'hr.employee'
+    
+    def run_employee_bday_reminder(self, cr, uid, context=None):
+        template_id = self.pool['email.template'].browse(cr,uid,139)[0]
+        hr_pool = self.pool['hr.employee']
+        today = datetime.date.today()
+        emp_ids=hr_pool.search(cr,uid,[],context=context)
+        if emp_ids:
+            for emp_id in emp_ids:
+                emp_rec=hr_pool.browse(cr,uid,emp_id)
+                birthday_date =emp_rec.birthday and datetime.datetime.strptime(emp_rec.birthday,'%Y-%m-%d')
+                if birthday_date and birthday_date.month==today.month and  birthday_date.day == today.day:
+                    self.pool.get('email.template').send_mail(cr, uid, template_id.id, emp_id, force_send=True, context=context)
 
 class crm_lead(osv.osv):
     _inherit = "crm.lead"
