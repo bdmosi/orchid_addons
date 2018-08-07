@@ -21,7 +21,7 @@
             <header>
 				<button name="confirm_emp" type="object" class="oe_highlight" string="Confirm Employee" attrs="{'invisible':[('state', '=', 'confirm')]}"/>
               <!--   <button name="cancel_emp" type="object" class="oe_highlight" string="Terminate Employee" attrs="{'invisible':[('state', 'in', ['draft','cancel'])]}"/> -->
-                <field name="state" widget="statusbar" statusbar_visible="draft,cancel,confirm" statusbar_colors='{"confirm":"blue"}'/>
+                <field name="state" widget="statusbar" statusbar_visible="draft,confirm" statusbar_colors='{"confirm":"blue"}'/>
             </header>
             <sheet>
                 <group>
