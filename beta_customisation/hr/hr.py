@@ -36,20 +36,20 @@ class BetaJoiningForm(models.Model):
     salary_struct = fields.Many2one('hr.payroll.structure', string='Salary Structure')
     
     work_sched = fields.Many2one('resource.calendar', string='Working Schedule')
-    work_hrs = fields.Integer(string="Working Hours")
-    schedule_pay = fields.Selection([
-            ('monthly', 'Monthly'),
-            ('quarterly', 'Quarterly'),
-            ('semi-annually', 'Semi-annually'),
-            ('annually', 'Annually'),
-            ('weekly', 'Weekly'),
-            ('bi-weekly', 'Bi-weekly'),
-            ('bi-monthly', 'Bi-monthly'),
-            ], 'Scheduled Pay', select=True, default="monthly")
-    journal_id = fields.Many2one('account.journal', string='Salary Journal')
+#     work_hrs = fields.Integer(string="Working Hours")
+#     schedule_pay = fields.Selection([
+#             ('monthly', 'Monthly'),
+#             ('quarterly', 'Quarterly'),
+#             ('semi-annually', 'Semi-annually'),
+#             ('annually', 'Annually'),
+#             ('weekly', 'Weekly'),
+#             ('bi-weekly', 'Bi-weekly'),
+#             ('bi-monthly', 'Bi-monthly'),
+#             ], 'Scheduled Pay', select=True, default="monthly")
+#     journal_id = fields.Many2one('account.journal', string='Salary Journal')
     manager1_id = fields.Many2one('res.users', string='First Approval Manager(Leaves)')
     manager2_id = fields.Many2one('res.users', string='Second Approval Manager(Leaves)')
-    audit_temp_id = fields.Many2one('audit.template', string='Audit Template')
+#     audit_temp_id = fields.Many2one('audit.template', string='Audit Template')
     
     def get_emp_vals(self):
         vals = { 'name' : self.name,
@@ -89,10 +89,13 @@ class BetaJoiningForm(models.Model):
         contract_pool = self.env['hr.contract']
         date_start_dt = fields.Datetime.from_string(self.joining_date)
         company_id = self.env.user.company_id or False
+        journal_id = False
         if company_id == 6:
             dt = date_start_dt + relativedelta(months=3)
+            journal_id =58
         else:
             dt = date_start_dt + relativedelta(months=6)
+            journal_id =21
         
         vals = {'name': self.name,
                 'employee_id': emp_id.id,
@@ -108,9 +111,9 @@ class BetaJoiningForm(models.Model):
                 'trial_date_end': fields.Datetime.to_string(dt),
                 'date_start': self.joining_date,
                 'working_hours': self.work_sched and self.work_sched.id or False,
-                'xo_working_hours': self.work_hrs,
-                'schedule_pay': self.schedule_pay,
-                'journal_id': self.journal_id and self.journal_id.id or False
+                'xo_working_hours':8.0,
+                'schedule_pay': 'monthly',
+                'journal_id': journal_id
             }
         
         contract_id = contract_pool.create(vals)

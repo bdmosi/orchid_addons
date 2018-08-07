@@ -19,8 +19,8 @@
             <field name="arch" type="xml">
             <form string="Employee Joining Form" version="7.0">
             <header>
-				<button name="confirm_emp" type="object" class="oe_highlight" string="Confirm Employee" attrs="{'invisible':[('state', 'in', ['cancel','confirm'])]}"/>
-                <button name="cancel_emp" type="object" class="oe_highlight" string="Terminate Employee" attrs="{'invisible':[('state', 'in', ['draft','cancel'])]}"/>
+				<button name="confirm_emp" type="object" class="oe_highlight" string="Confirm Employee" attrs="{'invisible':[('state', '=', 'confirm')]}"/>
+              <!--   <button name="cancel_emp" type="object" class="oe_highlight" string="Terminate Employee" attrs="{'invisible':[('state', 'in', ['draft','cancel'])]}"/> -->
                 <field name="state" widget="statusbar" statusbar_visible="draft,cancel,confirm" statusbar_colors='{"confirm":"blue"}'/>
             </header>
             <sheet>
@@ -65,10 +65,10 @@
             </field>
 	                   <field name="work_sched" required="1"/>
 	                   <field name="salary_struct" required="1"/>
-	                   <field name="work_hrs" required="1"/>
+	                 <!--   <field name="work_hrs" required="1"/>
 	                   <field name="schedule_pay" required="1"/>
 	                   <field name="journal_id" required="1"/>
-	                   <field name="audit_temp_id" />
+	                   <field name="audit_temp_id" /> -->
 	               </group>
                 </group>
 
