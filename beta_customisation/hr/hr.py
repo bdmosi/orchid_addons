@@ -141,6 +141,8 @@ class BetaJoiningForm(models.Model):
             }
         default_vals.update(vals)
         user_id = user_pool.create(default_vals)
+        partner_id = user_id.partner_id 
+        partner_id.write({'email':self.work_email,'employee':True})
 #         user_id.write({'groups_id'})
         return user_id
     
