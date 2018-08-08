@@ -5,7 +5,7 @@
         <field name="name">Waiting PO/Special Approval from GM Reminder UAE</field>
         <field name="email_from">erp@betait.net</field>
         <field name="subject">Waiting PO/Special Approval from GM Reminder</field>
-        <field name="email_to">gm@betait.net,khalid.eqtifan@betait.net,samer.hamdan@betait.net,FD@betait.net</field>
+        <field name="email_to">gm@betait.net,khalid.eqtifan@betait.net,samer.hamdan@betait.net,khalid.lebbeh@betait.net,FD@betait.net</field>
         <field name="model_id" ref="base.model_res_users"/>
         <field name="auto_delete" eval="True"/>
         <field name="body_html"><![CDATA[
@@ -55,7 +55,7 @@
         <field name="name">Waiting PO/Special Approval from GM Reminder Saudi</field>
         <field name="email_from">erp@betait.net</field>
         <field name="subject">Waiting PO/Special Approval from GM Reminder</field>
-        <field name="email_to">gm@sa.betait.net, pmo-d@sa.betait.net, hussein.alqassas@sa.betait.net,m.olayyan@sa.betait.net,basem.btoush@sa.betait.net,laith.ablasi@sa.betait.net,FD@sa.betait.net</field>
+        <field name="email_to">gm@sa.betait.net,muthanna.saadeh@sa.betait.net,hussein.alqassas@sa.betait.net,m.olayyan@sa.betait.net,basem.btoush@sa.betait.net,laith.ablasi@sa.betait.net,FD@sa.betait.net</field>
 
         <field name="model_id" ref="base.model_res_users"/>
         <field name="auto_delete" eval="True"/>
