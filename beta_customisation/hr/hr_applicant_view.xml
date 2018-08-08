@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="od_hr_job_applicationd" model="ir.ui.view">
+        <field name="name">hr.applicant.beta</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.crm_case_form_view_job"/>
+        <field name="arch" type="xml">
+           <button name="create_employee_from_applicant" position="replace">
+                <button string="Create Joining Form" name="create_joining_form" type="object"
+                                    class="oe_link oe_inline" style="margin-left: 8px;"
+                                    attrs="{'invisible': [('beta_join_id', '!=', False)]}"/> 
+           </button>
+          
+       
+        </field>
+        </record>
+        
+       
+    
+    </data>
+</openerp>
