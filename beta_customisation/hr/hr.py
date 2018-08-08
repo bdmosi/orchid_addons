@@ -41,6 +41,7 @@ class BetaJoiningForm(models.Model):
     salary_struct = fields.Many2one('hr.payroll.structure', string='Salary Structure')
     
     work_sched = fields.Many2one('resource.calendar', string='Working Schedule')
+    employee_id = fields.Many2one('hr.employee')
 #     work_hrs = fields.Integer(string="Working Hours")
 #     schedule_pay = fields.Selection([
 #             ('monthly', 'Monthly'),
@@ -143,7 +144,7 @@ class BetaJoiningForm(models.Model):
         default_vals.update(vals)
         user_id = user_pool.create(default_vals)
         partner_id = user_id.partner_id 
-#         partner_id.write({'email':self.work_email,'employee':True})
+        partner_id.write({'employee':True})
 #         user_id.action_reset_password()
 #         user_id.write({'groups_id'})
         return user_id
@@ -156,6 +157,7 @@ class BetaJoiningForm(models.Model):
         user_id = self.create_user()
         emp_id.write({'user_id': user_id and user_id.id or False, 'address_home_id': user_id.partner_id and user_id.partner_id.id or False})
         self.state = 'confirm'
+        self.employee_id = emp_id.id
         return emp_id
     
     @api.one
