@@ -13,7 +13,8 @@
             'project/analytic_view.xml',
             'purchase/purchase_view.xml',
             'hr/hr_view.xml',
-            'hr/job_view.xml'
+            'hr/job_view.xml',
+            'hr/hr_applicant_view.xml',
             ],
     'demo': [],
     'installable': True,
