@@ -144,7 +144,7 @@ class BetaJoiningForm(models.Model):
         user_id = user_pool.create(default_vals)
         partner_id = user_id.partner_id 
 #         partner_id.write({'email':self.work_email,'employee':True})
-        user_id.action_reset_password()
+#         user_id.action_reset_password()
 #         user_id.write({'groups_id'})
         return user_id
     
