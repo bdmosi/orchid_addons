@@ -28,7 +28,8 @@
 	                <group string="Profile">
 		                <label for="name"/>
 		             	<h2><field name="name" required="1"/></h2>
-		                <field name="work_email" required="1"/>
+		             	<field name="personal_email" required="1" />
+		                <field name="work_email" />
 	                </group>
 	               <group string="Public Information">
 	                   <field name="department_id" required="1"/>
@@ -46,9 +47,13 @@
 	                   <field name="manager2_id" required="1"/>
 	               </group>
 	               <group string="Personal Information">
-	                   <field name="nationality" required="1"/>
-	                   <field name="dob" required="1"/>
-	                   <field name="gender" required="1"/>
+	                    <field name="father_name" />
+	                   <field name="nationality" />
+	                   <field name="passport_no" />
+	                   <field name="dob"/>
+	                   <field name="place_of_birth" />
+	                   <field name="gender" />
+	                   <field name="martial" />
 	               </group>
 	               
 	               <group string="Contract Information">

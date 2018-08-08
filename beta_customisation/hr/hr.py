@@ -14,6 +14,11 @@ class BetaJoiningForm(models.Model):
                                   string='State', readonly=True,
                                   track_visibility='always', copy=False,  default= 'draft')
     work_email = fields.Char(string='Work Email')
+    personal_email = fields.Char(string="Personal Email")
+    father_name = fields.Char(string="Father Name")
+    passport_no = fields.Char(string="Passport Number")
+    
+    place_of_birth =fields.Char(string="Place of Birth")
     department_id = fields.Many2one('hr.department', string='Department') 
     job_id = fields.Many2one('hr.job', string='Job Title')
     manager_id = fields.Many2one('hr.employee', string='Manager')
@@ -21,6 +26,7 @@ class BetaJoiningForm(models.Model):
     nationality = fields.Many2one('res.country', string='Nationality')
     dob = fields.Date(string='Date of Birth')
     gender = fields.Selection([('male', 'Male'), ('female', 'Female')], 'Gender')
+    martial = fields.Selection([('single', 'Single'), ('married', 'Married'),('widower', 'Widower'),('divorced', 'Divorced')], 'Martial Status')
     joining_date = fields.Date(string='Joining Date', track_visibility='onchange')
     branch_id = fields.Many2one('od.cost.branch', string='Branch')
     tech_dept_id = fields.Many2one('od.cost.division', string='Technology Unit/Department')
