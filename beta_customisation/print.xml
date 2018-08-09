@@ -1,0 +1,212 @@
+<?xml version="1.0"?>
+<t t-name="account.report_sec_print_ar">
+
+<t t-foreach="docs" t-as="o">
+        <div class="page">
+	        <div style="text-align: center;">
+			    <span>
+			        فاتورة
+			    </span>
+			</div>
+           <div align="right">
+           <table style="border-width: 0;">
+		   <tbody >
+	           <tr>
+	              <td align="right" ><span >مؤسسة دار بيتا لتكنلوجيا المعلومات</span></td>
+	              <td align="right"><span>:اسم الشركة</span></td>
+	            </tr>
+	            <tr>
+	              <td align="right"><span >الرياض – حي المروج – الرمز البريدي 11435</span></td>
+	              <td align="right"><span>:العنوان</span></td>
+	            </tr>
+	            <tr>
+	              <td align="right"><span >300041306100003</span></td>
+	              <td align="right"><span>:الرقم الضريبي</span></td>
+	            </tr>
+	            <tr>
+	              <td align="right"><span t-field="o.number"/></td>
+	              <td align="right"><span>:رقم الفاتورة </span></td>
+	            </tr>
+	            <tr>
+	              <td align="right"><span t-field="o.date_invoice"/></td>
+	              <td align="right"><span>:تاريخ الفاتورة </span></td>
+	            </tr>
+	            <tr>
+	              <td align="right"><span t-field="o.bt_po_ref"/></td>
+	              <td align="right"><span>:رقم امر الشراء / التعميد </span></td>
+	            </tr>
+               </tbody>
+			</table>
+			</div>
+			
+			<div style="padding-top:30px;">
+			</div>
+			
+		   <div align="right">
+           <table style="border-width: 0;">
+		   <tbody >
+                   <tr>
+	                     <td align="right" ><span t-field="o.partner_id"/></td>
+	                     <td align="right"><span>:اسم العميل</span></td>
+                       
+                   </tr>
+                   <tr>
+	                   <td>
+	                     <span t-if="o.partner_id.street" style="color:gray !important;" t-field="o.partner_id.street" /><br t-if="o.partner_id.street" />
+	                     <span t-if="o.partner_id.street2" style="color:gray !important;" t-field="o.partner_id.street2" /><br t-if="o.partner_id.street2"/>
+	                     <span t-if="o.partner_id.city" style="color:gray !important;" t-field="o.partner_id.city" /><br t-if="o.partner_id.city"/>
+	                     <span t-if="o.partner_id.country_id" style="color:gray !important;" t-field="o.partner_id.country_id" /><br/>                    <td align="right"><span>:عنوان العميل</span></td>
+	                       
+	                    </td>
+                   </tr>
+                   <tr>
+	                     <td align="right"><span t-field="o.partner_id.vat"/></td>
+	                     <td align="right"><span>:الرقم الضريبي للعميل</span></td>
+                   </tr>
+               </tbody>
+			</table>
+			</div>
+			
+			
+			<div class="row" style="padding-top:20px;">
+            <div style="padding-top:20px;"></div>
+            <table class="table table-condensed table table-striped">
+                <thead >
+                    <tr>
+                        <th class="text-right">الاجمالي شامل الضريبة-ريال سعودي</th>
+                        <th class="text-right">قيمة الضريبة-ريال سعودي</th>
+                        <th class="text-right">نسبة الصريبة</th>
+                        <th class="text-right">الاجمالي قبل الضريبة-ريال سعودي</th>
+                        <th class="text-right">سعر الوحدة -ريال سعودي</th>
+                        <th class="text-right">الكمية مع الوحدة</th>
+                        <th class="text-right">تاريخ التوريد</th>
+                        <th class="text-right">وصف البند-باللغة العربية</th>
+                        <th class="text-right">رقم التسلسل</th>
+                    </tr>
+                </thead>
+                <tbody class="invoice_tbody">
+                    <t t-set="count" t-value="1"/>
+                
+                    <tr t-foreach="o.invoice_line" t-as="l">
+
+                        <td class="text-right">
+                        	<span t-esc="'{0:,.2f}'.format(l.price_subtotal+(l.price_subtotal * sum([tx.amount for tx in l.invoice_line_tax_id])))" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                        </td>
+
+                        <td class="text-right">
+                        	<span t-esc="l.price_subtotal * sum([tx.amount for tx in l.invoice_line_tax_id])" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                        </td>
+
+						<td>
+							<span t-esc="str(sum([tx.amount for tx in l.invoice_line_tax_id]) *100.0) + '%' "/> 
+						</td>
+                        <td>
+                        	<span t-field="l.price_subtotal"/>
+                        </td>
+                        <td>
+                        	<span t-field="l.price_unit"/>
+                        </td>
+						<td class="text-right">
+                            <span t-field="l.quantity"/>
+                            <span t-field="l.uos_id" />
+                        </td>
+                        <td>
+                        	<span t-field="o.bt_supply_date"/>
+                        </td>
+                        <td>
+                        	<span t-field="l.name_ar"/>
+                        </td>
+                    <td class="text-center"><span t-esc="count"/> <t t-set="count" t-value="count + 1"/></td>
+
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div style="padding-top:50px;">
+			</div>
+            
+           <div align="right">
+           <table style="border-width: 0;">
+		   <tbody >
+		   
+		   		<t t-set="amount_total" t-value="sum(map(lambda x: (x.quantity* x.price_unit)*(1-x.discount/100.0), o.invoice_line))"/>
+                  <tr>
+						<td class="text-right">
+                        	<span t-field="o.amount_untaxed" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                        </td>
+                        <td align="right">
+                        	<span>:الاجمالي بدون ضريبة القيمة المضافة</span>
+                        </td>
+                   </tr>
+                   <tr>
+						<td class="text-right">
+                        	<span t-field="o.amount_tax" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                        </td>
+                        <td align="right">
+                        	<span>:قيمة الضريبة المضافة </span>
+                        </td>
+                       
+                   </tr>
+                   <tr>
+						<td class="text-right">
+                        	<span t-field="o.amount_total" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                        </td>
+                        <td align="right">
+                        	<span>:اجمالي الفاتورة شامل الضريبة</span>
+                        </td>
+                   </tr>
+                   <t t-set="balance" t-value="amount_total - o.amount_untaxed"/>
+                  <t t-if="o.amount_tax">
+                   <t t-set="balance" t-value="balance + (balance *.05)"/>
+                  </t>
+                   
+                   <tr>
+                     <td class="text-right">
+                                <span t-esc="balance" t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                            </td>
+                    <td align="right">
+                    	<span>:الرصيد المستحق</span>
+                    </td>
+                   </tr>
+               </tbody>
+			</table>
+			</div>
+			
+			<div style="padding-top:25px;">
+			</div>
+
+			<div class="text-right">
+            	<strong>جميع الاسعار و المبالغ المذكورة بالريال السعودي</strong>
+            </div>
+            
+            <div style="padding-top:75px;">
+			</div>
+
+			
+			<div class="text-right">
+	            <div class="col-xs-4" >
+	            	<strong>ختم وتوقيع العميل</strong>
+	            </div>
+
+            <div class="col-xs-4" >
+            </div>
+            
+
+            <div class="col-xs-4" >
+                    <strong>ختم وتوقيع الشركة</strong>
+            </div>
+                
+               
+           </div>
+            
+        </div>
+			
+		
+         </div>   
+            
+
+    
+   </t>
+    
+    
+</t>
