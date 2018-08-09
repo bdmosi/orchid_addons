@@ -1529,9 +1529,14 @@ class od_amc_invoice_schedule(models.Model):
         od_division_id = self.analytic_id and self.analytic_id.od_division_id and self.analytic_id.od_division_id.id or False 
         if analytic_id and not self.invoice_id:
             so_id = self.env['sale.order'].search([('project_id','=',analytic_id),('state','!=','cancel')],limit=1)
+            if not so_id:
+                parent_analytic_id = self.analytic_id and self.analytic_id.parent_id and  self.analytic_id.parent_id.id
+                if parent_analytic_id:
+                    so_id = self.env['sale.order'].search([('project_id','=',parent_analytic_id),('state','!=','cancel')],limit=1)
             inv_vals =  self.pool.get('sale.order')._prepare_invoice(cr,uid,so_id,[])
             inv_vals['date_invoice'] =str(dt.today())
             inv_vals.update({
+                'od_analytic_account':analytic_id,
                 'od_cost_sheet_id':od_cost_sheet_id,
                 'od_branch_id':od_branch_id,
                 'od_cost_centre_id':od_cost_centre_id,
