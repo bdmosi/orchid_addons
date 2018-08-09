@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
         <data noupdate="1">
-
-
+        
             <record id="od_landed_cost_creation_email_mail" model="email.template">
                      <field name="name">Landed Cost Mail UAE</field>
                      <field name="email_from">${(user.email or '')|safe}</field>

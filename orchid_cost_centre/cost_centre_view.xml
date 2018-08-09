@@ -69,6 +69,7 @@
                             <h2><field name="code" /></h2>
                             <label for="name"/>
                             <h2><field name="name"/>    </h2>
+                            <label for="unit_alias"/>
                             <h2><field name="unit_alias"/>    </h2>
                         </group>
                         	
