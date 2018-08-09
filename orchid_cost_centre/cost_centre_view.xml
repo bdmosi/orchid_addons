@@ -14,11 +14,14 @@
                             <h2><field name="code" /></h2>
                             <label for="name"/>
                             <h2><field name="name"/>    </h2>
+                               <label for="unit_alias"/>
+                            <h2><field name="unit_alias"/>    </h2>
                         </group>
                         <group>
 						<field name="company_id"/>
 						<field name="manager_id" on_change="onchange_manager_id(manager_id)"/>
 						<field name="email"/>
+						<field name="tech_consult_id" />
                         </group>
                     </group>
                 <div class="oe_clear"/>
@@ -69,8 +72,8 @@
                             <h2><field name="code" /></h2>
                             <label for="name"/>
                             <h2><field name="name"/>    </h2>
-                            <label for="unit_alias"/>
-                            <h2><field name="unit_alias"/>    </h2>
+                            <!-- <label for="unit_alias"/>
+                            <h2><field name="unit_alias"/>    </h2> -->
                         </group>
                         	
                         <group>
@@ -78,7 +81,7 @@
 						<field name="manager_id" on_change="onchange_manager_id(manager_id)"/>
 						<field name="email"/>
 						<field name="pmo_manager_id"/>
-						<field name="tech_consult_id"/>
+						<field name="tech_consult_id" invisible="1"/>
                         </group>
                     </group>
                 <div class="oe_clear"/>

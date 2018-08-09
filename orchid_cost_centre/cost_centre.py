@@ -27,6 +27,8 @@ class od_cost_division(osv.osv):
         'manager_id':fields.many2one('hr.employee',string="Manager"),
         'division_manager_id':fields.many2one('res.users',string="Division Manager"),
         'email':fields.char(string='E-mail'),
+        'tech_consult_id':fields.many2one('res.users',string="Technology Consultant"),
+        'unit_alias':fields.char(string='Unit Alias'),
     }
     _sql_constraints = [
         ('code_uniq', 'unique(code)', 'Code must be unique...!'),
