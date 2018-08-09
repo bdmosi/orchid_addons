@@ -6,9 +6,9 @@
         <field name="model">hr.applicant</field>
         <field name="inherit_id" ref="hr_recruitment.crm_case_form_view_job"/>
         <field name="arch" type="xml">
-	        <field name="emp_id" position="replace">
+	       <!--  <field name="emp_id" position="replace">
 	            <field name="beta_join_id" />
-	        </field>
+	        </field> -->
            <button name="create_employee_from_applicant" position="replace">
                 <button string="Create Joining Form" name="create_joining_form" type="object"
                                     class="oe_link oe_inline" style="margin-left: 8px;"
