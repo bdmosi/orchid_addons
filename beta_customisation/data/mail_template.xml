@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+    
+         <record id="od_fill_detail_manager" model="email.template">
+             <field name="name">UAE - Employee detail fill by Manager</field>
+             <field name="email_from">${(user.email or '')|safe}</field>
+             <field name="subject">Fill Employee Manager details</field>
+             <field name="email_to">${object.manager_id.work_email},</field>
+<!--              <field name="email_cc">${object.od_owner_id.email}</field> -->
+             <field name="model_id" ref="model_od_beta_joining_form"/>
+
+             <field name="body_html"><![CDATA[
+         <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+             <p>Dear ${object.manager_id.name or ''},</p>
+
+             <p>Please Fill the manager details of our newly joined employee ${object.name or ''} .</p>
+             <p>link:http://betait.net/web#id=${object.id}&view_type=form&model=od.beta.joining.form&menu_id=1102&action=1469</p>
+             <p>Thank You</p>
+
+         </div>
+             ]]></field>
+         </record>
+         
+           <record id="od_fill_detail_manager_saudi" model="email.template">
+             <field name="name">KSA - Employee detail fill by Manager</field>
+             <field name="email_from">${(user.email or '')|safe}</field>
+             <field name="subject">Fill Employee Manager details</field>
+             <field name="email_to">${object.manager_id.work_email},</field>
+<!--              <field name="email_cc">${object.od_owner_id.email}</field> -->
+             <field name="model_id" ref="model_od_beta_joining_form"/>
+
+             <field name="body_html"><![CDATA[
+         <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+             <p>Dear ${object.manager_id.name or ''},</p>
+
+             <p>Please Fill the manager details of our newly joined employee ${object.name or ''} .</p>
+             <p>link:http://betait.net/web#id=${object.id}&view_type=form&model=od.beta.joining.form&menu_id=1102&action=1469</p>
+             <p>Thank You</p>
+
+         </div>
+             ]]></field>
+         </record>
+         
+<!--          <record id="od_fill_detail_hr" model="email.template"> -->
+<!--              <field name="name">UAE - Employee detail fill by HR</field> -->
+<!--              <field name="email_from">${(user.email or '')|safe}</field> -->
+<!--              <field name="subject">Fill Employee HR details</field> -->
+<!--              <field name="email_to">HR@betait.net,</field> -->
+<!--              <field name="email_cc">${object.od_owner_id.email}</field> -->
+<!--              <field name="model_id" ref="model_od_beta_joining_form"/> -->
+
+<!--              <field name="body_html"><![CDATA[ -->
+<!--          <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "> -->
+<!--              <p>Dear Team,</p> -->
+
+<!--              <p>Please Fill the HR details of our newly joined employee ${object.name or ''}</p> -->
+<!--              <p>link:http://betait.net/web#id=${object.id}&view_type=form&model=od.beta.joining.form&menu_id=1102&action=1469</p> -->
+<!--              <p>Thank You</p> -->
+
+<!--          </div> -->
+<!--              ]]></field> -->
+<!--          </record> -->
+         
+<!--          <record id="od_fill_detail_hr_saudi" model="email.template"> -->
+<!--              <field name="name">KSA - Employee detail fill by HR</field> -->
+<!--              <field name="email_from">${(user.email or '')|safe}</field> -->
+<!--              <field name="subject">Fill Employee HR details</field> -->
+<!--              <field name="email_to">hr@sa.betait.net,</field> -->
+<!--              <field name="email_cc">${object.od_owner_id.email}</field> -->
+<!--              <field name="model_id" ref="model_od_beta_joining_form"/> -->
+
+<!--              <field name="body_html"><![CDATA[ -->
+<!--          <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "> -->
+<!--              <p>Dear Team,</p> -->
+
+<!--              <p>Please Fill the HR details of our newly joined employee ${object.name or ''}</p> -->
+<!--              <p>link:http://betait.net/web#id=${object.id}&view_type=form&model=od.beta.joining.form&menu_id=1102&action=1469</p> -->
+<!--              <p>Thank You</p> -->
+
+<!--          </div> -->
+<!--              ]]></field> -->
+<!--          </record> -->
+         
+         
+         <record id="od_fill_detail_finance" model="email.template">
+             <field name="name">UAE - Employee detail fill by Finance</field>
+             <field name="email_from">${(user.email or '')|safe}</field>
+             <field name="subject">Fill Employee Finance details</field>
+             <field name="email_to">mohd.sageer@betait.net,</field>
+<!--              <field name="email_cc">${object.od_owner_id.email}</field> -->
+             <field name="model_id" ref="model_od_beta_joining_form"/>
+
+             <field name="body_html"><![CDATA[
+         <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+             <p>Dear Team,</p>
+
+             <p>Please Fill the Finance details of our newly joined employee ${object.name or ''}</p>
+             <p>link:http://betait.net/web#id=${object.id}&view_type=form&model=od.beta.joining.form&menu_id=1102&action=1469</p>
+             <p>Thank You</p>
+
+         </div>
+             ]]></field>
+         </record>
+         
+         <record id="od_fill_detail_finance_saudi" model="email.template">
+             <field name="name">KSA - Employee detail fill by Finance</field>
+             <field name="email_from">${(user.email or '')|safe}</field>
+             <field name="subject">Fill Employee Finance details</field>
+             <field name="email_to">${object.manager_id.work_email},</field>
+<!--              <field name="email_cc">${object.od_owner_id.email}</field> -->
+             <field name="model_id" ref="model_od_beta_joining_form"/>
+
+             <field name="body_html"><![CDATA[
+         <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+             <p>Dear Team,</p>
+
+             <p>Please Fill the Finance details of our newly joined employee ${object.name or ''}</p>
+             <p>link:http://betait.net/web#id=${object.id}&view_type=form&model=od.beta.joining.form&menu_id=1102&action=1469</p>
+             <p>Thank You</p>
+
+         </div>
+             ]]></field>
+         </record>
+         
+         <record id="od_fill_detail_employee" model="email.template">
+             <field name="name">UAE - Employee Personal Data Entry Form</field>
+             <field name="email_from">${(user.email or '')|safe}</field>
+             <field name="subject">Update Beta Joining Form</field>
+             <field name="email_to">${object.email_from},</field>
+<!--              <field name="email_cc">${object.od_owner_id.email}</field> -->
+             <field name="model_id" ref="model_hr_applicant"/>
+
+             <field name="body_html"><![CDATA[
+         <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+             <p>Dear ${object.user_id.name or ''},</p>
+			<p>Welcome you onboard as a member of Beta IT Family.</p>
+             <p>Please update your basic details by clicking following link !</p>
+             <p>link:http://betait.net/beta_join/${object.beta_join_id.id}</p>
+             <p>Thank You</p>
+
+         </div>
+             ]]></field>
+         </record>
+         
+         <record id="od_fill_detail_employee_saudi" model="email.template">
+             <field name="name">KSA - Employee Personal Data Entry Form</field>
+             <field name="email_from">${(user.email or '')|safe}</field>
+             <field name="subject">Update Beta Joining Form</field>
+             <field name="email_to">${object.email_from},</field>
+<!--              <field name="email_cc">${object.od_owner_id.email}</field> -->
+             <field name="model_id" ref="model_hr_applicant"/>
+
+             <field name="body_html"><![CDATA[
+         <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+             <p>Dear ${object.user_id.name or ''},</p>
+			<p>Welcome you onboard as a member of Beta IT Family.</p>
+             <p>Please update your basic details by clicking following link !</p>
+             <p>link:http://betait.net/beta_join/${object.beta_join_id.id}</p>
+             <p>Thank You</p>
+
+         </div>
+             ]]></field>
+         </record>
+         
+         
+     </data>
+</openerp>

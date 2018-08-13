@@ -1,0 +1,14 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+resource_request_line_access_right_user,resource_request_line_access_right,model_resource_request_line,base.group_hr_manager,1,1,1,1
+resource_request_line_access_right_manager,resource_request_line_access_right,model_resource_request_line,base.group_hr_user,1,0,0,0
+
+issue_tracker_access_right_user,issue_tracker_access_right,model_issue_tracker,base.group_hr_user,1,1,1,1
+issue_tracker_access_right_user,issue_tracker_access_right,model_issue_tracker,base.group_user,1,1,1,1
+issue_tracker_access_right_manager,issue_tracker_access_right,model_issue_tracker,base.group_hr_manager,1,1,1,1
+
+issue_solutions_access_right_user,issue_solutions_access_right,model_issue_solutions,base.group_hr_user,1,1,1,1
+issue_solutions_access_right_user,issue_solutions_access_right,model_issue_solutions,base.group_user,1,1,1,1
+issue_solutions_access_right_manager,issue_solutions_access_right,model_issue_solutions,base.group_hr_manager,1,1,1,1
+
+hr_requirement_access_right_manager,hr_requirement_access_right,model_hr_requirement,base.group_hr_manager,1,1,1,1

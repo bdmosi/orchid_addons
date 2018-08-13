@@ -19,48 +19,55 @@
             <field name="arch" type="xml">
             <form string="Employee Joining Form" version="7.0">
             <header>
-				<button name="confirm_emp" type="object" class="oe_highlight" string="Confirm Employee" attrs="{'invisible':[('state', '=', 'confirm')]}"/>
+				<button name="send_to_manager" type="object" class="oe_highlight" string="Send to Manager" attrs="{'invisible':[('state', '!=', 'draft')]}"/>
+<!-- 				<button name="send_to_hr" type="object" class="oe_highlight" string="Send to HR" attrs="{'invisible':[('state', '!=', 'manager')]}"/> -->
+				<button name="send_to_finance" type="object" class="oe_highlight" string="Send to Finance" attrs="{'invisible':[('state', '!=', 'manager')]}"/>
+				<button name="confirm_emp" type="object" class="oe_highlight" string="Confirm Employee" attrs="{'invisible':[('state', '!=', 'finance')]}"/>
+				
               <!--   <button name="cancel_emp" type="object" class="oe_highlight" string="Terminate Employee" attrs="{'invisible':[('state', 'in', ['draft','cancel'])]}"/> -->
-                <field name="state" widget="statusbar" statusbar_visible="draft,confirm" statusbar_colors='{"confirm":"blue"}'/>
+                <field name="state" widget="statusbar" statusbar_visible="draft,manager,finance,confirm" statusbar_colors='{"confirm":"blue"}'/>
             </header>
             <sheet>
                 <group>
 	                <group string="Profile">
 		                <label for="name"/>
-		             	<h2><field name="name" required="1"/></h2>
-		             	<field name="personal_email" required="1" />
-		                <field name="work_email" />
+		             	<h2><field name="name" attrs="{'required': [('state','=','draft')]}"/></h2>
+		             	<field name="personal_email" attrs="{'required': [('state','=','draft')]}"/>
+		                
+		                <field name="mobile" />
 	                </group>
-	               <group string="Public Information">
-	                   <field name="department_id" required="1"/>
-	                   <field name="job_id" required="1"/>
-	                   <field name="manager_id" required="1"/>
-	                   <field name="coach_id" required="1"/>
-	               </group>
-	               <group string="HR Settings">
-	                   <field name="joining_date" required="1"/>
-	                   <field name="branch_id" required="1"/>
-	                   <field name="tech_dept_id" required="1"/>
-	                   <field name="pay_salary_during_annual_leave"/>
-	                   <field name="cost_centre_id" required="1"/>
-	                   <field name="manager1_id" required="1"/>
-	                   <field name="manager2_id" required="1"/>
-	               </group>
-	               <group string="Personal Information">
-	                    <field name="father_name" />
+	                <group string="Personal Info">
+	                    <field name="father_name" attrs="{'required': [('state','=','draft')]}"/>
 	                   <field name="nationality" />
-	                   <field name="passport_no" />
-	                   <field name="dob"/>
-	                   <field name="place_of_birth" />
-	                   <field name="gender" />
-	                   <field name="martial" />
+	                   <field name="passport_no" attrs="{'required': [('state','=','draft')]}"/>
+	                   <field name="dob" attrs="{'required': [('state','=','draft')]}"/>
+	                   <field name="place_of_birth" attrs="{'required': [('state','=','draft')]}"/>
+	                   <field name="gender" attrs="{'required': [('state','=','draft')]}"/>
+	                   <field name="martial" attrs="{'required': [('state','=','draft')]}"/>
 	               </group>
+	               <group string="Public Info (To be Filled by Manager)">
+	               		<field name="work_email" attrs="{'required': [('state','=','manager')]}"/>
+	                   <field name="department_id" attrs="{'required': [('state','=','manager')]}"/>
+	                   <field name="job_id" attrs="{'required': [('state','=','manager')]}"/>
+	                   <field name="manager_id" attrs="{'required': [('state','=','manager')]}"/>
+	                   <field name="coach_id" attrs="{'required': [('state','=','manager')]}"/>
+	                   <field name="manager1_id" attrs="{'required': [('state','=','manager')]}"/>
+	                   <field name="manager2_id" attrs="{'required': [('state','=','manager')]}"/>
+	                   <field name="joining_date" attrs="{'required': [('state','=','manager')]}"/>
+	               </group>
+	               <group string="HR Settings (To be filled by Finance)">
+	                   <field name="branch_id" attrs="{'required': [('state','=','finance')]}"/>
+	                   <field name="tech_dept_id" attrs="{'required': [('state','=','finance')]}"/>
+	                   <field name="pay_salary_during_annual_leave" />
+	                   <field name="cost_centre_id" attrs="{'required': [('state','=','finance')]}"/>
+	              </group>
 	               
-	               <group string="Contract Information">
-	                   <field name="type_id" required="1"/>
-	                   <field name="mode_of_pay_id" required="1"/>
-	                   <field name="total_wage" required="1"/>
-	                   <field name="basic_wage" required="1"/>
+	               
+	               <group string="Contract Info (To be filled by Finance)">
+	                   <field name="type_id" attrs="{'required': [('state','=','finance')]}"/>
+	                   <field name="mode_of_pay_id" attrs="{'required': [('state','=','finance')]}"/>
+	                   <field name="total_wage" attrs="{'required': [('state','=','finance')]}"/>
+	                   <field name="basic_wage" attrs="{'required': [('state','=','finance')]}"/>
 	                   <field name="allowance_rule_line_ids" nolabel="1" colspan="2">
 		                    <tree editable="bottom">
 		                        <field name="rule_type" on_change="onchange_rule_type(rule_type)" required="1" domain="[('category_id.code','in',('ALW','DED'))]" />
@@ -68,8 +75,9 @@
 		                        <field name="amt"/>
 		                    </tree>
             </field>
-	                   <field name="work_sched" required="1"/>
-	                   <field name="salary_struct" required="1"/>
+	                   <field name="work_sched" attrs="{'required': [('state','=','finance')]}"/>
+	                   <field name="salary_struct" attrs="{'required': [('state','=','finance')]}"/>
+	                   <field name="analytic_account_id"/>
 	                 <!--   <field name="work_hrs" required="1"/>
 	                   <field name="schedule_pay" required="1"/>
 	                   <field name="journal_id" required="1"/>
@@ -97,7 +105,6 @@
                 </div>
                 </form>
             </field>
-            
          </record>
          
          <record model="ir.actions.act_window" id="action_od_beta_joining_form">

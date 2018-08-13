@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<record model="ir.ui.view" id="reason_wiz">
+		<field name="name">reason wiz wizard</field>
+		<field name="model">reason.wiz</field>
+		<field name="arch" type="xml">
+		<form string="Reason Wiz" version="7.0">
+			<group>
+					<field name="reason" />
+
+			</group>
+			<footer>
+				<button name="enter_reason" string="Enter Reason" type="object" class="oe_highlight"/>
+   				or
+ 				<button string="Cancel" class="oe_link" special="cancel"/>
+			</footer>
+		</form>
+		</field>
+		</record>
+
+		<record id="action_reason_wiz" model="ir.actions.act_window">
+		<field name="name">Reason Wiz</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">reason.wiz</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">form</field>
+		<field name="view_id" ref="reason_wiz"/>
+		<field name="target">new</field>
+		</record>
+
+		<!-- <menuitem name="Reason Wiz" 
+	  		id="menu_reason_wiz" 
+	  		parent="consyshr_menu_general"
+            action="action_reason_wiz" /> -->
+
+
+	</data>
+</openerp>

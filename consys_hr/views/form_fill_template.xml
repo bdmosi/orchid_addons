@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+<template id="employee_form">
+    <t t-call="website.layout">
+        <t t-set="additional_title">Fill the Form</t>
+        <div id="wrap">
+            <div class="container">
+                <h1 class="text-center">
+                    Employee Pesonal Data Entry Form
+                </h1>
+                <h2 t-if="employee" class="text-center text-muted">
+                    <span t-field="employee.name"/>
+                </h2>
+<script type="text/javascript">
+RelationRow=0;
+FamilyRow=0;
+AcademicRow=0;
+ProjectRow=0;
+function addNewRelationRow()
+{
+var $container =$("#dvRelation");
+var $row = $("<div></div>")
+					.addClass("col-md-10 col-md-offset-2")
+					.append($("<div></div>").addClass("col-md-2")
+											.append($("<input />").attr("type","text").attr("placeholder","eg English").attr("name","txt1_"+RelationRow))											
+							)
+					.append($("<div></div>").addClass("col-md-2")
+											.append($("<input />").attr("type","text").attr("placeholder","Yes or No").attr("name","txt2_"+RelationRow))											
+							)
+					.append($("<div></div>").addClass("col-md-2")
+											.append($("<input />").attr("type","text").attr("placeholder","Yes or No").attr("name","txt3_"+RelationRow))											
+							)
+					.append($("<div></div>").addClass("col-md-2")
+											.append($("<input />").attr("type","text").attr("placeholder","Yes or No").attr("name","txt4_"+RelationRow))											
+							)
+					
+					.append($("<div></div>").addClass("col-md-2")
+											.append(
+												$("<a></a>")
+												.addClass("btn glyphicon glyphicon-trash ")
+												.attr("href","#")
+												.attr("onclick","removeRelationRow(this);")
+												)
+											
+							);
+					RelationRow = RelationRow + 1;
+					$('#rowcount').val(RelationRow);
+$container.append($row);
+
+}
+
+function addFamilyRow()
+{
+var $container =$("#dvFamily");
+var $row = $("<div></div>")
+					.addClass("col-md-12 col-md-offset-2")
+					.append($("<div></div>").addClass("col-md-2")
+											.append($("<input />").attr("type","text").attr("placeholder","Name").attr("name","f1_"+FamilyRow))											
+							)
+					.append($("<div></div>").addClass("col-md-2")
+											.append($("<input />").attr("type","text").attr("placeholder","Mother/Father").attr("name","f2_"+FamilyRow))											
+							)
+					.append($("<div></div>").addClass("col-md-2")
+											.append($("<input />").attr("type","text").attr("placeholder","25").attr("name","f3_"+FamilyRow))											
+							)
+					.append($("<div></div>").addClass("col-md-2")
+											.append($("<input />").attr("type","text").attr("placeholder","Teacher").attr("name","f4_"+FamilyRow))											
+							)
+					.append($("<div></div>").addClass("col-md-2")
+											.append($("<input />").attr("type","text").attr("placeholder","Yes or No").attr("name","f5_"+FamilyRow))											
+							)
+					
+					.append($("<div></div>").addClass("col-md-2")
+											.append(
+												$("<a></a>")
+												.addClass("btn glyphicon glyphicon-trash ")
+												.attr("href","#")
+												.attr("onclick","removeFamilyRow(this);")
+												)
+											
+							);
+					FamilyRow = FamilyRow + 1;
+					$('#familycount').val(FamilyRow);
+$container.append($row);
+
+}
+function addAcademicRow()
+{
+var $container =$("#dvAcademy");
+var $row = $("<div></div>")
+					.addClass("col-md-12 col-md-offset-2")
+					.append($("<div></div>").addClass("col-md-2")
+											.append($("<input />").attr("type","date").attr("name","a1_"+AcademicRow))											
+							)
+					.append($("<div></div>").addClass("col-md-2")
+											.append($("<input />").attr("type","date").attr("name","a2_"+AcademicRow))											
+							)
+					.append($("<div></div>").addClass("col-md-2")
+											.append($("<input />").attr("type","text").attr("placeholder","Degree").attr("name","a3_"+AcademicRow))											
+				             )
+					.append($("<div></div>").addClass("col-md-2")
+											.append($("<input />").attr("type","text").attr("placeholder","Mark").attr("name","a4_"+AcademicRow))											
+							)
+					.append($("<div></div>").addClass("col-md-2")
+											.append($("<input />").attr("type","text").attr("placeholder","Regular/Correspondent").attr("name","a5_"+AcademicRow))											
+							)
+					
+					.append($("<div></div>").addClass("col-md-2")
+											.append(
+												$("<a></a>")
+												.addClass("btn glyphicon glyphicon-trash ")
+												.attr("href","#")
+												.attr("onclick","removeFamilyRow(this);")
+												)
+											
+							);
+					AcademicRow = AcademicRow + 1;
+					$('#academycount').val(AcademicRow);
+$container.append($row);
+
+}
+
+function addProjectRow()
+{
+var $container =$("#dvProject");
+var $row = $("<div></div>")
+					.addClass("col-md-12 col-md-offset-2")
+					.append($("<div></div>").addClass("col-md-2")
+											.append($("<input />").attr("type","date").attr("name","p1_"+ProjectRow))											
+							)
+					.append($("<div></div>").addClass("col-md-2")
+											.append($("<input />").attr("type","date").attr("name","p2_"+ProjectRow))											
+							)
+					.append($("<div></div>").addClass("col-md-2")
+											.append($("<input />").attr("type","text").attr("name","p3_"+ProjectRow))											
+							)
+					.append($("<div></div>").addClass("col-md-2")
+											.append($("<input />").attr("type","text").attr("name","p4_"+ProjectRow))											
+							)
+					
+					.append($("<div></div>").addClass("col-md-2")
+											.append(
+												$("<a></a>")
+												.addClass("btn glyphicon glyphicon-trash ")
+												.attr("href","#")
+												.attr("onclick","removeRelationRow(this);")
+												)
+											
+							);
+					ProjectRow = ProjectRow + 1;
+					$('#projectcount').val(ProjectRow);
+$container.append($row);
+
+}
+
+function removeRelationRow(sender)
+{
+	$(sender).parents(".col-md-10").remove();
+	
+}
+
+function removeFamilyRow(sender)
+{
+	$(sender).parents(".col-md-12").remove();
+	
+}
+
+</script>
+
+ 			  <style>
+						   h3 {
+						    color:blue;
+						   }
+			  </style>
+
+                <div class="row">
+                    <section id="forms">
+                        <!-- TODO Multilingual form action support ? -->
+                        <form class="form-horizontal mt32" action="/formfill/thankyou" method="post" enctype="multipart/form-data">
+                           <input type="hidden" t-att-value="employee and employee.id or False" name="employee_id"/>
+                            <input type="hidden" name="rowcount" id="rowcount"/>
+                            <input type="hidden" name="familycount" id="familycount"/>
+                            <input type="hidden" name="academycount" id="academycount"/>
+                            <input type="hidden" name="projectcount" id="projectcount"/>
+                            <h3>Your Personal Information</h3>
+                            <div t-attf-class="form-group #{error.get('present_address') and 'has-error' or ''}">
+                                <label class="col-md-3 col-sm-4 control-label" for="present_address">Present Address</label>
+                                <div class="col-md-7 col-sm-8">
+                                     <textarea  class="form-control" t-esc="default.get('present_address')" name="present_address" style="min-height: 120px"/>
+                                </div>
+                            </div>
+                            
+                            <div t-attf-class="form-group #{error.get('permanent_address') and 'has-error' or ''}">
+                                <label class="col-md-3 col-sm-4 control-label" for="permanent_address">Permanent Address</label>
+                                <div class="col-md-7 col-sm-8">
+                                     <textarea  class="form-control" t-esc="default.get('permanent_address')" name="permanent_address" style="min-height: 120px"/>
+                                </div>
+                            </div>
+                            
+                            <div t-attf-class="form-group">
+                                <label class="col-md-3 col-sm-4 control-label" for="blood_group">Blood Group</label>
+                                <div class="col-md-7 col-sm-8">
+                                    <input type="text" t-esc="default.get('blood_group')" class="form-control" name="blood_group"/>
+                                </div>
+                            </div>
+                            
+                            <div t-attf-class="form-group">
+                                <label class="col-md-3 col-sm-4 control-label" for="religion">Religion</label>
+                                <div class="col-md-7 col-sm-8">
+                                    <input type="text" t-esc="default.get('religion')" class="form-control" name="religion"/>
+                                </div>
+                            </div>
+                            
+                             <div t-attf-class="form-group #{error.get('identification_id') and 'has-error' or ''}">
+                                <label class="col-md-3 col-sm-4 control-label" for="identification_id">Identification Number</label>
+                                <div class="col-md-7 col-sm-8">
+                                     <input type="text"  class="form-control" t-esc="default.get('identification_id')" name="identification_id" />
+                                </div>
+                            </div>
+                            
+                            <div t-attf-class="form-group #{error.get('passport_id') and 'has-error' or ''}">
+                                <label class="col-md-3 col-sm-4 control-label" for="passport_id">Passport Number</label>
+                                <div class="col-md-7 col-sm-8">
+                                     <input type="text"  class="form-control" t-esc="default.get('passport_id')" name="passport_id" />
+                                </div>
+                            </div>
+                            
+                            
+                            <div t-attf-class="form-group #{error.get('marital') and 'has-error' or ''}">
+                                <label class="col-md-3 col-sm-4 control-label" for="marital">Martial status</label>
+                                <div class="col-md-7 col-sm-8">
+                                   <select id="marital" name="marital" t-att-value="default.get('marital')">
+								  <option  value="single">Single</option>
+								  <option value="married">Married</option>
+								  <option  value="widower">Widower</option>
+								  <option value="divoreced">Divorced</option>
+								</select>
+                                </div>
+                            </div>
+                      
+                   <div t-attf-class="form-group #{error.get('language_known') and 'has-error' or ''}">
+                      <label class="col-md-3 col-sm-4 control-label" for="language_known">Language Known</label>      
+                      <div class="row" id ="dvRelation">
+                        <div class="col-md-10 col-md-offset-2">
+                        <div class ="col-md-2">Language</div>
+                        <div class ="col-md-2">Speak</div>
+                        <div class ="col-md-2">Read</div>
+                        <div class ="col-md-2">Write</div>
+                        <div class ="col-md-2"><a href="#" onClick="addNewRelationRow();return false;" class="btn" ><i class="glyphicon glyphicon-plus"></i></a> </div>
+                        </div>
+                     </div>
+                 </div>           
+                 
+                  <div t-attf-class="form-group #{error.get('family_ids') and 'has-error' or ''}">
+                      <label class="col-md-3 col-sm-4 control-label" for="family_ids">Family Details</label>      
+                      <div class="row" id ="dvFamily">
+                        <div class="col-md-12 col-md-offset-2">
+                        <div class ="col-md-2">Name</div>
+                        <div class ="col-md-2">Relationship</div>
+                        <div class ="col-md-2">Age</div>
+                        <div class ="col-md-2">Occupation</div>
+                        <div class ="col-md-2">Dependent</div>
+                        <div class ="col-md-2"><a href="#" onClick="addFamilyRow();return false;" class="btn" ><i class="glyphicon glyphicon-plus"></i></a> </div>
+                        </div>
+                     </div>
+                 </div>     
+                  <h3>Emergency Contact Information</h3>
+                          <div t-attf-class="form-group #{error.get('em_contact') and 'has-error' or ''}">
+                                <label class="col-md-3 col-sm-4 control-label" for="em_contact">Name</label>
+                                <div class="col-md-7 col-sm-8">
+                                     <input type="text"  class="form-control" t-esc="default.get('em_contact')" name="em_contact" />
+                                </div>
+                            </div>        
+                             <div t-attf-class="form-group #{error.get('em_relation') and 'has-error' or ''}">
+                                <label class="col-md-3 col-sm-4 control-label" for="em_relation">Relation</label>
+                                <div class="col-md-7 col-sm-8">
+                                     <input type="text"  class="form-control" t-esc="default.get('em_relation')" name="em_relation" />
+                                </div>
+                            </div> 
+                            <div t-attf-class="form-group #{error.get('em_contact_no') and 'has-error' or ''}">
+                                <label class="col-md-3 col-sm-4 control-label" for="em_contact_no">Contact No</label>
+                                <div class="col-md-7 col-sm-8">
+                                     <input type="text"  class="form-control" t-esc="default.get('em_contact_no')" name="em_contact_no" />
+                                </div>
+                            </div> 
+                            <h3>Health</h3>
+                           <div t-attf-class="form-group #{error.get('health') and 'has-error' or ''}">
+                                <label class="col-md-3 col-sm-4 control-label" for="health">Any Major Operations in Last 5 Years</label>
+                                <div class="col-md-7 col-sm-8">
+                                     <textarea  class="form-control" t-esc="default.get('health')" name="health" style="min-height: 120px" />
+                                </div>
+                            </div> 
+                            <h3>Academic Record</h3>
+                            <div t-attf-class="form-group #{error.get('family_ids') and 'has-error' or ''}">
+		                      <label class="col-md-3 col-sm-4 control-label" for="academic_ids">Academic Details</label>      
+		                      <div class="row" id ="dvAcademy">
+		                        <div class="col-md-12 col-md-offset-2">
+		                        <div class ="col-md-2">From</div>
+		                        <div class ="col-md-2">To</div>
+		                        <div class ="col-md-2">Degree/Diploma</div>
+		                        <div class ="col-md-2">Mark</div>
+		                        <div class ="col-md-2">Regular/Correspondent</div>
+		                        <div class ="col-md-2"><a href="#" onClick="addAcademicRow();return false;" class="btn" ><i class="glyphicon glyphicon-plus"></i></a> </div>
+		                        </div>
+                    		 </div>
+               			  </div>     
+                           <h3>Project/Trainig/Apparentship</h3>
+                            <div t-attf-class="form-group #{error.get('family_ids') and 'has-error' or ''}">
+		                      <label class="col-md-3 col-sm-4 control-label" for="project_ids">Project Details</label>      
+		                      <div class="row" id ="dvProject">
+		                        <div class="col-md-12 col-md-offset-2">
+		                        <div class ="col-md-2">From</div>
+		                        <div class ="col-md-2">To</div>
+		                        <div class ="col-md-2">Institution</div>
+		                        <div class ="col-md-2">Area/Topic Covered</div>
+		                        <div class ="col-md-2"><a href="#" onClick="addProjectRow();return false;" class="btn" ><i class="glyphicon glyphicon-plus"></i></a> </div>
+		                        </div>
+                    		 </div>
+               			  </div>     
+                           
+                           <div class="form-group">
+                                <div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                           </div>
+                           
+                        </form>
+                        </section>  
+              
+                        </div>
+                        </div>
+                        </div>
+                        </t>
+                        </template>
+                        
+  
+                        
+  <template id="consyst_thankyou">
+    <t t-call="website.layout">
+        <div id="wrap">
+            <div class="oe_structure">
+                <div class="container">
+                    <h1>Thank you!</h1>
+                    <p>
+                        Your Personal data has been successfully registered,
+                        we will get back to you soon.
+                    </p>
+                </div>
+                <section data-snippet-id="cta" class="oe_dark">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12 text-center mt16 mb16">
+                                <a href="/" class="btn btn-primary btn-lg">Continue To Our Website</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </t>
+</template>
+                        
+      </data>
+      </openerp>
+                       

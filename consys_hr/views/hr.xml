@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+	<record model="ir.ui.view" id="hr_department_inherited_consyshr_form">
+		<field name="name">hr department form view</field>
+		<field name="model">hr.department</field>
+		<field name="inherit_id" ref="hr.view_department_form" />
+		<field name="arch" type="xml">
+
+	 		<xpath expr="//form/sheet" position="inside">
+           		<button name="%(action_request_wiz)d" type="action" string="Request Resource" class="oe_highlight" />
+           		<notebook>
+            		<page string="Requested Resources">
+            			<field name="resource_requset_ids">
+            				<tree string="Resource Request Lines" editable="bottom">
+            					<field name="name" />
+				            	<field name="no_of_employee"/>
+				            	<field name="approved_no"/>
+				            	<field name="state" />
+            					<button name="create_job" type="object" class="oe_highlight" string="Send Request" states="draft" />
+            				</tree>
+            			</field>
+            		</page>
+    			</notebook>
+          </xpath>
+          
+	 	</field>
+	</record>
+	
+	<record model="ir.ui.view" id="hr_emp_inherited_consyshr_form">
+		<field name="name">hr employee consyst form view</field>
+		<field name="model">hr.employee</field>
+		<field name="inherit_id" ref="hr.view_employee_form" />
+		<field name="arch" type="xml">
+   		<xpath expr="//page[@string='HR Settings']/group/group[@string='Active']" position="inside">
+   			 <div class="oe_top oe_button_box">
+                    <button name="cs_form_fill_mail" class="oe_stat_button" icon="fa-calendar" type="object"
+                         help="Schedule Form Fill Url email link to  Employee">
+                         <div>Send Form Fill<br/>Url</div>
+                    </button>
+             </div>
+   		</xpath>
+   		
+   		<xpath expr="//field[@name='address_home_id']" position="replace">
+           		<field name="present_address" />
+           		<field name="permanent_address" />
+           		<field name="blood_group" />
+           		<field name="religion" />
+          </xpath>
+          <xpath expr="//page[@string='HR Settings']" position="after">
+          		
+          		<page string="Language">
+          			<field name="lang_ids">
+          			<tree editable="bottom">
+          				<field name="langauage"/>
+          				<field name="can_speak"/>
+          				<field name="can_read"/>
+          				<field name="can_write"/>
+          			</tree>
+          			</field>
+          		</page>
+          		
+          		<page string="Family Details">
+          			<field name="family_ids">
+          			<tree editable="bottom">
+          				<field name="name"/>
+          				<field name="relationship"/>
+          				<field name="age"/>
+          				<field name="occupation"/>
+          				<field name="dependent"/>
+          			</tree>
+          			</field>
+          		</page>
+          		
+          		<page string="Academic Details">
+          		 <group string="Acedemic">
+          			<field name="academic_ids">
+          			<tree editable="bottom">
+          				<field name="from_date"/>
+          				<field name="to"/>
+          				<field name="degree"/>
+          				<field name="college"/>
+          				<field name="subjects"/>
+          				<field name="mark" />
+          				<field name="regular" />
+          			</tree>
+          			</field>
+          		</group>
+          		<group string="Project/Training">
+          			<field name="project_ids">
+          			<tree editable="bottom">
+          				<field name="from_date"/>
+          				<field name="to"/>
+          				<field name="institution"/>
+          				<field name="area"/>
+          				
+          			</tree>
+          			</field>
+          		</group>
+          		</page>
+          		
+          	<page string="Employment History">
+          		<group>
+          		<field name="history_ids" nolabel="1">
+          			
+          				<tree editable="bottom">
+	          				<field name="from_date"/>
+	          				<field name="to"/>
+	          				<field name="tot_exp"/>
+	          				<field name="address"/>
+	          				<field name="job_position"/>
+	          				<field name="nature"/>
+	          				<field name="designation1"/>
+	          				<field name="designation2"/>
+	          				<field name="salary1"/>
+	          				<field name="salary2"/>
+          				</tree>
+          			
+          		</field>
+          		</group>
+          		<group>
+          			<field name="total_experience" />
+          			<field name="report_structure" />
+          			<field name="considered" />
+          			<field name="position" />
+          			<field name="date_today" />
+          		</group>
+          		<group>
+          		  <field name="consyst_ids" >
+          		  	<tree editable="bottom">
+          		  		<field name="name" />
+          		  	</tree>
+          		  </field>
+          		</group>
+            </page>
+            
+            <page string="Emergency Contact Information">
+          		<group>
+          			<field name="em_contact"/>
+          			<field name="em_relation"/>
+          		    <field name="em_contact_no"/>
+          		</group>
+            </page>
+             <page string="Health">
+          		<group>
+          			<field name="health" string="Please give the details of any major operations or illness you have had in the last five year"/>
+          		</group>
+            </page>
+          
+          </xpath>
+          
+	 	</field>
+	</record>
+	
+	</data>
+</openerp>

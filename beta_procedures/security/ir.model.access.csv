@@ -3,3 +3,5 @@ access_beta_procedures,beta.procudures.user,model_beta_procedures,,1,0,0,0
 access_beta_structures,beta.structures.user,model_beta_structures,,1,0,0,0
 access_role_description,role.description.user,model_role_description,,1,0,0,0
 access_beta_kpis,beta.kpis.user,model_beta_kpi,,1,0,0,0
+access_beta_docs,beta.docs.user,model_beta_docs,,1,0,0,0
+access_beta_videos,beta.videos.user,model_beta_videos,,1,0,0,0

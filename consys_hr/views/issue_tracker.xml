@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<record model="ir.ui.view" id="issue_tracker_form">
+		<field name="name">issue tracker form view</field>
+		<field name="model">issue.tracker</field>
+		<field name="arch" type="xml">
+		<form string="Issue Tracker" version="7.0">
+ 			<header>
+ 					<field name="state" widget="statusbar" statusbar_colors='{"proforma":"blue"}'/>
+ 			</header>
+ 			<sheet>
+ 			 <h1>
+                        <label string="Ref No. "/>
+                        <field name="name" class="oe_inline" readonly="1"/>
+                    </h1>
+ 				
+ 			 <div class="oe_right oe_button_box" name="import_buttons">
+                       
+                        <button class="oe_inline oe_stat_button" name="open"
+                                string="Open" type="object"
+                                states="draft"
+                                icon="fa-bars"/>
+                        <button class="oe_inline oe_stat_button" name="open_doc"
+                                string="Source Doc" type="object"
+                                icon="fa-bars"/>
+                        <button class="oe_inline oe_stat_button" name="close"
+                                string="Close" type="object"
+                                states="open,replied"
+                                icon="fa-bars"/>
+                        <button class="oe_inline oe_stat_button" name="reopen"
+                                string="Re-open" type="object"
+                                states="closed"
+                                icon="fa-bars"/>
+                     
+                    </div>
+			<group>
+					<field name="issue_type" widget="radio" attrs="{'invisible': [('state','not in','draft')]}" />
+					<field name="subject" />
+					<field name="from_id" />
+					<field name="to" widget="many2many_tags"/>
+					<field name="date" />
+					<field name="Description" />
+					<field name="attachment" />
+					<field name="tag_ids" widget="many2many_tags"/>
+			</group>
+			
+			<notebook>
+				<page string="Issue Discussion Panel" >
+					<field name="solution_ids">
+						<tree string="Suggested Solution" editable="bottom">
+							<field name="solution_from" />
+							<field name="solution" />
+							<field name="attachment" />
+							<button name="open_me" string="Open" type="object" class="oe_inline"/>
+						</tree>
+						<form>
+							<field name="solution_from" />
+							<field name="solution" />
+						</form>
+					</field>
+					 <button class="oe_inline oe_stat_button" name="%(action_solution_wiz)d"
+                                string="Reply/Comment" type="action"
+                                states="open,replied"
+                                icon="fa-bars"/>
+				</page>
+			</notebook>
+			</sheet>
+			<!--  <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div> -->
+		</form>
+		</field>
+		</record>
+
+		<record model="ir.ui.view" id="issue_tracker_tree">
+		<field name="name">issue tracker tree view</field>
+		<field name="model">issue.tracker</field>
+		<field name="arch" type="xml">
+			<tree string="Issue Tracker" colors="red:state=='open';blue:state=='replied';grey:state=='closed'">
+					<field name="name" />
+					<field name="from_id" />
+					<field name="to" />
+					<field name="state" />
+			</tree>
+		</field>
+		</record>
+
+		<record model="ir.ui.view" id="issue_tracker_search">
+		<field name="name">issue tracker search view</field>
+		<field name="model">issue.tracker</field>
+		<field name="arch" type="xml">
+			<search>
+					<filter string="draft" name="draft" icon="terp-personal" domain="[('state','=','draft')]"/>
+					<field name="name" />
+					<field name="from_id" />
+					<field name="to" />
+					<field name="Description" />
+					<field name="tag_ids" />
+			</search>
+		</field>
+		</record>
+
+		<record model="ir.ui.view" id="issue_tracker_graph">
+		<field name="name">issue tracker graph view</field>
+		<field name="model">issue.tracker</field>
+		<field name="arch" type="xml">
+			<graph>
+					<field name="name" />
+					<field name="from_id" />
+					<field name="to" />
+					<field name="Description" />
+					
+					
+			</graph>
+		</field>
+		</record>
+
+	<record model="ir.actions.act_window" id="action_issue_tracker">
+		<field name="name">Issue Tracker</field>
+		<field name="res_model">issue.tracker</field>
+		<field name="context">{'search_default_draft': 1}</field>
+		<field name="domain">[('issue_type','=','normal')]</field>
+		<field name="view_mode">tree,form,graph</field>
+	</record>
+	
+	<record id="action_issue_wiz" model="ir.actions.act_window">
+		<field name="name">Issue Tracker Wizard</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">issue.tracker</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">form</field>
+		<field name="view_id" ref="issue_tracker_form"/>
+		<field name="target">new</field>
+		</record>
+
+		<menuitem name="Raise Issue" 
+	  		id="menu_issue_tracker" 
+	  		parent="issuetracker_menu_general"
+            action="action_issue_tracker" />
+            
+      <record id="action_issue_tracker_inbox" model="ir.actions.act_window">
+            <field name="name">Un-Answerd</field>
+            <field name="res_model">issue.tracker</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="domain">[('to','=',context.get('uid',False)),('state','=','open'),('issue_type','=','normal')]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+    </record>
+    
+    	<menuitem name="Un-Answerd" 
+	  		id="menu_issue_tracker_inbox" 
+	  		parent="issuetracker_menu_general"
+            action="action_issue_tracker_inbox" />
+        
+        
+         <record id="action_issue_tracker_archive_outbox" model="ir.actions.act_window">
+            <field name="name">Replied</field>
+            <field name="res_model">issue.tracker</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="domain">[('to','=',context.get('uid',False)),('state','=','replied'),('issue_type','=','normal')]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+    </record>
+    
+    	<menuitem name="Replied" 
+	  		id="menu_issue_tracker_archive_outbox" 
+	  		parent="issuetracker_menu_general"
+            action="action_issue_tracker_archive_outbox" />
+            
+     <record id="action_issue_tracker_outbox" model="ir.actions.act_window">
+            <field name="name">Sent Items</field>
+            <field name="res_model">issue.tracker</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="domain">[('from_id','=',context.get('uid',False)),('issue_type','=','normal')]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+    </record>
+    
+    	<menuitem name="Sent Items" 
+	  		id="menu_issue_tracker_outbox" 
+	  		parent="issuetracker_menu_general"
+            action="action_issue_tracker_outbox" />
+            
+      <record id="action_issue_tracker_archive" model="ir.actions.act_window">
+            <field name="name">Closed</field>
+            <field name="res_model">issue.tracker</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="domain">[('from_id','=',context.get('uid',False)),('state','=','closed'),('issue_type','=','normal')]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+    </record>
+    
+    	<menuitem name="Closed" 
+	  		id="menu_issue_tracker_archive" 
+	  		parent="issuetracker_menu_general"
+            action="action_issue_tracker_archive" />
+     
+     
+     
+	<record id="action_issue_tracker_inbox_confidential" model="ir.actions.act_window">
+            <field name="name">Inbox Issues Confidential</field>
+            <field name="res_model">issue.tracker</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="domain">[('to','=',context.get('uid',False)),('state','=','open'),('issue_type','=','confidential')]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+    </record>
+    
+    	
+    	
+    	
+    	<menuitem name="Un - Answerd" 
+	  		id="menu_issue_tracker_inbox_confidential" 
+	  		parent="issuetracker_menu_confidential"
+            action="action_issue_tracker_inbox_confidential" />
+            
+      <record id="action_issue_tracker_outbox_confidential" model="ir.actions.act_window">
+            <field name="name">Sent Issues Confidential</field>
+            <field name="res_model">issue.tracker</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="domain">[('from_id','=',context.get('uid',False)),('issue_type','=','confidential')]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+    </record>
+    
+    	<menuitem name="Sent Items" 
+	  		id="menu_issue_tracker_outbox_confidential" 
+	  		parent="issuetracker_menu_confidential"
+            action="action_issue_tracker_outbox_confidential" />
+            
+            
+   
+            
+      )
+      <record id="action_issue_tracker_archive_confidential" model="ir.actions.act_window">
+            <field name="name">Replied</field>
+            <field name="res_model">issue.tracker</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="domain">[('to','=',context.get('uid',False)),('state','=','replied'),('issue_type','=','confidential')]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+    </record>
+      
+      <menuitem name="Replied" 
+	  		id="menu_issue_tracker_archive_confidential" 
+	  		parent="issuetracker_menu_confidential"
+            action="action_issue_tracker_archive_confidential" />
+     
+      <record id="action_issue_tracker_archive_outbox_confidential" model="ir.actions.act_window">
+            <field name="name">Closed</field>
+            <field name="res_model">issue.tracker</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="domain">[('from_id','=',context.get('uid',False)),('state','=','closed'),('issue_type','=','confidential')]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+    </record>
+	
+		<menuitem name="Closed" 
+	  		id="menu_issue_tracker_archive_outbox_confidential" 
+	  		parent="issuetracker_menu_confidential"
+            action="action_issue_tracker_archive_outbox_confidential" />
+	
+	</data>
+</openerp>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<record model="ir.ui.view" id="request_receiver_form">
+		<field name="name">request receiver form view</field>
+		<field name="model">request.receiver</field>
+		<field name="arch" type="xml">
+		<form string="Request Receiver" version="7.0">
+ 			<header>
+ 			<button name="approve" type="object" string="Approve" class="oe_highlight" states="draft,refuse" />
+ 			 <field name="state" widget="statusbar" statusbar_colors='{"proforma":"blue"}'/>
+ 			</header>
+ 			<sheet>
+ 			
+			<group>
+					<field name="name" />
+					<field name="department_id" />
+					<field name="no_of_employee" />
+					<field name="responsible" />
+			</group>
+			</sheet>
+			 <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+		</form>
+		</field>
+		</record>
+
+		<record model="ir.ui.view" id="request_receiver_tree">
+		<field name="name">request receiver tree view</field>
+		<field name="model">request.receiver</field>
+		<field name="arch" type="xml">
+			<tree string="Request Receiver">
+					<field name="name" />
+					<field name="department_id" />
+					<field name="no_of_employee" />
+					<field name="responsible" />
+			</tree>
+		</field>
+		</record>
+
+		<record model="ir.ui.view" id="request_receiver_search">
+		<field name="name">request receiver search view</field>
+		<field name="model">request.receiver</field>
+		<field name="arch" type="xml">
+			<search>
+					<field name="name" />
+					<field name="department_id" />
+					<field name="no_of_employee" />
+					<field name="responsible" />
+			</search>
+		</field>
+		</record>
+
+		<record model="ir.ui.view" id="request_receiver_graph">
+		<field name="name">request receiver graph view</field>
+		<field name="model">request.receiver</field>
+		<field name="arch" type="xml">
+			<graph>
+					<field name="name" />
+					<field name="department_id" />
+					<field name="no_of_employee" />
+					<field name="responsible" />
+			</graph>
+		</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="action_request_receiver">
+		<field name="name">Request Receiver</field>
+		<field name="res_model">request.receiver</field>
+		<field name="view_mode">tree,form,graph</field>
+		</record>
+
+		<menuitem name="Resource Request Received" 
+	  		id="menu_request_receiver" 
+	  		parent="consyshr_menu_general"
+            action="action_request_receiver" />
+
+	</data>
+</openerp>

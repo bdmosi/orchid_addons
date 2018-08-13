@@ -9,13 +9,14 @@
 	        <field name="emp_id" position="replace">
 	            <field name="beta_join_id" />
 	        </field>
+	        <field name="job_id" position="before">
+	            <field name="manager_id" />
+	        </field>
            <button name="create_employee_from_applicant" position="replace">
                 <button string="Create Joining Form" name="create_joining_form" type="object"
                                     class="oe_link oe_inline" style="margin-left: 8px;"
                                     attrs="{'invisible': [('beta_join_id', '!=', False)]}"/> 
            </button>
-          
-       
         </field>
         </record>
         

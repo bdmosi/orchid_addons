@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<record model="ir.ui.view" id="hr_requirement_form">
+		<field name="name">hr requirement form view</field>
+		<field name="model">hr.requirement</field>
+		<field name="arch" type="xml">
+		<form string="Hr Requirement" version="7.0">
+ 			<header>
+ 				<field name="state" widget='statusbar' statusbar_colors='{"proforma":"blue"}' />
+ 			</header>
+ 			<sheet>
+ 			<div class="oe_right oe_button_box" name="import_buttons">
+                       
+                        <button class="oe_inline oe_stat_button" name="send_to_hr"
+                                string="Send to HR" type="object"
+                                states="draft"
+                                icon="fa-bars"/>
+                         <button class="oe_inline oe_stat_button" name="approve_by_hr"
+                                string="Approve" type="object"
+                                states="sendtoHR"
+                                groups="base.group_hr_dep"
+                                icon="fa-bars"/>
+                        <button class="oe_inline oe_stat_button" name="%(action_issue_wiz)d"
+                                string="Generate Issue" type="action"
+                                states="sendtoHR"
+                                groups="base.group_hr_dep"
+                                icon="fa-bars"/>
+                        <!--   <button class="oe_inline oe_stat_button" name="refuse_by_hr"
+                                string="Refuse" type="object"
+                                states="sendtoHR"
+                                icon="fa-bars" groups="base.group_hr_dep"/> -->
+                         <button class="oe_inline oe_stat_button" name="approve"
+                                string="Approve" type="object"
+                                states="waitingforapproval"
+                                icon="fa-bars"  groups="base.group_hr_top"/>
+                        <button class="oe_inline oe_stat_button" name="%(action_reason_wiz)d"
+                                string="Refuse" type="action"
+                                states="sendtoHR,waitingforapproval"
+                                icon="fa-bars"  groups="base.group_hr_dep,base.group_hr_top"/>
+                        <button class="oe_inline oe_stat_button" name="prepare_plan"
+                                string="Prepare Plan" type="object"
+                                states="approved"
+                                groups="base.group_hr_dep"
+                                icon="fa-bars"/>
+             </div>
+             <h1>
+             	 <label string="Ref No. "/>
+                 <field name="name" class="oe_inline" readonly="1"/>
+             </h1>
+			<group>
+					<field name="job_position" on_change="onchange_job_position(job_position)" attrs="{'readonly': [('state','!=','draft')],'invisible':[('hide_original', '=', True)]}" />
+					<field name="date_of_request" />
+					<field name="department_id" on_change="onchange_department(department_id)" attrs="{'readonly': [('state','!=','draft')],'invisible':[('hide_original', '=', True)]}"/>
+					<field name="job_desc" on_change="onchange_job_desc(job_desc)" attrs="{'readonly': [('state','!=','draft')],'invisible':[('hide_original', '=', True)]}"/>
+					<field name="requirement" on_change="onchange_requirement(requirement)" attrs="{'readonly': [('state','!=','draft')],'invisible':[('hide_original', '=', True)]}"/>
+					<field name="expected_date" attrs="{'readonly': [('state','!=','draft')]}"/>
+					<field name="required_count" on_change="onchange_count(required_count)" attrs="{'readonly': [('state','!=','draft')],'invisible':[('hide_original', '=', True)]}"/>
+					<field name="suggestion" attrs="{'readonly': [('state','!=','draft')]}" />
+					<field name="requested_by" />
+			</group>
+			<group string ='HR Modifications' attrs="{'invisible': [('state','=','draft')]}">
+				<field name="job_position1" />
+				<field name="department_id1" />
+				<field name="job_desc1" />
+				<field name="requirement1" />
+				<field name="required_count1" />
+				
+			</group>
+		
+				<group>
+					<field name="hide_original" attrs="{'invisible': [('state','in',('draft','sendtoHR'))]}" />
+				</group>
+				
+			<group>
+				<field name="refuse_reason" attrs="{'invisible':[('state','!=','refused')]}" />
+				<field name="refused_by" attrs="{'invisible':[('state','!=','refused')]}" />
+			</group>		
+		
+			
+			</sheet>
+			<div class="oe_chatter">
+				<field name="message_follower_ids" widget="mail_followers"/>
+                 <field name="message_ids" widget="mail_thread"/>
+			</div>
+		</form>
+		</field>
+		</record>
+
+		<record model="ir.ui.view" id="hr_requirement_tree">
+		<field name="name">hr requirement tree view</field>
+		<field name="model">hr.requirement</field>
+		<field name="arch" type="xml">
+			<tree string="Hr Requirement" colors="red:state=='sendtoHR';blue:state=='waitingforapproval';green:state=='approved';grey:state=='refused' ">
+					<field name="name" />
+					<field name="date_of_request" />
+					<field name="department_id" />
+					<field name="job_desc" />
+					<field name="expected_date" />
+					<field name="required_count" />
+					<field name="state" />
+			</tree>
+		</field>
+		</record>
+
+		<record model="ir.ui.view" id="hr_requirement_search">
+		<field name="name">hr requirement search view</field>
+		<field name="model">hr.requirement</field>
+		<field name="arch" type="xml">
+			<search>
+					<field name="name" />
+					<field name="date_of_request" />
+					<field name="department_id" />
+					<field name="job_desc" />
+					<!-- <field name="job_requirement" /> -->
+					<field name="expected_date" />
+					<field name="required_count" />
+			</search>
+		</field>
+		</record>
+
+		<record model="ir.ui.view" id="hr_requirement_graph">
+		<field name="name">hr requirement graph view</field>
+		<field name="model">hr.requirement</field>
+		<field name="arch" type="xml">
+			<graph>
+					<field name="name" />
+					<field name="date_of_request" />
+					<field name="department_id" />
+					<field name="job_desc" />
+					<!-- <field name="job_requirement" /> -->
+					<field name="expected_date" />
+					<field name="required_count" />
+					
+			</graph>
+		</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="action_hr_requirement">
+		<field name="name">Hr Requirement</field>
+		<field name="res_model">hr.requirement</field>
+		<field name="view_mode">tree,form,graph</field>
+		</record>
+
+		<menuitem name="Hr Requirement" 
+	  		id="menu_hr_requirement" 
+	  		parent="hr.menu_hr_main"
+            action="action_hr_requirement"/>
+            
+      
+    <!--   <record model="ir.actions.act_window" id="action_hr_requirement_hr">
+		<field name="name">Hr Requirement Request</field>
+		<field name="res_model">hr.requirement</field>
+		 <field name="domain">[('state','=','sendtoHR')]</field>
+		<field name="view_mode">tree,form,graph</field>
+		</record>
+
+		<menuitem name="Hr Requirement Request" 
+	  		id="menu_hr_requirement_hr" 
+	  		parent="my_activity"
+            action="action_hr_requirement_hr" />
+            
+            
+       <record model="ir.actions.act_window" id="action_hr_requirement_cfo">
+		<field name="name">Finance Approval</field>
+		<field name="res_model">hr.requirement</field>
+		 <field name="domain">[('state','=','sendtoCFO')]</field>
+		<field name="view_mode">tree,form,graph</field>
+		</record>
+
+		<menuitem name="Finance Approval" 
+	  		id="menu_hr_requirement_cfo" 
+	  		parent="my_activity"
+            action="action_hr_requirement_cfo" />
+            
+       <record model="ir.actions.act_window" id="action_hr_requirement_ceo">
+		<field name="name">Approval Requests</field>
+		<field name="res_model">hr.requirement</field>
+		 <field name="domain">[('state','=','sendtoCEO')]</field>
+		<field name="view_mode">tree,form,graph</field>
+	   </record>
+
+		<menuitem name="Approval Requests" 
+	  		id="menu_hr_requirement_ceo" 
+	  		parent="my_activity"
+            action="action_hr_requirement_ceo" /> -->
+
+	</data>
+</openerp>
