@@ -123,7 +123,7 @@ class account_invoice(models.Model):
         help="Remaining amount due.")
     
     
-    
+    date_invoice = fields.Date(string="Invoice Date",default=fields.Date.today())
     od_analytic_account = fields.Many2one('account.analytic.account',string='Analytic Account') 
     reason_for_credit_note = fields.Char(string="Reason For Credit Note")
     reason_for_debit_note = fields.Char(string="Reason For Debit Note")
