@@ -2881,14 +2881,14 @@
 										</td>
 										
 										<td>
-											<field name="date_start_a0" attrs="{'required':[('select_a0','=',True)]}"/>
+											<field name="date_start_a0" />
 										</td>
 										<td>
-											<field name="date_end_a0" attrs="{'required':[('select_a0','=',True)]}"/>
+											<field name="date_end_a0" />
 										</td>
 										
 										<td>
-											<field name="name_a0" attrs="{'required':[('select_a0','=',True)]}"/>
+											<field name="name_a0" />
 										</td>
 										<td>
 											<field name="analytic_a0" readonly="1"/>
