@@ -11,11 +11,12 @@ class BetaJoiningForm(models.Model):
     _description = "Beta Joining Form"
     
     name  = fields.Char(string='Employee Name', track_visibility='onchange')
-    state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('cancel', 'Terminated')],
+    state = fields.Selection([('draft', 'Draft'),('manager', 'Manager'), ('finance', 'Finance'),('confirm', 'Confirmed'), ('cancel', 'Terminated')],
                                   string='State', readonly=True,
                                   track_visibility='always', copy=False,  default= 'draft')
     work_email = fields.Char(string='Work Email')
     personal_email = fields.Char(string="Personal Email")
+    mobile = fields.Char(string="Mobile No")
     father_name = fields.Char(string="Father Name")
     passport_no = fields.Char(string="Passport Number")
     
@@ -40,6 +41,8 @@ class BetaJoiningForm(models.Model):
     basic_wage = fields.Float(string="Basic Wage")
     allowance_rule_line_ids = fields.One2many('allowance.rule.line','joining_id','Rule Lines')
     salary_struct = fields.Many2one('hr.payroll.structure', string='Salary Structure')
+    analytic_account_id = fields.Many2one('account.analytic.account',string="Analytic Account")
+
     
     work_sched = fields.Many2one('resource.calendar', string='Working Schedule')
     employee_id = fields.Many2one('hr.employee')
@@ -68,6 +71,11 @@ class BetaJoiningForm(models.Model):
                 'coach_id': self.coach_id and self.coach_id.id or False,
                 'country_id': self.nationality and self.nationality.id or False,
                 'birthday': self.dob,
+                'marital': self.martial,
+                'od_father': self.father_name,
+                'passport_id': self.passport_no,
+                'mobile_phone': self.mobile,
+                'od_personal_email': self.personal_email,
                 'gender': self.gender,
                 'active': True,
                 'od_joining_date': self.joining_date,
@@ -149,6 +157,32 @@ class BetaJoiningForm(models.Model):
 #         user_id.action_reset_password()
 #         user_id.write({'groups_id'})
         return user_id
+    
+    def od_send_mail(self,template):
+        ir_model_data = self.env['ir.model.data']
+        email_obj = self.pool.get('email.template')
+        saudi_comp =6
+        user_company_id = self.env.user.company_id.id
+        if user_company_id == saudi_comp:
+            template = template +'_saudi'
+        template_id = ir_model_data.get_object_reference('beta_customisation', template)[1]
+        crm_id = self.id
+        email_obj.send_mail(self.env.cr,self.env.uid,template_id,crm_id, force_send=True)
+        return True
+    
+    @api.one
+    @api.model
+    def send_to_manager(self):
+        self.od_send_mail('od_fill_detail_manager')
+        self.state = 'manager'
+        return True
+    
+    @api.one
+    @api.model
+    def send_to_finance(self):
+        self.od_send_mail('od_fill_detail_finance')
+        self.state = 'finance'
+        return True
     
     @api.one
     @api.model

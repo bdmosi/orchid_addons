@@ -7,7 +7,7 @@
     "description": """ Beta Customisations""",
     "website": "http://www.betait.net",
     "depends": ['base', 'crm', 'calendar', 'analytic','orchid_beta_project', 'orchid_cost_sheet', 'account', 'hr','hr_recruitment'],
-    'data': [
+    'data': ['data/mail_template.xml',
             'crm/crm_lead_view.xml',
             'project/project_view.xml',
             'project/analytic_view.xml',
@@ -15,6 +15,7 @@
             'hr/hr_view.xml',
             'hr/job_view.xml',
             'hr/hr_applicant_view.xml',
+            'controllers/form_fill_template.xml'
             ],
     'demo': [],
     'installable': True,

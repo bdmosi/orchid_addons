@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 {
     "name" : "Beta Procedures",
-    "version" : "0.1",
-    "author": "Aslam Up",
+    "version" : "0.2",
+    "author": "Beta Information Technology",
     "category" : "Human Resource",
     "description": """ Beta Support""",
     "website": "http://www.betait.net",
