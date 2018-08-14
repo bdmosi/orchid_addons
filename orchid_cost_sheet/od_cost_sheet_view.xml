@@ -3022,24 +3022,24 @@
 										<td>
 										A4 (AMC)
 										</td>
-										<td><field name="tabs_a4" widget="many2many_tags" attrs="{'required':[('select_a4','=',True)]}"/></td>
+										<td><field name="tabs_a4" widget="many2many_tags" /></td>
 										<td>
-											<field name="date_start_a4" attrs="{'required':[('select_a4','=',True)]}"/>
+											<field name="date_start_a4" />
 										</td>
 										<td>
-											<field name="date_end_a4" attrs="{'required':[('select_a4','=',True)]}"/>
-										</td>
-										
-										<td>
-											<field name="name_a4" attrs="{'required':[('select_a4','=',True)]}"/>
+											<field name="date_end_a4" />
 										</td>
 										
 										<td>
-											<field name="owner_id_a4" attrs="{'required':[('select_a4','=',True)]}"/>
+											<field name="name_a4" />
 										</td>
 										
 										<td>
-											<field name="type_of_project_a4" attrs="{'required':[('select_a4','=',True)]}"/>
+											<field name="owner_id_a4" />
+										</td>
+										
+										<td>
+											<field name="type_of_project_a4" />
 										</td>
 										<td>
 											<field name="analytic_a4" readonly="1"/>
@@ -3055,24 +3055,24 @@
 										<td>
 										A5 (O&amp;M)
 										</td>
-										<td><field name="tabs_a5" widget="many2many_tags" attrs="{'required':[('select_a5','=',True)]}"/></td>
+										<td><field name="tabs_a5" widget="many2many_tags" /></td>
 										<td>
-											<field name="date_start_a5" attrs="{'required':[('select_a5','=',True)]}"/>
+											<field name="date_start_a5" />
 										</td>
 										<td>
-											<field name="date_end_a5" attrs="{'required':[('select_a5','=',True)]}"/>
-										</td>
-										
-										<td>
-											<field name="name_a5" attrs="{'required':[('select_a5','=',True)]}"/>
+											<field name="date_end_a5" />
 										</td>
 										
 										<td>
-											<field name="owner_id_a5" attrs="{'required':[('select_a5','=',True)]}"/>
+											<field name="name_a5" />
 										</td>
 										
 										<td>
-											<field name="type_of_project_a5" attrs="{'required':[('select_a5','=',True)]}"/>
+											<field name="owner_id_a5" />
+										</td>
+										
+										<td>
+											<field name="type_of_project_a5" />
 										</td>
 										<td>
 											<field name="analytic_a5" readonly="1"/>
@@ -3096,9 +3096,9 @@
 								</thead>
 								<tbody>
 								<tr>
-									<td><field name="periodicity_amc" attrs="{'required':[('select_a4','=',True)]}"/></td>
-									<td><field name="l2_start_date_amc" attrs="{'required':[('select_a4','=',True)]}"/></td>
-									<td><field name="no_of_l2_accounts_amc" attrs="{'required':[('select_a4','=',True)]}"/></td>
+									<td><field name="periodicity_amc" /></td>
+									<td><field name="l2_start_date_amc" /></td>
+									<td><field name="no_of_l2_accounts_amc" /></td>
 										
 								</tr>
 								</tbody>
@@ -3126,9 +3126,9 @@
 								</thead>
 								<tbody>
 								<tr>
-									<td><field name="periodicity_om" attrs="{'required':[('select_a5','=',True)]}"/></td>
-									<td><field name="l2_start_date_om" attrs="{'required':[('select_a5','=',True)]}"/></td>
-									<td><field name="no_of_l2_accounts_om" attrs="{'required':[('select_a5','=',True)]}"/></td>
+									<td><field name="periodicity_om" /></td>
+									<td><field name="l2_start_date_om" /></td>
+									<td><field name="no_of_l2_accounts_om" /></td>
 										
 								</tr>
 								</tbody>

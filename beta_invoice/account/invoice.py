@@ -101,6 +101,20 @@ class account_invoice(models.Model):
         if self.state =='manual':
             self.residual =0.0
         self.residual = max(self.residual, 0.0)
+        
+        
+    
+    
+    @api.multi
+    def action_date_assign(self):
+        super(account_invoice,self).action_date_assign()
+        for inv in self:
+            today = fields.Date.today()
+            inv.write({'date_invoice':today})
+            res = inv.onchange_payment_term_date_invoice(inv.payment_term.id, today)
+            if res and res.get('value'):
+                inv.write(res['value'])
+        return True
   
     
     state = fields.Selection([('draft','Draft'),('proforma','Pro-forma'),('proforma2','Pro-forma'),('open','Open'),('accept','Accepted By Customer'),('paid','Paid'),('cancel','Cancelled'),('asset_done','Asset Done'),('manual','Manually Settled')],string="Invoice Status")
