@@ -206,6 +206,11 @@ class od_cost_sheet(models.Model):
                     total_cost = r_item['total_cost']
                     total_cost += item['total_cost']
                     r_item['total_cost'] = total_cost
+                    
+                    sup_cost = r_item['sup_cost']
+                    sup_cost += item['sup_cost']
+                    r_item['sup_cost'] = sup_cost
+                    
             if check == False :
                 item['all_brand_cost'] = all_brand_cost
                 result.append( item )
