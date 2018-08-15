@@ -218,12 +218,14 @@ class od_cost_sheet(models.Model):
             res.append({'manufacture_id':line.manufacture_id and line.manufacture_id.id or False,
                 'total_sale':line.line_price,
                 'total_cost': line.line_cost_local_currency,
+                'sup_cost':line.discounted_total_supplier_currency,
                 })
             all_brand_cost += line.line_cost_local_currency
         for line in self.trn_customer_training_line:
             res.append({'manufacture_id':line.manufacture_id and line.manufacture_id.id or False,
                 'total_sale':line.line_price,
                 'total_cost': line.line_cost_local_currency,
+                'sup_cost':0.0
                 })
             all_brand_cost += line.line_cost_local_currency
         result = self.grouped_brand_weight(res,all_brand_cost)
@@ -6534,6 +6536,7 @@ class od_cost_mat_brand_weight(models.Model):
     manufacture_id = fields.Many2one('od.product.brand',string='Brand')
     total_sale = fields.Float(string="Total Brand Sales",digits=dp.get_precision('Account'))
     total_cost = fields.Float(string="Total Brand cost",digits=dp.get_precision('Account'))
+    sup_cost = fields.Float(string="Supplier Discounted Price",digits=dp.get_precision('Account'))
     all_brand_cost = fields.Float(string="All Brand Cost",digits=dp.get_precision('Account'))
     profit = fields.Float(string="Profit",compute="_compute_vals",digits=dp.get_precision('Account'))
     profit_percent = fields.Float(string="Profit %",compute="_compute_vals",digits=dp.get_precision('Account'))
